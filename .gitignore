@@ -1,0 +1,14 @@
+*.bak
+.metadata
+.settings
+.classpath
+.project
+target
+*.class
+*.jar
+*.war
+*.ear
+*.log
+*~
+graph
+neo4j
