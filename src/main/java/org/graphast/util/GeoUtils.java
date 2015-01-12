@@ -8,7 +8,7 @@ public class GeoUtils {
     /**
      * Factor used to convert and round latitude and longitude to/from int.
      */
-    public static int LAT_LONG_CONVERTION_FACTOR = 10000000;
+    public static int LAT_LONG_CONVERTION_FACTOR = 1000000;
 	
 	
 	public GeoUtils() {
