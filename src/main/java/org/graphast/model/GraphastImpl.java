@@ -458,7 +458,7 @@ public class GraphastImpl implements Graphast {
 		while (next != -1) {
 
 			if (vid == nextEdge.getFromNode()) {
-				outEdges.add(nextEdge.getToNode());
+				outEdges.add(nextEdge.getId());
 				next = nextEdge.getFromNodeNextEdge();
 			} else if (vid == nextEdge.getToNode()) {
 				next = nextEdge.getToNodeNextEdge();
@@ -558,10 +558,10 @@ public class GraphastImpl implements Graphast {
 		long geometryIndex = BigArrays.index(edges.getInt(pos++), edges.getInt(pos++));
 		long labelIndex = BigArrays.index(edges.getInt(pos++), edges.getInt(pos++));
 
-		GraphastEdge edge = new GraphastEdge(id, externalId, fromId, toId,
+		GraphastEdge edge = new GraphastEdge(externalId, fromId, toId,
 				fromNodeNextEdge, toNodeNextEdge, distance, costsIndex,
 				geometryIndex, labelIndex, null);
-		
+		edge.setId(id);
 		edge.validate();
 		return edge;
 		

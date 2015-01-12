@@ -39,11 +39,10 @@ public class GraphastEdge {
 
 	private String label;
 
-	public GraphastEdge(Long id, long fromNode, long toNode, int distance,
+	public GraphastEdge(long fromNode, long toNode, int distance,
 			short[] costs, List<Point> geometry, String label) {
 
 		this(fromNode, toNode, distance);
-		this.id = id;
 		this.costs = costs;
 		this.geometry = geometry;
 		this.label = label;
@@ -52,30 +51,29 @@ public class GraphastEdge {
 
 	public GraphastEdge(long fromNode, long toNode, int distance) {
 
-		this(null, 0, fromNode, toNode, -1, -1, distance, -1, -1, -1, null);
+		this(0, fromNode, toNode, -1, -1, distance, -1, -1, -1, null);
 
 	}
 
 	public GraphastEdge(long externalId, long fromNode, long toNode, int distance) {
-		this(null, externalId, fromNode, toNode, -1, -1, distance, -1, -1, -1, null);
+		this(externalId, fromNode, toNode, -1, -1, distance, -1, -1, -1, null);
 	}
 
-	public GraphastEdge(Long id, long fromNode, long toNode,
+	public GraphastEdge(long fromNode, long toNode,
 			long fromNodeNextEdge, long toNodeNextEdge, int distance,
 			long costsIndex, long geometryIndex, long labelIndex,
 			String label) {
-		this(id, 0, fromNode, toNode, fromNodeNextEdge, toNodeNextEdge, distance, costsIndex, geometryIndex, labelIndex, label);
+		this(0, fromNode, toNode, fromNodeNextEdge, toNodeNextEdge, distance, costsIndex, geometryIndex, labelIndex, label);
 
 	}
 
-	public GraphastEdge(Long id, long externalId, long fromNode, long toNode,
+	public GraphastEdge(long externalId, long fromNode, long toNode,
 			long fromNodeNextEdge, long toNodeNextEdge, int distance,
 			long costsIndex, long geometryIndex,long labelIndex, String label) {
 
 		this.fromNode = fromNode;
 		this.toNode = toNode;
 		this.distance = distance;
-		this.id = id;
 		this.fromNodeNextEdge = fromNodeNextEdge;
 		this.toNodeNextEdge = toNodeNextEdge;
 		this.costsIndex = costsIndex;
