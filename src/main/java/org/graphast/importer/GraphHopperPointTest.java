@@ -28,8 +28,12 @@ public class GraphHopperPointTest {
 
 		//oeste leste
 		QueryResult fromQR = index.findClosest(52.535926,13.192974, EdgeFilter.ALL_EDGES);
-		System.out.println("from:" + fromQR.getQueryPoint().lat + "," + fromQR.getQueryPoint().lon);
+		int fromId = fromQR.getClosestNode();
+		System.out.println("from:" + graphStorage.getNodeAccess().getLatitude(fromId) + "," + 
+				graphStorage.getNodeAccess().getLongitude(fromId));
 		QueryResult toQR = index.findClosest(52.52651,13.493285, EdgeFilter.ALL_EDGES);
-		System.out.println("to:" + toQR.getQueryPoint().lat + "," + toQR.getQueryPoint().lon);
+		int toId = toQR.getClosestNode();
+		System.out.println("to:" + graphStorage.getNodeAccess().getLatitude(toId) + "," + 
+				graphStorage.getNodeAccess().getLongitude(toId));
 	}
 }

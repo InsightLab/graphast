@@ -4,6 +4,8 @@ import static org.graphast.util.GeoUtils.latLongToDouble;
 import static org.graphast.util.GeoUtils.latLongToInt;
 import it.unimi.dsi.fastutil.BigArrays;
 import it.unimi.dsi.fastutil.ints.IntBigArrayBigList;
+import it.unimi.dsi.fastutil.longs.Long2IntMap;
+import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2LongMap;
 import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
@@ -740,4 +742,25 @@ public class GraphastImpl implements Graphast {
 		return (int) getEdges().size64()/GraphastEdge.EDGE_BLOCKSIZE;
 
 	}
+
+	public Long2IntMap accessNeighborhood(GraphastNode v){
+		Long2IntMap neig = new Long2IntOpenHashMap();
+		for (Long e : this.getOutEdges( v.getId())) {
+			GraphastEdge edge = this.getEdge(e);
+			long vNeig =  edge.getFromNode();
+			int cost =  edge.getDistance();
+			if(!neig.containsKey(vNeig)){
+				neig.put(vNeig, cost);
+			}else{
+				if(neig.get(vNeig) > cost){
+					neig.put(vNeig, cost);
+				}
+			}
+		}
+		
+		return neig;
+	
+	}
+	
+	
 }

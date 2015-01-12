@@ -40,6 +40,7 @@ public class DijkstraShortestPathWithConstantWeight extends DijkstraShortestPath
 		//TODO Change this "i+1"
 		for (long i = 0; i < nodes.size64(); i = i + GraphastNode.NODE_BLOCKSIZE) {
 			
+			
 			unsettledNodes.add(nodes.get(i+1));
 			distance.put(nodes.get(i+1), Integer.MAX_VALUE);
 		

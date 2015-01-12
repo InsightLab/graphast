@@ -1,6 +1,7 @@
 package org.graphast.model;
 
 import it.unimi.dsi.fastutil.ints.IntBigArrayBigList;
+import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.LongList;
 import it.unimi.dsi.fastutil.objects.ObjectBigList;
 import it.unimi.dsi.fastutil.shorts.ShortBigArrayBigList;
@@ -204,5 +205,7 @@ public interface Graphast {
 	 * @return	total number of edges
 	 */
 	public int getNumberOfEdges();
+	
+	public Long2IntMap accessNeighborhood(GraphastNode v);
 
 }
