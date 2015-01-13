@@ -1,4 +1,4 @@
-package org.graphast.query.route.shortestpath2;
+package org.graphast.query.route.shortestpath;
 
 import static org.graphast.util.NumberUtils.convertToInt;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;

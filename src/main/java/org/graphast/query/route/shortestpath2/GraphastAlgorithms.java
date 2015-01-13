@@ -1,4 +1,4 @@
-package org.graphast.query.route.shortestpath;
+package org.graphast.query.route.shortestpath2;
 
 import it.unimi.dsi.fastutil.ints.IntBigArrayBigList;
 

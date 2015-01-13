@@ -1,4 +1,4 @@
-package org.graphast.query.route.shortestpath;
+package org.graphast.query.route.shortestpath2;
 
 import org.graphast.model.Graphast;
 import org.graphast.model.GraphastNode;

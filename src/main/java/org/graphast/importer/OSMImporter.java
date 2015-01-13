@@ -11,8 +11,6 @@ import org.graphast.model.Graphast;
 import org.graphast.model.GraphastEdge;
 import org.graphast.model.GraphastImpl;
 import org.graphast.model.GraphastNode;
-import org.graphast.query.route.shortestpath2.AbstractShortestPathService;
-import org.graphast.query.route.shortestpath2.DijkstraShortestPathConstantWeight;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,13 +21,9 @@ import com.graphhopper.util.EdgeIterator;
 public class OSMImporter {
 	public Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	public void execute() {
+	public void execute(String osmFile, String graphHopperDir, String graphastDir) {
 		logger.info("Initial date: {}", new Date());
 		double initialTime = System.currentTimeMillis();
-
-		String osmFile = Configuration.getProperty("berlin.osm.file");
-		String graphHopperDir = Configuration.getProperty("berlin.graphhopper.dir");
-		String graphastDir = Configuration.getProperty("berlin.graphast.dir");
 
 		Graphast fg = new GraphastImpl(graphastDir);
 
@@ -80,19 +74,14 @@ public class OSMImporter {
 		logger.info("Final date: {}", new Date());
 		logger.info("Total time: {}", total);
 	
-		Long source = fg.getNode(52.535926421044614,13.192974139592964);
-		Long destination = fg.getNode(52.52644816472638,13.496196571652515);
 		
-		AbstractShortestPathService dj = new DijkstraShortestPathConstantWeight(fg);
-		System.out.println(dj.shortestPath(fg.getNode(source), fg.getNode(destination)));
-		
-//		GraphastAlgorithms dj = new DijkstraShortestPathWithConstantWeight(fg, source, destination);
-//		dj.execute();
-
 	}
 
 	public static void main(String[] args) {
-		new OSMImporter().execute();
+		String osmFile = Configuration.getProperty("berlin.osm.file");
+		String graphHopperDir = Configuration.getProperty("berlin.graphhopper.dir");
+		String graphastDir = Configuration.getProperty("berlin.graphast.dir");
+		new OSMImporter().execute(osmFile, graphHopperDir, graphastDir);
 
 	}
 }

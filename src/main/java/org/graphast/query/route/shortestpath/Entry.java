@@ -1,4 +1,4 @@
-package org.graphast.query.route.shortestpath2;
+package org.graphast.query.route.shortestpath;
 
 public class Entry implements Comparable<Object>{
 
