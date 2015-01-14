@@ -77,14 +77,12 @@ public class GraphastImpl implements Graphast {
 	 */
 	@Override
 	public void save() throws IOException {
-
 		FileUtils.saveIntList(directory + "/nodes", nodes, blockSize);
 		FileUtils.saveIntList(directory + "/edges", edges, blockSize);
 		FileUtils.saveStringList(directory + "/nodesLabels", nodesLabels, blockSize);
 		FileUtils.saveStringList(directory + "/edgesLabels", edgesLabels, blockSize);
 		FileUtils.saveShortList(directory + "/costs", costs, blockSize);
 		FileUtils.saveIntList(directory + "/points", points, blockSize);
-
 	}
 
 	/* (non-Javadoc)
@@ -92,16 +90,24 @@ public class GraphastImpl implements Graphast {
 	 */
 	@Override
 	public void load() throws IOException {
-
 		nodes = FileUtils.loadIntList(directory + "/nodes", blockSize);
 		edges = FileUtils.loadIntList(directory + "/edges", blockSize);
 		nodesLabels = FileUtils.loadStringList(directory + "/nodesLabels", blockSize);
 		edgesLabels = FileUtils.loadStringList(directory + "/edgesLabels", blockSize);
 		costs = FileUtils.loadShortList(directory + "/costs", blockSize);
 		points = FileUtils.loadIntList(directory + "/points", blockSize);
-
+		loadNodeIndex();
 	}
 
+	private void loadNodeIndex() {
+		int numberOfNodes = getNumberOfNodes();
+		GraphastNode node;
+		for (int i=0; i < numberOfNodes; i++) {
+			node = getNode(i);
+			nodeIndex.put(BigArrays.index(node.getLatitudeConvertedToInt(), node.getLongitudeConvertedToInt()), (long) i);
+		}
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.graphast.model.Graphast#addNode(org.graphast.model.GraphastNode)
 	 */
@@ -120,8 +126,8 @@ public class GraphastImpl implements Graphast {
 			nodes.add(node.getExternalIdSegment());
 			nodes.add(node.getExternalIdOffset());
 			nodes.add(node.getCategory());
-			nodes.add(node.getLatitude());
-			nodes.add(node.getLongitude());
+			nodes.add(node.getLatitudeConvertedToInt());
+			nodes.add(node.getLongitudeConvertedToInt());
 			nodes.add(node.getFirstEdgeSegment());
 			nodes.add(node.getFirstEdgeOffset());
 			nodes.add(node.getLabelIndexSegment());
@@ -131,8 +137,7 @@ public class GraphastImpl implements Graphast {
 
 		}
 
-		nodeIndex.put(BigArrays.index(node.getLatitude(), node.getLongitude()),
-				(long) id);
+		nodeIndex.put(BigArrays.index(node.getLatitudeConvertedToInt(), node.getLongitudeConvertedToInt()), (long) id);
 
 		node.setId(id);
 
@@ -169,19 +174,15 @@ public class GraphastImpl implements Graphast {
 	 */
 	@Override
 	public void updateNodeInfo(GraphastNode node) {
-
 		long position = node.getId() * GraphastNode.NODE_BLOCKSIZE;
 		position = position + 3;
 
 		synchronized(nodes){
-
-			nodes.set(position++, node.getLatitude());
-			nodes.set(position++, node.getLongitude());
+			nodes.set(position++, node.getLatitudeConvertedToInt());
+			nodes.set(position++, node.getLongitudeConvertedToInt());
 			nodes.set(position++, node.getFirstEdgeSegment());
 			nodes.set(position++, node.getFirstEdgeOffset());
-
 		}
-
 	}
 
 	/* (non-Javadoc)

@@ -21,11 +21,11 @@ import com.graphhopper.util.EdgeIterator;
 public class OSMImporter {
 	public Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	public void execute(String osmFile, String graphHopperDir, String graphastDir) {
+	public Graphast execute(String osmFile, String graphHopperDir, String graphastDir) {
 		logger.info("Initial date: {}", new Date());
 		double initialTime = System.currentTimeMillis();
 
-		Graphast fg = new GraphastImpl(graphastDir);
+		Graphast graph = new GraphastImpl(graphastDir);
 
 		GraphHopper gh = OSMToGraphHopperReader.createGraph(osmFile, graphHopperDir, false, false);
 		GraphStorage gs = gh.getGraph();
@@ -46,25 +46,30 @@ public class OSMImporter {
 			GraphastNode fromNode = new GraphastNode(latitudeFrom, longitudeFrom);
 			GraphastNode toNode = new GraphastNode(latitudeTo, longitudeTo);
 			
-			if(longitudeTo == 13.493285 || longitudeFrom == 13.493285) {
+
+			
+			graph.addNode(fromNode);
+			graph.addNode(toNode);
+
+			if(longitudeTo == 7.414896 || longitudeFrom == 7.421220) {
+				System.out.println("fromNode: " + fromNode);
 				System.out.println("LatitudeFrom: " + latitudeFrom);
 				System.out.println("LongitudeFrom: " + longitudeFrom);
+				System.out.println("");
+				System.out.println("toNode: " + toNode);
 				System.out.println("LatitudeTo: " + latitudeTo);
 				System.out.println("LongitudeTo: " + longitudeTo);
 			}
 			
-			fg.addNode(fromNode);
-			fg.addNode(toNode);
-			
 			GraphastEdge edge = new GraphastEdge(fromNode.getId(), toNode.getId(), (int)distance);
-			fg.addEdge(edge);
+			graph.addEdge(edge);
 			
 		}
-		logger.info("Number of Nodes: {}", fg.getNumberOfNodes());
-		logger.info("Number of Edges: {}", fg.getNumberOfEdges());
+		logger.info("Number of Nodes: {}", graph.getNumberOfNodes());
+		logger.info("Number of Edges: {}", graph.getNumberOfEdges());
 
 		try {
-			fg.save();
+			graph.save();
 		} catch (IOException e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -74,7 +79,7 @@ public class OSMImporter {
 		logger.info("Final date: {}", new Date());
 		logger.info("Total time: {}", total);
 	
-		
+		return graph;
 	}
 
 	public static void main(String[] args) {

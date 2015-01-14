@@ -3,6 +3,7 @@ package org.graphast.query.route.shortestpath;
 import static org.graphast.util.NumberUtils.convertToInt;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 
@@ -51,7 +52,16 @@ public class DijkstraShortestPathConstantWeight extends DijkstraShortestPath {
 
 	@Override
 	public int shortestPath(GraphastNode source, GraphastNode target) {
-		
-		return shortestPath(source, target,null);
+		return shortestPath(source, target, null);
+	}
+
+	@Override
+	public int shortestPath(long source, long target) {
+		return shortestPath(source, target, null);
+	}
+
+	@Override
+	public int shortestPath(long source, long target, Date time) {
+		return shortestPath(graph.getNode(source), graph.getNode(target), time);
 	}
 }

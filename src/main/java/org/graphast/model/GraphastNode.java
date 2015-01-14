@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.BigArrays;
 import org.graphast.exception.GraphastException;
 
 import static org.graphast.util.GeoUtils.latLongToInt;
+import static org.graphast.util.GeoUtils.latLongToDouble;
 
 public class GraphastNode {
 	public static final short NODE_BLOCKSIZE = 11;
@@ -38,17 +39,13 @@ public class GraphastNode {
 	 * @param 	longitude
 	 */
 	public GraphastNode(double latitude, double longitude) {
-
-		this.latitude = latLongToInt(latitude);
-		this.longitude = latLongToInt(longitude);
+		setLatitude(latitude);
+		setLongitude(longitude);
 		this.firstEdge = -1;
 
 		if(latitude == Integer.MAX_VALUE || longitude==Integer.MAX_VALUE) {
-
 			throw new GraphastException("Invalid coordinate");
-
 		}
-
 	}
 
 	/**
@@ -136,20 +133,29 @@ public class GraphastNode {
 		this.externalId = externalId;
 	}
 
-	public int getLatitude() {
+	public double getLatitude() {
+		return latLongToDouble(latitude);
+	}
+	
+	int getLatitudeConvertedToInt() {
 		return latitude;
 	}
+	
 
-	public void setLatitude(int latitude) {
-		this.latitude = latitude;
+	public void setLatitude(double latitude) {
+		this.latitude = latLongToInt(latitude);
 	}
 
-	public int getLongitude() {
+	public double getLongitude() {
+		return latLongToDouble(longitude);
+	}
+
+	int getLongitudeConvertedToInt() {
 		return longitude;
 	}
-
-	public void setLongitude(int longitude) {
-		this.longitude = longitude;
+	
+	public void setLongitude(double longitude) {
+		this.longitude = latLongToInt(longitude);
 	}
 
 	public int getFirstEdgeSegment(){

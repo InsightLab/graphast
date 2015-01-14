@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.graphast.geometry.Point;
-import org.graphast.util.GeoUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -107,15 +106,15 @@ public class GraphastTest {
 		assertEquals(0, (long) v.getId());
 		assertEquals(3, (long) BigArrays.index(v.getExternalIdSegment(), v.getExternalIdOffset()));
 		assertEquals(0, (long) BigArrays.index(v.getFirstEdgeSegment(), v.getFirstEdgeOffset()));
-		assertEquals(10*GeoUtils.LAT_LONG_CONVERTION_FACTOR, v.getLatitude());
-		assertEquals(10*GeoUtils.LAT_LONG_CONVERTION_FACTOR, v.getLongitude());
+		assertEquals(10d, v.getLatitude(), 0);
+		assertEquals(10d, v.getLongitude(), 0);
 		
 		v = fg.getNode(1);
 		assertEquals(1, (long) v.getId());
 		assertEquals(4, (long) BigArrays.index(v.getExternalIdSegment(), v.getExternalIdOffset()));
 		assertEquals(0, (long) BigArrays.index(v.getFirstEdgeSegment(), v.getFirstEdgeOffset()));
-		assertEquals(10*GeoUtils.LAT_LONG_CONVERTION_FACTOR, v.getLatitude());
-		assertEquals(20*GeoUtils.LAT_LONG_CONVERTION_FACTOR, v.getLongitude());
+		assertEquals(10d, v.getLatitude(), 0);
+		assertEquals(20d, v.getLongitude(), 0);
 	}
 	
 	@Test
@@ -227,6 +226,9 @@ public class GraphastTest {
 		assertEquals(fg.getEdges(), fg1.getEdges());
 		assertEquals(fg.getLabels(), fg1.getLabels());
 		assertEquals(fg.getCosts(), fg1.getCosts());
+
+		GraphastNode node = fg.getNode(vId0);
+		assertEquals(vId0, (long)fg1.getNode(node.getLatitude(), node.getLongitude()));
 	}
 	
 	@Test
