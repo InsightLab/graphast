@@ -96,10 +96,10 @@ public class GraphastImpl implements Graphast {
 		edgesLabels = FileUtils.loadStringList(directory + "/edgesLabels", blockSize);
 		costs = FileUtils.loadShortList(directory + "/costs", blockSize);
 		points = FileUtils.loadIntList(directory + "/points", blockSize);
-		loadNodeIndex();
+		createNodeIndex();
 	}
 
-	private void loadNodeIndex() {
+	private void createNodeIndex() {
 		int numberOfNodes = getNumberOfNodes();
 		GraphastNode node;
 		for (int i=0; i < numberOfNodes; i++) {
