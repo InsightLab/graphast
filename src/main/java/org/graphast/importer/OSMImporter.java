@@ -2,6 +2,8 @@ package org.graphast.importer;
 
 import static org.graphast.util.GeoUtils.latLongToDouble;
 import static org.graphast.util.GeoUtils.latLongToInt;
+import it.unimi.dsi.fastutil.BigArrays;
+import it.unimi.dsi.fastutil.ints.Int2LongOpenHashMap;
 
 import java.io.IOException;
 import java.util.Date;
@@ -11,6 +13,8 @@ import org.graphast.model.Graphast;
 import org.graphast.model.GraphastEdge;
 import org.graphast.model.GraphastImpl;
 import org.graphast.model.GraphastNode;
+import org.graphast.query.route.shortestpath.AbstractShortestPathService;
+import org.graphast.query.route.shortestpath.DijkstraShortestPathConstantWeight;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,12 +34,15 @@ public class OSMImporter {
 		GraphHopper gh = OSMToGraphHopperReader.createGraph(osmFile, graphHopperDir, false, false);
 		GraphStorage gs = gh.getGraph();
 		EdgeIterator edgeIterator = gs.getAllEdges();
-
+		
+		//TODO Check if the edge is bidirectional or not
 		while(edgeIterator.next()) {
 			
 			int fromNodeId = edgeIterator.getBaseNode();
 			int toNodeId = edgeIterator.getAdjNode();
+			int externalEdgeId = edgeIterator.getEdge();
 			double distance = edgeIterator.getDistance();
+			
 
 			double latitudeFrom = latLongToDouble(latLongToInt(gs.getNodeAccess().getLatitude(fromNodeId)));
 			double longitudeFrom = latLongToDouble(latLongToInt(gs.getNodeAccess().getLongitude(fromNodeId)));	
@@ -43,26 +50,47 @@ public class OSMImporter {
 			double latitudeTo = latLongToDouble(latLongToInt(gs.getNodeAccess().getLatitude(toNodeId)));
 			double longitudeTo = latLongToDouble(latLongToInt(gs.getNodeAccess().getLongitude(toNodeId)));			
 
-			GraphastNode fromNode = new GraphastNode(latitudeFrom, longitudeFrom);
-			GraphastNode toNode = new GraphastNode(latitudeTo, longitudeTo);
+			GraphastNode fromNode, toNode;
 			
-
 			
-			graph.addNode(fromNode);
-			graph.addNode(toNode);
-
-			if(longitudeTo == 7.414896 || longitudeFrom == 7.421220) {
-				System.out.println("fromNode: " + fromNode);
-				System.out.println("LatitudeFrom: " + latitudeFrom);
-				System.out.println("LongitudeFrom: " + longitudeFrom);
-				System.out.println("");
-				System.out.println("toNode: " + toNode);
-				System.out.println("LatitudeTo: " + latitudeTo);
-				System.out.println("LongitudeTo: " + longitudeTo);
+			Int2LongOpenHashMap hashExternalIdToId = new Int2LongOpenHashMap();
+			
+			if(!hashExternalIdToId.containsKey(fromNodeId)){
+				
+				fromNode = new GraphastNode(fromNodeId, latitudeFrom, longitudeFrom);
+				graph.addNode(fromNode);
+				hashExternalIdToId.put(fromNodeId, (long)fromNode.getId());
+			
+			} else {
+				
+				hashExternalIdToId.get(fromNodeId);
+				
+				long existingIdFrom = graph.getNodeId(latLongToInt(gs.getNodeAccess().getLatitude(fromNodeId)), latLongToInt(gs.getNodeAccess().getLongitude(fromNodeId)));
+				//TODO Must be changed.
+				fromNode = graph.getNode(hashExternalIdToId.get(fromNodeId));
+			
 			}
 			
-			GraphastEdge edge = new GraphastEdge(fromNode.getId(), toNode.getId(), (int)distance);
+			if(graph.getNode(gs.getNodeAccess().getLatitude(toNodeId), gs.getNodeAccess().getLongitude(toNodeId))==null){
+				
+				toNode = new GraphastNode(toNodeId, latitudeTo, longitudeTo);
+				graph.addNode(toNode);
+			
+			} else {
+				
+				long existingIdTo = graph.getNodeId(latLongToInt(gs.getNodeAccess().getLatitude(toNodeId)), latLongToInt(gs.getNodeAccess().getLongitude(toNodeId)));
+				toNode = graph.getNode(existingIdTo);
+				
+			}
+			
+			GraphastEdge edge = new GraphastEdge(externalEdgeId, fromNode.getId(), toNode.getId(), (int)distance);
 			graph.addEdge(edge);
+			
+			long conditional = edge.getId();
+			System.out.println("edgeId: " + edge.getId());
+			System.out.println("edgeFrom: " + edge.getFromNode());
+			System.out.println("edgeTo: " + edge.getToNode());
+			System.out.println("\n");
 			
 		}
 		logger.info("Number of Nodes: {}", graph.getNumberOfNodes());

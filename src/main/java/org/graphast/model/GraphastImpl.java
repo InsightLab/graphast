@@ -107,7 +107,7 @@ public class GraphastImpl implements Graphast {
 			nodeIndex.put(BigArrays.index(node.getLatitudeConvertedToInt(), node.getLongitudeConvertedToInt()), (long) i);
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.graphast.model.Graphast#addNode(org.graphast.model.GraphastNode)
 	 */
@@ -118,6 +118,7 @@ public class GraphastImpl implements Graphast {
 
 		long labelIndex = storeNodeLabel(node.getLabel());
 		node.setLabelIndex(labelIndex);
+
 
 		synchronized (nodes) {
 
@@ -140,6 +141,7 @@ public class GraphastImpl implements Graphast {
 		nodeIndex.put(BigArrays.index(node.getLatitudeConvertedToInt(), node.getLongitudeConvertedToInt()), (long) id);
 
 		node.setId(id);
+
 
 	}
 
@@ -565,7 +567,7 @@ public class GraphastImpl implements Graphast {
 		edge.setId(id);
 		edge.validate();
 		return edge;
-		
+
 	}
 
 	/* (non-Javadoc)
@@ -573,7 +575,7 @@ public class GraphastImpl implements Graphast {
 	 */
 	@Override
 	public short[] getEdgeCosts(long id) {
-		
+
 		GraphastEdge edge = getEdge(id);
 		long costsIndex = edge.getCostsIndex();
 		short size = costs.getShort(costsIndex++);
@@ -591,7 +593,7 @@ public class GraphastImpl implements Graphast {
 	 */
 	@Override
 	public short getEdgeCost(GraphastEdge edge, int time) {
-		
+
 		long costsIndex = edge.getCostsIndex();
 		if (costsIndex < 0) {
 			throw new GraphastException("Edge without costs: " + edge);
@@ -599,9 +601,9 @@ public class GraphastImpl implements Graphast {
 		short size = costs.getShort(costsIndex++);
 		int intervalSize = secondsDay / size;
 		long index = (long) (costsIndex + (time / intervalSize));
-		
+
 		return costs.getShort(index);
-	
+
 	}
 
 	/* (non-Javadoc)
@@ -729,7 +731,7 @@ public class GraphastImpl implements Graphast {
 	 */
 	@Override
 	public int getNumberOfNodes(){
-		
+
 		return (int) getNodes().size64()/GraphastNode.NODE_BLOCKSIZE;
 
 	}
@@ -739,7 +741,7 @@ public class GraphastImpl implements Graphast {
 	 */
 	@Override
 	public int getNumberOfEdges(){
-		
+
 		return (int) getEdges().size64()/GraphastEdge.EDGE_BLOCKSIZE;
 
 	}
@@ -748,7 +750,7 @@ public class GraphastImpl implements Graphast {
 		Long2IntMap neig = new Long2IntOpenHashMap();
 		for (Long e : this.getOutEdges( v.getId())) {
 			GraphastEdge edge = this.getEdge(e);
-			long vNeig =  edge.getFromNode();
+			long vNeig =  edge.getToNode();
 			int cost =  edge.getDistance();
 			if(!neig.containsKey(vNeig)){
 				neig.put(vNeig, cost);
@@ -758,10 +760,43 @@ public class GraphastImpl implements Graphast {
 				}
 			}
 		}
-		
+
 		return neig;
-	
+
+	}	
+
+	public boolean hasNode(long id) {
+		try {
+			long position = id * GraphastNode.NODE_BLOCKSIZE;
+			if(nodes.contains(position)) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		catch(NullPointerException e) {
+			return false;
+		}
 	}
-	
-	
+
+	public boolean hasNode(GraphastNode node) {
+		try {
+			if(nodeIndex.containsKey(BigArrays.index(node.getLatitudeConvertedToInt(), node.getLongitudeConvertedToInt()))) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		catch(NullPointerException e) {
+			return false;
+		}
+	}
+
+	@Override
+	public boolean hasNode(int lat, int lon) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

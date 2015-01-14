@@ -207,5 +207,9 @@ public interface Graphast {
 	public int getNumberOfEdges();
 	
 	public Long2IntMap accessNeighborhood(GraphastNode v);
+	
+	public boolean hasNode(long id);
+	
+	public boolean hasNode(int lat, int lon);
 
 }

@@ -99,19 +99,19 @@ public class GraphastEdge {
 		
 		}
 
-		if(fromNode == toNode) {
-			
-			//logger.error("Invalid edge: {}", toString());
-			throw new GraphastException("Invalid edge: fromNode == toNode");
-		
-		}
-
-		if(getId() != null && (getFromNodeNextEdge() == getId() || getToNodeNextEdge() == getId())) {
-			
-			//logger.error("Invalid edge: {}", toString());
-			throw new GraphastException("Invalid edge: edgeId == nodeNextEdge");
-		
-		}
+//		if(fromNode == toNode) {
+//			
+//			//logger.error("Invalid edge: {}", toString());
+//			throw new GraphastException("Invalid edge: fromNode == toNode");
+//		
+//		}
+//
+//		if(getId() != null && (getFromNodeNextEdge() == getId() || getToNodeNextEdge() == getId())) {
+//			
+//			//logger.error("Invalid edge: {}", toString());
+//			throw new GraphastException("Invalid edge: edgeId == nodeNextEdge");
+//		
+//		}
 	
 	}
 

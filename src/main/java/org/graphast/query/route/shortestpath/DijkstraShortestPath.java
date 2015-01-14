@@ -45,7 +45,7 @@ public abstract class DijkstraShortestPath extends AbstractShortestPathService {
 		HashMap<Integer, Integer> wasTraversed = new HashMap<Integer, Integer>();
 		HashMap<Integer, RouteEntry> parents = new HashMap<Integer, RouteEntry>();
 		Entry removed = null;
-		int tid = convertToInt(target.getId());
+		int targetId = convertToInt(target.getId());
 		int t = DateUtils.dateToMilli(time);
 		
 		init(source, target, queue, parents, t);
@@ -54,7 +54,7 @@ public abstract class DijkstraShortestPath extends AbstractShortestPathService {
 			removed = queue.poll();
 			wasTraversed.put(removed.getId(), wasRemoved);	
 			
-			if(removed.getId() == tid){
+			if(removed.getId() == targetId){
 //				logger.info("path:" + reconstructPath((Integer) graphAdapter.getVertex(removed.getId()).getProperty(Property.ORGINALID)
 //						, parents));
 				return removed.getTt();
@@ -68,13 +68,10 @@ public abstract class DijkstraShortestPath extends AbstractShortestPathService {
 	}
 	
 	public void init(GraphastNode source, GraphastNode target, PriorityQueue<Entry> queue, 
-			HashMap<Integer, RouteEntry> parents, int t){
-		int sid = convertToInt(source.getId());
+			HashMap<Integer, RouteEntry> parents, int arrivalTime){
+		int sourceId = convertToInt(source.getId());
 		
-		queue.offer(new Entry(sid, 
-				0, 
-				t, 
-				-1));
+		queue.offer(new Entry(sourceId, 0, arrivalTime, -1));
 
 		//parents.put((Integer) graphAdapter.getVertex(sid).getProperty(Property.ORGINALID), new RouteEntry(-1, 0));
 	}
