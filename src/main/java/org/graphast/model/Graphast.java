@@ -182,10 +182,6 @@ public interface Graphast {
 
 	public IntBigArrayBigList getEdges();
 
-	public ObjectBigList<String> getLabels();
-
-	public void setLabels(ObjectBigList<String> labels);
-
 	public void logNodes();
 
 	public void logEdges();

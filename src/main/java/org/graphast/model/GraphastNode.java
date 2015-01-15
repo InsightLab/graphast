@@ -121,11 +121,11 @@ public class GraphastNode {
 		this.category = category;
 	}
 
-	public int getExternalIdSegment(){
+	int getExternalIdSegment(){
 		return BigArrays.segment(externalId);
 	}
 
-	public int getExternalIdOffset(){
+	int getExternalIdOffset(){
 		return BigArrays.displacement(externalId);
 	}
 
@@ -158,15 +158,15 @@ public class GraphastNode {
 		this.longitude = latLongToInt(longitude);
 	}
 
-	public int getFirstEdgeSegment(){
+	int getFirstEdgeSegment(){
 		return BigArrays.segment(firstEdge);
 	}
 
-	public int getFirstEdgeOffset(){
+	int getFirstEdgeOffset(){
 		return BigArrays.displacement(firstEdge);
 	}
 
-	public void setFirstEdge(long firstEdge) {
+	void setFirstEdge(long firstEdge) {
 		this.firstEdge = firstEdge;
 	}
 
@@ -178,27 +178,31 @@ public class GraphastNode {
 		this.id = id;
 	}
 
-	public int getLabelIndexSegment(){
+	long getLabelIndex(){
+		return labelIndex;
+	}
+
+	int getLabelIndexSegment(){
 		return BigArrays.segment(labelIndex);
 	}
 
-	public int getLabelIndexOffset(){
+	int getLabelIndexOffset(){
 		return BigArrays.displacement(labelIndex);
 	}
 
-	public void setLabelIndex(long labelIndex) {
+	void setLabelIndex(long labelIndex) {
 		this.labelIndex = labelIndex;
 	}
 
-	public int getCostsIndexSegment(){
+	int getCostsIndexSegment(){
 		return BigArrays.segment(costsIndex);
 	}
 
-	public int getCostsIndexOffset(){
+	int getCostsIndexOffset(){
 		return BigArrays.displacement(costsIndex);
 	}
 
-	public void setCostsIndex(long costIndex) {
+	void setCostsIndex(long costIndex) {
 		this.costsIndex = costIndex;
 	}
 
@@ -213,7 +217,7 @@ public class GraphastNode {
 	@Override
 	public String toString() {
 		return "FastGraphNode [id=" + id + ", externalId=" + externalId + ", latitude=" + latitude
-				+ ", longitude=" + longitude + ", firstEdge=" + firstEdge + "]";
+				+ ", longitude=" + longitude + ", firstEdge=" + firstEdge + ", label="+ label + "]";
 	}
 
 }
