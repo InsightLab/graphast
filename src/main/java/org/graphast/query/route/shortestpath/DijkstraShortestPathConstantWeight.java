@@ -30,9 +30,11 @@ public class DijkstraShortestPathConstantWeight extends DijkstraShortestPath {
 			if(!wasTraversed.containsKey(vid)){					
 				queue.offer(newEntry);
 				wasTraversed.put(newEntry.getId(), newEntry.getTt());
-//				parents.put((int) graphAdapter.getVertex(vid).getProperty(Property.ORGINALID), 
-//						new RouteEntry((int) graphAdapter.getVertex(removed.getId()).getProperty(Property.ORGINALID), 
-//						neig.get(v)));
+				
+				
+				parents.put(vid, new RouteEntry(removed.getId(), neig.get(v)));
+				
+				
 			}else{
 				int cost = wasTraversed.get(vid);
 				if(cost != wasRemoved){
@@ -41,9 +43,9 @@ public class DijkstraShortestPathConstantWeight extends DijkstraShortestPath {
 						queue.offer(newEntry);
 						wasTraversed.remove(newEntry.getId());
 						wasTraversed.put(newEntry.getId(), newEntry.getTt());
-//						parents.put((int) graphAdapter.getVertex(vid).getProperty(Property.ORGINALID), 
-//								new RouteEntry((int) graphAdapter.getVertex(removed.getId()).getProperty(Property.ORGINALID), 
-//								neig.get(v)));
+
+						parents.put(vid, new RouteEntry(vid, neig.get(v)));
+					
 					}
 				}
 			}

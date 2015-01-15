@@ -55,12 +55,13 @@ public abstract class DijkstraShortestPath extends AbstractShortestPathService {
 			wasTraversed.put(removed.getId(), wasRemoved);	
 			
 			if(removed.getId() == targetId){
-//				logger.info("path:" + reconstructPath((Integer) graphAdapter.getVertex(removed.getId()).getProperty(Property.ORGINALID)
-//						, parents));
+				//logger.info("path:" + reconstructPath(removed.getId(), parents));
 				return removed.getTt();
 			}
 			
 			expandVertex(target, removed, wasTraversed, queue, parents);
+			
+
 			
 		}
 		

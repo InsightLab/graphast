@@ -13,7 +13,13 @@ public class OSMToGraphHopperReader {
 			hopper = new GraphHopper().forServer();
 		}
 		
-		hopper.setOSMFile(osmFile);
+		if(osmFile!=null) {
+			
+			hopper.setOSMFile(osmFile);
+		
+		}
+		
+		
 		hopper.setGraphHopperLocation(graphDir);
 		hopper.setEncodingManager(new EncodingManager("car"));
 		if(enableCHShortcuts){

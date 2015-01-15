@@ -206,4 +206,11 @@ public class FileUtils {
 		}
 	}
 	
+	public static void deleteDir(String dir) {
+		File pathName = new File(dir);
+		if(!pathName.isDirectory()) {
+			pathName.delete();
+		}
+	}
+	
 }

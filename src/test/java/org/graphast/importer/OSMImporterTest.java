@@ -28,7 +28,7 @@ public class OSMImporterTest {
 		Graphast graph = new OSMImporter().execute(osmFile, graphHopperDir, graphastDir);
 
 		assertEquals(751, graph.getNumberOfNodes());
-		assertEquals(957, graph.getNumberOfEdges());
+		assertEquals(1306, graph.getNumberOfEdges());
 
 	}
 
