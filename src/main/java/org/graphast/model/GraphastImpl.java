@@ -205,6 +205,7 @@ public class GraphastImpl implements Graphast {
 				);
 
 		node.setId(id);
+		node.setLabel(getNodesLabels().get(node.getLabelIndex()));
 		node.validate();
 
 		return node;
@@ -688,20 +689,20 @@ public class GraphastImpl implements Graphast {
 	public IntBigArrayBigList getEdges() {
 		return edges;
 	}
+	
+	ObjectBigList<String> getNodesLabels() {
+		return nodesLabels;
+	}
 
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Graphast#getLabels()
-	 */
-	@Override
-	public ObjectBigList<String> getLabels() {
+	void setNodesLabels(ObjectBigList<String> labels) {
+		this.nodesLabels = labels;
+	}
+
+	ObjectBigList<String> getEdgesLabels() {
 		return edgesLabels;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Graphast#setLabels(it.unimi.dsi.fastutil.objects.ObjectBigList)
-	 */
-	@Override
-	public void setLabels(ObjectBigList<String> labels) {
+	void setEdgesLabels(ObjectBigList<String> labels) {
 		this.edgesLabels = labels;
 	}
 
