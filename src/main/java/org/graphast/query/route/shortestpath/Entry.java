@@ -53,5 +53,11 @@ public class Entry implements Comparable<Object>{
 	public void setParent(int parent) {
 		this.parent = parent;
 	}
+
+	@Override
+	public String toString() {
+		return "Entry [id=" + id + ", travelTime=" + travelTime
+				+ ", arrivalTime=" + arrivalTime + ", parent=" + parent + "]";
+	}
 	
 }

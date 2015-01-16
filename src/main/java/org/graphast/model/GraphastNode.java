@@ -121,6 +121,10 @@ public class GraphastNode {
 		this.category = category;
 	}
 
+	public long getExternalId() {
+		return externalId;
+	}
+	
 	int getExternalIdSegment(){
 		return BigArrays.segment(externalId);
 	}

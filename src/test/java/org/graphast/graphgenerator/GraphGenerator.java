@@ -1,7 +1,5 @@
 package org.graphast.graphgenerator;
 
-import java.io.IOException;
-
 import org.graphast.model.Graphast;
 import org.graphast.model.GraphastEdge;
 import org.graphast.model.GraphastImpl;
