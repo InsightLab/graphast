@@ -108,7 +108,6 @@ import org.graphast.model.Graphast;
 import org.graphast.model.GraphastImpl;
 import org.graphast.util.FileUtils;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

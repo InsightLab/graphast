@@ -170,11 +170,13 @@ public class GraphastImpl implements Graphast {
 	}
 
 	//TODO Why we only update the latitude, longitude and FirstEdge? 
-	//Wouldn't be better if we had a method that updates everything?
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Graphast#updateNodeInfo(org.graphast.model.GraphastNode)
-	 */
-	@Override
+		//Wouldn't be better if we had a method that updates everything?
+		/**
+		 * This method will update the IntBigArrayBigList of nodes
+		 * with need information of a passed GraphastNode.
+		 * 
+		 * @param node GraphastNode with the informations that must be updated.
+		 */
 	public void updateNodeInfo(GraphastNode node) {
 		long position = node.getId() * GraphastNode.NODE_BLOCKSIZE;
 		position = position + 3;

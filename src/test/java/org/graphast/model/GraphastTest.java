@@ -19,7 +19,7 @@ public class GraphastTest {
 	private String dir = "/tmp/fastgraph";
 	
 	private long vId0, vId3, vId5;
-	private long eId0, eId1, eId2, eId3, eId4, eId5, eId6;
+	private long eId0, eId1;
 	private String labelNode0 = "label node 0";
 	
 	@Before
@@ -73,7 +73,6 @@ public class GraphastTest {
 		points.add(new Point(10,30));
 		e = new GraphastEdge(0l, 2l, 20, costs, points, "rua3");
 		graph.addEdge(e);
-		eId2 = e.getId();
 		
 		costs = new short[]{2};
 		points = new ArrayList<Point>();
@@ -81,7 +80,6 @@ public class GraphastTest {
 		points.add(new Point(10,10));
 		e = new GraphastEdge(2l, 0l, 20, costs, points, "rua4");
 		graph.addEdge(e);
-		eId3 = e.getId();
 		
 		costs = new short[]{3};
 		points = new ArrayList<Point>();
@@ -89,15 +87,12 @@ public class GraphastTest {
 		points.add(new Point(10,40));
 		e = new GraphastEdge(0l, 3l, 20, costs, points, "");
 		graph.addEdge(e);
-		eId4 = e.getId();
 		
 		e = new GraphastEdge(2l, 4l, 20);
 		graph.addEdge(e);
-		eId5 = e.getId();
 		
 		e = new GraphastEdge(3l, 0l, 50);
 		graph.addEdge(e);
-		eId6 = e.getId();
 	}
 	
 	@Test
