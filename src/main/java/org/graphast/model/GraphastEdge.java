@@ -25,6 +25,9 @@ public class GraphastEdge {
 
 	private long toNodeNextEdge;
 
+	/**
+	 * Distance in millimeters.
+	 */
 	private int distance;
 
 	private long costsIndex;
@@ -59,15 +62,11 @@ public class GraphastEdge {
 		this(externalId, fromNode, toNode, -1, -1, distance, -1, -1, -1, null);
 	}
 
-	public GraphastEdge(long fromNode, long toNode,
-			long fromNodeNextEdge, long toNodeNextEdge, int distance,
-			long costsIndex, long geometryIndex, long labelIndex,
-			String label) {
-		this(0, fromNode, toNode, fromNodeNextEdge, toNodeNextEdge, distance, costsIndex, geometryIndex, labelIndex, label);
-
+	public GraphastEdge(long externalId, long fromNode, long toNode, int distance, String label) {
+		this(externalId, fromNode, toNode, -1, -1, distance, -1, -1, -1, label);
 	}
 
-	public GraphastEdge(long externalId, long fromNode, long toNode,
+	GraphastEdge(long externalId, long fromNode, long toNode,
 			long fromNodeNextEdge, long toNodeNextEdge, int distance,
 			long costsIndex, long geometryIndex,long labelIndex, String label) {
 
@@ -88,15 +87,11 @@ public class GraphastEdge {
 	public void validate(){
 		
 		if(distance < 0){
-			
-			throw new GraphastException("Invalid edge");
-		
+			throw new GraphastException("Invalid edge: distance(mm)=" + distance);
 		}
 		
 		if(fromNode == 0 && toNode == 0 && fromNodeNextEdge == 0 && toNodeNextEdge == 0) {
-			
 			throw new GraphastException("Invalid edge");
-		
 		}
 
 //		if(fromNode == toNode) {
@@ -131,11 +126,11 @@ public class GraphastEdge {
 		this.id = id;
 	}
 
-	public int getExternalIdSegment() {
+	int getExternalIdSegment() {
 		return BigArrays.segment(externalId);
 	}
 
-	public int getExternalIdOffset() {
+	int getExternalIdOffset() {
 		return BigArrays.displacement(externalId);
 	}
 
@@ -171,11 +166,11 @@ public class GraphastEdge {
 		this.toNodeNextEdge = toNodeNextEdge;
 	}
 
-	public int getFromNodeSegment() {
+	int getFromNodeSegment() {
 		return BigArrays.segment(fromNode);
 	}
 
-	public int getFromNodeOffset() {
+	int getFromNodeOffset() {
 		return BigArrays.displacement(fromNode);
 	}
 
@@ -183,7 +178,7 @@ public class GraphastEdge {
 		return BigArrays.segment(toNode);
 	}
 
-	public int getToNodeOffset() {
+	int getToNodeOffset() {
 		return BigArrays.displacement(toNode);
 	}
 
@@ -192,7 +187,7 @@ public class GraphastEdge {
 		return BigArrays.segment(costsIndex);
 	}
 
-	public int getCostsOffset() {
+	int getCostsOffset() {
 		return BigArrays.displacement(costsIndex);
 	}
 
@@ -200,7 +195,7 @@ public class GraphastEdge {
 		return BigArrays.segment(geometryIndex);
 	}
 
-	public int getGeometryOffset() {
+	int getGeometryOffset() {
 		return BigArrays.displacement(geometryIndex);
 	}
 
@@ -236,16 +231,20 @@ public class GraphastEdge {
 		this.geometry = geometry;
 	}
 
-	public int getLabelIndexSegment(){
+	long getLabelIndex(){
+		return labelIndex;
+	}
+
+	void setLabelIndex(long labelIndex) {
+		this.labelIndex = labelIndex;
+	}
+
+	int getLabelIndexSegment(){
 		return BigArrays.segment(labelIndex);
 	}
 
-	public int getLabelIndexOffset(){
+	int getLabelIndexOffset(){
 		return BigArrays.displacement(labelIndex);
-	}
-
-	public void setLabelIndex(long labelIndex) {
-		this.labelIndex = labelIndex;
 	}
 
 	public String getLabel() {
@@ -256,19 +255,19 @@ public class GraphastEdge {
 		this.label = label;
 	}
 
-	public int getFromNodeNextEdgeSegment(){
+	int getFromNodeNextEdgeSegment(){
 		return BigArrays.segment(fromNodeNextEdge);
 	}
 
-	public int getFromNodeNextEdgeOffset(){
+	int getFromNodeNextEdgeOffset(){
 		return BigArrays.displacement(fromNodeNextEdge);
 	}
 
-	public int getToNodeNextEdgeSegment(){
+	int getToNodeNextEdgeSegment(){
 		return BigArrays.segment(toNodeNextEdge);
 	}
 
-	public int getToNodeNextEdgeOffset(){
+	int getToNodeNextEdgeOffset(){
 		return BigArrays.displacement(toNodeNextEdge);
 	}
 

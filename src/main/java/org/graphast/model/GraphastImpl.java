@@ -58,7 +58,6 @@ public class GraphastImpl implements Graphast {
 	 * @param directory
 	 */
 	public GraphastImpl(String directory) {
-
 		this.directory = directory;
 
 		nodes = new IntBigArrayBigList();
@@ -69,7 +68,6 @@ public class GraphastImpl implements Graphast {
 		points = new IntBigArrayBigList();
 
 		nodeIndex.defaultReturnValue(-1);
-
 	}
 
 	/* (non-Javadoc)
@@ -121,7 +119,6 @@ public class GraphastImpl implements Graphast {
 
 
 		synchronized (nodes) {
-
 			id = nodes.size64() / GraphastNode.NODE_BLOCKSIZE;
 
 			nodes.add(node.getExternalIdSegment());
@@ -135,14 +132,9 @@ public class GraphastImpl implements Graphast {
 			nodes.add(node.getLabelIndexOffset());
 			nodes.add(node.getCostsIndexSegment());
 			nodes.add(node.getCostsIndexOffset());
-
 		}
-
 		nodeIndex.put(BigArrays.index(node.getLatitudeConvertedToInt(), node.getLongitudeConvertedToInt()), (long) id);
-
 		node.setId(id);
-
-
 	}
 
 	/**
@@ -155,18 +147,18 @@ public class GraphastImpl implements Graphast {
 	 * @return	the labelId (position where the label was inserted).
 	 */
 	private long storeNodeLabel(String label) {
-
+		// Do not store a null label
+		if (label == null) {
+			return -1;
+		}
+		
 		long labelId;
 
 		synchronized (nodesLabels) {
-
 			labelId = nodesLabels.size64();
 			nodesLabels.add(label);
-
 		}
-
 		return labelId;
-
 	}
 
 	//TODO Why we only update the latitude, longitude and FirstEdge? 
@@ -207,11 +199,13 @@ public class GraphastImpl implements Graphast {
 				);
 
 		node.setId(id);
-		node.setLabel(getNodesLabels().get(node.getLabelIndex()));
+		long labelIndex = node.getLabelIndex();
+		if (labelIndex >= 0) {
+			node.setLabel(getNodesLabels().get(labelIndex));
+		}
 		node.validate();
 
 		return node;
-
 	}
 
 	//TODO Suggestion: delete this method and keep all these operations in  updateEdgeInfo
@@ -222,7 +216,6 @@ public class GraphastImpl implements Graphast {
 	public void setEdge(GraphastEdge edge, long pos) {
 
 		synchronized (edges) {
-
 			edges.set(pos++, edge.getExternalIdSegment());
 			edges.set(pos++, edge.getExternalIdOffset());
 			edges.set(pos++, edge.getFromNodeSegment());
@@ -240,9 +233,7 @@ public class GraphastImpl implements Graphast {
 			edges.set(pos++, edge.getGeometryOffset());
 			edges.set(pos++, edge.getLabelIndexSegment());
 			edges.set(pos++, edge.getLabelIndexOffset());
-
 		}
-
 	}
 
 	/* (non-Javadoc)
@@ -262,7 +253,6 @@ public class GraphastImpl implements Graphast {
 		long id;
 
 		synchronized (edges) {
-
 			id = edges.size64() / GraphastEdge.EDGE_BLOCKSIZE;
 
 			edges.add(edge.getExternalIdSegment());
@@ -282,13 +272,9 @@ public class GraphastImpl implements Graphast {
 			edges.add(edge.getGeometryOffset());
 			edges.add(edge.getLabelIndexSegment());
 			edges.add(edge.getLabelIndexOffset());	
-
 		}
-
 		edge.setId(id);
-
 		updateNeighborhood(edge);
-
 	}
 
 	/**
@@ -301,18 +287,17 @@ public class GraphastImpl implements Graphast {
 	 * @return	the labelId (position where the label was inserted).
 	 */
 	private long storeEdgeLabel(String label) {
-
+		// Do not store a null label
+		if (label == null) {
+			return -1l;
+		}
 		long labelId;
 
 		synchronized (edgesLabels) {
-
 			labelId = edgesLabels.size64();
 			edgesLabels.add(label);
-
 		}
-
 		return labelId;
-
 	}
 
 	/* (non-Javadoc)
@@ -320,30 +305,21 @@ public class GraphastImpl implements Graphast {
 	 */
 	@Override
 	public long storeCosts(short[] c) {
-
 		if (c == null || c.length == 0) {
-
 			return -1l;
-
 		}
-
+		
 		long costId;
 
 		synchronized (costs) {
-
 			costId = costs.size64();
 			costs.add((short) c.length);
 
 			for (int i = 0; i < c.length; i++) {
-
 				costs.add(c[i]);
-
 			}
-
 		}
-
 		return costId;
-
 	}
 
 	/* (non-Javadoc)
@@ -351,31 +327,22 @@ public class GraphastImpl implements Graphast {
 	 */
 	@Override
 	public long storePoints(List<Point> listPoints) {
-
 		if (listPoints == null || listPoints.size() == 0) {
-
 			return -1l;
-
 		}
-
+		
 		long listId;
 
 		synchronized (points) {
-
 			listId = points.size64();
 			points.add((short) listPoints.size());
 
 			for (Point p : listPoints) {
-
 				points.add(latLongToInt(p.getLatitude()));
 				points.add(latLongToInt(p.getLongitude()));
-
 			}
-
 		}
-
 		return listId;
-
 	}
 
 	/* (non-Javadoc)
@@ -567,7 +534,12 @@ public class GraphastImpl implements Graphast {
 		GraphastEdge edge = new GraphastEdge(externalId, fromId, toId,
 				fromNodeNextEdge, toNodeNextEdge, distance, costsIndex,
 				geometryIndex, labelIndex, null);
+		
 		edge.setId(id);
+		if (labelIndex >= 0) {
+			edge.setLabel(getEdgesLabels().get(labelIndex));
+		}
+
 		edge.validate();
 		return edge;
 
@@ -673,7 +645,7 @@ public class GraphastImpl implements Graphast {
 	 */
 	@Override
 	public String getEdgeLabel(long id) {
-		return edgesLabels.get(id);
+		return edgesLabels.size64() > 0 ? edgesLabels.get(id) : null;
 	}
 
 	/* (non-Javadoc)
@@ -734,9 +706,7 @@ public class GraphastImpl implements Graphast {
 	 */
 	@Override
 	public int getNumberOfNodes(){
-
 		return (int) getNodes().size64()/GraphastNode.NODE_BLOCKSIZE;
-
 	}
 
 	/* (non-Javadoc)
@@ -744,9 +714,7 @@ public class GraphastImpl implements Graphast {
 	 */
 	@Override
 	public int getNumberOfEdges(){
-
 		return (int) getEdges().size64()/GraphastEdge.EDGE_BLOCKSIZE;
-
 	}
 
 	public Long2IntMap accessNeighborhood(GraphastNode v){
@@ -763,9 +731,7 @@ public class GraphastImpl implements Graphast {
 				}
 			}
 		}
-
 		return neig;
-
 	}	
 
 	public boolean hasNode(long id) {

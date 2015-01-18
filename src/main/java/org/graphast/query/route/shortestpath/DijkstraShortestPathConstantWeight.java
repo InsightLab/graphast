@@ -1,6 +1,5 @@
 package org.graphast.query.route.shortestpath;
 
-import static org.graphast.util.NumberUtils.convertToInt;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 
 import java.util.Date;
@@ -16,36 +15,33 @@ public class DijkstraShortestPathConstantWeight extends DijkstraShortestPath {
 		super(graph);
 	}
 	
-	public void expandVertex(GraphastNode target, Entry removed, HashMap<Integer, Integer> wasTraversed, 
-			PriorityQueue<Entry> queue, HashMap<Integer, RouteEntry> parents){
+	public void expandVertex(GraphastNode target, Entry removed, HashMap<Long, Integer> wasTraversed, 
+			PriorityQueue<Entry> queue, HashMap<Long, RouteEntry> parents){
 		
 		Long2IntMap neig = graph.accessNeighborhood(graph.getNode(removed.getId()));
 		
-		for (long v : neig.keySet()) {
-			int vid = convertToInt(v);
+		for (long vid : neig.keySet()) {
+			//long vid = convertToInt(v);
 			//int arrivalTime = graph.getArrival(removed.getAt(), neig.get(v));
-			int travelTime = removed.getTt() + neig.get(v);
+			int travelTime = removed.getTravelTime() + neig.get(vid);
 			Entry newEntry = new Entry(	vid, travelTime, 0, removed.getId());
 			
-			if(!wasTraversed.containsKey(vid)){					
+			if (!wasTraversed.containsKey(vid)){					
 				queue.offer(newEntry);
-				wasTraversed.put(newEntry.getId(), newEntry.getTt());
-				
-				
-				parents.put(vid, new RouteEntry(removed.getId(), neig.get(v)));
-				
-				
-			}else{
+				wasTraversed.put(newEntry.getId(), newEntry.getTravelTime());
+				String label = graph.getEdgeLabel(removed.getId());
+				parents.put(vid, new RouteEntry(removed.getId(), neig.get(vid), label));
+			} else {
 				int cost = wasTraversed.get(vid);
-				if(cost != wasRemoved){
-					if(cost>newEntry.getTt()){
+				if (cost != wasRemoved) {
+					if(cost > newEntry.getTravelTime()){
 						queue.remove(newEntry);
 						queue.offer(newEntry);
 						wasTraversed.remove(newEntry.getId());
-						wasTraversed.put(newEntry.getId(), newEntry.getTt());
+						wasTraversed.put(newEntry.getId(), newEntry.getTravelTime());
 
-						parents.put(vid, new RouteEntry(vid, neig.get(v)));
-					
+						//String label = graph.getEdgeLabel(vid);
+						//parents.put(vid, new RouteEntry(vid, neig.get(vid), label));
 					}
 				}
 			}
