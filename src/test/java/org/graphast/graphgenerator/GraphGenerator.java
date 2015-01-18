@@ -1,9 +1,15 @@
 package org.graphast.graphgenerator;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.graphast.geometry.Point;
+import org.graphast.importer.OSMImporter;
 import org.graphast.model.Graphast;
 import org.graphast.model.GraphastEdge;
 import org.graphast.model.GraphastImpl;
 import org.graphast.model.GraphastNode;
+import org.graphast.query.route.shortestpath.DijkstraShortestPathConstantWeight;
 
 import com.graphhopper.routing.util.EncodingManager;
 import com.graphhopper.storage.GraphBuilder;
@@ -14,12 +20,14 @@ import com.graphhopper.util.Helper;
 
 public class GraphGenerator {
 
-	public void generateExample() {
+	public Graphast generateExample() {
+		String graphastExampleDir = "/tmp/graphast/test/example";
+		String graphHopperExampleDir = "/tmp/graphhopper/test/example";
+		Graphast graphast = new GraphastImpl(graphHopperExampleDir);
 
-		String defaultGraphLoc = "/tmp/graphhopper/test/example";
 
 		EncodingManager encodingManager = new EncodingManager("car");
-		GraphBuilder gb = new GraphBuilder(encodingManager).setLocation(defaultGraphLoc).setStore(true);
+		GraphBuilder gb = new GraphBuilder(encodingManager).setLocation(graphHopperExampleDir).setStore(true);
 		GraphStorage graphStorage = gb.create();
 
 		NodeAccess na = graphStorage.getNodeAccess();
@@ -30,7 +38,7 @@ public class GraphGenerator {
 		na.setNode(4, 0, 5);
 		na.setNode(5, 1, 1);
 
-		EdgeIteratorState iter1 = graphStorage.edge(1, 5, 1, true);
+		EdgeIteratorState iter1 = graphStorage.edge(1, 5, 1.1, true);
 		iter1.setWayGeometry(Helper.createPointList(3.5, 4.5, 5, 6));
 		EdgeIteratorState iter2 = graphStorage.edge(5, 0, 2, false);
 		iter2.setWayGeometry(Helper.createPointList(1.5, 1, 2, 3));
@@ -51,6 +59,9 @@ public class GraphGenerator {
 
 		graphStorage.flush();
 		graphStorage.close();
+		graphast = new OSMImporter().execute(null, graphHopperExampleDir, graphastExampleDir);
+		
+		return graphast;
 
 	}
 	
@@ -109,5 +120,82 @@ public class GraphGenerator {
  		return graphast;
  		
 	}
-
+	
+	public Graphast generateMonaco() {
+		String osmFile = DijkstraShortestPathConstantWeight.class.getResource("/monaco-150112.osm.pbf").getPath();
+		String graphHopperMonacoDir = "/tmp/graphhopper/test/monaco";
+		String graphastMonacoDir = "/tmp/graphast/test/monaco";
+		Graphast graphast = new OSMImporter().execute(osmFile, graphHopperMonacoDir, graphastMonacoDir);
+		
+		return graphast;
+	}
+	
+	public Graphast generateExample3() {
+		Graphast graph = new GraphastImpl("/tmp/graphast/test/example3");
+		
+		GraphastNode v = new GraphastNode(3l, 10d, 10d, "label node 0");
+		graph.addNode(v);
+		
+		v = new GraphastNode(4l, 10d, 20d);
+		graph.addNode(v);
+		
+		v = new GraphastNode(2l, 10d, 30d);
+		graph.addNode(v);
+		
+		v = new GraphastNode(6l, 10d, 40d);
+		graph.addNode(v);
+		
+		v = new GraphastNode(7l, 11d, 32d);
+		graph.addNode(v);
+		
+		v = new GraphastNode(7, 11, 32, "Banco");
+		graph.addNode(v);
+		
+		short[] costs = {1,2,3,4};
+		List<Point> points = new ArrayList<Point>();
+		points.add(new Point(10,10));
+		points.add(new Point(10,20));
+		GraphastEdge e = new GraphastEdge(0l, 1l, 10, costs, points, "rua1");
+//		public GraphastEdge(long fromNode, long toNode, int distance,
+//				short[] costs, List<Point> geometry, String label)
+		graph.addEdge(e);
+		
+		costs = new short[]{2,4,6,8,10};
+		points = new ArrayList<Point>();
+		points.add(new Point(10,20));
+		points.add(new Point(10,15));
+		points.add(new Point(10,10));
+		e = new GraphastEdge(1l, 0l, 20, costs, points, "rua2");
+		graph.addEdge(e);
+		
+		costs = new short[]{2};
+		points = new ArrayList<Point>();
+		points.add(new Point(10,10));
+		points.add(new Point(10,30));
+		e = new GraphastEdge(0l, 2l, 30, costs, points, "rua3");
+		graph.addEdge(e);
+		
+		costs = new short[]{2};
+		points = new ArrayList<Point>();
+		points.add(new Point(10,30));
+		points.add(new Point(10,10));
+		e = new GraphastEdge(2l, 0l, 40, costs, points, "rua4");
+		graph.addEdge(e);
+		
+		costs = new short[]{3};
+		points = new ArrayList<Point>();
+		points.add(new Point(10,10));
+		points.add(new Point(10,40));
+		e = new GraphastEdge(0l, 3l, 50, costs, points, "");
+		graph.addEdge(e);
+		
+		e = new GraphastEdge(2l, 4l, 60);
+		graph.addEdge(e);
+		
+		e = new GraphastEdge(3l, 0l, 70);
+		graph.addEdge(e);
+		
+		return graph;
+	}
+	
 }

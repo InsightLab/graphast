@@ -2,18 +2,20 @@ package org.graphast.query.route.shortestpath;
 
 public class RouteEntry {
 
-	private int id;
+	private long id;
 	private int cost;
+	private String label;
 	
-	public RouteEntry(int id, int cost){
+	public RouteEntry(long id, int cost, String label){
 		this.id = id;
 		this.cost = cost;
+		this.label = label;
 	}
 	
-	public int getId() {
+	public long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	public int getCost() {
@@ -23,9 +25,17 @@ public class RouteEntry {
 		this.cost = cost;
 	}
 
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
 	@Override
 	public String toString() {
-		return "RouteEntry [id=" + id + ", cost=" + cost + "]";
+		return "RouteEntry [id=" + id + ", cost=" + cost + ", label=" + label + "]";
 	}
 	
 }

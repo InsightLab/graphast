@@ -1,13 +1,12 @@
 package org.graphast.query.route.shortestpath;
 
 public class Entry implements Comparable<Object>{
-
-    private int id;
+    private long id;
     private int travelTime;
     private int arrivalTime;
-    private int parent;
+    private long parent;
 	
-	public Entry(int id, int travelTime, int arrivalTime, int parent) {
+	public Entry(long id, int travelTime, int arrivalTime, long parent) {
     	this.id = id;
     	this.travelTime = travelTime;
     	this.arrivalTime = arrivalTime;
@@ -22,35 +21,35 @@ public class Entry implements Comparable<Object>{
 		return new Integer(travelTime).compareTo(((Entry)o).travelTime);
 	}
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
-	public int getTt() {
+	public int getTravelTime() {
 		return travelTime;
 	}
 
-	public void setTt(int tt) {
+	public void setTravelTime(int tt) {
 		this.travelTime = tt;
 	}
 
-	public int getAt() {
+	public int getArrivalTime() {
 		return arrivalTime;
 	}
 
-	public void setAt(int at) {
+	public void setArrivalTime(int at) {
 		this.arrivalTime = at;
 	}
 
-	public int getParent() {
+	public long getParent() {
 		return parent;
 	}
 
-	public void setParent(int parent) {
+	public void setParent(long parent) {
 		this.parent = parent;
 	}
 

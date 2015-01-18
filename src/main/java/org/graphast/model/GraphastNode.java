@@ -61,7 +61,7 @@ public class GraphastNode {
 	 * @param labelIndex
 	 * @param costIndex
 	 */
-	public GraphastNode(long externalId, int category, double latitude, 
+	GraphastNode(long externalId, int category, double latitude, 
 			double longitude, long firstEdge, long labelIndex, long costIndex) {
 
 		this(latitude, longitude);
