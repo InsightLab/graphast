@@ -645,6 +645,9 @@ public class GraphastImpl implements Graphast {
 	 */
 	@Override
 	public String getEdgeLabel(long id) {
+		
+		
+		
 		return edgesLabels.size64() > 0 ? edgesLabels.get(id) : null;
 	}
 

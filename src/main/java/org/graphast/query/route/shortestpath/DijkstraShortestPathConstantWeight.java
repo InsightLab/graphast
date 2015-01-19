@@ -24,12 +24,20 @@ public class DijkstraShortestPathConstantWeight extends DijkstraShortestPath {
 			//long vid = convertToInt(v);
 			//int arrivalTime = graph.getArrival(removed.getAt(), neig.get(v));
 			int travelTime = removed.getTravelTime() + neig.get(vid);
-			Entry newEntry = new Entry(	vid, travelTime, 0, removed.getId());
+			Entry newEntry = new Entry(vid, travelTime, 0, removed.getId());
+			
+			String label = null;
 			
 			if (!wasTraversed.containsKey(vid)){					
 				queue.offer(newEntry);
 				wasTraversed.put(newEntry.getId(), newEntry.getTravelTime());
-				String label = graph.getEdgeLabel(removed.getId());
+				
+				for(Long outEdges : graph.getOutEdges(removed.getId())) {
+					if ((int) graph.getEdge(outEdges).getToNode() == vid) {
+						label = graph.getEdge(outEdges).getLabel();
+					}
+				}
+				
 				parents.put(vid, new RouteEntry(removed.getId(), neig.get(vid), label));
 			} else {
 				int cost = wasTraversed.get(vid);
