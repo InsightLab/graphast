@@ -9,7 +9,9 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static org.graphast.util.DistanceUtils.euclidianDistance;
+import com.graphhopper.util.StopWatch;
+
+import static org.graphast.util.DistanceUtils.distanceLatLong;
 
 public class DijkstraShortestPathConstantWeightTest {
 	
@@ -27,27 +29,31 @@ public class DijkstraShortestPathConstantWeightTest {
 	@Test
 	public void shortestPathMonacoTest() {
 		
+		// To see the error, try this coordinates
+		//		from: 43.729825,7.414146
+		//		to: 43.730577,7.415487
+		
 		assertEquals(751, graphMonaco.getNumberOfNodes());
 		assertEquals(1306, graphMonaco.getNumberOfEdges());
 		
-		Long source = graphMonaco.getNode(43.72899201651645,7.414386400901967);
-		Long target = graphMonaco.getNode(43.7294668047756,7.413772473047058);
-		
-		
+		Long source = graphMonaco.getNode(43.7294668047756,7.413772473047058);
+		Long target = graphMonaco.getNode(43.73079058671274,7.415815422292399);
 		
 		AbstractShortestPathService dj = new DijkstraShortestPathConstantWeight(graphMonaco);
-//		dj.shortestPath(source, target);
 		
-		double diffFrom = euclidianDistance(43.72899201651645,7.414386400901967, 43.729065,7.414243);
-		double diffTo = euclidianDistance(43.7294668047756,7.413772473047058, 43.729402,7.413851);
+		//TODO Improve this distance function
+		double diffFrom = distanceLatLong(43.7294668047756,7.413772473047058, 43.7294668047756,7.413772473047058);
+		double diffTo = distanceLatLong(43.73079058671274,7.415815422292399, 43.73079058671274,7.415815422292399);
+		StopWatch sw = new StopWatch();
+        sw.start();
 		double shortestPath = dj.shortestPath(source, target);
-		// TODO Improve this calculation
-		System.out.println((shortestPath/1000.0) - diffFrom - diffTo);
+		sw.stop();
 		
-		
-		// GraphHopper result 	-> 1117.9563590469443m 	= 1117956.359046944mm
-		// Graphast result		-> 1136.643m 			= 1136643mm
-		assertEquals(3998760, dj.shortestPath(source, target));
+		System.out.println("execution time:" + sw.getTime());
+		int realDistance = (int)(((shortestPath/1000.0) - diffFrom - diffTo)*1000);
+
+		assertEquals(228910, realDistance);
+
 	}
 	
 	@Test
