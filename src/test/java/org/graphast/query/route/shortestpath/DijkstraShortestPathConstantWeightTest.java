@@ -9,6 +9,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import static org.graphast.util.DistanceUtils.euclidianDistance;
+
 public class DijkstraShortestPathConstantWeightTest {
 	
 	private static Graphast graphMonaco;
@@ -28,13 +30,24 @@ public class DijkstraShortestPathConstantWeightTest {
 		assertEquals(751, graphMonaco.getNumberOfNodes());
 		assertEquals(1306, graphMonaco.getNumberOfEdges());
 		
-		Long source = graphMonaco.getNode(43.728424, 7.414896);
-		Long target = graphMonaco.getNode(43.735437, 7.42122);
+		Long source = graphMonaco.getNode(43.72899201651645,7.414386400901967);
+		Long target = graphMonaco.getNode(43.7294668047756,7.413772473047058);
+		
+		
 		
 		AbstractShortestPathService dj = new DijkstraShortestPathConstantWeight(graphMonaco);
-		System.out.println(dj.shortestPath(source, target));
-		// 1117.9563590469443m = 1117956mm (GraphHooper result)
-		assertEquals(1117956, dj.shortestPath(source, target));
+//		dj.shortestPath(source, target);
+		
+		double diffFrom = euclidianDistance(43.72899201651645,7.414386400901967, 43.729065,7.414243);
+		double diffTo = euclidianDistance(43.7294668047756,7.413772473047058, 43.729402,7.413851);
+		double shortestPath = dj.shortestPath(source, target);
+		// TODO Improve this calculation
+		System.out.println((shortestPath/1000.0) - diffFrom - diffTo);
+		
+		
+		// GraphHopper result 	-> 1117.9563590469443m 	= 1117956.359046944mm
+		// Graphast result		-> 1136.643m 			= 1136643mm
+		assertEquals(3998760, dj.shortestPath(source, target));
 	}
 	
 	@Test

@@ -54,12 +54,15 @@ public abstract class DijkstraShortestPath extends AbstractShortestPathService {
 		
 		while(!queue.isEmpty()){
 			removed = queue.poll();
-			wasTraversed.put(removed.getId(), wasRemoved);	
+			wasTraversed.put(removed.getId(), wasRemoved);		
 			
 			if(removed.getId() == targetId) {
 				//TODO: path is not ok!!! Fix it!!!
 				List<RouteEntry> path = reconstructPath(removed.getId(), parents);
 				logger.info("path: {}", path);
+				
+				
+				
 				return removed.getTravelTime();
 			}
 			expandVertex(target, removed, wasTraversed, queue, parents);
