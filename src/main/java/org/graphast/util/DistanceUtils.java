@@ -6,31 +6,28 @@ import org.graphast.model.GraphastNode;
 
 public class DistanceUtils {
 
-//	public static double euclidianDistance(GraphastNode v1, GraphastNode v2){
-//		double y1 = v1.getProperty(LATITUDE);
-//		y1 = GeoUtils.lat2YSpherical(y1);
-//		double x1 = v1.getProperty(LONGITUDE);
-//		x1 = GeoUtils.long2XSpherical(x1);
-//		
-//		double y2 = v2.getProperty(LATITUDE);
-//		y2 = GeoUtils.lat2YSpherical(y2);
-//		double x2 = v2.getProperty(LONGITUDE);
-//		x2 = GeoUtils.long2XSpherical(x2);
-//		
-//		return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
-//	}
-	
-	public static double euclidianDistance(double x1, double y1, double x2, double y2){
-		y1 = GeoUtils.lat2YSpherical(y1);
-		x1 = GeoUtils.long2XSpherical(x1);
-		
-		y2 = GeoUtils.lat2YSpherical(y2);
-		x2 = GeoUtils.long2XSpherical(x2);
-		
-		return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+	public static double distanceLatLong(double latitudeFrom, double longitudeFrom,
+			double latitudeTo, double longitudeTo) {
+
+	    final int R = 6371; // Radius of the earth
+
+	    Double latDistance = deg2rad(latitudeTo - latitudeFrom);
+	    Double lonDistance = deg2rad(longitudeTo - longitudeFrom);
+	    Double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
+	            + Math.cos(deg2rad(latitudeFrom)) * Math.cos(deg2rad(latitudeTo))
+	            * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
+	    Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+	    double distance = R * c * 1000; // convert to meters
+
+	    
+	    distance = Math.pow(distance, 2);
+	    return Math.sqrt(distance);
+	}
+
+	public static double deg2rad(double deg) {
+	    return (deg * Math.PI / 180.0);
 	}
 	
-//	public static int timeCost(Vertex v1, Vertex v2){
-//		return (int) ((int) euclidianDistance(v1, v2)/88.51392);
-//	}
+	
+	
 }

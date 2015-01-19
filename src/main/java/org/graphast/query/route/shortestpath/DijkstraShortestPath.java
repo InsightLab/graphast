@@ -58,10 +58,8 @@ public abstract class DijkstraShortestPath extends AbstractShortestPathService {
 			
 			if(removed.getId() == targetId) {
 				//TODO: path is not ok!!! Fix it!!!
-				List<RouteEntry> path = reconstructPath(removed.getId(), parents);
-				logger.info("path: {}", path);
-				
-				
+				//List<RouteEntry> path = reconstructPath(removed.getId(), parents);
+				//logger.info("path: {}", path);
 				
 				return removed.getTravelTime();
 			}
