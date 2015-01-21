@@ -10,11 +10,8 @@ public class GeoUtilsTest {
 	
 	@Test
 	public void latLongToIntTest() {
-		
-		assertEquals(52535926, latLongToInt(52.535926895));
+		assertEquals(52535927, latLongToInt(52.535926895));
 		assertEquals(52.535926d, latLongToDouble(52535926), 0);
-		
 	}
 	
-
 }
