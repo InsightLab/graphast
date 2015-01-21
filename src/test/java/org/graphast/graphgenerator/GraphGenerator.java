@@ -136,7 +136,7 @@ public class GraphGenerator {
 		GraphastNode v = new GraphastNode(3l, 10d, 10d, "label node 0");
 		graph.addNode(v);
 		
-		v = new GraphastNode(4l, 10d, 20d);
+		v = new GraphastNode(4l, 43.7294668047756,7.413772473047058);
 		graph.addNode(v);
 		
 		v = new GraphastNode(2l, 10d, 30d);

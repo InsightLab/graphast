@@ -89,6 +89,5 @@ public class GeoUtils {
         double y = 0 - R_MAJOR * Math.log(ts);
         return y;
     }	
-    
 
 }
