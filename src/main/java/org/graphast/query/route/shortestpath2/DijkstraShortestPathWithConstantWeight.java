@@ -21,12 +21,12 @@ public class DijkstraShortestPathWithConstantWeight extends DijkstraShortestPath
 
 	/**
 	 * Class constructor
-	 * @param source
-	 * @param target
-	 * @param gr
+	 * @param graph Graph used to compute the shortest path.
+	 * @param source Source node id.
+	 * @param target Target node id.
 	 */
-	public DijkstraShortestPathWithConstantWeight(Graphast gr, long source, long target) {
-		super(gr,source,target);
+	public DijkstraShortestPathWithConstantWeight(Graphast graph, long source, long target) {
+		super(graph,source,target);
 	}
 	
 	//TODO Put some reference for the Dijkstra Algorithm here!
@@ -103,7 +103,7 @@ public class DijkstraShortestPathWithConstantWeight extends DijkstraShortestPath
 		
 		for (long id=0;	id<edges.size64()/GraphastEdge.EDGE_BLOCKSIZE; id++) {
 			
-			edge = gr.getEdge(id);
+			edge = graph.getEdge(id);
 
 			if (edge.getFromNode() == sourceId && edge.getToNode() == destinationId) {
 				return edge.getDistance();
@@ -130,7 +130,7 @@ public class DijkstraShortestPathWithConstantWeight extends DijkstraShortestPath
 
 		for (long i=0; i<edges.size64()/17; i++) {
 			
-			edge = gr.getEdge(i);
+			edge = graph.getEdge(i);
 
 			if ( edge.getFromNode() == node && !isSettled(edge.getToNode())) {
 				

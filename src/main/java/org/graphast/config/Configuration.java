@@ -28,8 +28,8 @@ public class Configuration {
 	 * Obtém uma propriedade a partir do arquivo de propriedades que contém
 	 * as configurações usadas na aplicação.
 	 * Exemplo: Configuration.getProperty("app.environment")
-	 * @param key
-	 * @return
+	 * @param key Property name.
+	 * @return Property value.
 	 */
 	public static String getProperty(String key) {
 		return config.getProperty(key);
