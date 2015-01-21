@@ -55,7 +55,7 @@ public class GraphastImpl implements Graphast {
 	 * to properly handle the information of a Graphast, 
 	 * e.g. nodes, edges, labels, etc.
 	 * 
-	 * @param directory
+	 * @param directory Directory in which the graph is (or will be) persisted.
 	 */
 	public GraphastImpl(String directory) {
 		this.directory = directory;
@@ -419,10 +419,10 @@ public class GraphastImpl implements Graphast {
 	 * @see org.graphast.model.Graphast#getOutEdges(long)
 	 */
 	@Override
-	public LongList getOutEdges(long vid) {
+	public LongList getOutEdges(long nodeId) {
 
 		LongList outEdges = new LongArrayList();
-		GraphastNode v = getNode(vid);
+		GraphastNode v = getNode(nodeId);
 
 		long firstEdgeId = BigArrays.index(v.getFirstEdgeSegment(), v.getFirstEdgeOffset());
 		GraphastEdge nextEdge = getEdge(firstEdgeId);
@@ -430,10 +430,10 @@ public class GraphastImpl implements Graphast {
 
 		while (next != -1) {
 
-			if (vid == nextEdge.getFromNode()) {
+			if (nodeId == nextEdge.getFromNode()) {
 				outEdges.add(nextEdge.getId());
 				next = nextEdge.getFromNodeNextEdge();
-			} else if (vid == nextEdge.getToNode()) {
+			} else if (nodeId == nextEdge.getToNode()) {
 				next = nextEdge.getToNodeNextEdge();
 			}
 

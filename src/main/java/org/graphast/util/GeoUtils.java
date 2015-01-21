@@ -43,7 +43,7 @@ public class GeoUtils {
 	/**
 	 * 
 	 * @param longitude in degrees
-	 * @return
+	 * @return X offset from your original position in meters.
 	 */
 	public static double long2XSpherical(double longitude) {
 		return 6378137 * Math.toRadians(longitude);
@@ -52,7 +52,7 @@ public class GeoUtils {
 	/**
 	 * 
 	 * @param latitude in degrees
-	 * @return
+	 * @return Y offset from your original position in meters.
 	 */
 	public static double lat2YSpherical(double latitude) {
 		return 6378137 * Math.log(Math.tan(Math.PI / 4 + Math.toRadians(latitude) / 2.0));

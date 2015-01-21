@@ -35,8 +35,8 @@ public class GraphastNode {
 	/**
 	 * This method will construct a FastGraphNode with the latitude and longitude passed.
 	 * IMPORTANT: the latitude and longitude will be rounded to six decimal places.
-	 * @param	latitude	
-	 * @param 	longitude
+	 * @param	latitude Node latitude.	
+	 * @param 	longitude Node longitude.
 	 */
 	public GraphastNode(double latitude, double longitude) {
 		setLatitude(latitude);
@@ -77,9 +77,9 @@ public class GraphastNode {
 	 * This method will construct a FastGraphNode with the externalId, latitude and longitude passed.
 	 * IMPORTANT: the latitude and longitude will be rounded to six decimal places.
 	 * 
-	 * @param	externalId
-	 * @param	latitude	
-	 * @param 	longitude
+	 * @param	externalId Node id used in the dataset from where the data was imported.
+	 * @param	latitude Node latitude.	
+	 * @param 	longitude Node longitude.
 	 */
 	public GraphastNode(long externalId, double latitude, double longitude) {
 
@@ -93,10 +93,10 @@ public class GraphastNode {
 	 * label passed.
 	 * IMPORTANT: the latitude and longitude will be rounded to six decimal places.
 	 * 
-	 * @param externalId
-	 * @param latitude
-	 * @param longitude
-	 * @param label
+	 * @param	externalId Node id used in the dataset from where the data was imported.
+	 * @param	latitude Node latitude.	
+	 * @param 	longitude Node longitude.
+	 * @param   label Node label.
 	 */
 	public GraphastNode(long externalId, double latitude, double longitude, String label) {
 
