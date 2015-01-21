@@ -65,9 +65,6 @@ public class DijkstraShortestPathConstantWeightTest {
 		Long source = graphMonaco.getNode(43.72842465479131, 7.414896579419745);
 		Long target = graphMonaco.getNode(43.7354373276704, 7.4212202598427295);
 		
-//		Long source = graphMonaco.getNode(43.72842465479131, 7.414896579419745);
-//		Long target = graphMonaco.getNode(43.7354373276704, 7.4212202598427295);
-		
 		AbstractShortestPathService dj = new DijkstraShortestPathConstantWeight(graphMonaco);
 	
 		// 1117.9563590469443m = 1117956mm (GraphHooper result)
