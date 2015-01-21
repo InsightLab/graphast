@@ -637,7 +637,7 @@ public class GraphastImpl implements Graphast {
 	 */
 	@Override
 	public String getNodeLabel(long id) {
-		return nodesLabels.get(id);
+		return nodesLabels.size64() > 0 ? nodesLabels.get(id) : null;
 	}
 
 	/* (non-Javadoc)
@@ -645,9 +645,6 @@ public class GraphastImpl implements Graphast {
 	 */
 	@Override
 	public String getEdgeLabel(long id) {
-		
-		
-		
 		return edgesLabels.size64() > 0 ? edgesLabels.get(id) : null;
 	}
 
