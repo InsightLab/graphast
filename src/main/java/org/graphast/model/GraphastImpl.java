@@ -637,7 +637,12 @@ public class GraphastImpl implements Graphast {
 	 */
 	@Override
 	public String getNodeLabel(long id) {
-		return nodesLabels.get(id);
+		
+		long position =  id*GraphastNode.NODE_BLOCKSIZE;
+		
+		long labelIndex = BigArrays.index(nodes.getInt(position + 7), nodes.getInt(position + 8));
+		
+		return nodesLabels.get(labelIndex);
 	}
 
 	/* (non-Javadoc)

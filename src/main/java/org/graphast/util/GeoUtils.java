@@ -16,6 +16,7 @@ public class GeoUtils {
 
 	public static int latLongToInt(double number) {
 	
+//		return (int) (number * LAT_LONG_CONVERTION_FACTOR);
 		return (int) Math.round((number * LAT_LONG_CONVERTION_FACTOR));
 		
 	}
