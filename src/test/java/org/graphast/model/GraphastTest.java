@@ -37,8 +37,8 @@ public class GraphastTest {
 		assertEquals(1, (long) v.getId());
 		assertEquals(4, (long) BigArrays.index(v.getExternalIdSegment(), v.getExternalIdOffset()));
 		assertEquals(0, (long) BigArrays.index(v.getFirstEdgeSegment(), v.getFirstEdgeOffset()));
-		assertEquals(10d, v.getLatitude(), 0);
-		assertEquals(20d, v.getLongitude(), 0);
+		assertEquals(43.729467, v.getLatitude(), 0);
+		assertEquals(7.413772, v.getLongitude(), 0);
 	}
 	
 	@Test
@@ -152,6 +152,10 @@ public class GraphastTest {
 
 		GraphastNode node = graphExample3.getNode(0);
 		assertEquals(0, (long)graph2.getNode(node.getLatitude(), node.getLongitude()));
+		assertEquals(node.getLatitude(), graph2.getNode(0).getLatitude(),0);
+		assertEquals(node.getLongitude(), graph2.getNode(0).getLongitude(),0);
+		
+		
 		assertEquals("label node 0", graph2.getNode(0).getLabel());
 	}
 	
