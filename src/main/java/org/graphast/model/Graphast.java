@@ -17,7 +17,8 @@ public interface Graphast {
 	 * Saves all the information in the graph.
 	 * 
 	 * @see FileUtils for more information about how each list is saved.
-	 * @throws IOException
+	 * @throws IOException 
+	 *         If the graph can not be saved for some reason related to IO.
 	 */
 	public void save() throws IOException;
 
@@ -26,6 +27,7 @@ public interface Graphast {
 	 * 
 	 * @see FileUtils for more information about how each list is saved.
 	 * @throws IOException
+	 *         If the graph can not be loaded for some reason related to IO.
 	 */
 	public void load() throws IOException;
 
@@ -132,26 +134,26 @@ public interface Graphast {
 	 * This method will update the structure of neighbors used
 	 * in Graphast. This structure was based in GraphHopper.
 	 * 
-	 * @param node
-	 * @param eid
+	 * @param node Base node used to update its neighbors.
+	 * @param eid Edge id where the base node is placed.
 	 */
 	public void updateNodeNeighborhood(GraphastNode node, long eid);
 
 	/**
 	 * This method will return all outgoing edges for a given node
 	 * 
-	 * @param vid
-	 * @return
+	 * @param nodeId Given node id.
+	 * @return Outgoing edges for a given node.
 	 */
-	public LongList getOutEdges(long vid);
+	public LongList getOutEdges(long nodeId);
 
 	/**
 	 * For a given edge and time, this method will return 
 	 * the costs stored in the ShortBigArrayBigList.
 	 * 
-	 * @param edges
-	 * @param time
-	 * @return
+	 * @param edges List containing the ids of edges.
+	 * @param time Time used to get edge costs.
+	 * @return Edge costs.
 	 */
 	public short[] getCosts(LongList edges, int time);
 
