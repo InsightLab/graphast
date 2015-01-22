@@ -2,6 +2,8 @@ package org.graphast.model;
 
 public interface Node {
 
+	public static final short NODE_BLOCKSIZE = 11;
+	
 	public abstract void validate();
 
 	public abstract int getCategory();

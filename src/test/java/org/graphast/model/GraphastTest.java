@@ -26,14 +26,14 @@ public class GraphastTest {
 	
 	@Test
 	public void storeGetNode(){
-		NodeImpl v = graphExample3.getNode(0);
+		NodeImpl v = (NodeImpl)graphExample3.getNode(0);
 		assertEquals(0, (long) v.getId());
 		assertEquals(3, (long) BigArrays.index(v.getExternalIdSegment(), v.getExternalIdOffset()));
 		assertEquals(0, (long) BigArrays.index(v.getFirstEdgeSegment(), v.getFirstEdgeOffset()));
 		assertEquals(10d, v.getLatitude(), 0);
 		assertEquals(10d, v.getLongitude(), 0);
 		
-		v = graphExample3.getNode(1);
+		v = (NodeImpl)graphExample3.getNode(1);
 		assertEquals(1, (long) v.getId());
 		assertEquals(4, (long) BigArrays.index(v.getExternalIdSegment(), v.getExternalIdOffset()));
 		assertEquals(0, (long) BigArrays.index(v.getFirstEdgeSegment(), v.getFirstEdgeOffset()));
@@ -161,7 +161,7 @@ public class GraphastTest {
 	
 	@Test
 	public void getNode() throws IOException{
-		NodeImpl n = graphExample3.getNode(3);
+		NodeImpl n = (NodeImpl)graphExample3.getNode(3);
 		
 		assertEquals(3, (long)n.getId());
 		assertEquals(6, BigArrays.index(n.getExternalIdSegment(), n.getExternalIdOffset()));

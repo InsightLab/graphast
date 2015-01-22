@@ -90,6 +90,4 @@ public interface Edge {
 	 */
 	public abstract String toString();
 	
-	public int getLabelIndexSegment();
-
 }

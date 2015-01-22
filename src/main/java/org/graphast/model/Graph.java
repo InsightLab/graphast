@@ -45,7 +45,7 @@ public interface Graph {
 	 * @param	node	GraphastNode that will be added
 	 * 					to the IntBigArrayBigList of nodes.
 	 */
-	public void addNode(NodeImpl node);
+	public void addNode(Node node);
 
 	//TODO Why we only update the latitude, longitude and FirstEdge? 
 	//Wouldn't be better if we had a method that updates everything?
@@ -55,7 +55,7 @@ public interface Graph {
 	 * 
 	 * @param node GraphastNode with the informations that must be updated.
 	 */
-	public void updateNodeInfo(NodeImpl node);
+	public void updateNodeInfo(Node node);
 
 	/**
 	 * With a passed id, this method retrieves a GraphastNode
@@ -66,7 +66,7 @@ public interface Graph {
 	 * 				start position of the node needed.
 	 * @return	a GraphastNode.
 	 */
-	public NodeImpl getNode(long id);
+	public Node getNode(long id);
 
 	//TODO Suggestion: delete this method and keep all these operations in  updateEdgeInfo
 	public void setEdge(Edge edge, long pos);
@@ -137,7 +137,7 @@ public interface Graph {
 	 * @param node Base node used to update its neighbors.
 	 * @param eid Edge id where the base node is placed.
 	 */
-	public void updateNodeNeighborhood(NodeImpl node, long eid);
+	public void updateNodeNeighborhood(Node node, long eid);
 
 	/**
 	 * This method will return all outgoing edges for a given node

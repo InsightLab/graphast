@@ -294,7 +294,7 @@ public class EdgeImpl implements Edge {
 		this.labelIndex = labelIndex;
 	}
 
-	public int getLabelIndexSegment(){
+	int getLabelIndexSegment(){
 		return BigArrays.segment(labelIndex);
 	}
 
