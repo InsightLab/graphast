@@ -169,7 +169,7 @@ public class GraphImpl implements Graph {
 		 * This method will update the IntBigArrayBigList of nodes
 		 * with need information of a passed GraphastNode.
 		 * 
-		 * @param node GraphastNode with the informations that must be updated.
+		 * @param n GraphastNode with the informations that must be updated.
 		 */
 	public void updateNodeInfo(Node n) {
 		
