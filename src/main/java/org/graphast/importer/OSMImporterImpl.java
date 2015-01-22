@@ -54,6 +54,8 @@ public class OSMImporterImpl implements Importer {
 		Int2LongOpenHashMap hashExternalIdToId = new Int2LongOpenHashMap();
 		int count = 0;
 		while(edgeIterator.next()) {
+			
+			
 			count++;
 //			System.out.println("edgeIteratorId: " + edgeIterator.getEdge());
 //			System.out.println("edgeIteratorFrom: " + edgeIterator.getBaseNode());
