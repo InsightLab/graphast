@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.graphast.graphgenerator.GraphGenerator;
 import org.graphast.model.Graph;
+import org.graphast.query.route.shortestpath.dijkstra.DijkstraShortestPathConstantWeight;
 import org.graphast.util.FileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

@@ -1,4 +1,4 @@
-package org.graphast.query.route.shortestpath;
+package org.graphast.query.route.shortestpath.astar;
 
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 
@@ -8,6 +8,9 @@ import java.util.PriorityQueue;
 
 import org.graphast.model.Graph;
 import org.graphast.model.Node;
+import org.graphast.query.route.shortestpath.model.LowerBoundEntry;
+import org.graphast.query.route.shortestpath.model.RouteEntry;
+import org.graphast.query.route.shortestpath.model.TimeEntry;
 
 import com.graphhopper.util.DistanceCalcEarth;
 

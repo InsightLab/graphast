@@ -1,7 +1,5 @@
 package org.graphast.model;
 
-import it.unimi.dsi.fastutil.BigArrays;
-
 import java.util.List;
 
 import org.graphast.geometry.Point;

@@ -1,4 +1,4 @@
-package org.graphast.query.route.shortestpath;
+package org.graphast.query.route.shortestpath.dijkstra;
 
 import static org.graphast.util.NumberUtils.convertToInt;
 
@@ -12,7 +12,10 @@ import java.util.PriorityQueue;
 import org.graphast.exception.PathNotFoundException;
 import org.graphast.model.Graph;
 import org.graphast.model.Node;
-import org.graphast.util.DateUtils;
+import org.graphast.query.route.shortestpath.AbstractShortestPathService;
+import org.graphast.query.route.shortestpath.model.DistanceEntry;
+import org.graphast.query.route.shortestpath.model.Instruction;
+import org.graphast.query.route.shortestpath.model.RouteEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,9 +46,8 @@ public abstract class DijkstraShortestPath extends AbstractShortestPathService {
 			
 			if(re != null) {
 				
-				//TODO Revise this verification and Data Structure. 
-				//Cases that must be checked: null == null, null == String, String == String
-				if(verificationQueue.peek().getLabel() == re.getLabel() || verificationQueue.peek().getLabel().equals(re.getLabel())) {
+				//TODO Use equals
+				if((verificationQueue.peek().getLabel() == null && re.getLabel() == null) || verificationQueue.peek().getLabel().equals(re.getLabel())) {
 					
 					oldInstruction = verificationQueue.poll();
 					newInstruction = new Instruction(0, oldInstruction.getLabel(), oldInstruction.getCost() + re.getCost());

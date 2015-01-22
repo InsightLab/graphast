@@ -1,4 +1,4 @@
-package org.graphast.query.route.shortestpath;
+package org.graphast.query.route.shortestpath.model;
 
 public class TimeEntry extends EntryImpl implements Comparable<Object>{
 	
