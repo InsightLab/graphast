@@ -10,7 +10,7 @@ import org.graphast.model.Graph;
 import org.graphast.model.EdgeImpl;
 import org.graphast.model.GraphImpl;
 import org.graphast.model.NodeImpl;
-import org.graphast.query.route.shortestpath.DijkstraShortestPathConstantWeight;
+import org.graphast.query.route.shortestpath.dijkstra.DijkstraShortestPathConstantWeight;
 
 import com.graphhopper.routing.util.EncodingManager;
 import com.graphhopper.storage.GraphBuilder;

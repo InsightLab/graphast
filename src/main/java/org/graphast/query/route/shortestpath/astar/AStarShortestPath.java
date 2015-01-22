@@ -1,4 +1,4 @@
-package org.graphast.query.route.shortestpath;
+package org.graphast.query.route.shortestpath.astar;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,6 +9,10 @@ import java.util.PriorityQueue;
 
 import org.graphast.model.Graph;
 import org.graphast.model.Node;
+import org.graphast.query.route.shortestpath.AbstractShortestPathService;
+import org.graphast.query.route.shortestpath.model.LowerBoundEntry;
+import org.graphast.query.route.shortestpath.model.RouteEntry;
+import org.graphast.query.route.shortestpath.model.TimeEntry;
 import org.graphast.util.DateUtils;
 import org.graphast.util.DistanceUtils;
 import org.slf4j.Logger;
