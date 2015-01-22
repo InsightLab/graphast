@@ -33,8 +33,6 @@ public class DijkstraShortestPathConstantWeightTest {
 		//		from: 43.729825,7.414146
 		//		to: 43.730577,7.415487
 		
-		assertEquals(751, graphMonaco.getNumberOfNodes());
-		assertEquals(1306, graphMonaco.getNumberOfEdges());
 		
 		Long source = graphMonaco.getNode(43.7294668047756,7.413772473047058);
 		Long target = graphMonaco.getNode(43.73079058671274,7.415815422292399);
@@ -59,8 +57,6 @@ public class DijkstraShortestPathConstantWeightTest {
 	@Test
 	public void shortestPathMonacoTest2() {
 		
-		assertEquals(751, graphMonaco.getNumberOfNodes());
-		assertEquals(1306, graphMonaco.getNumberOfEdges());
 		
 		Long source = graphMonaco.getNode(43.72842465479131, 7.414896579419745);
 		Long target = graphMonaco.getNode(43.7354373276704, 7.4212202598427295);
@@ -74,8 +70,6 @@ public class DijkstraShortestPathConstantWeightTest {
 	
 	@Test
 	public void shortestPathExampleTest() {
-		assertEquals(6, graphExample.getNumberOfNodes());
-		assertEquals(10, graphExample.getNumberOfEdges());
 		
 		Long source = 1L; // External ID = 5
 		Long target = 4L; // External ID = 2
@@ -90,14 +84,23 @@ public class DijkstraShortestPathConstantWeightTest {
 	
 	@Test
 	public void shortestPathExample2Test() {
-		assertEquals(7, graphExample2.getNumberOfNodes());
-		assertEquals(8, graphExample2.getNumberOfEdges());
 		
 		Long source = 0L;
 		Long target = 6L;
 		
 		AbstractShortestPathService dj = new DijkstraShortestPathConstantWeight(graphExample2);
 		assertEquals(12, dj.shortestPath(source, target));
+	}
+	
+	@Test
+	public void ShortestPathMonacoTest3() {
+		Long source = graphMonaco.getNode(43.72636792197156, 7.417292499928754);
+		Long target = graphMonaco.getNode(43.74766484829034,7.430716770083832);
+		
+		AbstractShortestPathService dj = new DijkstraShortestPathConstantWeight(graphMonaco);
+		System.out.println(dj.shortestPath(source, target));
+        assertEquals(3610710, dj.shortestPath(source, target));
+
 	}
 	
 	@AfterClass
