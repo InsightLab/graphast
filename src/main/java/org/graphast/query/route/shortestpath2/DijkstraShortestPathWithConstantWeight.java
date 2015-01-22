@@ -6,9 +6,9 @@ import it.unimi.dsi.fastutil.longs.LongSet;
 
 import java.util.Collections;
 
-import org.graphast.model.Graphast;
-import org.graphast.model.GraphastEdge;
-import org.graphast.model.GraphastNode;
+import org.graphast.model.Edge;
+import org.graphast.model.Graph;
+import org.graphast.model.NodeImpl;
 
 /**
  * This class contains useful methods for the Dijkstra's Shortest Path Algorithm with
@@ -25,7 +25,7 @@ public class DijkstraShortestPathWithConstantWeight extends DijkstraShortestPath
 	 * @param source Source node id.
 	 * @param target Target node id.
 	 */
-	public DijkstraShortestPathWithConstantWeight(Graphast graph, long source, long target) {
+	public DijkstraShortestPathWithConstantWeight(Graph graph, long source, long target) {
 		super(graph,source,target);
 	}
 	
@@ -38,7 +38,7 @@ public class DijkstraShortestPathWithConstantWeight extends DijkstraShortestPath
 		LongList resultPath;
 		
 		//TODO Change this "i+1"
-		for (long i = 0; i < nodes.size64(); i = i + GraphastNode.NODE_BLOCKSIZE) {
+		for (long i = 0; i < nodes.size64(); i = i + NodeImpl.NODE_BLOCKSIZE) {
 			
 			
 			unsettledNodes.add(nodes.get(i+1));
@@ -99,9 +99,9 @@ public class DijkstraShortestPathWithConstantWeight extends DijkstraShortestPath
 	 */
 	private int getDistance(long sourceId, long destinationId) {
 		
-		GraphastEdge edge;
+		Edge edge;
 		
-		for (long id=0;	id<edges.size64()/GraphastEdge.EDGE_BLOCKSIZE; id++) {
+		for (long id=0;	id<edges.size64()/Edge.EDGE_BLOCKSIZE; id++) {
 			
 			edge = graph.getEdge(id);
 
@@ -126,7 +126,7 @@ public class DijkstraShortestPathWithConstantWeight extends DijkstraShortestPath
 		
 		LongList neighbors = new LongArrayList();
 
-		GraphastEdge edge;
+		Edge edge;
 
 		for (long i=0; i<edges.size64()/17; i++) {
 			

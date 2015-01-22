@@ -11,7 +11,7 @@ import java.util.List;
 import org.graphast.geometry.Point;
 import org.graphast.util.FileUtils;
 
-public interface Graphast {
+public interface Graph {
 
 	/**
 	 * Saves all the information in the graph.
@@ -45,7 +45,7 @@ public interface Graphast {
 	 * @param	node	GraphastNode that will be added
 	 * 					to the IntBigArrayBigList of nodes.
 	 */
-	public void addNode(GraphastNode node);
+	public void addNode(NodeImpl node);
 
 	//TODO Why we only update the latitude, longitude and FirstEdge? 
 	//Wouldn't be better if we had a method that updates everything?
@@ -55,7 +55,7 @@ public interface Graphast {
 	 * 
 	 * @param node GraphastNode with the informations that must be updated.
 	 */
-	public void updateNodeInfo(GraphastNode node);
+	public void updateNodeInfo(NodeImpl node);
 
 	/**
 	 * With a passed id, this method retrieves a GraphastNode
@@ -66,10 +66,10 @@ public interface Graphast {
 	 * 				start position of the node needed.
 	 * @return	a GraphastNode.
 	 */
-	public GraphastNode getNode(long id);
+	public NodeImpl getNode(long id);
 
 	//TODO Suggestion: delete this method and keep all these operations in  updateEdgeInfo
-	public void setEdge(GraphastEdge edge, long pos);
+	public void setEdge(Edge edge, long pos);
 
 	/**
 	 * For a given GraphastEdge, this method will 
@@ -90,7 +90,7 @@ public interface Graphast {
 	 * @param	edge	GraphastEdge that will be added
 	 * 					to the IntBigArrayBigList of edges.
 	 */
-	public void addEdge(GraphastEdge edge);
+	public void addEdge(Edge edge);
 
 	/**
 	 * This method will store the passed list of costs in a
@@ -118,7 +118,7 @@ public interface Graphast {
 	 * 
 	 * @param edge GraphastEdge with the informations that must be updated.
 	 */
-	public void updateEdgeInfo(GraphastEdge edge);
+	public void updateEdgeInfo(Edge edge);
 
 	/**
 	 * After add an edge, we must update the neighbor of both
@@ -128,7 +128,7 @@ public interface Graphast {
 	 * @param	edge	GraphastEdge that will be used to update
 	 * 					the neighborhood
 	 */
-	public void updateNeighborhood(GraphastEdge edge);
+	public void updateNeighborhood(Edge edge);
 
 	/**
 	 * This method will update the structure of neighbors used
@@ -137,7 +137,7 @@ public interface Graphast {
 	 * @param node Base node used to update its neighbors.
 	 * @param eid Edge id where the base node is placed.
 	 */
-	public void updateNodeNeighborhood(GraphastNode node, long eid);
+	public void updateNodeNeighborhood(NodeImpl node, long eid);
 
 	/**
 	 * This method will return all outgoing edges for a given node
@@ -163,11 +163,11 @@ public interface Graphast {
 
 	public LongList getOutNeighborsAndCosts(long vid, int time);
 
-	public GraphastEdge getEdge(long id);
+	public Edge getEdge(long id);
 
 	public short[] getEdgeCosts(long id);
 
-	public short getEdgeCost(GraphastEdge edge, int time);
+	public short getEdgeCost(Edge edge, int time);
 
 	public List<Point> getEdgePoints(long id);
 
@@ -203,7 +203,7 @@ public interface Graphast {
 	 */
 	public int getNumberOfEdges();
 	
-	public Long2IntMap accessNeighborhood(GraphastNode v);
+	public Long2IntMap accessNeighborhood(Node v);
 	
 	public boolean hasNode(long id);
 	

@@ -2,7 +2,7 @@ package org.graphast.query.route.shortestpath2;
 
 import it.unimi.dsi.fastutil.ints.IntBigArrayBigList;
 
-import org.graphast.model.Graphast;
+import org.graphast.model.Graph;
 /**
  * An abstract class that structure for any type of algorithm
  * that our framework may implement.
@@ -12,7 +12,7 @@ import org.graphast.model.Graphast;
  */
 public abstract class GraphastAlgorithms {
 
-	public Graphast graph;
+	public Graph graph;
 	
 	public final IntBigArrayBigList nodes;
 	public final IntBigArrayBigList edges;
@@ -21,7 +21,7 @@ public abstract class GraphastAlgorithms {
 	 * Constructs a GraphastAlgorithms with the passed parameter.
 	 * @param graph Graph used by the algorithm.
 	 */
-	public GraphastAlgorithms(Graphast graph) {
+	public GraphastAlgorithms(Graph graph) {
 	
 		this.graph = graph;
 		this.nodes = graph.getNodes();
