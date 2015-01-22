@@ -6,20 +6,20 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 
-import org.graphast.model.Graphast;
-import org.graphast.model.GraphastNode;
+import org.graphast.model.Graph;
+import org.graphast.model.Node;
 
 import com.graphhopper.util.DistanceCalcEarth;
 
 public class AStarShortestPathConstantWeight extends AStarShortestPath{
 	private DistanceCalcEarth distance;
 	
-	public AStarShortestPathConstantWeight(Graphast graph) {
+	public AStarShortestPathConstantWeight(Graph graph) {
 		super(graph);
 		this.distance = new DistanceCalcEarth();
 	}
 
-	public void expandVertex(GraphastNode target, TimeEntry removed, HashMap<Long, Integer> wasTraversed, 
+	public void expandVertex(Node target, TimeEntry removed, HashMap<Long, Integer> wasTraversed, 
 			PriorityQueue<LowerBoundEntry> queue, HashMap<Long, RouteEntry> parents){
 		
 		Long2IntMap neig = graph.accessNeighborhood(graph.getNode(removed.getId()));
@@ -60,7 +60,7 @@ public class AStarShortestPathConstantWeight extends AStarShortestPath{
 	}
 
 	@Override
-	public int shortestPath(GraphastNode source, GraphastNode target) {
+	public int shortestPath(Node source, Node target) {
 		return shortestPath(source, target, null);
 	}
 

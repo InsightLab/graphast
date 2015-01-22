@@ -8,10 +8,8 @@ import java.util.List;
 import org.graphast.exception.GraphastException;
 import org.graphast.geometry.Point;
 
-public class GraphastEdge {
+public class EdgeImpl implements Edge {
 	//private Logger logger = LoggerFactory.getLogger(this.getClass());
-
-	public static final short EDGE_BLOCKSIZE = 17;
 
 	private Long id;
 
@@ -42,7 +40,7 @@ public class GraphastEdge {
 
 	private String label;
 
-	public GraphastEdge(long fromNode, long toNode, int distance,
+	public EdgeImpl(long fromNode, long toNode, int distance,
 			short[] costs, List<Point> geometry, String label) {
 
 		this(fromNode, toNode, distance);
@@ -52,21 +50,21 @@ public class GraphastEdge {
 
 	}
 
-	public GraphastEdge(long fromNode, long toNode, int distance) {
+	public EdgeImpl(long fromNode, long toNode, int distance) {
 
 		this(0, fromNode, toNode, -1, -1, distance, -1, -1, -1, null);
 
 	}
 
-	public GraphastEdge(long externalId, long fromNode, long toNode, int distance) {
+	public EdgeImpl(long externalId, long fromNode, long toNode, int distance) {
 		this(externalId, fromNode, toNode, -1, -1, distance, -1, -1, -1, null);
 	}
 
-	public GraphastEdge(long externalId, long fromNode, long toNode, int distance, String label) {
+	public EdgeImpl(long externalId, long fromNode, long toNode, int distance, String label) {
 		this(externalId, fromNode, toNode, -1, -1, distance, -1, -1, -1, label);
 	}
 
-	GraphastEdge(long externalId, long fromNode, long toNode,
+	EdgeImpl(long externalId, long fromNode, long toNode,
 			long fromNodeNextEdge, long toNodeNextEdge, int distance,
 			long costsIndex, long geometryIndex,long labelIndex, String label) {
 
@@ -84,6 +82,10 @@ public class GraphastEdge {
 	
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Edge#validate()
+	 */
+	@Override
 	public void validate(){
 		
 		if(distance < 0){
@@ -110,6 +112,10 @@ public class GraphastEdge {
 	
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Edge#getDistance()
+	 */
+	@Override
 	public int getDistance() {
 		return distance;
 	}
@@ -118,6 +124,10 @@ public class GraphastEdge {
 		this.distance = distance;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Edge#getId()
+	 */
+	@Override
 	public Long getId() {
 		return id;
 	}
@@ -134,6 +144,10 @@ public class GraphastEdge {
 		return BigArrays.displacement(externalId);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Edge#getFromNode()
+	 */
+	@Override
 	public long getFromNode() {
 		return fromNode;
 	}
@@ -142,6 +156,10 @@ public class GraphastEdge {
 		this.fromNode = fromNode;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Edge#getToNode()
+	 */
+	@Override
 	public long getToNode() {
 		return toNode;
 	}
@@ -150,6 +168,10 @@ public class GraphastEdge {
 		this.toNode = toNode;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Edge#getFromNodeNextEdge()
+	 */
+	@Override
 	public long getFromNodeNextEdge() {
 		return fromNodeNextEdge;
 	}
@@ -158,6 +180,10 @@ public class GraphastEdge {
 		this.fromNodeNextEdge = fromNodeNextEdge;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Edge#getToNodeNextEdge()
+	 */
+	@Override
 	public long getToNodeNextEdge() {
 		return toNodeNextEdge;
 	}
@@ -174,6 +200,10 @@ public class GraphastEdge {
 		return BigArrays.displacement(fromNode);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Edge#getToNodeSegment()
+	 */
+	@Override
 	public int getToNodeSegment() {
 		return BigArrays.segment(toNode);
 	}
@@ -182,6 +212,10 @@ public class GraphastEdge {
 		return BigArrays.displacement(toNode);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Edge#getCostsSegment()
+	 */
+	@Override
 	public int getCostsSegment() {
 
 		return BigArrays.segment(costsIndex);
@@ -191,6 +225,10 @@ public class GraphastEdge {
 		return BigArrays.displacement(costsIndex);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Edge#getGeometrySegment()
+	 */
+	@Override
 	public int getGeometrySegment() {
 		return BigArrays.segment(geometryIndex);
 	}
@@ -199,6 +237,10 @@ public class GraphastEdge {
 		return BigArrays.displacement(geometryIndex);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Edge#getCostsIndex()
+	 */
+	@Override
 	public long getCostsIndex() {
 		return costsIndex;
 	}
@@ -207,6 +249,10 @@ public class GraphastEdge {
 		this.costsIndex = costsIndex;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Edge#getGeometryIndex()
+	 */
+	@Override
 	public long getGeometryIndex() {
 		return geometryIndex;
 	}
@@ -215,6 +261,10 @@ public class GraphastEdge {
 		this.geometryIndex = geometryIndex;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Edge#getCosts()
+	 */
+	@Override
 	public short[] getCosts() {
 		return costs;
 	}
@@ -223,6 +273,11 @@ public class GraphastEdge {
 		this.costs = costs;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Edge#getGeometry()
+	 */
+
+	@Override
 	public List<Point> getGeometry() {
 		return geometry;
 	}
@@ -239,7 +294,7 @@ public class GraphastEdge {
 		this.labelIndex = labelIndex;
 	}
 
-	int getLabelIndexSegment(){
+	public int getLabelIndexSegment(){
 		return BigArrays.segment(labelIndex);
 	}
 
@@ -247,6 +302,10 @@ public class GraphastEdge {
 		return BigArrays.displacement(labelIndex);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Edge#getLabel()
+	 */
+	@Override
 	public String getLabel() {
 		return label;
 	}
@@ -275,6 +334,9 @@ public class GraphastEdge {
 		this.externalId = externalID;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Edge#toString()
+	 */
 	@Override
 	public String toString() {
 		return "FastGraphEdge [id=" + id + ", externalId=" + externalId + ", fromNode=" + fromNode

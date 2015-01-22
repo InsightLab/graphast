@@ -6,18 +6,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 
-import org.graphast.model.Graphast;
-import org.graphast.model.GraphastNode;
+import org.graphast.model.Graph;
+import org.graphast.model.Node;
 
 public class DijkstraShortestPathConstantWeight extends DijkstraShortestPath {
 
-	public DijkstraShortestPathConstantWeight(Graphast graph) {
-		
+	public DijkstraShortestPathConstantWeight(Graph graph) {
 		super(graph);
-	
 	}
 	
-	public void expandVertex(GraphastNode target, DistanceEntry removed, HashMap<Long, Integer> wasTraversed, 
+	public void expandVertex(Node target, DistanceEntry removed, HashMap<Long, Integer> wasTraversed, 
 			PriorityQueue<DistanceEntry> queue, HashMap<Long, RouteEntry> parents){
 		
 		Long2IntMap neig = graph.accessNeighborhood(graph.getNode(removed.getId()));
@@ -67,7 +65,7 @@ public class DijkstraShortestPathConstantWeight extends DijkstraShortestPath {
 	}
 
 	@Override
-	public int shortestPath(GraphastNode source, GraphastNode target) {
+	public int shortestPath(Node source, Node target) {
 		return shortestPath(source, target, null);
 	}
 

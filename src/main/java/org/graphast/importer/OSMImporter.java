@@ -7,10 +7,11 @@ import it.unimi.dsi.fastutil.ints.Int2LongOpenHashMap;
 import java.io.IOException;
 import java.util.Date;
 
-import org.graphast.model.Graphast;
-import org.graphast.model.GraphastEdge;
-import org.graphast.model.GraphastImpl;
-import org.graphast.model.GraphastNode;
+import org.graphast.model.Edge;
+import org.graphast.model.Graph;
+import org.graphast.model.EdgeImpl;
+import org.graphast.model.GraphImpl;
+import org.graphast.model.NodeImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,12 +23,12 @@ public class OSMImporter {
 
 	public Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	public Graphast execute(String osmFile, String graphHopperDir, String graphastDir) {
+	public Graph execute(String osmFile, String graphHopperDir, String graphastDir) {
 
 		logger.info("Initial date: {}", new Date());
 		double initialTime = System.currentTimeMillis();
 
-		Graphast graph = new GraphastImpl(graphastDir);
+		Graph graph = new GraphImpl(graphastDir);
 
 		GraphHopper gh = OSMToGraphHopperReader.createGraph(osmFile, graphHopperDir, false, false);
 		GraphStorage gs = gh.getGraph();
@@ -56,14 +57,14 @@ public class OSMImporter {
 			double latitudeTo = latLongToDouble(latLongToInt(gs.getNodeAccess().getLatitude(externalToNodeId)));
 			double longitudeTo = latLongToDouble(latLongToInt(gs.getNodeAccess().getLongitude(externalToNodeId)));			
 
-			GraphastNode fromNode, toNode;
+			NodeImpl fromNode, toNode;
 
 			long fromNodeId, toNodeId;
 
 
 			if(!hashExternalIdToId.containsKey(externalFromNodeId)){
 
-				fromNode = new GraphastNode(externalFromNodeId, latitudeFrom, longitudeFrom);
+				fromNode = new NodeImpl(externalFromNodeId, latitudeFrom, longitudeFrom);
 				graph.addNode(fromNode);
 				fromNodeId = (long)fromNode.getId();
 				hashExternalIdToId.put(externalFromNodeId, fromNodeId);
@@ -72,7 +73,7 @@ public class OSMImporter {
 			}
 
 			if(!hashExternalIdToId.containsKey(externalToNodeId)){
-				toNode = new GraphastNode(externalToNodeId, latitudeTo, longitudeTo);
+				toNode = new NodeImpl(externalToNodeId, latitudeTo, longitudeTo);
 				graph.addNode(toNode);
 				toNodeId = (long)toNode.getId();
 				hashExternalIdToId.put(externalToNodeId, toNodeId);
@@ -83,16 +84,16 @@ public class OSMImporter {
 			int direction = getDirection(edgeIterator.getFlags());
 			if(direction == 0) {        // Bidirectional
 				if(fromNodeId != toNodeId) {
-					GraphastEdge edge = new GraphastEdge(externalEdgeId, fromNodeId, toNodeId, distance, label);
+					Edge edge = new EdgeImpl(externalEdgeId, fromNodeId, toNodeId, distance, label);
 					graph.addEdge(edge);
-					edge = new GraphastEdge(externalEdgeId, toNodeId, fromNodeId, distance, label);
+					edge = new EdgeImpl(externalEdgeId, toNodeId, fromNodeId, distance, label);
 					graph.addEdge(edge);
 				}
 			}else if(direction == 1) {  // One direction: base -> adj
-				GraphastEdge edge = new GraphastEdge(externalEdgeId, fromNodeId, toNodeId, distance, label);
+				Edge edge = new EdgeImpl(externalEdgeId, fromNodeId, toNodeId, distance, label);
 				graph.addEdge(edge);
 			}else {                     // One direction: adj -> base
-				GraphastEdge edge = new GraphastEdge(externalEdgeId, toNodeId, fromNodeId, distance, label);
+				Edge edge = new EdgeImpl(externalEdgeId, toNodeId, fromNodeId, distance, label);
 				graph.addEdge(edge);
 			}
 		}

@@ -1,7 +1,7 @@
 package org.graphast.query.route.shortestpath2;
 
-import org.graphast.model.Graphast;
-import org.graphast.model.GraphastNode;
+import org.graphast.model.Graph;
+import org.graphast.model.Node;
 
 /**
  * A subclass of GraphastAlgorithm, the ShortestPathAlgorithms will
@@ -12,8 +12,8 @@ import org.graphast.model.GraphastNode;
  */
 public abstract class ShortestPathAlgorithms extends GraphastAlgorithms{
 
-	public GraphastNode source;
-	public GraphastNode target;
+	public Node source;
+	public Node target;
 	
 	/**
 	 * Constructs a ShortestPathAlgorithms with source and target nodes
@@ -21,7 +21,7 @@ public abstract class ShortestPathAlgorithms extends GraphastAlgorithms{
 	 * @param 	target	node that will be used as a target
 	 * @param 	gr		Graphast where a path will be searched
 	 */
-	public ShortestPathAlgorithms(Graphast gr, long source, long target) {
+	public ShortestPathAlgorithms(Graph gr, long source, long target) {
 	
 		super(gr);
 		

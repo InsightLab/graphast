@@ -24,7 +24,7 @@ import org.graphast.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class GraphastImpl implements Graphast {
+public class GraphImpl implements Graph {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -57,7 +57,7 @@ public class GraphastImpl implements Graphast {
 	 * 
 	 * @param directory Directory in which the graph is (or will be) persisted.
 	 */
-	public GraphastImpl(String directory) {
+	public GraphImpl(String directory) {
 		this.directory = directory;
 
 		nodes = new IntBigArrayBigList();
@@ -99,7 +99,7 @@ public class GraphastImpl implements Graphast {
 
 	private void createNodeIndex() {
 		int numberOfNodes = getNumberOfNodes();
-		GraphastNode node;
+		NodeImpl node;
 		for (int i=0; i < numberOfNodes; i++) {
 			node = getNode(i);
 			nodeIndex.put(BigArrays.index(node.getLatitudeConvertedToInt(), node.getLongitudeConvertedToInt()), (long) i);
@@ -110,7 +110,7 @@ public class GraphastImpl implements Graphast {
 	 * @see org.graphast.model.Graphast#addNode(org.graphast.model.GraphastNode)
 	 */
 	@Override
-	public void addNode(GraphastNode node) {
+	public void addNode(NodeImpl node) {
 
 		long id;
 
@@ -119,7 +119,7 @@ public class GraphastImpl implements Graphast {
 
 
 		synchronized (nodes) {
-			id = nodes.size64() / GraphastNode.NODE_BLOCKSIZE;
+			id = nodes.size64() / NodeImpl.NODE_BLOCKSIZE;
 
 			nodes.add(node.getExternalIdSegment());
 			nodes.add(node.getExternalIdOffset());
@@ -169,8 +169,8 @@ public class GraphastImpl implements Graphast {
 		 * 
 		 * @param node GraphastNode with the informations that must be updated.
 		 */
-	public void updateNodeInfo(GraphastNode node) {
-		long position = node.getId() * GraphastNode.NODE_BLOCKSIZE;
+	public void updateNodeInfo(NodeImpl node) {
+		long position = node.getId() * NodeImpl.NODE_BLOCKSIZE;
 		position = position + 3;
 
 		synchronized(nodes){
@@ -185,10 +185,10 @@ public class GraphastImpl implements Graphast {
 	 * @see org.graphast.model.Graphast#getNode(long)
 	 */
 	@Override
-	public GraphastNode getNode(long id) {
+	public NodeImpl getNode(long id) {
 
-		long position = id * GraphastNode.NODE_BLOCKSIZE;
-		GraphastNode node = new GraphastNode(
+		long position = id * NodeImpl.NODE_BLOCKSIZE;
+		NodeImpl node = new NodeImpl(
 				BigArrays.index(nodes.getInt(position), nodes.getInt(position + 1)), // externalId
 				nodes.getInt(position + 2), // category
 				latLongToDouble(nodes.getInt(position + 3)), // latitude
@@ -213,7 +213,7 @@ public class GraphastImpl implements Graphast {
 	 * @see org.graphast.model.Graphast#setEdge(org.graphast.model.GraphastEdge, long)
 	 */
 	@Override
-	public void setEdge(GraphastEdge edge, long pos) {
+	public void setEdge(Edge edge, long pos) {
 
 		synchronized (edges) {
 			edges.set(pos++, edge.getExternalIdSegment());
@@ -240,7 +240,7 @@ public class GraphastImpl implements Graphast {
 	 * @see org.graphast.model.Graphast#addEdge(org.graphast.model.GraphastEdge)
 	 */
 	@Override
-	public void addEdge(GraphastEdge edge) {
+	public void addEdge(Edge edge) {
 
 		long labelIndex = storeEdgeLabel(edge.getLabel());
 		long costsIndex = storeCosts(edge.getCosts());
@@ -253,7 +253,7 @@ public class GraphastImpl implements Graphast {
 		long id;
 
 		synchronized (edges) {
-			id = edges.size64() / GraphastEdge.EDGE_BLOCKSIZE;
+			id = edges.size64() / Edge.EDGE_BLOCKSIZE;
 
 			edges.add(edge.getExternalIdSegment());
 			edges.add(edge.getExternalIdOffset());
@@ -349,9 +349,9 @@ public class GraphastImpl implements Graphast {
 	 * @see org.graphast.model.Graphast#updateEdgeInfo(org.graphast.model.GraphastEdge)
 	 */
 	@Override
-	public void updateEdgeInfo(GraphastEdge edge) {
+	public void updateEdgeInfo(Edge edge) {
 
-		long pos = edge.getId() * GraphastEdge.EDGE_BLOCKSIZE;
+		long pos = edge.getId() * Edge.EDGE_BLOCKSIZE;
 		setEdge(edge, pos);
 
 	}
@@ -360,12 +360,12 @@ public class GraphastImpl implements Graphast {
 	 * @see org.graphast.model.Graphast#updateNeighborhood(org.graphast.model.GraphastEdge)
 	 */
 	@Override
-	public void updateNeighborhood(GraphastEdge edge) {
+	public void updateNeighborhood(Edge edge) {
 
-		GraphastNode from = getNode(edge.getFromNode());
+		NodeImpl from = getNode(edge.getFromNode());
 		from.validate();
 
-		GraphastNode to = getNode(edge.getToNode());
+		NodeImpl to = getNode(edge.getToNode());
 		to.validate();
 
 		long eid = edge.getId();
@@ -379,7 +379,7 @@ public class GraphastImpl implements Graphast {
 	 * @see org.graphast.model.Graphast#updateNodeNeighborhood(org.graphast.model.GraphastNode, long)
 	 */
 	@Override
-	public void updateNodeNeighborhood(GraphastNode node, long eid) {
+	public void updateNodeNeighborhood(NodeImpl node, long eid) {
 
 		if (BigArrays.index(node.getFirstEdgeSegment(), node.getFirstEdgeOffset()) == -1) {
 
@@ -389,7 +389,7 @@ public class GraphastImpl implements Graphast {
 		} else {
 
 			long next = 0;
-			GraphastEdge nextEdge = getEdge(BigArrays.index(node.getFirstEdgeSegment(), node.getFirstEdgeOffset()));
+			Edge nextEdge = getEdge(BigArrays.index(node.getFirstEdgeSegment(), node.getFirstEdgeOffset()));
 
 			while (next != -1) {				
 
@@ -422,10 +422,10 @@ public class GraphastImpl implements Graphast {
 	public LongList getOutEdges(long nodeId) {
 
 		LongList outEdges = new LongArrayList();
-		GraphastNode v = getNode(nodeId);
+		NodeImpl v = getNode(nodeId);
 
 		long firstEdgeId = BigArrays.index(v.getFirstEdgeSegment(), v.getFirstEdgeOffset());
-		GraphastEdge nextEdge = getEdge(firstEdgeId);
+		Edge nextEdge = getEdge(firstEdgeId);
 		long next = 0;
 
 		while (next != -1) {
@@ -454,7 +454,7 @@ public class GraphastImpl implements Graphast {
 	public short[] getCosts(LongList edges, int time) {
 
 		short[] costs = new short[edges.size()];
-		GraphastEdge e;
+		Edge e;
 		for (int i = 0; i < edges.size(); i++) {
 			e = getEdge(edges.get(i));
 			costs[i] = getEdgeCost(e, time);
@@ -490,9 +490,9 @@ public class GraphastImpl implements Graphast {
 
 	private LongList getOutNeighbors(long vid, int time, boolean getCosts) {
 		LongList neighborsCosts = new LongArrayList();
-		GraphastNode v = getNode(vid);
+		NodeImpl v = getNode(vid);
 		long firstEdgeId = BigArrays.index(v.getFirstEdgeSegment(), v.getFirstEdgeOffset());
-		GraphastEdge nextEdge = getEdge(firstEdgeId);
+		Edge nextEdge = getEdge(firstEdgeId);
 		long next = 0;
 		while (next != -1) {
 			if (vid == nextEdge.getFromNode()) {
@@ -517,9 +517,9 @@ public class GraphastImpl implements Graphast {
 	 * @see org.graphast.model.Graphast#getEdge(long)
 	 */
 	@Override
-	public GraphastEdge getEdge(long id) {
+	public Edge getEdge(long id) {
 
-		long pos = id * GraphastEdge.EDGE_BLOCKSIZE;
+		long pos = id * Edge.EDGE_BLOCKSIZE;
 
 		long externalId = BigArrays.index(edges.getInt(pos++), edges.getInt(pos++));
 		long fromId = BigArrays.index(edges.getInt(pos++), edges.getInt(pos++));
@@ -531,7 +531,7 @@ public class GraphastImpl implements Graphast {
 		long geometryIndex = BigArrays.index(edges.getInt(pos++), edges.getInt(pos++));
 		long labelIndex = BigArrays.index(edges.getInt(pos++), edges.getInt(pos++));
 
-		GraphastEdge edge = new GraphastEdge(externalId, fromId, toId,
+		Edge edge = new Edge(externalId, fromId, toId,
 				fromNodeNextEdge, toNodeNextEdge, distance, costsIndex,
 				geometryIndex, labelIndex, null);
 		
@@ -551,7 +551,7 @@ public class GraphastImpl implements Graphast {
 	@Override
 	public short[] getEdgeCosts(long id) {
 
-		GraphastEdge edge = getEdge(id);
+		Edge edge = getEdge(id);
 		long costsIndex = edge.getCostsIndex();
 		short size = costs.getShort(costsIndex++);
 		short[] c = new short[size];
@@ -567,7 +567,7 @@ public class GraphastImpl implements Graphast {
 	 * @see org.graphast.model.Graphast#getEdgeCost(org.graphast.model.GraphastEdge, int)
 	 */
 	@Override
-	public short getEdgeCost(GraphastEdge edge, int time) {
+	public short getEdgeCost(Edge edge, int time) {
 
 		long costsIndex = edge.getCostsIndex();
 		if (costsIndex < 0) {
@@ -586,7 +586,7 @@ public class GraphastImpl implements Graphast {
 	 */
 	@Override
 	public List<Point> getEdgePoints(long id) {
-		GraphastEdge edge = getEdge(id);
+		Edge edge = getEdge(id);
 		long geometryIndex = edge.getGeometryIndex();
 		int size = points.getInt(geometryIndex++);
 		List<Point> listPoints = new ArrayList<Point>(size);
@@ -637,7 +637,7 @@ public class GraphastImpl implements Graphast {
 	 */
 	@Override
 	public String getNodeLabel(long id) {
-		long position =  id*GraphastNode.NODE_BLOCKSIZE;
+		long position =  id*NodeImpl.NODE_BLOCKSIZE;
 		long labelIndex = BigArrays.index(nodes.getInt(position + 7), nodes.getInt(position + 8));
 		return nodesLabels.get(labelIndex);
 	}
@@ -687,7 +687,7 @@ public class GraphastImpl implements Graphast {
 	 */
 	@Override
 	public void logNodes() {
-		for (int i = 0; i < nodes.size64() / GraphastNode.NODE_BLOCKSIZE; i++) {
+		for (int i = 0; i < nodes.size64() / NodeImpl.NODE_BLOCKSIZE; i++) {
 			logger.info(getNode(i).toString());
 		}
 	}
@@ -698,7 +698,7 @@ public class GraphastImpl implements Graphast {
 	@Override
 	public void logEdges() {
 
-		for (long i = 0; i < (edges.size64() / GraphastEdge.EDGE_BLOCKSIZE); i++) {
+		for (long i = 0; i < (edges.size64() / Edge.EDGE_BLOCKSIZE); i++) {
 			logger.info(getEdge(i).toString());
 		}
 	}
@@ -708,7 +708,7 @@ public class GraphastImpl implements Graphast {
 	 */
 	@Override
 	public int getNumberOfNodes(){
-		return (int) getNodes().size64()/GraphastNode.NODE_BLOCKSIZE;
+		return (int) getNodes().size64()/NodeImpl.NODE_BLOCKSIZE;
 	}
 
 	/* (non-Javadoc)
@@ -716,13 +716,13 @@ public class GraphastImpl implements Graphast {
 	 */
 	@Override
 	public int getNumberOfEdges(){
-		return (int) getEdges().size64()/GraphastEdge.EDGE_BLOCKSIZE;
+		return (int) getEdges().size64()/Edge.EDGE_BLOCKSIZE;
 	}
 
-	public Long2IntMap accessNeighborhood(GraphastNode v){
+	public Long2IntMap accessNeighborhood(Node v){
 		Long2IntMap neig = new Long2IntOpenHashMap();
 		for (Long e : this.getOutEdges( v.getId())) {
-			GraphastEdge edge = this.getEdge(e);
+			Edge edge = this.getEdge(e);
 			long vNeig =  edge.getToNode();
 			int cost =  edge.getDistance();
 			if(!neig.containsKey(vNeig)){
@@ -738,7 +738,7 @@ public class GraphastImpl implements Graphast {
 
 	public boolean hasNode(long id) {
 		try {
-			long position = id * GraphastNode.NODE_BLOCKSIZE;
+			long position = id * NodeImpl.NODE_BLOCKSIZE;
 			if(nodes.contains(position)) {
 				return true;
 			}
@@ -751,7 +751,7 @@ public class GraphastImpl implements Graphast {
 		}
 	}
 
-	public boolean hasNode(GraphastNode node) {
+	public boolean hasNode(NodeImpl node) {
 		try {
 			if(nodeIndex.containsKey(BigArrays.index(node.getLatitudeConvertedToInt(), node.getLongitudeConvertedToInt()))) {
 				return true;

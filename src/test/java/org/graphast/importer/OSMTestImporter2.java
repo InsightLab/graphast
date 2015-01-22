@@ -2,7 +2,7 @@ package org.graphast.importer;
 
 import static org.junit.Assert.assertEquals;
 
-import org.graphast.model.Graphast;
+import org.graphast.model.Graph;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,7 +21,7 @@ public class OSMTestImporter2 {
 	@Test
 	public void executeTest() {
 
-		Graphast graph = new OSMImporter().execute(null, graphHopperDir, graphastDir);
+		Graph graph = new OSMImporter().execute(null, graphHopperDir, graphastDir);
 
 		assertEquals(6, graph.getNumberOfNodes());
 		assertEquals(9, graph.getNumberOfEdges());

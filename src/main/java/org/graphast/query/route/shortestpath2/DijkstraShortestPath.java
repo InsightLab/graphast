@@ -7,7 +7,7 @@ import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 
-import org.graphast.model.Graphast;
+import org.graphast.model.Graph;
 
 /**
  * An abstract class that handle DijkstraShortestPath.
@@ -30,7 +30,7 @@ public abstract class DijkstraShortestPath extends ShortestPathAlgorithms {
 	 * @param	target	node that will be used as a destination for this kind of algorithm
 	 * @param	gr	Graphast
 	 */
-	public DijkstraShortestPath(Graphast gr, long source, long target) {
+	public DijkstraShortestPath(Graph gr, long source, long target) {
 		
 		super(gr, source,target);
 		

@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.PriorityQueue;
 
 import org.graphast.exception.PathNotFoundException;
-import org.graphast.model.Graphast;
-import org.graphast.model.GraphastNode;
+import org.graphast.model.Graph;
+import org.graphast.model.Node;
 import org.graphast.util.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,7 @@ public abstract class DijkstraShortestPath extends AbstractShortestPathService {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	public DijkstraShortestPath(Graphast graph) {
+	public DijkstraShortestPath(Graph graph) {
 		super(graph);
 	}
 
@@ -76,7 +76,7 @@ public abstract class DijkstraShortestPath extends AbstractShortestPathService {
 
 	}
 
-	public int shortestPath(GraphastNode source, GraphastNode target, Date time) {
+	public int shortestPath(Node source, Node target, Date time) {
 		PriorityQueue<DistanceEntry> queue = new PriorityQueue<DistanceEntry>();
 		HashMap<Long, Integer> wasTraversed = new HashMap<Long, Integer>();
 		HashMap<Long, RouteEntry> parents = new HashMap<Long, RouteEntry>();
@@ -101,7 +101,7 @@ public abstract class DijkstraShortestPath extends AbstractShortestPathService {
 		throw new PathNotFoundException();
 	}
 
-	public void init(GraphastNode source, GraphastNode target, PriorityQueue<DistanceEntry> queue, 
+	public void init(Node source, Node target, PriorityQueue<DistanceEntry> queue, 
 			HashMap<Long, RouteEntry> parents){
 		int sourceId = convertToInt(source.getId());
 
@@ -110,7 +110,7 @@ public abstract class DijkstraShortestPath extends AbstractShortestPathService {
 		//parents.put((Integer) graphAdapter.getVertex(sid).getProperty(Property.ORGINALID), new RouteEntry(-1, 0));
 	}
 
-	public abstract void expandVertex(GraphastNode target, DistanceEntry removed, HashMap<Long, Integer> wasTraversed, 
+	public abstract void expandVertex(Node target, DistanceEntry removed, HashMap<Long, Integer> wasTraversed, 
 			PriorityQueue<DistanceEntry> queue, HashMap<Long, RouteEntry> parents);
 
 }
