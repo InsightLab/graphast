@@ -8,7 +8,6 @@ import static org.graphast.util.GeoUtils.latLongToInt;
 import static org.graphast.util.GeoUtils.latLongToDouble;
 
 public class NodeImpl implements Node {
-	public static final short NODE_BLOCKSIZE = 11;
 
 	private Long id;
 

@@ -101,7 +101,7 @@ public class GraphImpl implements Graph {
 		int numberOfNodes = getNumberOfNodes();
 		NodeImpl node;
 		for (int i=0; i < numberOfNodes; i++) {
-			node = getNode(i);
+			node = (NodeImpl)getNode(i);
 			nodeIndex.put(BigArrays.index(node.getLatitudeConvertedToInt(), node.getLongitudeConvertedToInt()), (long) i);
 		}
 	}
@@ -110,16 +110,18 @@ public class GraphImpl implements Graph {
 	 * @see org.graphast.model.Graphast#addNode(org.graphast.model.GraphastNode)
 	 */
 	@Override
-	public void addNode(NodeImpl node) {
+	public void addNode(Node n) {
 
 		long id;
+		
+		NodeImpl node = (NodeImpl)n;
 
 		long labelIndex = storeNodeLabel(node.getLabel());
 		node.setLabelIndex(labelIndex);
 
 
 		synchronized (nodes) {
-			id = nodes.size64() / NodeImpl.NODE_BLOCKSIZE;
+			id = nodes.size64() / Node.NODE_BLOCKSIZE;
 
 			nodes.add(node.getExternalIdSegment());
 			nodes.add(node.getExternalIdOffset());
@@ -169,8 +171,11 @@ public class GraphImpl implements Graph {
 		 * 
 		 * @param node GraphastNode with the informations that must be updated.
 		 */
-	public void updateNodeInfo(NodeImpl node) {
-		long position = node.getId() * NodeImpl.NODE_BLOCKSIZE;
+	public void updateNodeInfo(Node n) {
+		
+		NodeImpl node = (NodeImpl)n;
+		
+		long position = node.getId() * Node.NODE_BLOCKSIZE;
 		position = position + 3;
 
 		synchronized(nodes){
@@ -185,9 +190,9 @@ public class GraphImpl implements Graph {
 	 * @see org.graphast.model.Graphast#getNode(long)
 	 */
 	@Override
-	public NodeImpl getNode(long id) {
+	public Node getNode(long id) {
 
-		long position = id * NodeImpl.NODE_BLOCKSIZE;
+		long position = id * Node.NODE_BLOCKSIZE;
 		NodeImpl node = new NodeImpl(
 				BigArrays.index(nodes.getInt(position), nodes.getInt(position + 1)), // externalId
 				nodes.getInt(position + 2), // category
@@ -213,8 +218,10 @@ public class GraphImpl implements Graph {
 	 * @see org.graphast.model.Graphast#setEdge(org.graphast.model.GraphastEdge, long)
 	 */
 	@Override
-	public void setEdge(Edge edge, long pos) {
+	public void setEdge(Edge e, long pos) {
 
+		EdgeImpl edge = (EdgeImpl)e;
+		
 		synchronized (edges) {
 			edges.set(pos++, edge.getExternalIdSegment());
 			edges.set(pos++, edge.getExternalIdOffset());
@@ -240,8 +247,10 @@ public class GraphImpl implements Graph {
 	 * @see org.graphast.model.Graphast#addEdge(org.graphast.model.GraphastEdge)
 	 */
 	@Override
-	public void addEdge(Edge edge) {
+	public void addEdge(Edge e) {
 
+		EdgeImpl edge = (EdgeImpl)e;
+		
 		long labelIndex = storeEdgeLabel(edge.getLabel());
 		long costsIndex = storeCosts(edge.getCosts());
 		long geometryIndex = storePoints(edge.getGeometry());
@@ -362,10 +371,10 @@ public class GraphImpl implements Graph {
 	@Override
 	public void updateNeighborhood(Edge edge) {
 
-		NodeImpl from = getNode(edge.getFromNode());
+		Node from = getNode(edge.getFromNode());
 		from.validate();
 
-		NodeImpl to = getNode(edge.getToNode());
+		Node to = getNode(edge.getToNode());
 		to.validate();
 
 		long eid = edge.getId();
@@ -379,8 +388,10 @@ public class GraphImpl implements Graph {
 	 * @see org.graphast.model.Graphast#updateNodeNeighborhood(org.graphast.model.GraphastNode, long)
 	 */
 	@Override
-	public void updateNodeNeighborhood(NodeImpl node, long eid) {
+	public void updateNodeNeighborhood(Node n, long eid) {
 
+		NodeImpl node = (NodeImpl)n;
+		
 		if (BigArrays.index(node.getFirstEdgeSegment(), node.getFirstEdgeOffset()) == -1) {
 
 			node.setFirstEdge(eid);
@@ -389,7 +400,7 @@ public class GraphImpl implements Graph {
 		} else {
 
 			long next = 0;
-			Edge nextEdge = getEdge(BigArrays.index(node.getFirstEdgeSegment(), node.getFirstEdgeOffset()));
+			EdgeImpl nextEdge = (EdgeImpl) getEdge(BigArrays.index(node.getFirstEdgeSegment(), node.getFirstEdgeOffset()));
 
 			while (next != -1) {				
 
@@ -399,7 +410,7 @@ public class GraphImpl implements Graph {
 					next = nextEdge.getToNodeNextEdge();
 				}
 				if (next != -1) {
-					nextEdge = getEdge(next);
+					nextEdge = (EdgeImpl)getEdge(next);
 				}
 			}
 
@@ -422,7 +433,7 @@ public class GraphImpl implements Graph {
 	public LongList getOutEdges(long nodeId) {
 
 		LongList outEdges = new LongArrayList();
-		NodeImpl v = getNode(nodeId);
+		NodeImpl v = (NodeImpl)getNode(nodeId);
 
 		long firstEdgeId = BigArrays.index(v.getFirstEdgeSegment(), v.getFirstEdgeOffset());
 		Edge nextEdge = getEdge(firstEdgeId);
@@ -490,7 +501,7 @@ public class GraphImpl implements Graph {
 
 	private LongList getOutNeighbors(long vid, int time, boolean getCosts) {
 		LongList neighborsCosts = new LongArrayList();
-		NodeImpl v = getNode(vid);
+		NodeImpl v = (NodeImpl)getNode(vid);
 		long firstEdgeId = BigArrays.index(v.getFirstEdgeSegment(), v.getFirstEdgeOffset());
 		Edge nextEdge = getEdge(firstEdgeId);
 		long next = 0;
@@ -519,6 +530,8 @@ public class GraphImpl implements Graph {
 	@Override
 	public Edge getEdge(long id) {
 
+		
+		
 		long pos = id * Edge.EDGE_BLOCKSIZE;
 
 		long externalId = BigArrays.index(edges.getInt(pos++), edges.getInt(pos++));
@@ -531,7 +544,7 @@ public class GraphImpl implements Graph {
 		long geometryIndex = BigArrays.index(edges.getInt(pos++), edges.getInt(pos++));
 		long labelIndex = BigArrays.index(edges.getInt(pos++), edges.getInt(pos++));
 
-		Edge edge = new Edge(externalId, fromId, toId,
+		EdgeImpl edge = new EdgeImpl(externalId, fromId, toId,
 				fromNodeNextEdge, toNodeNextEdge, distance, costsIndex,
 				geometryIndex, labelIndex, null);
 		
@@ -637,7 +650,7 @@ public class GraphImpl implements Graph {
 	 */
 	@Override
 	public String getNodeLabel(long id) {
-		long position =  id*NodeImpl.NODE_BLOCKSIZE;
+		long position =  id*Node.NODE_BLOCKSIZE;
 		long labelIndex = BigArrays.index(nodes.getInt(position + 7), nodes.getInt(position + 8));
 		return nodesLabels.get(labelIndex);
 	}
@@ -687,7 +700,7 @@ public class GraphImpl implements Graph {
 	 */
 	@Override
 	public void logNodes() {
-		for (int i = 0; i < nodes.size64() / NodeImpl.NODE_BLOCKSIZE; i++) {
+		for (int i = 0; i < nodes.size64() / Node.NODE_BLOCKSIZE; i++) {
 			logger.info(getNode(i).toString());
 		}
 	}
@@ -708,7 +721,7 @@ public class GraphImpl implements Graph {
 	 */
 	@Override
 	public int getNumberOfNodes(){
-		return (int) getNodes().size64()/NodeImpl.NODE_BLOCKSIZE;
+		return (int) getNodes().size64()/Node.NODE_BLOCKSIZE;
 	}
 
 	/* (non-Javadoc)
@@ -738,7 +751,7 @@ public class GraphImpl implements Graph {
 
 	public boolean hasNode(long id) {
 		try {
-			long position = id * NodeImpl.NODE_BLOCKSIZE;
+			long position = id * Node.NODE_BLOCKSIZE;
 			if(nodes.contains(position)) {
 				return true;
 			}
@@ -751,7 +764,10 @@ public class GraphImpl implements Graph {
 		}
 	}
 
-	public boolean hasNode(NodeImpl node) {
+	public boolean hasNode(Node n) {
+		
+		NodeImpl node = (NodeImpl)n;
+		
 		try {
 			if(nodeIndex.containsKey(BigArrays.index(node.getLatitudeConvertedToInt(), node.getLongitudeConvertedToInt()))) {
 				return true;
