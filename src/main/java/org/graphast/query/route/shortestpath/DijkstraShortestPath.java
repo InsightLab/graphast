@@ -77,14 +77,13 @@ public abstract class DijkstraShortestPath extends AbstractShortestPathService {
 	}
 
 	public int shortestPath(GraphastNode source, GraphastNode target, Date time) {
-		PriorityQueue<Entry> queue = new PriorityQueue<Entry>();
+		PriorityQueue<DistanceEntry> queue = new PriorityQueue<DistanceEntry>();
 		HashMap<Long, Integer> wasTraversed = new HashMap<Long, Integer>();
 		HashMap<Long, RouteEntry> parents = new HashMap<Long, RouteEntry>();
-		Entry removed = null;
+		DistanceEntry removed = null;
 		int targetId = convertToInt(target.getId());
-		int timeMillis = DateUtils.dateToMilli(time);
 
-		init(source, target, queue, parents, timeMillis);
+		init(source, target, queue, parents);
 
 		while(!queue.isEmpty()){
 			removed = queue.poll();
@@ -95,23 +94,23 @@ public abstract class DijkstraShortestPath extends AbstractShortestPathService {
 				List<Instruction> path = reconstructPath(removed.getId(), parents);
 				logger.info("path: {}", path);
 
-				return removed.getTravelTime();
+				return removed.getDistance();
 			}
 			expandVertex(target, removed, wasTraversed, queue, parents);
 		}
 		throw new PathNotFoundException();
 	}
 
-	public void init(GraphastNode source, GraphastNode target, PriorityQueue<Entry> queue, 
-			HashMap<Long, RouteEntry> parents, int arrivalTime){
+	public void init(GraphastNode source, GraphastNode target, PriorityQueue<DistanceEntry> queue, 
+			HashMap<Long, RouteEntry> parents){
 		int sourceId = convertToInt(source.getId());
 
-		queue.offer(new Entry(sourceId, 0, arrivalTime, -1));
+		queue.offer(new DistanceEntry(sourceId, 0, -1));
 
 		//parents.put((Integer) graphAdapter.getVertex(sid).getProperty(Property.ORGINALID), new RouteEntry(-1, 0));
 	}
 
-	public abstract void expandVertex(GraphastNode target, Entry removed, HashMap<Long, Integer> wasTraversed, 
-			PriorityQueue<Entry> queue, HashMap<Long, RouteEntry> parents);
+	public abstract void expandVertex(GraphastNode target, DistanceEntry removed, HashMap<Long, Integer> wasTraversed, 
+			PriorityQueue<DistanceEntry> queue, HashMap<Long, RouteEntry> parents);
 
 }

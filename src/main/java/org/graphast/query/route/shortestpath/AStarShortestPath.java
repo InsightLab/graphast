@@ -81,7 +81,7 @@ public abstract class AStarShortestPath extends AbstractShortestPathService{
 		parents.put(sourceId, null);		
 	}
 	
-	public abstract void expandVertex(GraphastNode target, Entry removed, HashMap<Long, Integer> wasTraversed, 
+	public abstract void expandVertex(GraphastNode target, TimeEntry removed, HashMap<Long, Integer> wasTraversed, 
 			PriorityQueue<LowerBoundEntry> queue, HashMap<Long, RouteEntry> parents);
 
 }

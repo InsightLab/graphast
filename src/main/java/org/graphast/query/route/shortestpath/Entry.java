@@ -1,62 +1,17 @@
 package org.graphast.query.route.shortestpath;
 
-public class Entry implements Comparable<Object>{
-    private long id;
-    private int travelTime;
-    private int arrivalTime;
-    private long parent;
-	
-	public Entry(long id, int travelTime, int arrivalTime, long parent) {
-    	this.id = id;
-    	this.travelTime = travelTime;
-    	this.arrivalTime = arrivalTime;
-    	this.parent = parent;
-	}
+public interface Entry {
 
-	public boolean equals(Entry o){
-        return this.id == o.id;
-    }
- 
-	public int compareTo(Object o) {
-		return new Integer(travelTime).compareTo(((Entry)o).travelTime);
-	}
+	public abstract boolean equals(EntryImpl o);
 
-	public long getId() {
-		return id;
-	}
+	public abstract long getId();
 
-	public void setId(long id) {
-		this.id = id;
-	}
+	public abstract void setId(long id);
 
-	public int getTravelTime() {
-		return travelTime;
-	}
+	public abstract long getParent();
 
-	public void setTravelTime(int tt) {
-		this.travelTime = tt;
-	}
+	public abstract void setParent(long parent);
 
-	public int getArrivalTime() {
-		return arrivalTime;
-	}
+	public abstract String toString();
 
-	public void setArrivalTime(int at) {
-		this.arrivalTime = at;
-	}
-
-	public long getParent() {
-		return parent;
-	}
-
-	public void setParent(long parent) {
-		this.parent = parent;
-	}
-
-	@Override
-	public String toString() {
-		return "Entry [id=" + id + ", travelTime=" + travelTime
-				+ ", arrivalTime=" + arrivalTime + ", parent=" + parent + "]";
-	}
-	
 }

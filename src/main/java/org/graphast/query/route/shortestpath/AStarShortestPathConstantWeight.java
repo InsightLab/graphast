@@ -19,7 +19,7 @@ public class AStarShortestPathConstantWeight extends AStarShortestPath{
 		this.distance = new DistanceCalcEarth();
 	}
 
-	public void expandVertex(GraphastNode target, Entry removed, HashMap<Long, Integer> wasTraversed, 
+	public void expandVertex(GraphastNode target, TimeEntry removed, HashMap<Long, Integer> wasTraversed, 
 			PriorityQueue<LowerBoundEntry> queue, HashMap<Long, RouteEntry> parents){
 		
 		Long2IntMap neig = graph.accessNeighborhood(graph.getNode(removed.getId()));
