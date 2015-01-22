@@ -12,20 +12,20 @@ import org.graphast.model.Graphast;
  */
 public abstract class GraphastAlgorithms {
 
-	public Graphast gr;
+	public Graphast graph;
 	
 	public final IntBigArrayBigList nodes;
 	public final IntBigArrayBigList edges;
 	
 	/**
 	 * Constructs a GraphastAlgorithms with the passed parameter.
-	 * @param fg
+	 * @param graph Graph used by the algorithm.
 	 */
-	public GraphastAlgorithms(Graphast gr) {
+	public GraphastAlgorithms(Graphast graph) {
 	
-		this.gr = gr;
-		this.nodes = gr.getNodes();
-		this.edges = gr.getEdges();
+		this.graph = graph;
+		this.nodes = graph.getNodes();
+		this.edges = graph.getEdges();
 	
 	}
 	

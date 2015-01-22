@@ -20,7 +20,7 @@ public class AStarShortestPathConstantWeight extends AStarShortestPath{
 	}
 
 	public void expandVertex(GraphastNode target, Entry removed, HashMap<Long, Integer> wasTraversed, 
-			PriorityQueue<LowerBoundEntry> queue){
+			PriorityQueue<LowerBoundEntry> queue, HashMap<Long, RouteEntry> parents){
 		
 		Long2IntMap neig = graph.accessNeighborhood(graph.getNode(removed.getId()));
 		
@@ -31,9 +31,20 @@ public class AStarShortestPathConstantWeight extends AStarShortestPath{
 			int lb = tt + (int) (distance.calcDist((double) graph.getNode(vid).getLatitude(), (double) graph.getNode(vid).getLongitude(),
 					(double) target.getLatitude(), (double) target.getLongitude())) * 100;
 			LowerBoundEntry newEntry = new LowerBoundEntry(vid, tt, 0, removed.getId(), lb);
+			
+			String label = null;
+			
 			if(!wasTraversed.containsKey(vid)){					
 				queue.offer(newEntry);
 				wasTraversed.put(newEntry.getId(), newEntry.getTravelTime());
+				
+				for(Long outEdges : graph.getOutEdges(removed.getId())) {
+					if ((int) graph.getEdge(outEdges).getToNode() == vid) {
+						label = graph.getEdge(outEdges).getLabel();
+					}
+				}
+				
+				parents.put(vid, new RouteEntry(removed.getId(), neig.get(vid), label));
 			}else{
 				int cost = wasTraversed.get(vid);
 				if(cost != wasRemoved){
