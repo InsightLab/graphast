@@ -15,14 +15,10 @@ import com.graphhopper.util.StopWatch;
 public class AStarShortestPathConstantWeightTest {
 
 		private static Graphast graphMonaco;
-		private static Graphast graphExample;
-		private static Graphast graphExample2;
 		
 		@BeforeClass
 		public static void setup() {
 			graphMonaco = new GraphGenerator().generateMonaco();
-			graphExample = new GraphGenerator().generateExample();
-			graphExample2 = new GraphGenerator().generateExample2();
 		}
 		
 		@Test
@@ -63,30 +59,17 @@ public class AStarShortestPathConstantWeightTest {
 
 		}
 		
-//		@Test
-//		public void shortestPathExampleTest() {
-//			Long source = 1L; // External ID = 5
-//			Long target = 4L; // External ID = 2
-//			AbstractShortestPathService aStar = new AStarShortestPathConstantWeight(graphExample);
-//			assertEquals(9000, aStar.shortestPath(source, target));
-//			
-//			source = 0L; // External ID = 1
-//			target = 5L; // External ID = 4
-//			aStar = new AStarShortestPathConstantWeight(graphExample);
-//			assertEquals(8100, aStar.shortestPath(source, target));		
-//		}
+		@Test
+		public void ShortestPathMonacoTest3() {
+			Long source = graphMonaco.getNode(43.72636792197156, 7.417292499928754);
+			Long target = graphMonaco.getNode(43.74766484829034,7.430716770083832);
+			
+			AbstractShortestPathService aStar = new AStarShortestPathConstantWeight(graphMonaco);
+	        assertEquals(3610710, aStar.shortestPath(source, target));
+
+		}
 		
-//		@Test
-//		public void shortestPathExample2Test() {
-//			Long source = 0L;
-//			Long target = 6L;
-//			
-//			AbstractShortestPathService aStar = new AStarShortestPathConstantWeight(graphExample2);
-//			//debug
-//			double x = aStar.shortestPath(source, target);
-//			System.out.println(x);
-//			assertEquals(12, aStar.shortestPath(source, target));
-//		}
+
 		
 		@AfterClass
 		public static void tearDown() {
