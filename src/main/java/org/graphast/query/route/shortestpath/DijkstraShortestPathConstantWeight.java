@@ -12,41 +12,51 @@ import org.graphast.model.GraphastNode;
 public class DijkstraShortestPathConstantWeight extends DijkstraShortestPath {
 
 	public DijkstraShortestPathConstantWeight(Graphast graph) {
+		
 		super(graph);
+	
 	}
 	
-	public void expandVertex(GraphastNode target, Entry removed, HashMap<Long, Integer> wasTraversed, 
-			PriorityQueue<Entry> queue, HashMap<Long, RouteEntry> parents){
+	public void expandVertex(GraphastNode target, DistanceEntry removed, HashMap<Long, Integer> wasTraversed, 
+			PriorityQueue<DistanceEntry> queue, HashMap<Long, RouteEntry> parents){
 		
 		Long2IntMap neig = graph.accessNeighborhood(graph.getNode(removed.getId()));
 		
 		for (long vid : neig.keySet()) {
 			//long vid = convertToInt(v);
 			//int arrivalTime = graph.getArrival(removed.getAt(), neig.get(v));
-			int travelTime = removed.getTravelTime() + neig.get(vid);
-			Entry newEntry = new Entry(vid, travelTime, 0, removed.getId());
+			int travelDistance = removed.getDistance() + neig.get(vid);
+			DistanceEntry newDistanceEntry = new DistanceEntry(vid, travelDistance, removed.getId());
 			
 			String label = null;
 			
-			if (!wasTraversed.containsKey(vid)){					
-				queue.offer(newEntry);
-				wasTraversed.put(newEntry.getId(), newEntry.getTravelTime());
+			if (!wasTraversed.containsKey(vid)) {		
+				
+				queue.offer(newDistanceEntry);
+				wasTraversed.put(newDistanceEntry.getId(), newDistanceEntry.getDistance());
 				
 				for(Long outEdges : graph.getOutEdges(removed.getId())) {
+					
 					if ((int) graph.getEdge(outEdges).getToNode() == vid) {
 						label = graph.getEdge(outEdges).getLabel();
 					}
+				
 				}
 				
 				parents.put(vid, new RouteEntry(removed.getId(), neig.get(vid), label));
+				
 			} else {
+				
 				int cost = wasTraversed.get(vid);
+				
 				if (cost != wasRemoved) {
-					if(cost > newEntry.getTravelTime()){
-						queue.remove(newEntry);
-						queue.offer(newEntry);
-						wasTraversed.remove(newEntry.getId());
-						wasTraversed.put(newEntry.getId(), newEntry.getTravelTime());
+					
+					if(cost > newDistanceEntry.getDistance()) {
+						
+						queue.remove(newDistanceEntry);
+						queue.offer(newDistanceEntry);
+						wasTraversed.remove(newDistanceEntry.getId());
+						wasTraversed.put(newDistanceEntry.getId(), newDistanceEntry.getDistance());
 
 						//String label = graph.getEdgeLabel(vid);
 						//parents.put(vid, new RouteEntry(vid, neig.get(vid), label));
