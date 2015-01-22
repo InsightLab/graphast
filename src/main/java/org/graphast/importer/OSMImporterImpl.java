@@ -19,11 +19,28 @@ import com.graphhopper.GraphHopper;
 import com.graphhopper.storage.GraphStorage;
 import com.graphhopper.util.EdgeIterator;
 
-public class OSMImporter {
+public class OSMImporterImpl implements Importer {
 
 	public Logger logger = LoggerFactory.getLogger(this.getClass());
-
-	public Graph execute(String osmFile, String graphHopperDir, String graphastDir) {
+	
+	private String osmFile, graphHopperDir, graphastDir;
+	
+	public OSMImporterImpl(String osmFile, String graphHopperDir, String graphastDir) {
+		this.osmFile = osmFile;
+		this.graphHopperDir = graphHopperDir;
+		this.graphastDir = graphastDir;
+	}
+	
+	public OSMImporterImpl(String graphHopperDir, String graphastDir) {
+		this(null, graphHopperDir, graphastDir);
+		
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.graphast.importer.OSMImporter#execute()
+	 */
+	@Override
+	public Graph execute() {
 
 		logger.info("Initial date: {}", new Date());
 		double initialTime = System.currentTimeMillis();
@@ -116,6 +133,10 @@ public class OSMImporter {
 		return graph;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.importer.OSMImporter#getDirection(long)
+	 */
+	@Override
 	public int getDirection(long flags) {
 		long direction = (flags & 3);
 
@@ -130,4 +151,41 @@ public class OSMImporter {
 			throw new IllegalArgumentException("Invalid flag");
 		}
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.graphast.importer.OSMImporter#getOsmFile()
+	 */
+	@Override
+	public String getOsmFile() {
+		return osmFile;
+	}
+
+	public void setOsmFile(String osmFile) {
+		this.osmFile = osmFile;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.graphast.importer.OSMImporter#getGraphHopperDir()
+	 */
+	@Override
+	public String getGraphHopperDir() {
+		return graphHopperDir;
+	}
+
+	public void setGraphHopperDir(String graphHopperDir) {
+		this.graphHopperDir = graphHopperDir;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.graphast.importer.OSMImporter#getGraphastDir()
+	 */
+	@Override
+	public String getGraphastDir() {
+		return graphastDir;
+	}
+
+	public void setGraphastDir(String graphastDir) {
+		this.graphastDir = graphastDir;
+	}
+	
 }

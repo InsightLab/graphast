@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.graphast.geometry.Point;
-import org.graphast.importer.OSMImporter;
+import org.graphast.importer.OSMImporterImpl;
 import org.graphast.model.Edge;
 import org.graphast.model.Graph;
 import org.graphast.model.EdgeImpl;
@@ -60,7 +60,7 @@ public class GraphGenerator {
 
 		graphStorage.flush();
 		graphStorage.close();
-		graphast = new OSMImporter().execute(null, graphHopperExampleDir, graphastExampleDir);
+		graphast = new OSMImporterImpl(graphHopperExampleDir, graphastExampleDir).execute();
 		
 		return graphast;
 
@@ -126,7 +126,8 @@ public class GraphGenerator {
 		String osmFile = DijkstraShortestPathConstantWeight.class.getResource("/monaco-150112.osm.pbf").getPath();
 		String graphHopperMonacoDir = "/tmp/graphhopper/test/monaco";
 		String graphastMonacoDir = "/tmp/graphast/test/monaco";
-		Graph graphast = new OSMImporter().execute(osmFile, graphHopperMonacoDir, graphastMonacoDir);
+		
+		Graph graphast = new OSMImporterImpl(osmFile, graphHopperMonacoDir, graphastMonacoDir).execute();
 		
 		return graphast;
 	}

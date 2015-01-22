@@ -21,7 +21,7 @@ public class OSMTestImporter2 {
 	@Test
 	public void executeTest() {
 
-		Graph graph = new OSMImporter().execute(null, graphHopperDir, graphastDir);
+		Graph graph = new OSMImporterImpl(graphHopperDir, graphastDir).execute();
 
 		assertEquals(6, graph.getNumberOfNodes());
 		assertEquals(9, graph.getNumberOfEdges());
