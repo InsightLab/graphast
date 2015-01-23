@@ -44,31 +44,6 @@ public interface Edge {
 	public abstract long getToNodeNextEdge();
 
 	/* (non-Javadoc)
-	 * @see org.graphast.model.Edge#getToNodeSegment()
-	 */
-	public abstract int getToNodeSegment();
-
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Edge#getCostsSegment()
-	 */
-	public abstract int getCostsSegment();
-
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Edge#getGeometrySegment()
-	 */
-	public abstract int getGeometrySegment();
-
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Edge#getCostsIndex()
-	 */
-	public abstract long getCostsIndex();
-
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Edge#getGeometryIndex()
-	 */
-	public abstract long getGeometryIndex();
-
-	/* (non-Javadoc)
 	 * @see org.graphast.model.Edge#getCosts()
 	 */
 	public abstract short[] getCosts();

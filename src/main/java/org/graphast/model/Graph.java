@@ -171,9 +171,7 @@ public interface Graph {
 
 	public List<Point> getEdgePoints(long id);
 
-	public Long getNodeId(int latitude, int longitude);
-
-	public Long getNode(double latitude, double longitude);
+	public Long getNodeId(double latitude, double longitude);
 
 	public String getNodeLabel(long id);
 

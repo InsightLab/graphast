@@ -96,20 +96,6 @@ public class EdgeImpl implements Edge {
 			throw new GraphastException("Invalid edge");
 		}
 
-//		if(fromNode == toNode) {
-//			
-//			//logger.error("Invalid edge: {}", toString());
-//			throw new GraphastException("Invalid edge: fromNode == toNode");
-//		
-//		}
-//
-//		if(getId() != null && (getFromNodeNextEdge() == getId() || getToNodeNextEdge() == getId())) {
-//			
-//			//logger.error("Invalid edge: {}", toString());
-//			throw new GraphastException("Invalid edge: edgeId == nodeNextEdge");
-//		
-//		}
-	
 	}
 
 	/* (non-Javadoc)
@@ -124,9 +110,6 @@ public class EdgeImpl implements Edge {
 		this.distance = distance;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Edge#getId()
-	 */
 	@Override
 	public Long getId() {
 		return id;
@@ -144,9 +127,6 @@ public class EdgeImpl implements Edge {
 		return BigArrays.displacement(externalId);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Edge#getFromNode()
-	 */
 	@Override
 	public long getFromNode() {
 		return fromNode;
@@ -156,9 +136,6 @@ public class EdgeImpl implements Edge {
 		this.fromNode = fromNode;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Edge#getToNode()
-	 */
 	@Override
 	public long getToNode() {
 		return toNode;
@@ -168,9 +145,6 @@ public class EdgeImpl implements Edge {
 		this.toNode = toNode;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Edge#getFromNodeNextEdge()
-	 */
 	@Override
 	public long getFromNodeNextEdge() {
 		return fromNodeNextEdge;
@@ -180,9 +154,6 @@ public class EdgeImpl implements Edge {
 		this.fromNodeNextEdge = fromNodeNextEdge;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Edge#getToNodeNextEdge()
-	 */
 	@Override
 	public long getToNodeNextEdge() {
 		return toNodeNextEdge;
@@ -200,10 +171,6 @@ public class EdgeImpl implements Edge {
 		return BigArrays.displacement(fromNode);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Edge#getToNodeSegment()
-	 */
-	@Override
 	public int getToNodeSegment() {
 		return BigArrays.segment(toNode);
 	}
@@ -212,10 +179,6 @@ public class EdgeImpl implements Edge {
 		return BigArrays.displacement(toNode);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Edge#getCostsSegment()
-	 */
-	@Override
 	public int getCostsSegment() {
 
 		return BigArrays.segment(costsIndex);
@@ -225,10 +188,6 @@ public class EdgeImpl implements Edge {
 		return BigArrays.displacement(costsIndex);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Edge#getGeometrySegment()
-	 */
-	@Override
 	public int getGeometrySegment() {
 		return BigArrays.segment(geometryIndex);
 	}
@@ -237,10 +196,6 @@ public class EdgeImpl implements Edge {
 		return BigArrays.displacement(geometryIndex);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Edge#getCostsIndex()
-	 */
-	@Override
 	public long getCostsIndex() {
 		return costsIndex;
 	}
@@ -249,10 +204,6 @@ public class EdgeImpl implements Edge {
 		this.costsIndex = costsIndex;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Edge#getGeometryIndex()
-	 */
-	@Override
 	public long getGeometryIndex() {
 		return geometryIndex;
 	}
@@ -261,9 +212,6 @@ public class EdgeImpl implements Edge {
 		this.geometryIndex = geometryIndex;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Edge#getCosts()
-	 */
 	@Override
 	public short[] getCosts() {
 		return costs;
@@ -272,10 +220,6 @@ public class EdgeImpl implements Edge {
 	public void setCosts(short[] costs) {
 		this.costs = costs;
 	}
-
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Edge#getGeometry()
-	 */
 
 	@Override
 	public List<Point> getGeometry() {
@@ -302,9 +246,6 @@ public class EdgeImpl implements Edge {
 		return BigArrays.displacement(labelIndex);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Edge#getLabel()
-	 */
 	@Override
 	public String getLabel() {
 		return label;
@@ -334,9 +275,6 @@ public class EdgeImpl implements Edge {
 		this.externalId = externalID;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Edge#toString()
-	 */
 	@Override
 	public String toString() {
 		return "FastGraphEdge [id=" + id + ", externalId=" + externalId + ", fromNode=" + fromNode
