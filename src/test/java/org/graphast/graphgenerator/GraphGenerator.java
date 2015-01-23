@@ -24,8 +24,7 @@ public class GraphGenerator {
 	public Graph generateExample() {
 		String graphastExampleDir = "/tmp/graphast/test/example";
 		String graphHopperExampleDir = "/tmp/graphhopper/test/example";
-		Graph graphast = new GraphImpl(graphHopperExampleDir);
-
+		Graph graph = new GraphImpl(graphHopperExampleDir);
 
 		EncodingManager encodingManager = new EncodingManager("car");
 		GraphBuilder gb = new GraphBuilder(encodingManager).setLocation(graphHopperExampleDir).setStore(true);
@@ -57,68 +56,67 @@ public class GraphGenerator {
 		iter6.setName("Named Street 6");
 		iter7.setName("Named Street 7");
 		
-
 		graphStorage.flush();
 		graphStorage.close();
-		graphast = new OSMImporterImpl(graphHopperExampleDir, graphastExampleDir).execute();
+		graph = new OSMImporterImpl(graphHopperExampleDir, graphastExampleDir).execute();
 		
-		return graphast;
+		return graph;
 
 	}
 	
 	public Graph generateExample2() {
 		
- 		Graph graphast = new GraphImpl("/tmp/graphhopper/test/example2");
+ 		Graph graph = new GraphImpl("/tmp/graphhopper/test/example2");
 
  		Edge e;
  		NodeImpl v;
 
  		v = new NodeImpl(0l, 0d, 10d);
- 		graphast.addNode(v);
+ 		graph.addNode(v);
 
  		v = new NodeImpl(1l, 10d, 0d);
- 		graphast.addNode(v);
+ 		graph.addNode(v);
 
  		v = new NodeImpl(2l, 30d, 20d);
- 		graphast.addNode(v);
+ 		graph.addNode(v);
 
  		v = new NodeImpl(3l, 40d, 20d);
- 		graphast.addNode(v);
+ 		graph.addNode(v);
 
  		v = new NodeImpl(4l, 50d, 30d);
- 		graphast.addNode(v);
+ 		graph.addNode(v);
 
  		v = new NodeImpl(5l, 60d, 20d);
- 		graphast.addNode(v);
+ 		graph.addNode(v);
 
  		v = new NodeImpl(6l, 60d, 0d);
- 		graphast.addNode(v);
+ 		graph.addNode(v);
 
  		e = new EdgeImpl(0l, 1l, 1);
- 		graphast.addEdge(e);
+ 		graph.addEdge(e);
 
  		e = new EdgeImpl(0l, 2l, 5);
- 		graphast.addEdge(e);
+ 		graph.addEdge(e);
 
  		e = new EdgeImpl(1l, 2l, 3);
- 		graphast.addEdge(e);
+ 		graph.addEdge(e);
 
  		e = new EdgeImpl(2l, 3l, 3);
- 		graphast.addEdge(e);
+ 		graph.addEdge(e);
 
  		e = new EdgeImpl(3l, 4l, 3);
- 		graphast.addEdge(e);
+ 		graph.addEdge(e);
 
  		e = new EdgeImpl(3l, 5l, 4);
- 		graphast.addEdge(e);
+ 		graph.addEdge(e);
 
  		e = new EdgeImpl(4l, 5l, 2);
- 		graphast.addEdge(e);
+ 		graph.addEdge(e);
 
  		e = new EdgeImpl(5l, 6l, 1);
- 		graphast.addEdge(e);
+ 		graph.addEdge(e);
 
- 		return graphast;
+ 		return graph;
  		
 	}
 	
@@ -127,9 +125,9 @@ public class GraphGenerator {
 		String graphHopperMonacoDir = "/tmp/graphhopper/test/monaco";
 		String graphastMonacoDir = "/tmp/graphast/test/monaco";
 		
-		Graph graphast = new OSMImporterImpl(osmFile, graphHopperMonacoDir, graphastMonacoDir).execute();
+		Graph graph = new OSMImporterImpl(osmFile, graphHopperMonacoDir, graphastMonacoDir).execute();
 		
-		return graphast;
+		return graph;
 	}
 	
 	public Graph generateExample3() {
@@ -158,8 +156,6 @@ public class GraphGenerator {
 		points.add(new Point(10,10));
 		points.add(new Point(10,20));
 		Edge e = new EdgeImpl(0l, 1l, 10, costs, points, "rua1");
-//		public GraphastEdge(long fromNode, long toNode, int distance,
-//				short[] costs, List<Point> geometry, String label)
 		graph.addEdge(e);
 		
 		costs = new short[]{2,4,6,8,10};

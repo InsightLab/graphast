@@ -16,14 +16,12 @@ import com.graphhopper.util.StopWatch;
 public class AStarShortestPathConstantWeightTest {
 
 		private static Graph graphMonaco;
-		private static Graph graphExample;
-		private static Graph graphExample2;
+
 		
 		@BeforeClass
 		public static void setup() {
 			graphMonaco = new GraphGenerator().generateMonaco();
-			graphExample = new GraphGenerator().generateExample();
-			graphExample2 = new GraphGenerator().generateExample2();
+
 		}
 		
 		@Test
@@ -32,8 +30,8 @@ public class AStarShortestPathConstantWeightTest {
 			// To see the error, try this coordinates
 			//		from: 43.729825,7.414146
 			//		to: 43.730577,7.415487
-			Long source = graphMonaco.getNode(43.7294668047756,7.413772473047058);
-			Long target = graphMonaco.getNode(43.73079058671274,7.415815422292399);
+			Long source = graphMonaco.getNodeId(43.7294668047756,7.413772473047058);
+			Long target = graphMonaco.getNodeId(43.73079058671274,7.415815422292399);
 			
 			AbstractShortestPathService aStar = new AStarShortestPathConstantWeight(graphMonaco);
 			
@@ -54,8 +52,8 @@ public class AStarShortestPathConstantWeightTest {
 		
 		@Test
 		public void shortestPathMonacoTest2() {
-			Long source = graphMonaco.getNode(43.72842465479131, 7.414896579419745);
-			Long target = graphMonaco.getNode(43.7354373276704, 7.4212202598427295);
+			Long source = graphMonaco.getNodeId(43.72842465479131, 7.414896579419745);
+			Long target = graphMonaco.getNodeId(43.7354373276704, 7.4212202598427295);
 			
 			AbstractShortestPathService aStar = new AStarShortestPathConstantWeight(graphMonaco);
 		

@@ -564,7 +564,7 @@ public class GraphImpl implements Graph {
 	@Override
 	public short[] getEdgeCosts(long id) {
 
-		Edge edge = getEdge(id);
+		EdgeImpl edge = (EdgeImpl)getEdge(id);
 		long costsIndex = edge.getCostsIndex();
 		short size = costs.getShort(costsIndex++);
 		short[] c = new short[size];
@@ -580,8 +580,8 @@ public class GraphImpl implements Graph {
 	 * @see org.graphast.model.Graphast#getEdgeCost(org.graphast.model.GraphastEdge, int)
 	 */
 	@Override
-	public short getEdgeCost(Edge edge, int time) {
-
+	public short getEdgeCost(Edge e, int time) {
+		EdgeImpl edge = (EdgeImpl)e;
 		long costsIndex = edge.getCostsIndex();
 		if (costsIndex < 0) {
 			throw new GraphastException("Edge without costs: " + edge);
@@ -599,7 +599,7 @@ public class GraphImpl implements Graph {
 	 */
 	@Override
 	public List<Point> getEdgePoints(long id) {
-		Edge edge = getEdge(id);
+		EdgeImpl edge = (EdgeImpl)getEdge(id);
 		long geometryIndex = edge.getGeometryIndex();
 		int size = points.getInt(geometryIndex++);
 		List<Point> listPoints = new ArrayList<Point>(size);
@@ -612,10 +612,6 @@ public class GraphImpl implements Graph {
 		return listPoints;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Graphast#getNodeId(int, int)
-	 */
-	@Override
 	public Long getNodeId(int latitude, int longitude) {
 
 		Long result = nodeIndex.get(BigArrays.index(latitude, longitude));
@@ -634,7 +630,7 @@ public class GraphImpl implements Graph {
 	 * @see org.graphast.model.Graphast#getNode(double, double)
 	 */
 	@Override
-	public Long getNode(double latitude, double longitude) {
+	public Long getNodeId(double latitude, double longitude) {
 
 		int lat, lon;
 

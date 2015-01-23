@@ -55,14 +55,7 @@ public class OSMImporterImpl implements Importer {
 		int count = 0;
 		while(edgeIterator.next()) {
 			
-			
 			count++;
-//			System.out.println("edgeIteratorId: " + edgeIterator.getEdge());
-//			System.out.println("edgeIteratorFrom: " + edgeIterator.getBaseNode());
-//			System.out.println("edgeIteratorTo: " + edgeIterator.getAdjNode());
-//			System.out.println("egdeCost: " + edgeIterator.getDistance());
-//			System.out.println("edgeDirection: " + getDirection(edgeIterator.getFlags()));
-//			System.out.println("\n");
 
 			int externalFromNodeId = edgeIterator.getBaseNode();
 			int externalToNodeId = edgeIterator.getAdjNode();
@@ -79,7 +72,6 @@ public class OSMImporterImpl implements Importer {
 			NodeImpl fromNode, toNode;
 
 			long fromNodeId, toNodeId;
-
 
 			if(!hashExternalIdToId.containsKey(externalFromNodeId)){
 
@@ -135,10 +127,6 @@ public class OSMImporterImpl implements Importer {
 		return graph;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.graphast.importer.OSMImporter#getDirection(long)
-	 */
-	@Override
 	public int getDirection(long flags) {
 		long direction = (flags & 3);
 
@@ -153,11 +141,7 @@ public class OSMImporterImpl implements Importer {
 			throw new IllegalArgumentException("Invalid flag");
 		}
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.graphast.importer.OSMImporter#getOsmFile()
-	 */
-	@Override
+
 	public String getOsmFile() {
 		return osmFile;
 	}
@@ -166,10 +150,7 @@ public class OSMImporterImpl implements Importer {
 		this.osmFile = osmFile;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.graphast.importer.OSMImporter#getGraphHopperDir()
-	 */
-	@Override
+
 	public String getGraphHopperDir() {
 		return graphHopperDir;
 	}
@@ -178,10 +159,6 @@ public class OSMImporterImpl implements Importer {
 		this.graphHopperDir = graphHopperDir;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.graphast.importer.OSMImporter#getGraphastDir()
-	 */
-	@Override
 	public String getGraphastDir() {
 		return graphastDir;
 	}
