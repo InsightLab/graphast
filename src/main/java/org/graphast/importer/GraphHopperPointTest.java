@@ -35,5 +35,8 @@ public class GraphHopperPointTest {
 		int toId = toQR.getClosestNode();
 		System.out.println("to:" + graphStorage.getNodeAccess().getLatitude(toId) + "," + 
 				graphStorage.getNodeAccess().getLongitude(toId));
+	
+		index.close();
+	
 	}
 }
