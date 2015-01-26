@@ -12,7 +12,7 @@ public class GraphGeneratorTest {
 	private static Graphast graphMonaco;
 	private static Graphast graphExample;
 	private static Graphast graphExample2;
-	
+
 	@BeforeClass
 	public static void setup() {
 		graphMonaco = new GraphGenerator().generateMonaco();
@@ -20,6 +20,7 @@ public class GraphGeneratorTest {
 		graphExample2 = new GraphGenerator().generateExample2();
 	}
 	
+
 	@Test
 	public void shortestPathMonacoTest() {
 		assertEquals(751, graphMonaco.getNumberOfNodes());
