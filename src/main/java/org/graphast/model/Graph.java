@@ -32,17 +32,17 @@ public interface Graph {
 	public void load() throws IOException;
 
 	/**
-	 * For a given GraphastNode, this method will 
+	 * For a given Node, this method will 
 	 * add the information of this node to the list
 	 * of all nodes.
 	 * 
-	 * Remember that a GraphastNode has its common 
+	 * Remember that a Node has its common 
 	 * attributes, but when added to the list of
 	 * nodes, theses attributes are broken, when 
 	 * necessary, into smaller integer peaces so they
 	 * can be added to the IntBigArrayBigList of nodes.
 	 * 
-	 * @param	node	GraphastNode that will be added
+	 * @param	node	Node that will be added
 	 * 					to the IntBigArrayBigList of nodes.
 	 */
 	public void addNode(Node node);
@@ -51,20 +51,20 @@ public interface Graph {
 	//Wouldn't be better if we had a method that updates everything?
 	/**
 	 * This method will update the IntBigArrayBigList of nodes
-	 * with need information of a passed GraphastNode.
+	 * with need information of a passed Node.
 	 * 
-	 * @param node GraphastNode with the informations that must be updated.
+	 * @param node Node with the informations that must be updated.
 	 */
 	public void updateNodeInfo(Node node);
 
 	/**
-	 * With a passed id, this method retrieves a GraphastNode
+	 * With a passed id, this method retrieves a Node
 	 * by instantiating a new one using their attribute positions
 	 * in the IntBigArrayBigList of nodes.
 	 * 
 	 * @param	id	identifier that will be used to calculate the
 	 * 				start position of the node needed.
-	 * @return	a GraphastNode.
+	 * @return	a Node.
 	 */
 	public Node getNode(long id);
 
@@ -72,11 +72,11 @@ public interface Graph {
 	public void setEdge(Edge edge, long pos);
 
 	/**
-	 * For a given GraphastEdge, this method will 
+	 * For a given Edge, this method will 
 	 * add the information of this edge to the list
 	 * of all edges.
 	 * 
-	 * Remember that a GraphastEdge has its common 
+	 * Remember that a Edge has its common 
 	 * attributes, but when added to the list of
 	 * edges, theses attributes are broken, when 
 	 * necessary, into smaller integer peaces so they
@@ -87,7 +87,7 @@ public interface Graph {
 	 * actually stored in the IntBigArrayBigList of edges
 	 * are their index in the respective lists.
 	 * 
-	 * @param	edge	GraphastEdge that will be added
+	 * @param	edge	Edge that will be added
 	 * 					to the IntBigArrayBigList of edges.
 	 */
 	public void addEdge(Edge edge);
@@ -114,25 +114,25 @@ public interface Graph {
 
 	/**
 	 * This method will update the IntBigArrayBigList of edges
-	 * with need information of a passed GraphastEdge.
+	 * with need information of a passed Edge.
 	 * 
-	 * @param edge GraphastEdge with the informations that must be updated.
+	 * @param edge Edge with the informations that must be updated.
 	 */
 	public void updateEdgeInfo(Edge edge);
 
 	/**
 	 * After add an edge, we must update the neighbor of both
 	 * nodes of the edge. This method will do this operation
-	 * for a given GraphastEdge.
+	 * for a given Edge.
 	 * 
-	 * @param	edge	GraphastEdge that will be used to update
+	 * @param	edge	Edge that will be used to update
 	 * 					the neighborhood
 	 */
 	public void updateNeighborhood(Edge edge);
 
 	/**
 	 * This method will update the structure of neighbors used
-	 * in Graphast. This structure was based in GraphHopper.
+	 * in Graph. This structure was based in GraphHopper.
 	 * 
 	 * @param node Base node used to update its neighbors.
 	 * @param eid Edge id where the base node is placed.
@@ -157,54 +157,132 @@ public interface Graph {
 	 */
 	public short[] getCosts(LongList edges, int time);
 
+	/**
+	 * This method returns all costs of all edges stored in a BigArrayBigList.
+	 * @return all costs of all edges
+	 */
 	public ShortBigArrayBigList getCosts();
-
+	
+	/**
+	 * This method returns all neighbors of a given node. 
+	 * @param id of a node
+	 * @return a list of all neighboring nodes
+	 */
 	public LongList getOutNeighbors(long vid);
 
+	/**
+	 * This method returns all neighbors of a given node with the costs based on a given time.
+	 * @param vid Id of a node
+	 * @param time Time used to get edge costs.
+	 * @return a list of all neighboring nodes with costs
+	 */
 	public LongList getOutNeighborsAndCosts(long vid, int time);
 
+	/**
+	 * This method returns a Edge for a given edgeId.
+	 * @param id Id of a edge
+	 * @return Edge
+	 */
 	public Edge getEdge(long id);
 
+	/**
+	 * This method returns a array containing all time costs for a given edge.
+	 * @param id Id of a edge
+	 * @return a array containing all time costs
+	 */
 	public short[] getEdgeCosts(long id);
-
+	
+	/**
+	 * This method returns a cost value of a given edge based on a given time
+	 * @param edge
+	 * @param time Time used to get edge costs.
+	 * @return
+	 */
 	public short getEdgeCost(Edge edge, int time);
-
+	
+	/**
+	 * This method returns a list of points that are part of a given edge in the map.
+	 * @param id Id of a edge
+	 * @return a list of points that are part of the edge in the map
+	 */
 	public List<Point> getEdgePoints(long id);
-
+	
+	/**
+	 * This method return a nodeId based on a given latitude and longitude.
+	 * @param latitude
+	 * @param longitude
+	 * @return Id of a node
+	 */
 	public Long getNodeId(double latitude, double longitude);
 
+	/**
+	 * This method returns a label of a given node. 
+	 * @param id Id of a node
+	 * @return Label of a node
+	 */
 	public String getNodeLabel(long id);
-
+	
+	/**
+	 * This method returns a label of a given edge.
+	 * @param id If of a edge.
+	 * @return Label of a edge
+	 */
 	public String getEdgeLabel(long id);
 
+	/**
+	 * This method returns all nodes as integer array. 
+	 * @return All nodes
+	 */
 	public IntBigArrayBigList getNodes();
 
+	/**
+	 * This method returns all edges as integer array. 
+	 * @return All edges
+	 */
 	public IntBigArrayBigList getEdges();
-
+	
+	/**
+	 * this method shows Nodes log.
+	 */
 	public void logNodes();
 
+	/**
+	 * this method shows Edges log.
+	 */
 	public void logEdges();
 
 	/**
 	 * This method will return the total number of nodes
-	 * for a given Graphast.
-	 * 
 	 * @return	total number of nodes
 	 */
 	public int getNumberOfNodes();
 
 	/**
 	 * This method will return the total number of edges
-	 * for a given Graphast.
-	 * 
 	 * @return	total number of edges
 	 */
 	public int getNumberOfEdges();
-	
+
+	/**
+	 * This method returns a map containing the distances of neighbors, of a given node, being the key their id's
+	 * @param v A node
+	 * @return a map containing the distances of neighbors being the key their id's
+	 */
 	public Long2IntMap accessNeighborhood(Node v);
 	
+	/**
+	 * This method verify if a given nodeId exists on graph.
+	 * @param id Id of a node
+	 * @return true if a node with this id exists
+	 */
 	public boolean hasNode(long id);
 	
+	/**
+	 * This method verify if a node with this latitude and longitude exists on graph.
+	 * @param lat Latitude
+	 * @param lon Longitude
+	 * @return true if a node with this latitude and longitude exists
+	 */
 	public boolean hasNode(int lat, int lon);
 
 }

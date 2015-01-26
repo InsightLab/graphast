@@ -5,61 +5,76 @@ import java.util.List;
 import org.graphast.geometry.Point;
 
 public interface Edge {
-
+	
+	/**
+	 * Blocksize length of one edge on IntBigArrayBigList.  
+	 */
 	public static final short EDGE_BLOCKSIZE = 17;
 
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Edge#validate()
+	/**
+	 * This method validates an edge if the distance is positive ,
+	 * or if the "from" node is equal to the "to" node.
 	 */
 	public abstract void validate();
 
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Edge#getDistance()
+	/**
+	 * This method returns the distance of a edge.
+	 * @return edge distance
 	 */
 	public abstract int getDistance();
 
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Edge#getId()
+	/**
+	 * This method returns the id of a edge.
+	 * @return Edge id
 	 */
 	public abstract Long getId();
 
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Edge#getFromNode()
+	/**
+	 * This method returns the fromNode id of a edge.
+	 * @return fromNode id
 	 */
 	public abstract long getFromNode();
 
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Edge#getToNode()
+	/**
+	 * This method returns the toNode id of a edge.
+	 * @return toNode id
 	 */
 	public abstract long getToNode();
 
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Edge#getFromNodeNextEdge()
+	/**
+	 * This method returns neighbor edge that has one end equal to fromNode of this edge.
+	 * @return neighbor edge that has one end equal to fromNode of this edge
 	 */
 	public abstract long getFromNodeNextEdge();
 
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Edge#getToNodeNextEdge()
+	/**
+	 * This method returns neighbor edge that has one end equal to toNode of this edge.
+	 * @return neighbor edge that has one end equal to toNode of this edge
 	 */
 	public abstract long getToNodeNextEdge();
 
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Edge#getCosts()
+	/**
+	 * This method returns a array containing all time costs.
+	 * @return a array containing all time costs
 	 */
 	public abstract short[] getCosts();
 
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Edge#getGeometry()
+	/**
+	 * This method returns a list of points that are part of the edge in the map.
+	 * Useful to draw on the map.
+	 * @return a list of points that are part of the edge in the map
 	 */
 	public abstract List<Point> getGeometry();
 
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Edge#getLabel()
+	/**
+	 * This method returns the edge label.
+	 * @return edge label
 	 */
 	public abstract String getLabel();
 
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Edge#toString()
+	/**
+	 * toString method.
+	 * @return toString
 	 */
 	public abstract String toString();
 	
