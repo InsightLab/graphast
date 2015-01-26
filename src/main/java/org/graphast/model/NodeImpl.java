@@ -7,8 +7,7 @@ import org.graphast.exception.GraphastException;
 import static org.graphast.util.GeoUtils.latLongToInt;
 import static org.graphast.util.GeoUtils.latLongToDouble;
 
-public class GraphastNode {
-	public static final short NODE_BLOCKSIZE = 11;
+public class NodeImpl implements Node {
 
 	private Long id;
 
@@ -28,7 +27,7 @@ public class GraphastNode {
 
 	private String label;
 
-	public GraphastNode() {
+	public NodeImpl() {
 
 	}
 
@@ -38,7 +37,7 @@ public class GraphastNode {
 	 * @param	latitude Node latitude.	
 	 * @param 	longitude Node longitude.
 	 */
-	public GraphastNode(double latitude, double longitude) {
+	public NodeImpl(double latitude, double longitude) {
 		setLatitude(latitude);
 		setLongitude(longitude);
 		this.firstEdge = -1;
@@ -61,7 +60,7 @@ public class GraphastNode {
 	 * @param labelIndex
 	 * @param costIndex
 	 */
-	GraphastNode(long externalId, int category, double latitude, 
+	NodeImpl(long externalId, int category, double latitude, 
 			double longitude, long firstEdge, long labelIndex, long costIndex) {
 
 		this(latitude, longitude);
@@ -81,7 +80,7 @@ public class GraphastNode {
 	 * @param	latitude Node latitude.	
 	 * @param 	longitude Node longitude.
 	 */
-	public GraphastNode(long externalId, double latitude, double longitude) {
+	public NodeImpl(long externalId, double latitude, double longitude) {
 
 		this(latitude, longitude);
 		this.externalId = externalId;
@@ -98,13 +97,17 @@ public class GraphastNode {
 	 * @param 	longitude Node longitude.
 	 * @param   label Node label.
 	 */
-	public GraphastNode(long externalId, double latitude, double longitude, String label) {
+	public NodeImpl(long externalId, double latitude, double longitude, String label) {
 
 		this(externalId, latitude, longitude);
 		this.label = label;
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Node#validate()
+	 */
+	@Override
 	public void validate(){
 
 		if(latitude == 0 && longitude == 0 && firstEdge == 0){
@@ -113,6 +116,10 @@ public class GraphastNode {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Node#getCategory()
+	 */
+	@Override
 	public int getCategory() {
 		return category;
 	}
@@ -121,6 +128,10 @@ public class GraphastNode {
 		this.category = category;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Node#getExternalId()
+	 */
+	@Override
 	public long getExternalId() {
 		return externalId;
 	}
@@ -137,6 +148,10 @@ public class GraphastNode {
 		this.externalId = externalId;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Node#getLatitude()
+	 */
+	@Override
 	public double getLatitude() {
 		return latLongToDouble(latitude);
 	}
@@ -150,6 +165,10 @@ public class GraphastNode {
 		this.latitude = latLongToInt(latitude);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Node#getLongitude()
+	 */
+	@Override
 	public double getLongitude() {
 		return latLongToDouble(longitude);
 	}
@@ -174,6 +193,10 @@ public class GraphastNode {
 		this.firstEdge = firstEdge;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Node#getId()
+	 */
+	@Override
 	public Long getId() {
 		return id;
 	}
@@ -210,6 +233,10 @@ public class GraphastNode {
 		this.costsIndex = costIndex;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Node#getLabel()
+	 */
+	@Override
 	public String getLabel() {
 		return label;
 	}
@@ -218,6 +245,9 @@ public class GraphastNode {
 		this.label = label;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Node#toString()
+	 */
 	@Override
 	public String toString() {
 		return "FastGraphNode [id=" + id + ", externalId=" + externalId + ", latitude=" + latitude

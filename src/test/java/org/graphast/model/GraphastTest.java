@@ -1,7 +1,6 @@
 package org.graphast.model;
 
 import static org.junit.Assert.assertEquals;
-import it.unimi.dsi.fastutil.BigArrays;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.LongList;
 
@@ -15,8 +14,8 @@ import org.junit.Test;
 
 public class GraphastTest {
 	
-	private static Graphast graphExample3;
-	private static Graphast graphExample;
+	private static Graph graphExample3;
+	private static Graph graphExample;
 	
 	@BeforeClass
 	public static void setup(){
@@ -26,24 +25,22 @@ public class GraphastTest {
 	
 	@Test
 	public void storeGetNode(){
-		GraphastNode v = graphExample3.getNode(0);
+		Node v = graphExample3.getNode(0);
 		assertEquals(0, (long) v.getId());
-		assertEquals(3, (long) BigArrays.index(v.getExternalIdSegment(), v.getExternalIdOffset()));
-		assertEquals(0, (long) BigArrays.index(v.getFirstEdgeSegment(), v.getFirstEdgeOffset()));
+		assertEquals(3, v.getExternalId());
 		assertEquals(10d, v.getLatitude(), 0);
 		assertEquals(10d, v.getLongitude(), 0);
 		
 		v = graphExample3.getNode(1);
 		assertEquals(1, (long) v.getId());
-		assertEquals(4, (long) BigArrays.index(v.getExternalIdSegment(), v.getExternalIdOffset()));
-		assertEquals(0, (long) BigArrays.index(v.getFirstEdgeSegment(), v.getFirstEdgeOffset()));
+		assertEquals(4, v.getExternalId());
 		assertEquals(43.729467, v.getLatitude(), 0);
 		assertEquals(7.413772, v.getLongitude(), 0);
 	}
 	
 	@Test
 	public void storeGetEdge() {
-		GraphastEdge e = graphExample3.getEdge(0);
+		EdgeImpl e = (EdgeImpl)graphExample3.getEdge(0);
 		assertEquals(0, (long) e.getId());
 		assertEquals(0, (long) e.getFromNode());
 		assertEquals(1, (long) e.getToNode());
@@ -51,7 +48,7 @@ public class GraphastTest {
 		assertEquals(0, (long) e.getCostsIndex());
 		assertEquals(0, (long) e.getGeometryIndex());
 		
-		e = graphExample3.getEdge(1);
+		e = (EdgeImpl)graphExample3.getEdge(1);
 		assertEquals(1, (long) e.getId());
 		assertEquals(1, (long) e.getFromNode());
 		assertEquals(0, (long) e.getToNode());
@@ -78,7 +75,7 @@ public class GraphastTest {
 	
 	@Test
 	public void getEdgeCostTest(){
-		GraphastEdge edge = graphExample3.getEdge(0);
+		Edge edge = graphExample3.getEdge(0);
 		assertEquals(1, graphExample3.getEdgeCost(edge, 3600));
 		assertEquals(1, graphExample3.getEdgeCost(edge, 7200));
 		assertEquals(2, graphExample3.getEdgeCost(edge, 36000));
@@ -144,14 +141,14 @@ public class GraphastTest {
 	@Test
 	public void saveLoadTest() throws IOException{
 		graphExample3.save();
-		Graphast graph2 = new GraphastImpl("/tmp/graphast/test/example3");
+		Graph graph2 = new GraphImpl("/tmp/graphast/test/example3");
 		graph2.load();
 		assertEquals(graphExample3.getNodes(), graph2.getNodes());
 		assertEquals(graphExample3.getEdges(), graph2.getEdges());
 		assertEquals(graphExample3.getCosts(), graph2.getCosts());
 
-		GraphastNode node = graphExample3.getNode(0);
-		assertEquals(0, (long)graph2.getNode(node.getLatitude(), node.getLongitude()));
+		Node node = graphExample3.getNode(0);
+		assertEquals(0, (long)graph2.getNodeId(node.getLatitude(), node.getLongitude()));
 		assertEquals(node.getLatitude(), graph2.getNode(0).getLatitude(),0);
 		assertEquals(node.getLongitude(), graph2.getNode(0).getLongitude(),0);
 		
@@ -161,15 +158,15 @@ public class GraphastTest {
 	
 	@Test
 	public void getNode() throws IOException{
-		GraphastNode n = graphExample3.getNode(3);
+		Node n = graphExample3.getNode(3);
 		
 		assertEquals(3, (long)n.getId());
-		assertEquals(6, BigArrays.index(n.getExternalIdSegment(), n.getExternalIdOffset()));
+		assertEquals(6, n.getExternalId());
 	}
 	
 	@Test
 	public void getNode2(){
-		long n = graphExample3.getNode(10, 40);
+		long n = graphExample3.getNodeId(10, 40);
 		assertEquals(3, n);
 	}
 	
@@ -214,7 +211,7 @@ public class GraphastTest {
 	
 	@Test
 	public void getEdgeLabel() {
-		GraphastEdge e =  graphExample.getEdge(0);
+		Edge e =  graphExample.getEdge(0);
 		assertEquals("Named Street 1", graphExample.getEdgeLabel(0));
 		assertEquals("Named Street 1", e.getLabel());
 	}

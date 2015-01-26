@@ -8,10 +8,8 @@ import java.util.List;
 import org.graphast.exception.GraphastException;
 import org.graphast.geometry.Point;
 
-public class GraphastEdge {
+public class EdgeImpl implements Edge {
 	//private Logger logger = LoggerFactory.getLogger(this.getClass());
-
-	public static final short EDGE_BLOCKSIZE = 17;
 
 	private Long id;
 
@@ -42,7 +40,7 @@ public class GraphastEdge {
 
 	private String label;
 
-	public GraphastEdge(long fromNode, long toNode, int distance,
+	public EdgeImpl(long fromNode, long toNode, int distance,
 			short[] costs, List<Point> geometry, String label) {
 
 		this(fromNode, toNode, distance);
@@ -52,21 +50,21 @@ public class GraphastEdge {
 
 	}
 
-	public GraphastEdge(long fromNode, long toNode, int distance) {
+	public EdgeImpl(long fromNode, long toNode, int distance) {
 
 		this(0, fromNode, toNode, -1, -1, distance, -1, -1, -1, null);
 
 	}
 
-	public GraphastEdge(long externalId, long fromNode, long toNode, int distance) {
+	public EdgeImpl(long externalId, long fromNode, long toNode, int distance) {
 		this(externalId, fromNode, toNode, -1, -1, distance, -1, -1, -1, null);
 	}
 
-	public GraphastEdge(long externalId, long fromNode, long toNode, int distance, String label) {
+	public EdgeImpl(long externalId, long fromNode, long toNode, int distance, String label) {
 		this(externalId, fromNode, toNode, -1, -1, distance, -1, -1, -1, label);
 	}
 
-	GraphastEdge(long externalId, long fromNode, long toNode,
+	EdgeImpl(long externalId, long fromNode, long toNode,
 			long fromNodeNextEdge, long toNodeNextEdge, int distance,
 			long costsIndex, long geometryIndex,long labelIndex, String label) {
 
@@ -84,6 +82,10 @@ public class GraphastEdge {
 	
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Edge#validate()
+	 */
+	@Override
 	public void validate(){
 		
 		if(distance < 0){
@@ -94,22 +96,12 @@ public class GraphastEdge {
 			throw new GraphastException("Invalid edge");
 		}
 
-//		if(fromNode == toNode) {
-//			
-//			//logger.error("Invalid edge: {}", toString());
-//			throw new GraphastException("Invalid edge: fromNode == toNode");
-//		
-//		}
-//
-//		if(getId() != null && (getFromNodeNextEdge() == getId() || getToNodeNextEdge() == getId())) {
-//			
-//			//logger.error("Invalid edge: {}", toString());
-//			throw new GraphastException("Invalid edge: edgeId == nodeNextEdge");
-//		
-//		}
-	
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Edge#getDistance()
+	 */
+	@Override
 	public int getDistance() {
 		return distance;
 	}
@@ -118,6 +110,7 @@ public class GraphastEdge {
 		this.distance = distance;
 	}
 
+	@Override
 	public Long getId() {
 		return id;
 	}
@@ -134,6 +127,7 @@ public class GraphastEdge {
 		return BigArrays.displacement(externalId);
 	}
 
+	@Override
 	public long getFromNode() {
 		return fromNode;
 	}
@@ -142,6 +136,7 @@ public class GraphastEdge {
 		this.fromNode = fromNode;
 	}
 
+	@Override
 	public long getToNode() {
 		return toNode;
 	}
@@ -150,6 +145,7 @@ public class GraphastEdge {
 		this.toNode = toNode;
 	}
 
+	@Override
 	public long getFromNodeNextEdge() {
 		return fromNodeNextEdge;
 	}
@@ -158,6 +154,7 @@ public class GraphastEdge {
 		this.fromNodeNextEdge = fromNodeNextEdge;
 	}
 
+	@Override
 	public long getToNodeNextEdge() {
 		return toNodeNextEdge;
 	}
@@ -215,6 +212,7 @@ public class GraphastEdge {
 		this.geometryIndex = geometryIndex;
 	}
 
+	@Override
 	public short[] getCosts() {
 		return costs;
 	}
@@ -223,6 +221,7 @@ public class GraphastEdge {
 		this.costs = costs;
 	}
 
+	@Override
 	public List<Point> getGeometry() {
 		return geometry;
 	}
@@ -247,6 +246,7 @@ public class GraphastEdge {
 		return BigArrays.displacement(labelIndex);
 	}
 
+	@Override
 	public String getLabel() {
 		return label;
 	}

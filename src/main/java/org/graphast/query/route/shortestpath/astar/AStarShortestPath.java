@@ -1,4 +1,4 @@
-package org.graphast.query.route.shortestpath;
+package org.graphast.query.route.shortestpath.astar;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,8 +7,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.PriorityQueue;
 
-import org.graphast.model.Graphast;
-import org.graphast.model.GraphastNode;
+import org.graphast.model.Graph;
+import org.graphast.model.Node;
+import org.graphast.query.route.shortestpath.AbstractShortestPathService;
+import org.graphast.query.route.shortestpath.model.LowerBoundEntry;
+import org.graphast.query.route.shortestpath.model.RouteEntry;
+import org.graphast.query.route.shortestpath.model.TimeEntry;
 import org.graphast.util.DateUtils;
 import org.graphast.util.DistanceUtils;
 import org.slf4j.Logger;
@@ -18,7 +22,7 @@ public abstract class AStarShortestPath extends AbstractShortestPathService{
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
-	public AStarShortestPath(Graphast graphAdapter) {
+	public AStarShortestPath(Graph graphAdapter) {
 		super(graphAdapter);
 	}
 	
@@ -40,7 +44,7 @@ public abstract class AStarShortestPath extends AbstractShortestPathService{
 		return path;
 	}
 	
-	public int shortestPath(GraphastNode source, GraphastNode target, Date time) {
+	public int shortestPath(Node source, Node target, Date time) {
 		PriorityQueue<LowerBoundEntry> queue = new PriorityQueue<LowerBoundEntry>();
 		HashMap<Long, Integer> wasTraversed = new HashMap<Long, Integer>();
 		HashMap<Long, RouteEntry> parents = new HashMap<Long, RouteEntry>();
@@ -67,7 +71,7 @@ public abstract class AStarShortestPath extends AbstractShortestPathService{
 		return Integer.MAX_VALUE;
 	}
 
-	public void init(GraphastNode source, GraphastNode target, PriorityQueue<LowerBoundEntry> queue,
+	public void init(Node source, Node target, PriorityQueue<LowerBoundEntry> queue,
 			HashMap<Long, RouteEntry> parents, int t) {
 		
 		long sourceId = source.getId();
@@ -81,7 +85,7 @@ public abstract class AStarShortestPath extends AbstractShortestPathService{
 		parents.put(sourceId, null);		
 	}
 	
-	public abstract void expandVertex(GraphastNode target, Entry removed, HashMap<Long, Integer> wasTraversed, 
+	public abstract void expandVertex(Node target, TimeEntry removed, HashMap<Long, Integer> wasTraversed, 
 			PriorityQueue<LowerBoundEntry> queue, HashMap<Long, RouteEntry> parents);
 
 }
