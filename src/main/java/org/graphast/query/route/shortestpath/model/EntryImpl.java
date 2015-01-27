@@ -1,5 +1,7 @@
 package org.graphast.query.route.shortestpath.model;
 
+import org.graphast.query.model.Entry;
+
 public class EntryImpl implements Entry{
 
 	private long id;

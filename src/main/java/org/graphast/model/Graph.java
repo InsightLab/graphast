@@ -11,6 +11,7 @@ import java.util.List;
 import org.graphast.geometry.Point;
 import org.graphast.util.FileUtils;
 
+
 public interface Graph {
 
 	/**
@@ -284,5 +285,9 @@ public interface Graph {
 	 * @return true if a node with this latitude and longitude exists
 	 */
 	public boolean hasNode(int lat, int lon);
+	
+	public abstract boolean isPoi(long vid);
+
+	public abstract Node getPoi(long vid);
 
 }
