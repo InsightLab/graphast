@@ -1,4 +1,6 @@
-package org.graphast.query.route.shortestpath.model;
+package org.graphast.query.model;
+
+import org.graphast.query.route.shortestpath.model.EntryImpl;
 
 public interface Entry {
 
