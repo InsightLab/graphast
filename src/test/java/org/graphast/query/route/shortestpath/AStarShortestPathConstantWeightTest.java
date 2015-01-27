@@ -4,7 +4,8 @@ import static org.graphast.util.DistanceUtils.distanceLatLong;
 import static org.junit.Assert.assertEquals;
 
 import org.graphast.graphgenerator.GraphGenerator;
-import org.graphast.model.Graphast;
+import org.graphast.model.Graph;
+import org.graphast.query.route.shortestpath.astar.AStarShortestPathConstantWeight;
 import org.graphast.util.FileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -13,8 +14,7 @@ import org.junit.Test;
 import com.graphhopper.util.StopWatch;
 
 public class AStarShortestPathConstantWeightTest {
-
-		private static Graphast graphMonaco;
+		private static Graph graphMonaco;
 		
 		@BeforeClass
 		public static void setup() {
@@ -27,8 +27,8 @@ public class AStarShortestPathConstantWeightTest {
 			// To see the error, try this coordinates
 			//		from: 43.729825,7.414146
 			//		to: 43.730577,7.415487
-			Long source = graphMonaco.getNode(43.7294668047756,7.413772473047058);
-			Long target = graphMonaco.getNode(43.73079058671274,7.415815422292399);
+			Long source = graphMonaco.getNodeId(43.7294668047756,7.413772473047058);
+			Long target = graphMonaco.getNodeId(43.73079058671274,7.415815422292399);
 			
 			AbstractShortestPathService aStar = new AStarShortestPathConstantWeight(graphMonaco);
 			
@@ -49,8 +49,8 @@ public class AStarShortestPathConstantWeightTest {
 		
 		@Test
 		public void shortestPathMonacoTest2() {
-			Long source = graphMonaco.getNode(43.72842465479131, 7.414896579419745);
-			Long target = graphMonaco.getNode(43.7354373276704, 7.4212202598427295);
+			Long source = graphMonaco.getNodeId(43.72842465479131, 7.414896579419745);
+			Long target = graphMonaco.getNodeId(43.7354373276704, 7.4212202598427295);
 			
 			AbstractShortestPathService aStar = new AStarShortestPathConstantWeight(graphMonaco);
 		
@@ -61,8 +61,8 @@ public class AStarShortestPathConstantWeightTest {
 		
 		@Test
 		public void ShortestPathMonacoTest3() {
-			Long source = graphMonaco.getNode(43.72636792197156, 7.417292499928754);
-			Long target = graphMonaco.getNode(43.74766484829034,7.430716770083832);
+			Long source = graphMonaco.getNodeId(43.72636792197156, 7.417292499928754);
+			Long target = graphMonaco.getNodeId(43.74766484829034,7.430716770083832);
 			
 			AbstractShortestPathService aStar = new AStarShortestPathConstantWeight(graphMonaco);
 	        assertEquals(3610710, aStar.shortestPath(source, target));

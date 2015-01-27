@@ -1,4 +1,4 @@
-package org.graphast.query.route.shortestpath;
+package org.graphast.query.route.shortestpath.dijkstra;
 
 import static org.graphast.util.NumberUtils.convertToInt;
 
@@ -10,9 +10,12 @@ import java.util.List;
 import java.util.PriorityQueue;
 
 import org.graphast.exception.PathNotFoundException;
-import org.graphast.model.Graphast;
-import org.graphast.model.GraphastNode;
-import org.graphast.util.DateUtils;
+import org.graphast.model.Graph;
+import org.graphast.model.Node;
+import org.graphast.query.route.shortestpath.AbstractShortestPathService;
+import org.graphast.query.route.shortestpath.model.DistanceEntry;
+import org.graphast.query.route.shortestpath.model.Instruction;
+import org.graphast.query.route.shortestpath.model.RouteEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +23,7 @@ public abstract class DijkstraShortestPath extends AbstractShortestPathService {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	public DijkstraShortestPath(Graphast graph) {
+	public DijkstraShortestPath(Graph graph) {
 		super(graph);
 	}
 
@@ -43,9 +46,8 @@ public abstract class DijkstraShortestPath extends AbstractShortestPathService {
 			
 			if(re != null) {
 				
-				//TODO Revise this verification and Data Structure. 
-				//Cases that must be checked: null == null, null == String, String == String
-				if(verificationQueue.peek().getLabel() == re.getLabel() || verificationQueue.peek().getLabel().equals(re.getLabel())) {
+				//TODO Use equals
+				if((verificationQueue.peek().getLabel() == null && re.getLabel() == null) || verificationQueue.peek().getLabel().equals(re.getLabel())) {
 					
 					oldInstruction = verificationQueue.poll();
 					newInstruction = new Instruction(0, oldInstruction.getLabel(), oldInstruction.getCost() + re.getCost());
@@ -76,15 +78,14 @@ public abstract class DijkstraShortestPath extends AbstractShortestPathService {
 
 	}
 
-	public int shortestPath(GraphastNode source, GraphastNode target, Date time) {
-		PriorityQueue<Entry> queue = new PriorityQueue<Entry>();
+	public int shortestPath(Node source, Node target, Date time) {
+		PriorityQueue<DistanceEntry> queue = new PriorityQueue<DistanceEntry>();
 		HashMap<Long, Integer> wasTraversed = new HashMap<Long, Integer>();
 		HashMap<Long, RouteEntry> parents = new HashMap<Long, RouteEntry>();
-		Entry removed = null;
+		DistanceEntry removed = null;
 		int targetId = convertToInt(target.getId());
-		int timeMillis = DateUtils.dateToMilli(time);
 
-		init(source, target, queue, parents, timeMillis);
+		init(source, target, queue, parents);
 
 		while(!queue.isEmpty()){
 			removed = queue.poll();
@@ -95,23 +96,23 @@ public abstract class DijkstraShortestPath extends AbstractShortestPathService {
 				List<Instruction> path = reconstructPath(removed.getId(), parents);
 				logger.info("path: {}", path);
 
-				return removed.getTravelTime();
+				return removed.getDistance();
 			}
 			expandVertex(target, removed, wasTraversed, queue, parents);
 		}
 		throw new PathNotFoundException();
 	}
 
-	public void init(GraphastNode source, GraphastNode target, PriorityQueue<Entry> queue, 
-			HashMap<Long, RouteEntry> parents, int arrivalTime){
+	public void init(Node source, Node target, PriorityQueue<DistanceEntry> queue, 
+			HashMap<Long, RouteEntry> parents){
 		int sourceId = convertToInt(source.getId());
 
-		queue.offer(new Entry(sourceId, 0, arrivalTime, -1));
+		queue.offer(new DistanceEntry(sourceId, 0, -1));
 
 		//parents.put((Integer) graphAdapter.getVertex(sid).getProperty(Property.ORGINALID), new RouteEntry(-1, 0));
 	}
 
-	public abstract void expandVertex(GraphastNode target, Entry removed, HashMap<Long, Integer> wasTraversed, 
-			PriorityQueue<Entry> queue, HashMap<Long, RouteEntry> parents);
+	public abstract void expandVertex(Node target, DistanceEntry removed, HashMap<Long, Integer> wasTraversed, 
+			PriorityQueue<DistanceEntry> queue, HashMap<Long, RouteEntry> parents);
 
 }

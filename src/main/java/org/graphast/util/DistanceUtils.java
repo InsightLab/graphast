@@ -1,6 +1,6 @@
 package org.graphast.util;
 
-import org.graphast.model.GraphastNode;
+import org.graphast.model.Node;
 
 
 
@@ -25,7 +25,7 @@ public class DistanceUtils {
 	    return Math.sqrt(distance);
 	}
 	
-	public static double distanceLatLong(GraphastNode fromNode, GraphastNode toNode) {
+	public static double distanceLatLong(Node fromNode, Node toNode) {
 
 	    final int R = 6371; // Radius of the earth
 
@@ -48,7 +48,7 @@ public class DistanceUtils {
 	
 	
 	
-	public static int timeCost(GraphastNode fromNode, GraphastNode toNode){
+	public static int timeCost(Node fromNode, Node toNode){
 		return (int) ((int) distanceLatLong(fromNode, toNode)/88.51392);
 	}
 	

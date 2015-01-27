@@ -2,17 +2,17 @@ package org.graphast.graphgenerator;
 
 import static org.junit.Assert.assertEquals;
 
-import org.graphast.model.Graphast;
+import org.graphast.model.Graph;
 import org.graphast.util.FileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class GraphGeneratorTest {
-	private static Graphast graphMonaco;
-	private static Graphast graphExample;
-	private static Graphast graphExample2;
-	
+	private static Graph graphMonaco;
+	private static Graph graphExample;
+	private static Graph graphExample2;
+
 	@BeforeClass
 	public static void setup() {
 		graphMonaco = new GraphGenerator().generateMonaco();
@@ -20,6 +20,7 @@ public class GraphGeneratorTest {
 		graphExample2 = new GraphGenerator().generateExample2();
 	}
 	
+
 	@Test
 	public void shortestPathMonacoTest() {
 		assertEquals(751, graphMonaco.getNumberOfNodes());
