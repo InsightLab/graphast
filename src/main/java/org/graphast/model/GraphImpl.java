@@ -24,6 +24,7 @@ import org.graphast.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 public class GraphImpl implements Graph {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -781,5 +782,15 @@ public class GraphImpl implements Graph {
 	public boolean hasNode(int lat, int lon) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+	
+	public boolean isPoi(long vid){
+		return getNode(vid).getCategory() >= 0;
+	}
+	
+	public Node getPoi(long vid){
+		Node v = getNode(vid);
+		if(v.getCategory() < 0)	return null;
+		else	return v;
 	}
 }
