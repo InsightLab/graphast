@@ -38,6 +38,7 @@ public class Configuration {
 	/** Carrega ou recarrega as configurações da aplicação a partir do 
 	 * arquivo de propriedades config.properties.
 	 */
+	@SuppressWarnings("unchecked")
 	public static void reload() {
 		try {
 			logger.info("user.dir: {}", System.getProperty("user.dir"));
