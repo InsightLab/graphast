@@ -30,7 +30,7 @@ public abstract class AbstractKNNService implements KNNService{
 			HashMap<Integer, Integer> isIn, HashMap<Long, Long> parents){
 		Bound bMin = new Bound((String) minBounds.getBounds().get(Integer.toString(vid)));
 		Bound bMax = new Bound((String) maxBounds.getBounds().get(Integer.toString(vid)));
-		int unn = bMax.getId();
+		long unn = bMax.getId();
 		int utdd = t + bMax.getDistance();
 		queue.offer(new LowerBoundEntry(	vid, 
 									0, 
