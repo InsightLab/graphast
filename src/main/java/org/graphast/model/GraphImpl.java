@@ -31,7 +31,7 @@ public class GraphImpl implements Graph {
 
 	private Long2LongMap nodeIndex = new Long2LongOpenHashMap();
 
-	private String directory;
+	protected String directory;
 
 	private IntBigArrayBigList nodes;
 
@@ -45,7 +45,7 @@ public class GraphImpl implements Graph {
 
 	private IntBigArrayBigList points;
 
-	private int blockSize = 4096;
+	protected int blockSize = 4096;
 
 	private static int secondsDay = 86400;
 
@@ -793,4 +793,33 @@ public class GraphImpl implements Graph {
 		if(v.getCategory() < 0)	return null;
 		else	return v;
 	}
+	
+	public short getMaximunCostValue(short[] costs) {
+		
+		short max = costs[0];
+		
+		for (int i = 0; i < costs.length; i++) {
+			
+			if (costs[i] > max) {
+				max = costs[i];
+			}
+		}
+		
+		return max;
+	}
+	
+	public short getMinimunCostValue(short[] costs) {
+		
+		short min = costs[0];
+		
+		for (int i = 0; i < costs.length; i++) {
+			
+			if (costs[i] < min) {
+				min = costs[i];
+			}
+		}
+		
+		return min;
+	}
+
 }
