@@ -31,7 +31,7 @@ public class GraphImpl implements Graph {
 
 	private Long2LongMap nodeIndex = new Long2LongOpenHashMap();
 
-	private String directory;
+	protected String directory;
 
 	private IntBigArrayBigList nodes;
 
@@ -47,7 +47,7 @@ public class GraphImpl implements Graph {
 	
 	private IntBigArrayBigList points;
 
-	private int blockSize = 4096;
+	protected int blockSize = 4096;
 
 	private static int secondsDay = 86400;
 
@@ -857,5 +857,6 @@ public class GraphImpl implements Graph {
 			shortCosts[i] = (short)linearFunction[i].getStartCost(); 
 		}
 		return shortCosts;
+		
 	}
 }
