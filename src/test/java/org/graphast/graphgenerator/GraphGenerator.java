@@ -10,7 +10,7 @@ import org.graphast.model.Graph;
 import org.graphast.model.EdgeImpl;
 import org.graphast.model.GraphImpl;
 import org.graphast.model.NodeImpl;
-import org.graphast.query.route.shortestpath.dijkstra.DijkstraShortestPathConstantWeight;
+import org.graphast.query.route.shortestpath.dijkstra.DijkstraConstantWeight;
 
 import com.graphhopper.routing.util.EncodingManager;
 import com.graphhopper.storage.GraphBuilder;
@@ -121,7 +121,7 @@ public class GraphGenerator {
 	}
 	
 	public Graph generateMonaco() {
-		String osmFile = DijkstraShortestPathConstantWeight.class.getResource("/monaco-150112.osm.pbf").getPath();
+		String osmFile = DijkstraConstantWeight.class.getResource("/monaco-150112.osm.pbf").getPath();
 		String graphHopperMonacoDir = "/tmp/graphhopper/test/monaco";
 		String graphastMonacoDir = "/tmp/graphast/test/monaco";
 		

@@ -18,11 +18,11 @@ import org.graphast.util.DistanceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class AStarShortestPath extends AbstractShortestPathService{
+public abstract class AStar extends AbstractShortestPathService{
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
-	public AStarShortestPath(Graph graphAdapter) {
+	public AStar(Graph graphAdapter) {
 		super(graphAdapter);
 	}
 	

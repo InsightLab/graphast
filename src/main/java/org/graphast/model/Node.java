@@ -20,11 +20,23 @@ public interface Node {
 	public abstract int getCategory();
 
 	/**
+	 * this method set a category from a node.
+	 * @param a category
+	 */
+	public void setCategory(int category);
+	
+	/**
 	 * This method returns the externalId of this node.
 	 * @return the externalId
 	 */
 	public abstract long getExternalId();
 
+	/**
+	 * this method set the externalId from a node.
+	 * @param externalId
+	 */
+	public void setExternalId(long externalId);
+	
 	/**
 	 * This method returns the latitude of this node.
 	 * @return the latitude
@@ -32,11 +44,23 @@ public interface Node {
 	public abstract double getLatitude();
 
 	/**
+	 * this method set the latitude from a node.
+	 * @param latitude
+	 */
+	public void setLatitude(double latitude);
+	
+	/**
 	 * This method returns the longitude of this node.
 	 * @return the longitude
 	 */
 	public abstract double getLongitude();
 
+	/**
+	 * this method set the longitude from a node.
+	 * @param longitude
+	 */
+	public void setLongitude(double longitude);
+	
 	/**
 	 * This method returns the id of this node.
 	 * @return the id
@@ -44,10 +68,28 @@ public interface Node {
 	public abstract Long getId();
 	
 	/**
+	 * this method set the id from a node.
+	 * @param id
+	 */
+	public void setId(Long id);
+	
+	/**
 	 * This method returns the label of this node.
 	 * @return the label
 	 */
 	public abstract String getLabel();
+	
+	/**
+	 * this method set the label from a node.
+	 * @param label
+	 */
+	public void setLabel(String label);
+	
+	/**
+	 * This method returns the costIndex of this node.
+	 * @return costIndex
+	 */
+	public long getCostsIndex();
 
 	/**
 	 * toString method

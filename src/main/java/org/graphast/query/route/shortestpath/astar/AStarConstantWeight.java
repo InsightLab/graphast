@@ -14,10 +14,10 @@ import org.graphast.query.route.shortestpath.model.TimeEntry;
 
 import com.graphhopper.util.DistanceCalcEarth;
 
-public class AStarShortestPathConstantWeight extends AStarShortestPath{
+public class AStarConstantWeight extends AStar{
 	private DistanceCalcEarth distance;
 	
-	public AStarShortestPathConstantWeight(Graph graph) {
+	public AStarConstantWeight(Graph graph) {
 		super(graph);
 		this.distance = new DistanceCalcEarth();
 	}
