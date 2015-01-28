@@ -6,6 +6,13 @@ import java.math.RoundingMode;
 import org.graphast.exception.GraphastException;
 
 public class NumberUtils {
+	
+	public final static int SEGMENT_SHIFT = 14;
+	
+	public final static int SEGMENT_SIZE = 1 << SEGMENT_SHIFT;
+
+	public final static int SEGMENT_MASK = SEGMENT_SIZE - 1;
+	
 	/**
      * Returns a numeric value rounded to a specified number of digits.
      * Negative decimals indicates the number of digits to the left of the
@@ -55,7 +62,6 @@ public class NumberUtils {
         return number.setScale(decimals, RoundingMode.HALF_UP);
     }
 	
-
 	public static long convert(double number, int factor) {
         number = number * factor;
         if (number > 0) {
@@ -66,7 +72,6 @@ public class NumberUtils {
         return (long)number;
 	}
 
-	
 	public static int convertToInt(Object obj){
 		if(obj instanceof Long){
 			return (int) ((long) obj);
@@ -75,6 +80,37 @@ public class NumberUtils {
 		}else{
 			throw new GraphastException("Can not convert to int type");
 		}
+	}
+	
+	/**
+	 * Returns the segment part (a 'short' number) of a passed 'int' number.
+	 * 
+	 * @param	number	an 'int' number to be segmented
+	 * @return	the segment part (a 'short' number) of the passed 'int'
+	 */
+	public static short segment(int number) {
+		return (short)(number >> 16);
+	}
+	
+	/**
+	 * Returns the displacement part (a 'short' number) of a passed 'int' number.
+	 * 
+	 * @param	number	an 'int' number to be 'displacemented'
+	 * @return	the displacement part (a 'short' number) of the passed 'int'
+	 */
+	public static short displacement(int number ) {
+		return (short)number;
+	}
+	
+	/**
+	 * Turns two 'short' type numbers (segment and displacement) into a new 'int' number.
+	 * 
+	 * @param	segment	segment part of the new 'int' number that will be created
+	 * @param	displacement displacement part of the new 'int' number that will be created
+	 * @return	an 'int' number based on the segment and displacement passed
+	 */
+	public static int index( final short segment, final short displacement ) {
+		return (short)segment << 16 | displacement & 0xFFFF;
 	}
 	
 }
