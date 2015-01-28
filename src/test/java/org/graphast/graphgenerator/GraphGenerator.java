@@ -6,8 +6,10 @@ import java.util.List;
 import org.graphast.geometry.Point;
 import org.graphast.importer.OSMImporterImpl;
 import org.graphast.model.Edge;
-import org.graphast.model.Graph;
 import org.graphast.model.EdgeImpl;
+import org.graphast.model.Graph;
+import org.graphast.model.GraphBounds;
+import org.graphast.model.GraphBoundsImpl;
 import org.graphast.model.GraphImpl;
 import org.graphast.model.NodeImpl;
 import org.graphast.query.route.shortestpath.dijkstra.DijkstraShortestPathConstantWeight;
@@ -64,9 +66,9 @@ public class GraphGenerator {
 
 	}
 	
-	public Graph generateExample2() {
+	public GraphBounds generateExample2() {
 		
- 		Graph graph = new GraphImpl("/tmp/graphhopper/test/example2");
+ 		GraphBounds graph = new GraphBoundsImpl("/tmp/graphhopper/test/example2");
 
  		Edge e;
  		NodeImpl v;
@@ -92,30 +94,42 @@ public class GraphGenerator {
  		v = new NodeImpl(6l, 60d, 0d);
  		graph.addNode(v);
 
- 		e = new EdgeImpl(0l, 1l, 1);
+ 		short[] costs = {1,2,3,4};
+ 		e = new EdgeImpl(0l, 1l, 1, costs);
  		graph.addEdge(e);
 
- 		e = new EdgeImpl(0l, 2l, 5);
+ 		costs = new short[]{2,4,6,8,10};
+ 		e = new EdgeImpl(0l, 2l, 5, costs);
  		graph.addEdge(e);
 
- 		e = new EdgeImpl(1l, 2l, 3);
+ 		costs = new short[]{2};
+ 		e = new EdgeImpl(1l, 2l, 3, costs);
  		graph.addEdge(e);
 
+ 		costs = new short[]{1,4,7,6,11};
  		e = new EdgeImpl(2l, 3l, 3);
  		graph.addEdge(e);
 
- 		e = new EdgeImpl(3l, 4l, 3);
+ 		costs = new short[]{10};
+ 		e = new EdgeImpl(3l, 4l, 3, costs);
  		graph.addEdge(e);
 
- 		e = new EdgeImpl(3l, 5l, 4);
+ 		costs = new short[]{12,13};
+ 		e = new EdgeImpl(3l, 5l, 4, costs);
  		graph.addEdge(e);
 
- 		e = new EdgeImpl(4l, 5l, 2);
+ 		costs = new short[]{9,10,11};
+ 		e = new EdgeImpl(4l, 5l, 2, costs);
  		graph.addEdge(e);
 
+ 		costs = new short[]{2,4,6,8,10};
  		e = new EdgeImpl(5l, 6l, 1);
  		graph.addEdge(e);
 
+ 		System.out.println(graph.getCosts());
+ 		
+ 		graph.createBounds();
+ 		
  		return graph;
  		
 	}

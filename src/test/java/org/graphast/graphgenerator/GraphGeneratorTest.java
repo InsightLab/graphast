@@ -3,6 +3,7 @@ package org.graphast.graphgenerator;
 import static org.junit.Assert.assertEquals;
 
 import org.graphast.model.Graph;
+import org.graphast.model.GraphBounds;
 import org.graphast.util.FileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -11,7 +12,7 @@ import org.junit.Test;
 public class GraphGeneratorTest {
 	private static Graph graphMonaco;
 	private static Graph graphExample;
-	private static Graph graphExample2;
+	private static GraphBounds graphExample2;
 
 	@BeforeClass
 	public static void setup() {
@@ -37,6 +38,16 @@ public class GraphGeneratorTest {
 	public void shortestPathExample2Test() {
 		assertEquals(7, graphExample2.getNumberOfNodes());
 		assertEquals(8, graphExample2.getNumberOfEdges());
+	}
+	
+	@Test
+	public void Test() {
+		
+		graphExample2.getCosts();
+		
+		System.out.println(graphExample2.getUpperBound());
+		System.out.println(graphExample2.getLowerBound());
+		
 	}
 	
 	@AfterClass

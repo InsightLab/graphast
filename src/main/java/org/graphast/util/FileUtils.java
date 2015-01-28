@@ -1,6 +1,9 @@
 package org.graphast.util;
 
 import it.unimi.dsi.fastutil.ints.IntBigArrayBigList;
+import it.unimi.dsi.fastutil.longs.Long2ShortMap;
+import it.unimi.dsi.fastutil.longs.Long2ShortOpenHashMap;
+import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.objects.ObjectBigArrayBigList;
 import it.unimi.dsi.fastutil.objects.ObjectBigList;
 import it.unimi.dsi.fastutil.shorts.ShortBigArrayBigList;
@@ -90,6 +93,37 @@ public class FileUtils {
 		fos.close();
 	}
 	
+	public static void saveLong2ShortMap(String path, Long2ShortMap map, int blockSize) throws IOException{
+		String dir = path.substring(0, path.lastIndexOf("/"));
+		createDir(dir);
+		FileOutputStream fos = new FileOutputStream(path);
+		FileChannel channel = fos.getChannel();
+		
+		ByteBuffer buf = ByteBuffer.allocate(10 * blockSize);
+		int capacity = buf.capacity();
+		int used = 0;
+		LongIterator iterator = map.keySet().iterator();
+		
+		while(iterator.hasNext()) {
+			long key = iterator.next();
+			buf.putLong(key);
+			buf.putShort(map.get(key));
+			used += 10;
+			if(used == capacity) {
+				buf.flip();
+				channel.write(buf);
+				buf = ByteBuffer.allocate(10 * blockSize);
+				used = 0;
+			} else if(!iterator.hasNext() && used < capacity){
+				buf.flip();
+				channel.write(buf);
+			}
+		}
+		
+		channel.close();
+		fos.close();
+	}
+	
 	public static void saveStringList(String path, ObjectBigList<String> list, int blockSize) throws IOException{
 		String dir = path.substring(0, path.lastIndexOf("/"));
 		createDir(dir);
@@ -170,6 +204,25 @@ public class FileUtils {
 		return list;
 	}
 	
+	public static Long2ShortMap loadLong2ShortMap(String path, int blockSize) throws IOException{
+		 
+		Long2ShortMap list = new Long2ShortOpenHashMap();
+		FileInputStream fis = new FileInputStream(path);
+		FileChannel channel = fis.getChannel();
+		
+		ByteBuffer buf = ByteBuffer.allocate(10 * blockSize);
+		while (channel.read(buf) > 0) {
+			buf.flip();
+            while (buf.hasRemaining()) {
+            	list.put(buf.getLong(), buf.getShort());
+            }
+            buf.clear();
+		}
+		channel.close();
+		fis.close();
+		return list;
+	}
+	
 	public static ObjectBigList<String> loadStringList(String path, int blockSize) throws IOException{
 		ObjectBigList<String> list = new ObjectBigArrayBigList<String>();
 		FileInputStream fis = new FileInputStream(path);
@@ -198,6 +251,8 @@ public class FileUtils {
 		fis.close();
 		return list;
 	}
+	
+	
 	
 	public static void createDir(String dir){
 		File pathName = new File(dir);
