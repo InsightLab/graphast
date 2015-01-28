@@ -24,6 +24,8 @@ public class NodeImpl implements Node {
 	private long labelIndex;
 
 	private long costsIndex;
+	
+	private short[] costs;
 
 	private String label;
 
@@ -61,6 +63,18 @@ public class NodeImpl implements Node {
 	 * @param costIndex
 	 */
 	NodeImpl(long externalId, int category, double latitude, 
+			double longitude, long firstEdge, long labelIndex, long costIndex, short[] costs) {
+
+		this(latitude, longitude);
+		this.externalId = externalId;
+		this.category = category;
+		this.firstEdge = firstEdge;
+		this.labelIndex = labelIndex;
+		this.costsIndex = costIndex;
+		this.costs = costs;
+	}
+	
+	NodeImpl(long externalId, int category, double latitude, 
 			double longitude, long firstEdge, long labelIndex, long costIndex) {
 
 		this(latitude, longitude);
@@ -68,8 +82,7 @@ public class NodeImpl implements Node {
 		this.category = category;
 		this.firstEdge = firstEdge;
 		this.labelIndex = labelIndex;
-		this.costsIndex = costIndex;	
-
+		this.costsIndex = costIndex;
 	}
 
 	/**
@@ -124,6 +137,7 @@ public class NodeImpl implements Node {
 		return category;
 	}
 
+	@Override
 	public void setCategory(int category) {
 		this.category = category;
 	}
@@ -144,6 +158,7 @@ public class NodeImpl implements Node {
 		return BigArrays.displacement(externalId);
 	}
 
+	@Override
 	public void setExternalId(long externalId) {
 		this.externalId = externalId;
 	}
@@ -161,6 +176,7 @@ public class NodeImpl implements Node {
 	}
 	
 
+	@Override
 	public void setLatitude(double latitude) {
 		this.latitude = latLongToInt(latitude);
 	}
@@ -177,6 +193,7 @@ public class NodeImpl implements Node {
 		return longitude;
 	}
 	
+	@Override
 	public void setLongitude(double longitude) {
 		this.longitude = latLongToInt(longitude);
 	}
@@ -201,6 +218,7 @@ public class NodeImpl implements Node {
 		return id;
 	}
 
+	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -228,6 +246,10 @@ public class NodeImpl implements Node {
 	int getCostsIndexOffset(){
 		return BigArrays.displacement(costsIndex);
 	}
+	
+	public long getCostsIndex() {
+		return costsIndex;
+	}
 
 	void setCostsIndex(long costIndex) {
 		this.costsIndex = costIndex;
@@ -241,6 +263,7 @@ public class NodeImpl implements Node {
 		return label;
 	}
 
+	@Override
 	public void setLabel(String label) {
 		this.label = label;
 	}

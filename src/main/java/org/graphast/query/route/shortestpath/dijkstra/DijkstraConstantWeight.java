@@ -11,9 +11,9 @@ import org.graphast.model.Node;
 import org.graphast.query.route.shortestpath.model.DistanceEntry;
 import org.graphast.query.route.shortestpath.model.RouteEntry;
 
-public class DijkstraShortestPathConstantWeight extends DijkstraShortestPath {
+public class DijkstraConstantWeight extends Dijkstra {
 
-	public DijkstraShortestPathConstantWeight(Graph graph) {
+	public DijkstraConstantWeight(Graph graph) {
 		super(graph);
 	}
 	
