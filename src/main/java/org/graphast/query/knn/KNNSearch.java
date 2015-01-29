@@ -21,13 +21,13 @@ public class KNNSearch extends AbstractKNNService{
 		HashMap<Long, Integer> wasTraversed = new HashMap<Long, Integer>();
 		PriorityQueue<LowerBoundEntry> queue = new PriorityQueue<LowerBoundEntry>();
 		PriorityQueue<UpperEntry> upperCandidates = new PriorityQueue<UpperEntry>();
-		HashMap<Integer, Integer> isIn = new HashMap<Integer, Integer>();
+		HashMap<Long, Integer> isIn = new HashMap<Long, Integer>();
 		HashMap<Long, Long> parents = new HashMap<Long, Long>();
 		int kth = Integer.MAX_VALUE;
 		int t = DateUtils.dateToMilli(time);
 		LowerBoundEntry removed = null;
 		
-		init((v.getId()), t, k, kth, queue, upperCandidates, isIn, parents);
+		init(v.getId(), t, k, kth, queue, upperCandidates, isIn, parents);
 		
 		while(!queue.isEmpty()){
 			removed = queue.poll();

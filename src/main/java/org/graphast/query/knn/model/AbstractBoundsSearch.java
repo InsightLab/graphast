@@ -4,23 +4,23 @@ import java.util.HashMap;
 
 
 public class AbstractBoundsSearch implements BoundsSearch{
-	protected HashMap<String, Integer> bounds;
+	protected HashMap<Long, Integer> bounds;
 
-	public AbstractBoundsSearch(String host, int index) {
-		this.bounds = new HashMap<String, Integer>();
+	public AbstractBoundsSearch(long host, int index) {
+		this.bounds = new HashMap<Long, Integer>();
 	}
 
-	public HashMap<String, Integer> getBounds() {
+	public HashMap<Long, Integer> getBounds() {
 		return bounds;
 	}
 
-	public void setBounds(HashMap<String, Integer> bounds) {
+	public void setBounds(HashMap<Long, Integer> bounds) {
 		this.bounds = bounds;		
 	}
 	
 	public String toString(){
 		String str = "";
-		for(String s : bounds.keySet()){
+		for(long s : bounds.keySet()){
 			str += s + ":" + bounds.get(s) + "\n";
 		}
 		return str;
