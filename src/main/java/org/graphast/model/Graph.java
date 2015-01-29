@@ -11,6 +11,7 @@ import java.util.List;
 import org.graphast.geometry.Point;
 import org.graphast.util.FileUtils;
 
+
 public interface Graph {
 
 	/**
@@ -93,34 +94,6 @@ public interface Graph {
 	public void addEdge(Edge edge);
 
 	/**
-	 * This method will store the passed list of costs in a
-	 * ShortBigArrayBigList and return the position
-	 * of this insertion.
-	 * 
-	 * @param	c	list of costs that will be stored
-	 * @return	the costId (position where the cost was inserted).
-	 */
-	public long storeCosts(short[] c);
-
-	/**
-	 * This method will store the passed list of points
-	 * in a IntBigArrayBigList and return the position
-	 * of this insertion.
-	 * 
-	 * @param	listPoints	list of points that will be stored
-	 * @return	the listId (position where the list was inserted).
-	 */
-	public long storePoints(List<Point> listPoints);
-
-	/**
-	 * This method will update the IntBigArrayBigList of edges
-	 * with need information of a passed Edge.
-	 * 
-	 * @param edge Edge with the informations that must be updated.
-	 */
-	public void updateEdgeInfo(Edge edge);
-
-	/**
 	 * After add an edge, we must update the neighbor of both
 	 * nodes of the edge. This method will do this operation
 	 * for a given Edge.
@@ -155,7 +128,10 @@ public interface Graph {
 	 * @param time Time used to get edge costs.
 	 * @return Edge costs.
 	 */
-	public short[] getCosts(LongList edges, int time);
+	public short[] getEdgesCosts(LongList edges, int time);
+	
+	//TODO documentation
+	public short[] getNodeCosts(long id);
 
 	/**
 	 * This method returns all costs of all edges stored in a BigArrayBigList.
@@ -283,6 +259,20 @@ public interface Graph {
 	 * @param lon Longitude
 	 * @return true if a node with this latitude and longitude exists
 	 */
-	public boolean hasNode(int lat, int lon);
+	public boolean hasNode(double lat, double lon);
+	
+	public abstract Node addPoi(long id, double lat, double lon, int category, LinearFunction[] costs);
+	
+	public abstract boolean isPoi(long vid);
+
+	public abstract Node getPoi(long vid);
+	
+	public abstract int poiGetCost(long vid, int time);
+
+	public abstract int poiGetCost(long vid);
+	
+	public abstract short[] getPoiCost(long vid);
+	
+	public LinearFunction[] convertToLinearFunction(short[] costs);
 
 }

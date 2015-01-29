@@ -24,13 +24,14 @@ import org.graphast.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 public class GraphImpl implements Graph {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private Long2LongMap nodeIndex = new Long2LongOpenHashMap();
 
-	private String directory;
+	protected String directory;
 
 	private IntBigArrayBigList nodes;
 
@@ -40,19 +41,23 @@ public class GraphImpl implements Graph {
 
 	private ObjectBigList<String> edgesLabels;
 
-	private ShortBigArrayBigList costs;
+	private ShortBigArrayBigList edgesCosts;
+
+	private ShortBigArrayBigList nodesCosts;
 
 	private IntBigArrayBigList points;
 
-	private int blockSize = 4096;
+	protected int blockSize = 4096;
 
 	private static int secondsDay = 86400;
 
+	private short[] shortCosts;
+
 	/**
-	 * Creates a Graphast for the given directory passed as parameter.
+	 * Creates a Graph for the given directory passed as parameter.
 	 * 
 	 * This constructor will instantiate all lists needed 
-	 * to properly handle the information of a Graphast, 
+	 * to properly handle the information of a Graph, 
 	 * e.g. nodes, edges, labels, etc.
 	 * 
 	 * @param directory Directory in which the graph is (or will be) persisted.
@@ -64,7 +69,8 @@ public class GraphImpl implements Graph {
 		edges = new IntBigArrayBigList();
 		nodesLabels = new ObjectBigArrayBigList<String>();
 		edgesLabels = new ObjectBigArrayBigList<String>();
-		costs = new ShortBigArrayBigList();
+		nodesCosts = new ShortBigArrayBigList();
+		edgesCosts = new ShortBigArrayBigList();
 		points = new IntBigArrayBigList();
 
 		nodeIndex.defaultReturnValue(-1);
@@ -79,7 +85,8 @@ public class GraphImpl implements Graph {
 		FileUtils.saveIntList(directory + "/edges", edges, blockSize);
 		FileUtils.saveStringList(directory + "/nodesLabels", nodesLabels, blockSize);
 		FileUtils.saveStringList(directory + "/edgesLabels", edgesLabels, blockSize);
-		FileUtils.saveShortList(directory + "/costs", costs, blockSize);
+		FileUtils.saveShortList(directory + "/nodesCosts", nodesCosts, blockSize);
+		FileUtils.saveShortList(directory + "/edgesCosts", edgesCosts, blockSize);
 		FileUtils.saveIntList(directory + "/points", points, blockSize);
 	}
 
@@ -92,7 +99,8 @@ public class GraphImpl implements Graph {
 		edges = FileUtils.loadIntList(directory + "/edges", blockSize);
 		nodesLabels = FileUtils.loadStringList(directory + "/nodesLabels", blockSize);
 		edgesLabels = FileUtils.loadStringList(directory + "/edgesLabels", blockSize);
-		costs = FileUtils.loadShortList(directory + "/costs", blockSize);
+		nodesCosts = FileUtils.loadShortList(directory + "/nodesCosts", blockSize);
+		edgesCosts = FileUtils.loadShortList(directory + "/edgesCosts", blockSize);
 		points = FileUtils.loadIntList(directory + "/points", blockSize);
 		createNodeIndex();
 	}
@@ -113,12 +121,14 @@ public class GraphImpl implements Graph {
 	public void addNode(Node n) {
 
 		long id;
-		
+
 		NodeImpl node = (NodeImpl)n;
 
-		long labelIndex = storeNodeLabel(node.getLabel());
-		node.setLabelIndex(labelIndex);
+		long labelIndex = storeLabel(node.getLabel(), nodesLabels);
+		long costsIndex = storeCosts(node.getCosts(), nodesCosts);
 
+		node.setCostsIndex(costsIndex);
+		node.setLabelIndex(labelIndex);
 
 		synchronized (nodes) {
 			id = nodes.size64() / Node.NODE_BLOCKSIZE;
@@ -148,33 +158,33 @@ public class GraphImpl implements Graph {
 	 * 					the ObjectBigList.
 	 * @return	the labelId (position where the label was inserted).
 	 */
-	private long storeNodeLabel(String label) {
+	private long storeLabel(String label, ObjectBigList<String> labelList) {
 		// Do not store a null label
 		if (label == null) {
 			return -1;
 		}
-		
+
 		long labelId;
 
-		synchronized (nodesLabels) {
-			labelId = nodesLabels.size64();
-			nodesLabels.add(label);
+		synchronized (labelList) {
+			labelId = labelList.size64();
+			labelList.add(label);
 		}
 		return labelId;
 	}
 
 	//TODO Why we only update the latitude, longitude and FirstEdge? 
-		//Wouldn't be better if we had a method that updates everything?
-		/**
-		 * This method will update the IntBigArrayBigList of nodes
-		 * with need information of a passed GraphastNode.
-		 * 
-		 * @param n GraphastNode with the informations that must be updated.
-		 */
+	//Wouldn't be better if we had a method that updates everything?
+	/**
+	 * This method will update the IntBigArrayBigList of nodes
+	 * with need information of a passed GraphastNode.
+	 * 
+	 * @param n GraphastNode with the informations that must be updated.
+	 */
 	public void updateNodeInfo(Node n) {
-		
+
 		NodeImpl node = (NodeImpl)n;
-		
+
 		long position = node.getId() * Node.NODE_BLOCKSIZE;
 		position = position + 3;
 
@@ -221,7 +231,7 @@ public class GraphImpl implements Graph {
 	public void setEdge(Edge e, long pos) {
 
 		EdgeImpl edge = (EdgeImpl)e;
-		
+
 		synchronized (edges) {
 			edges.set(pos++, edge.getExternalIdSegment());
 			edges.set(pos++, edge.getExternalIdOffset());
@@ -250,11 +260,10 @@ public class GraphImpl implements Graph {
 	public void addEdge(Edge e) {
 
 		EdgeImpl edge = (EdgeImpl)e;
-		
-		long labelIndex = storeEdgeLabel(edge.getLabel());
-		long costsIndex = storeCosts(edge.getCosts());
-		long geometryIndex = storePoints(edge.getGeometry());
 
+		long labelIndex = storeLabel(edge.getLabel(), edgesLabels);
+		long costsIndex = storeCosts(edge.getCosts(), edgesCosts);
+		long geometryIndex = storePoints(edge.getGeometry());
 		edge.setCostsIndex(costsIndex);
 		edge.setGeometryIndex(geometryIndex);
 		edge.setLabelIndex(labelIndex);
@@ -287,37 +296,18 @@ public class GraphImpl implements Graph {
 	}
 
 	/**
-	 * This method will store the passed label in a
-	 * ObjectBigList of Strings and return the position
+	 * This method will store the passed list of costs in a
+	 * ShortBigArrayBigList and return the position
 	 * of this insertion.
 	 * 
-	 * @param	label	String that will be added into
-	 * 					the ObjectBigList.
-	 * @return	the labelId (position where the label was inserted).
+	 * @param	c	list of costs that will be stored
+	 * @return	the costId (position where the cost was inserted).
 	 */
-	private long storeEdgeLabel(String label) {
-		// Do not store a null label
-		if (label == null) {
-			return -1l;
-		}
-		long labelId;
-
-		synchronized (edgesLabels) {
-			labelId = edgesLabels.size64();
-			edgesLabels.add(label);
-		}
-		return labelId;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Graphast#storeCosts(short[])
-	 */
-	@Override
-	public long storeCosts(short[] c) {
+	private long storeCosts(short[] c, ShortBigArrayBigList costs) {
 		if (c == null || c.length == 0) {
 			return -1l;
 		}
-		
+
 		long costId;
 
 		synchronized (costs) {
@@ -331,15 +321,19 @@ public class GraphImpl implements Graph {
 		return costId;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Graphast#storePoints(java.util.List)
+	/**
+	 * This method will store the passed list of points
+	 * in a IntBigArrayBigList and return the position
+	 * of this insertion.
+	 * 
+	 * @param	listPoints	list of points that will be stored
+	 * @return	the listId (position where the list was inserted).
 	 */
-	@Override
-	public long storePoints(List<Point> listPoints) {
+	private long storePoints(List<Point> listPoints) {
 		if (listPoints == null || listPoints.size() == 0) {
 			return -1l;
 		}
-		
+
 		long listId;
 
 		synchronized (points) {
@@ -354,11 +348,13 @@ public class GraphImpl implements Graph {
 		return listId;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Graphast#updateEdgeInfo(org.graphast.model.GraphastEdge)
+	/**
+	 * This method will update the IntBigArrayBigList of edges
+	 * with need information of a passed Edge.
+	 * 
+	 * @param edge Edge with the informations that must be updated.
 	 */
-	@Override
-	public void updateEdgeInfo(Edge edge) {
+	private void updateEdgeInfo(Edge edge) {
 
 		long pos = edge.getId() * Edge.EDGE_BLOCKSIZE;
 		setEdge(edge, pos);
@@ -391,7 +387,7 @@ public class GraphImpl implements Graph {
 	public void updateNodeNeighborhood(Node n, long eid) {
 
 		NodeImpl node = (NodeImpl)n;
-		
+
 		if (BigArrays.index(node.getFirstEdgeSegment(), node.getFirstEdgeOffset()) == -1) {
 
 			node.setFirstEdge(eid);
@@ -399,6 +395,7 @@ public class GraphImpl implements Graph {
 
 		} else {
 
+			
 			long next = 0;
 			EdgeImpl nextEdge = (EdgeImpl) getEdge(BigArrays.index(node.getFirstEdgeSegment(), node.getFirstEdgeOffset()));
 
@@ -459,10 +456,10 @@ public class GraphImpl implements Graph {
 	}
 
 	/* (non-Javadoc)
-	 * @see org.graphast.model.Graphast#getCosts(it.unimi.dsi.fastutil.longs.LongList, int)
+	 * @see org.graphast.model.Graphast#getEdgesCosts(it.unimi.dsi.fastutil.longs.LongList, int)
 	 */
 	@Override
-	public short[] getCosts(LongList edges, int time) {
+	public short[] getEdgesCosts(LongList edges, int time) {
 
 		short[] costs = new short[edges.size()];
 		Edge e;
@@ -480,7 +477,7 @@ public class GraphImpl implements Graph {
 	@Override
 	public ShortBigArrayBigList getCosts() {
 
-		return costs;
+		return edgesCosts;
 	}
 
 	/* (non-Javadoc)
@@ -530,8 +527,8 @@ public class GraphImpl implements Graph {
 	@Override
 	public Edge getEdge(long id) {
 
-		
-		
+
+
 		long pos = id * Edge.EDGE_BLOCKSIZE;
 
 		long externalId = BigArrays.index(edges.getInt(pos++), edges.getInt(pos++));
@@ -547,10 +544,18 @@ public class GraphImpl implements Graph {
 		EdgeImpl edge = new EdgeImpl(externalId, fromId, toId,
 				fromNodeNextEdge, toNodeNextEdge, distance, costsIndex,
 				geometryIndex, labelIndex, null);
-		
+
 		edge.setId(id);
 		if (labelIndex >= 0) {
 			edge.setLabel(getEdgesLabels().get(labelIndex));
+		}
+		
+		if (costsIndex >= 0) {
+			edge.setCosts(getEdgeCosts(costsIndex));
+		}
+
+		if (costsIndex >= 0) {
+			edge.setCosts(getEdgeCosts(costsIndex));
 		}
 
 		edge.validate();
@@ -564,14 +569,32 @@ public class GraphImpl implements Graph {
 	@Override
 	public short[] getEdgeCosts(long id) {
 
-		EdgeImpl edge = (EdgeImpl)getEdge(id);
-		long costsIndex = edge.getCostsIndex();
-		short size = costs.getShort(costsIndex++);
+//		EdgeImpl edge = (EdgeImpl)getEdge(id);
+		long costsIndex = id;
+		short size = edgesCosts.getShort(costsIndex);
 		short[] c = new short[size];
 		int i = 0;
 		while (size > 0) {
-			c[i++] = costs.getShort(costsIndex++);
+			costsIndex++;
+			c[i] = edgesCosts.getShort(costsIndex);
 			size--;
+			i++;
+		}
+		return c;
+	}
+
+	public short[] getNodeCosts(long id) {
+
+		//Node node = getNode(id);
+		long costsIndex = id;
+		short size = nodesCosts.getShort(costsIndex);
+		short[] c = new short[size];
+		int i = 0;
+		while (size > 0) {
+			costsIndex++;
+			c[i] = nodesCosts.getShort(costsIndex);
+			size--;
+			i++;
 		}
 		return c;
 	}
@@ -586,11 +609,11 @@ public class GraphImpl implements Graph {
 		if (costsIndex < 0) {
 			throw new GraphastException("Edge without costs: " + edge);
 		}
-		short size = costs.getShort(costsIndex++);
+		short size = edgesCosts.getShort(costsIndex++);
 		int intervalSize = secondsDay / size;
 		long index = (long) (costsIndex + (time / intervalSize));
 
-		return costs.getShort(index);
+		return edgesCosts.getShort(index);
 
 	}
 
@@ -674,7 +697,7 @@ public class GraphImpl implements Graph {
 	public IntBigArrayBigList getEdges() {
 		return edges;
 	}
-	
+
 	ObjectBigList<String> getNodesLabels() {
 		return nodesLabels;
 	}
@@ -761,9 +784,9 @@ public class GraphImpl implements Graph {
 	}
 
 	public boolean hasNode(Node n) {
-		
+
 		NodeImpl node = (NodeImpl)n;
-		
+
 		try {
 			if(nodeIndex.containsKey(BigArrays.index(node.getLatitudeConvertedToInt(), node.getLongitudeConvertedToInt()))) {
 				return true;
@@ -778,8 +801,113 @@ public class GraphImpl implements Graph {
 	}
 
 	@Override
-	public boolean hasNode(int lat, int lon) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean hasNode(double latitude, double longitude) {
+		int lat = latLongToInt(latitude);
+		int lon = latLongToInt(longitude);
+		try {
+			if(nodeIndex.containsKey(BigArrays.index(lat, lon))) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		catch(NullPointerException e) {
+			return false;
+		}
 	}
+
+	@Override
+	public Node addPoi(long id, double lat, double lon, int category,
+			LinearFunction[] costs) {
+		short[] shortCosts = linearFunctionArrayToCostShortArray(costs);
+		Node poi = new NodeImpl(id, category, lat, lon, 0l, 0l, 0l, shortCosts);
+		this.addNode(poi);
+		return poi;
+	}
+
+
+	public int poiGetCost(long vid, int time){
+		int i = 0;
+		LinearFunction[] lf = convertToLinearFunction(getPoiCost(vid));
+		while(lf[i].getEndInterval() <= time){
+			i++;
+		}
+		return lf[i].calculateCost(time);
+	}
+
+	public int poiGetCost(long vid){
+		LinearFunction[] lf = convertToLinearFunction(getPoiCost(vid));
+		return lf[0].calculateCost(0);
+	}
+
+	public short[] getPoiCost(long vid){
+		return getNodeCosts(vid);
+	}
+
+	public LinearFunction[] convertToLinearFunction(short[] costs){
+		LinearFunction[] result = new LinearFunction[costs.length];
+		int interval = (60*60*24)/costs.length;
+		int startInterval = 0;
+		int endInterval = interval;
+		for(int i = 0; i < costs.length; i++){
+			result[i] = new LinearFunction(startInterval, costs[i], endInterval, costs[i]);
+			startInterval = endInterval;
+			endInterval = endInterval + interval;
+		}
+		return result;
+	}
+
+	private short[] linearFunctionArrayToCostShortArray(LinearFunction[] linearFunction) {
+		shortCosts = null;
+		for(int i = 0; i < linearFunction.length; i++) {
+			shortCosts[i] = (short)linearFunction[i].getStartCost(); 
+		}
+		return shortCosts;
+
+	}
+
+	public short getMaximunCostValue(short[] costs) {
+
+		if(costs==null) {
+			throw new IllegalArgumentException("Costs can not be null.");
+		}
+		
+		
+		short max = costs[0];
+
+		for (int i = 0; i < costs.length; i++) {
+
+			if (costs[i] > max) {
+				max = costs[i];
+			}
+		}
+
+		return max;
+	}
+
+	public short getMinimunCostValue(short[] costs) {
+
+		short min = costs[0];
+
+		for (int i = 0; i < costs.length; i++) {
+
+			if (costs[i] < min) {
+				min = costs[i];
+			}
+		}
+
+		return min;
+	}
+	
+	public boolean isPoi(long vid){
+		return getNode(vid).getCategory() >= 0;
+	}
+	
+	public Node getPoi(long vid){
+		Node v = getNode(vid);
+		if(v.getCategory() < 0)	return null;
+		else	return v;
+	}
+	
 }

@@ -55,6 +55,11 @@ public class EdgeImpl implements Edge {
 		this(0, fromNode, toNode, -1, -1, distance, -1, -1, -1, null);
 
 	}
+	
+	public EdgeImpl(long fromNode, long toNode, int distance, short[] costs){
+		this(fromNode, toNode, distance);
+		this.costs = costs;
+	}
 
 	public EdgeImpl(long externalId, long fromNode, long toNode, int distance) {
 		this(externalId, fromNode, toNode, -1, -1, distance, -1, -1, -1, null);
