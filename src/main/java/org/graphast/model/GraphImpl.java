@@ -545,6 +545,10 @@ public class GraphImpl implements Graph {
 		if (labelIndex >= 0) {
 			edge.setLabel(getEdgesLabels().get(labelIndex));
 		}
+		
+		if (costsIndex >= 0) {
+			edge.setCosts(getEdgeCosts(costsIndex));
+		}
 
 		edge.validate();
 		return edge;
