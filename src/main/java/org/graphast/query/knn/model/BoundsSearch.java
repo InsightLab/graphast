@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 
 public interface BoundsSearch {
-	public HashMap<String, Integer> getBounds();
+	public HashMap<Long, Integer> getBounds();
 	
-	public void setBounds(HashMap<String, Integer> bounds) ;
+	public void setBounds(HashMap<Long, Integer> bounds) ;
 }

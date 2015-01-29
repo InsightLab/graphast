@@ -21,6 +21,7 @@ import java.util.List;
 import org.graphast.exception.GraphastException;
 import org.graphast.geometry.Point;
 import org.graphast.util.FileUtils;
+import org.graphast.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,9 +43,9 @@ public class GraphImpl implements Graph {
 	private ObjectBigList<String> edgesLabels;
 
 	private ShortBigArrayBigList edgesCosts;
-
+	
 	private ShortBigArrayBigList nodesCosts;
-
+	
 	private IntBigArrayBigList points;
 
 	protected int blockSize = 4096;
@@ -125,8 +126,8 @@ public class GraphImpl implements Graph {
 		NodeImpl node = (NodeImpl)n;
 
 		long labelIndex = storeLabel(node.getLabel(), nodesLabels);
+		node.setLabelIndex(labelIndex);
 		long costsIndex = storeCosts(node.getCosts(), nodesCosts);
-
 		node.setCostsIndex(costsIndex);
 		node.setLabelIndex(labelIndex);
 
@@ -260,7 +261,6 @@ public class GraphImpl implements Graph {
 	public void addEdge(Edge e) {
 
 		EdgeImpl edge = (EdgeImpl)e;
-
 		long labelIndex = storeLabel(edge.getLabel(), edgesLabels);
 		long costsIndex = storeCosts(edge.getCosts(), edgesCosts);
 		long geometryIndex = storePoints(edge.getGeometry());
@@ -681,7 +681,7 @@ public class GraphImpl implements Graph {
 	public String getEdgeLabel(long id) {
 		return edgesLabels.size64() > 0 ? edgesLabels.get(id) : null;
 	}
-
+	
 	/* (non-Javadoc)
 	 * @see org.graphast.model.Graphast#getNodes()
 	 */
@@ -816,7 +816,6 @@ public class GraphImpl implements Graph {
 			return false;
 		}
 	}
-
 	@Override
 	public Node addPoi(long id, double lat, double lon, int category,
 			LinearFunction[] costs) {
@@ -825,8 +824,7 @@ public class GraphImpl implements Graph {
 		this.addNode(poi);
 		return poi;
 	}
-
-
+	
 	public int poiGetCost(long vid, int time){
 		int i = 0;
 		LinearFunction[] lf = convertToLinearFunction(getPoiCost(vid));

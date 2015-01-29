@@ -2,10 +2,10 @@ package org.graphast.query.knn;
 
 class UpperEntry implements Comparable<UpperEntry>{
 	
-	Integer unn;
+	long unn;
 	Integer  utdd;
 
-	public UpperEntry(Integer unn, Integer utdd) {
+	public UpperEntry(long unn, Integer utdd) {
 		this.unn = unn;
 		this.utdd = utdd;
 	}
@@ -16,7 +16,7 @@ class UpperEntry implements Comparable<UpperEntry>{
 
 
 	public boolean equals(UpperEntry o){
-		return unn.equals(o.unn);
+		return unn == o.unn;
 	}
 	
 	public String toString(){
