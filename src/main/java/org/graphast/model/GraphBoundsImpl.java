@@ -37,20 +37,20 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 		int numberOfEdges = getNumberOfEdges();
 		Edge edge; 
 		
-		for(int i=0; i<numberOfEdges; i++) {
-			edge = getEdge(i);
+		for(long i=0; i<numberOfEdges; i++) {
+			edge = super.getEdge(i);
 			lowerBound.put((long)edge.getId(), getMinimunCostValue(edge.getCosts()));
 		}
 	}
 	
 	public void createUpperBounds() {
+		
 		int numberOfEdges = getNumberOfEdges();
 		Edge edge; 
 		
 		for(int i=0; i<numberOfEdges; i++) {
 			edge = getEdge(i);
 			upperBound.put((long)edge.getId(), getMaximunCostValue(edge.getCosts()));
-			
 		}
 	}
 	
