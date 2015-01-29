@@ -7,11 +7,13 @@ import it.unimi.dsi.fastutil.ints.Int2LongOpenHashMap;
 import java.io.IOException;
 import java.util.Date;
 
+import org.graphast.config.Configuration;
 import org.graphast.model.Edge;
 import org.graphast.model.Graph;
 import org.graphast.model.EdgeImpl;
 import org.graphast.model.GraphImpl;
 import org.graphast.model.NodeImpl;
+import org.graphast.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,17 +25,20 @@ public class OSMImporterImpl implements Importer {
 
 	public Logger logger = LoggerFactory.getLogger(this.getClass());
 	
-	private String osmFile, graphHopperDir, graphastDir;
+	private String osmFile, graphHopperDir, graphastDir, graphastTmpDir;
 	
 	public OSMImporterImpl(String osmFile, String graphHopperDir, String graphastDir) {
+		graphastTmpDir = Configuration.USER_HOME + "/graphast/tmp/osmimporter";
 		this.osmFile = osmFile;
-		this.graphHopperDir = graphHopperDir;
-		this.graphastDir = graphastDir;
+		if (graphHopperDir == null) {
+			this.graphHopperDir = graphastTmpDir;
+		} else {
+			this.graphHopperDir = graphHopperDir;
+		}
 	}
 	
-	public OSMImporterImpl(String graphHopperDir, String graphastDir) {
-		this(null, graphHopperDir, graphastDir);
-		
+	public OSMImporterImpl(String osmFile, String graphastDir) {
+		this(osmFile, null, graphastDir);
 	}
 	
 	/* (non-Javadoc)
@@ -53,8 +58,8 @@ public class OSMImporterImpl implements Importer {
 
 		Int2LongOpenHashMap hashExternalIdToId = new Int2LongOpenHashMap();
 		int count = 0;
+		int countInvalidDirection = 0;
 		while(edgeIterator.next()) {
-			
 			count++;
 
 			int externalFromNodeId = edgeIterator.getBaseNode();
@@ -92,26 +97,37 @@ public class OSMImporterImpl implements Importer {
 				toNodeId = hashExternalIdToId.get(externalToNodeId);
 			}
 
-			int direction = getDirection(edgeIterator.getFlags());
-			if(direction == 0) {        // Bidirectional
+			int direction = 9999;
+			try {
+				direction = getDirection(edgeIterator.getFlags());
+			} catch (Exception e) {
+				countInvalidDirection++;
+			}
+			
+			if(direction == 0) {          // Bidirectional
 				if(fromNodeId != toNodeId) {
 					Edge edge = new EdgeImpl(externalEdgeId, fromNodeId, toNodeId, distance, label);
 					graph.addEdge(edge);
 					edge = new EdgeImpl(externalEdgeId, toNodeId, fromNodeId, distance, label);
 					graph.addEdge(edge);
+				} else {
+					logger.info("Edge not created, because fromNodeId({}) == toNodeId({})", fromNodeId, toNodeId);
 				}
-			}else if(direction == 1) {  // One direction: base -> adj
+			} else if(direction == 1) {   // One direction: base -> adj
 				Edge edge = new EdgeImpl(externalEdgeId, fromNodeId, toNodeId, distance, label);
 				graph.addEdge(edge);
-			}else {                     // One direction: adj -> base
+			} else if(direction == -1) {  // One direction: adj -> base
 				Edge edge = new EdgeImpl(externalEdgeId, toNodeId, fromNodeId, distance, label);
 				graph.addEdge(edge);
+			} else {
+				logger.info("Edge not created. Invalid direction: {}", direction);
 			}
 		}
 
 		logger.info("Number of Nodes: {}", graph.getNumberOfNodes());
 		logger.info("Number of Edges: {}", graph.getNumberOfEdges());
 		logger.info("Count: {}", count);
+		logger.info("Number of invalid direction in original edges: {}", countInvalidDirection);
 
 		try {
 			graph.save();
@@ -123,7 +139,9 @@ public class OSMImporterImpl implements Importer {
 		double total = finalTime - initialTime;
 		logger.info("Final date: {}", new Date());
 		logger.info("Total time: {}", total);
-
+		if (graphHopperDir.equals(graphastTmpDir)) {
+			FileUtils.deleteDir(graphastTmpDir);
+		}
 		return graph;
 	}
 
@@ -131,14 +149,14 @@ public class OSMImporterImpl implements Importer {
 		long direction = (flags & 3);
 
 		if(direction ==  1) {
-			return 1; 
+			return 1;   // One direction: From --> To 
 		} else if(direction ==  2) {
-			return -1;
+			return -1;  // One direction: To --> From
 		} else if(direction == 3) {
-			return 0;
+			return 0;   // Bidirectional: To <--> From
 		}
 		else {
-			throw new IllegalArgumentException("Invalid flag");
+			throw new IllegalArgumentException("Invalid flag: " + direction);
 		}
 	}
 
