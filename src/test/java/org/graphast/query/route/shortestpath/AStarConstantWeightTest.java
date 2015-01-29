@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.graphast.graphgenerator.GraphGenerator;
 import org.graphast.model.Graph;
-import org.graphast.query.route.shortestpath.astar.AStarShortestPathConstantWeight;
+import org.graphast.query.route.shortestpath.astar.AStarConstantWeight;
 import org.graphast.util.FileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import com.graphhopper.util.StopWatch;
 
-public class AStarShortestPathConstantWeightTest {
+public class AStarConstantWeightTest {
 		private static Graph graphMonaco;
 		
 		@BeforeClass
@@ -30,7 +30,7 @@ public class AStarShortestPathConstantWeightTest {
 			Long source = graphMonaco.getNodeId(43.7294668047756,7.413772473047058);
 			Long target = graphMonaco.getNodeId(43.73079058671274,7.415815422292399);
 			
-			AbstractShortestPathService aStar = new AStarShortestPathConstantWeight(graphMonaco);
+			AbstractShortestPathService aStar = new AStarConstantWeight(graphMonaco);
 			
 			//TODO Improve this distance function
 			double diffFrom = distanceLatLong(43.7294668047756,7.413772473047058, 43.7294668047756,7.413772473047058);
@@ -52,7 +52,7 @@ public class AStarShortestPathConstantWeightTest {
 			Long source = graphMonaco.getNodeId(43.72842465479131, 7.414896579419745);
 			Long target = graphMonaco.getNodeId(43.7354373276704, 7.4212202598427295);
 			
-			AbstractShortestPathService aStar = new AStarShortestPathConstantWeight(graphMonaco);
+			AbstractShortestPathService aStar = new AStarConstantWeight(graphMonaco);
 		
 			// 1117.9563590469443m = 1117956mm (GraphHooper result)
 	        assertEquals(1136643, aStar.shortestPath(source, target));
@@ -64,7 +64,7 @@ public class AStarShortestPathConstantWeightTest {
 			Long source = graphMonaco.getNodeId(43.72636792197156, 7.417292499928754);
 			Long target = graphMonaco.getNodeId(43.74766484829034,7.430716770083832);
 			
-			AbstractShortestPathService aStar = new AStarShortestPathConstantWeight(graphMonaco);
+			AbstractShortestPathService aStar = new AStarConstantWeight(graphMonaco);
 	        assertEquals(3610710, aStar.shortestPath(source, target));
 
 		}

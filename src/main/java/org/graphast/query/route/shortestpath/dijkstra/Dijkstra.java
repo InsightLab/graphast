@@ -19,11 +19,11 @@ import org.graphast.query.route.shortestpath.model.RouteEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class DijkstraShortestPath extends AbstractShortestPathService {
+public abstract class Dijkstra extends AbstractShortestPathService {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-	public DijkstraShortestPath(Graph graph) {
+	public Dijkstra(Graph graph) {
 		super(graph);
 	}
 
