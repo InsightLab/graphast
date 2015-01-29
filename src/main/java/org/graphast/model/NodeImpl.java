@@ -267,6 +267,15 @@ public class NodeImpl implements Node {
 	public void setLabel(String label) {
 		this.label = label;
 	}
+	
+	@Override
+	public short[] getCosts() {
+		return costs;
+	}
+
+	public void setCosts(short[] costs) {
+		this.costs = costs;
+	}
 
 	/* (non-Javadoc)
 	 * @see org.graphast.model.Node#toString()

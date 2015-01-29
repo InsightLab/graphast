@@ -2,8 +2,13 @@ package org.graphast.graphgenerator;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Map;
+
 import org.graphast.model.Graph;
+import org.graphast.model.GraphBounds;
 import org.graphast.util.FileUtils;
+import org.graphast.util.MapUtils;
+import org.graphast.util.SimpleMap;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -11,7 +16,7 @@ import org.junit.Test;
 public class GraphGeneratorTest {
 	private static Graph graphMonaco;
 	private static Graph graphExample;
-	private static Graph graphExample2;
+	private static GraphBounds graphExample2;
 
 	@BeforeClass
 	public static void setup() {
@@ -37,6 +42,19 @@ public class GraphGeneratorTest {
 	public void shortestPathExample2Test() {
 		assertEquals(7, graphExample2.getNumberOfNodes());
 		assertEquals(8, graphExample2.getNumberOfEdges());
+	}
+	
+	@Test
+	public void upperAndLowerBoundsTest() {
+		
+		graphExample2.getCosts();
+		
+		Map<Object, Object> realValueUpper = new SimpleMap(2,2,6,11,3,11,1,10,5,13,4,10,0,4,7,15);
+		Map<Object, Object> realValueLower = new SimpleMap(2,1, 6,3, 3,4, 1,2, 5,2, 4,1, 0,2, 7,2);
+
+		assertEquals(true, MapUtils.equalMaps(realValueUpper, graphExample2.getUpperBound()));
+		assertEquals(true, MapUtils.equalMaps(realValueLower, graphExample2.getLowerBound()));
+
 	}
 	
 	@AfterClass
