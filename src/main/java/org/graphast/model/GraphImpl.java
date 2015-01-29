@@ -24,6 +24,7 @@ import org.graphast.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 public class GraphImpl implements Graph {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -548,6 +549,10 @@ public class GraphImpl implements Graph {
 		if (labelIndex >= 0) {
 			edge.setLabel(getEdgesLabels().get(labelIndex));
 		}
+		
+		if (costsIndex >= 0) {
+			edge.setCosts(getEdgeCosts(costsIndex));
+		}
 
 		if (costsIndex >= 0) {
 			edge.setCosts(getEdgeCosts(costsIndex));
@@ -821,15 +826,6 @@ public class GraphImpl implements Graph {
 		return poi;
 	}
 
-	public boolean isPoi(long vid){
-		return getNode(vid).getCategory() >= 0;
-	}
-
-	public Node getPoi(long vid){
-		Node v = getNode(vid);
-		if(v.getCategory() < 0)	return null;
-		else	return v;
-	}
 
 	public int poiGetCost(long vid, int time){
 		int i = 0;
@@ -903,4 +899,15 @@ public class GraphImpl implements Graph {
 
 		return min;
 	}
+	
+	public boolean isPoi(long vid){
+		return getNode(vid).getCategory() >= 0;
+	}
+	
+	public Node getPoi(long vid){
+		Node v = getNode(vid);
+		if(v.getCategory() < 0)	return null;
+		else	return v;
+	}
+	
 }
