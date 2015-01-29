@@ -27,14 +27,10 @@ public abstract class AbstractKNNService implements KNNService{
 	}
 	
 	protected void init(long vid, int t, int k, int kth, PriorityQueue<LowerBoundEntry> queue, PriorityQueue<UpperEntry> upperCandidates, 
-			HashMap<Integer, Integer> isIn, HashMap<Long, Long> parents){
-		Bound bMin = new Bound((String) minBounds.getBounds().get(Integer.toString(vid)));
-		Bound bMax = new Bound((String) maxBounds.getBounds().get(Integer.toString(vid)));
-<<<<<<< HEAD
+			HashMap<Long, Integer> isIn, HashMap<Long, Long> parents){
+		Bound bMin = new Bound(minBounds.getBounds().get(vid));
+		Bound bMax = new Bound(maxBounds.getBounds().get(vid));
 		long unn = bMax.getId();
-=======
-		int unn = bMax.getId();
->>>>>>> d3f2979cb38156569c6e8745e5fc0c8bdb0b09fa
 		int utdd = t + bMax.getDistance();
 		queue.offer(new LowerBoundEntry(	vid, 
 									0, 
@@ -58,8 +54,8 @@ public abstract class AbstractKNNService implements KNNService{
 		return path;
 	}
 	
-	protected void includeCandidate(int k, Integer unn, int utdd, int kth, 
-			PriorityQueue<UpperEntry> upperCandidates, HashMap<Integer, Integer> isIn){
+	protected void includeCandidate(int k, long unn, int utdd, int kth, 
+			PriorityQueue<UpperEntry> upperCandidates, HashMap<Long, Integer> isIn){
 		if(!isIn.containsKey(unn)){
 			if(upperCandidates.size() < k){
 				upperCandidates.offer(new UpperEntry(unn, utdd));
@@ -82,10 +78,10 @@ public abstract class AbstractKNNService implements KNNService{
 		}
 	}
 	
-	protected void updateCandidates(int unn, int utdd, PriorityQueue<UpperEntry> upperCandidates) {
+	protected void updateCandidates(long unn, int utdd, PriorityQueue<UpperEntry> upperCandidates) {
 		UpperEntry toBeRemoved = null;
 		for (UpperEntry u : upperCandidates) {
-			if(u.unn.equals(unn)){
+			if(u.unn == unn){
 				toBeRemoved = u;
 				break;
 			}
@@ -95,20 +91,20 @@ public abstract class AbstractKNNService implements KNNService{
 	}
 	
 	protected void expandVertex(LowerBoundEntry removed, int kth, HashMap<Long, Integer> wasTraversed, int k,
-			PriorityQueue<LowerBoundEntry> queue, PriorityQueue<UpperEntry> upperCandidates, HashMap<Integer, Integer> isIn){
+			PriorityQueue<LowerBoundEntry> queue, PriorityQueue<UpperEntry> upperCandidates, HashMap<Long, Integer> isIn){
 		
 		Long2IntMap neig = network.accessNeighborhood(network.getNode(removed.getId()));
 		
 		for (long v : neig.keySet()) {
-			int at = network.getArrival(removed.getArrivalTime(), neig.get(v));
+			int at = getArrival(removed.getArrivalTime(), neig.get(v));
 			int tt = removed.getTravelTime() + neig.get(v);
-			Bound bMin = new Bound((String) minBounds.getBounds().get(Integer.toString(v)));
+			Bound bMin = new Bound(minBounds.getBounds().get(v));
 			LowerBoundEntry newEntry = new LowerBoundEntry(	v, 
 													tt, 
 													at, 
 													removed.getId(),
 													tt + bMin.getDistance());
-			if(kth >= newEntry.lb){
+			if(kth >= newEntry.getLowerBound()){
 				if(!wasTraversed.containsKey(v)){					
 					queue.offer(newEntry);
 					wasTraversed.put(newEntry.getId(), newEntry.getTravelTime());
@@ -123,9 +119,15 @@ public abstract class AbstractKNNService implements KNNService{
 						}
 					}
 				}
-				Bound bMax = new Bound((String) maxBounds.getBounds().get(Integer.toString(v)));
+				Bound bMax = new Bound(maxBounds.getBounds().get(v));
 				includeCandidate(k, bMax.getId(), tt + bMax.getDistance(), kth, upperCandidates, isIn);
 			}
 		}
+	}
+	
+	public int getArrival(int dt, int tt) {
+		int at = dt + tt;
+		at = at % maxTime;
+		return at;
 	}
 }
