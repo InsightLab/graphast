@@ -107,7 +107,9 @@ public class GraphGenerator {
  		graph.addEdge(e);
 
  		costs = new short[]{4,4,7,6,11};
+
  		e = new EdgeImpl(2l, 3l, 3, costs);
+
  		graph.addEdge(e);
 
  		costs = new short[]{1,10};
@@ -126,9 +128,11 @@ public class GraphGenerator {
  		e = new EdgeImpl(5l, 6l, 1, costs);
  		graph.addEdge(e);
 
- 		graph.createBounds();
+
+ 		System.out.println(graph.getCosts());
  		
- 	
+ 		graph.createBounds();
+
  		
  		return graph;
  		
