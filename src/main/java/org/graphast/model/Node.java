@@ -96,5 +96,7 @@ public interface Node {
 	 * @return String object
 	 */
 	public abstract String toString();
+	
+	public abstract short[] getCosts();
 
 }
