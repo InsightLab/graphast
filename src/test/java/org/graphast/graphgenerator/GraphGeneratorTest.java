@@ -2,9 +2,13 @@ package org.graphast.graphgenerator;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Map;
+
 import org.graphast.model.Graph;
 import org.graphast.model.GraphBounds;
 import org.graphast.util.FileUtils;
+import org.graphast.util.MapUtils;
+import org.graphast.util.SimpleMap;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -41,13 +45,16 @@ public class GraphGeneratorTest {
 	}
 	
 	@Test
-	public void Test() {
+	public void upperAndLowerBoundsTest() {
 		
 		graphExample2.getCosts();
 		
-		System.out.println(graphExample2.getUpperBound());
-		System.out.println(graphExample2.getLowerBound());
-		
+		Map<Object, Object> realValueUpper = new SimpleMap(2,2,6,11,3,11,1,10,5,13,4,10,0,4,7,15);
+		Map<Object, Object> realValueLower = new SimpleMap(2,1, 6,3, 3,4, 1,2, 5,2, 4,1, 0,2, 7,2);
+
+		assertEquals(true, MapUtils.equalMaps(realValueUpper, graphExample2.getUpperBound()));
+		assertEquals(true, MapUtils.equalMaps(realValueLower, graphExample2.getLowerBound()));
+
 	}
 	
 	@AfterClass
