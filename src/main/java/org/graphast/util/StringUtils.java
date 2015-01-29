@@ -22,17 +22,6 @@ public class StringUtils {
 		return sb.toString();
 	}
 	
-	public static Bound[] splitBound(String delimiter, String str) {
-		StringTokenizer st = new StringTokenizer(str, delimiter);
-		Bound[] bound = new Bound[st.countTokens()];
-		int i = 0;
-		while (st.hasMoreTokens()) {
-			String s = st.nextToken();
-			bound[i++] = new Bound(s);
-		}
-		return bound;
-	}
-	
 	public static double[] splitDouble(String delimiter, String str) {
 		StringTokenizer st = new StringTokenizer(str, delimiter);
 		double[] d = new double[st.countTokens()];

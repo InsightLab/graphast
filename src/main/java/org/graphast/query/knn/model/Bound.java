@@ -17,18 +17,13 @@ public class Bound {
 		this.distance = Integer.MAX_VALUE;
 	}
 	
-	public Bound(String s){
-		read(s);
+	public Bound(long id) {
+		this.id = id;
+		this.distance = Integer.MAX_VALUE;
 	}
 	
 	public String toString(){
 		return StringUtils.append(",", id,distance);
-	}
-	
-	public void read(String s){
-		int[] bound = StringUtils.splitInt(",", s);
-		this.id = bound[0];
-		this.distance = bound[1];
 	}
 
 	public long getId() {
