@@ -15,13 +15,13 @@ public class OSMTestImporter2 {
 	public void setup() {
 	
 		graphHopperDir = this.getClass().getResource("/example").getPath();
-		graphastDir = "/tmp/graphast/test/monaco";
+		graphastDir = "/tmp/graphast/test/example";
 	}
 
 	@Test
 	public void executeTest() {
 
-		Graph graph = new OSMImporterImpl(graphHopperDir, graphastDir).execute();
+		Graph graph = new OSMImporterImpl(null, graphHopperDir, graphastDir).execute();
 
 		assertEquals(6, graph.getNumberOfNodes());
 		assertEquals(9, graph.getNumberOfEdges());
