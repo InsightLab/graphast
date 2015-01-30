@@ -4,6 +4,8 @@ import static org.graphast.util.GeoUtils.latLongToDouble;
 import static org.graphast.util.GeoUtils.latLongToInt;
 import it.unimi.dsi.fastutil.BigArrays;
 import it.unimi.dsi.fastutil.ints.IntBigArrayBigList;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2LongMap;
@@ -15,7 +17,9 @@ import it.unimi.dsi.fastutil.objects.ObjectBigList;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.graphast.enums.CompressionType;
 import org.graphast.exception.GraphastException;
@@ -23,7 +27,6 @@ import org.graphast.geometry.Point;
 import org.graphast.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 public class GraphImpl implements Graph {
 
@@ -929,6 +932,23 @@ public class GraphImpl implements Graph {
 		Node v = getNode(vid);
 		if(v.getCategory() < 0)	return null;
 		else	return v;
+	}
+	
+	//TODO Verify if this access is correct
+	@Override
+	public IntSet getCategories(){
+		IntSet categories = new IntOpenHashSet();
+		
+		for(int i = 0; i < getNumberOfNodes(); i++) {
+			long position = i*Node.NODE_BLOCKSIZE;
+			int category = getNodes().getInt(position+2);
+			categories.add(category);
+//			long position = i*Node.NODE_BLOCKSIZE;
+//			long vid = ga.getNodes().getInt(position);
+//			bounds.put(vid,  d.shortestPathPoi(vid, -1).getDistance());
+		}	
+		
+		return categories;
 	}
 
 	@Override
