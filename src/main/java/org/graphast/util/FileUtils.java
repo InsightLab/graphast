@@ -16,7 +16,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
+import java.nio.channels.WritableByteChannel;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 public class FileUtils {
 
@@ -45,7 +49,9 @@ public class FileUtils {
 		String dir = path.substring(0, path.lastIndexOf("/"));
 		createDir(dir);
 		FileOutputStream fos = new FileOutputStream(path);
-		FileChannel channel = fos.getChannel();
+		//FileChannel channel = fos.getChannel();
+		GZIPOutputStream gos = new GZIPOutputStream(fos);
+		WritableByteChannel channel = Channels.newChannel(gos);
 		
 		ByteBuffer buf = ByteBuffer.allocate(4 * blockSize);
 		int capacity = buf.capacity();
@@ -71,7 +77,9 @@ public class FileUtils {
 		String dir = path.substring(0, path.lastIndexOf("/"));
 		createDir(dir);
 		FileOutputStream fos = new FileOutputStream(path);
-		FileChannel channel = fos.getChannel();
+		//FileChannel channel = fos.getChannel();
+		GZIPOutputStream gos = new GZIPOutputStream(fos);
+		WritableByteChannel channel = Channels.newChannel(gos);
 		
 		ByteBuffer buf = ByteBuffer.allocate(2 * blockSize);
 		int capacity = buf.capacity();
@@ -97,7 +105,9 @@ public class FileUtils {
 		String dir = path.substring(0, path.lastIndexOf("/"));
 		createDir(dir);
 		FileOutputStream fos = new FileOutputStream(path);
-		FileChannel channel = fos.getChannel();
+		//FileChannel channel = fos.getChannel();
+		GZIPOutputStream gos = new GZIPOutputStream(fos);
+		WritableByteChannel channel = Channels.newChannel(gos);
 		
 		ByteBuffer buf = ByteBuffer.allocate(10 * blockSize);
 		int capacity = buf.capacity();
@@ -128,7 +138,9 @@ public class FileUtils {
 		String dir = path.substring(0, path.lastIndexOf("/"));
 		createDir(dir);
 		FileOutputStream fos = new FileOutputStream(path);
-		FileChannel channel = fos.getChannel();
+		//FileChannel channel = fos.getChannel();
+		GZIPOutputStream gos = new GZIPOutputStream(fos);
+		WritableByteChannel channel = Channels.newChannel(gos);
 		
 		ByteBuffer buf = ByteBuffer.allocate(4 * blockSize);
 		int capacity = buf.capacity();
@@ -170,7 +182,9 @@ public class FileUtils {
 	public static IntBigArrayBigList loadIntList(String path, int blockSize) throws IOException{
 		IntBigArrayBigList list = new IntBigArrayBigList();
 		FileInputStream fis = new FileInputStream(path);
-		FileChannel channel = fis.getChannel();
+		//FileChannel channel = fis.getChannel();
+		GZIPInputStream gos = new GZIPInputStream(fis);
+		ReadableByteChannel channel = Channels.newChannel(gos);
 		
 		ByteBuffer buf = ByteBuffer.allocate(4 * blockSize);
 		while (channel.read(buf) > 0) {
@@ -189,7 +203,9 @@ public class FileUtils {
 		 
 		ShortBigArrayBigList list = new ShortBigArrayBigList();
 		FileInputStream fis = new FileInputStream(path);
-		FileChannel channel = fis.getChannel();
+		//FileChannel channel = fis.getChannel();
+		GZIPInputStream gos = new GZIPInputStream(fis);
+		ReadableByteChannel channel = Channels.newChannel(gos);
 		
 		ByteBuffer buf = ByteBuffer.allocate(4 * blockSize);
 		while (channel.read(buf) > 0) {
@@ -208,7 +224,9 @@ public class FileUtils {
 		 
 		Long2ShortMap list = new Long2ShortOpenHashMap();
 		FileInputStream fis = new FileInputStream(path);
-		FileChannel channel = fis.getChannel();
+		//FileChannel channel = fis.getChannel();
+		GZIPInputStream gos = new GZIPInputStream(fis);
+		ReadableByteChannel channel = Channels.newChannel(gos);
 		
 		ByteBuffer buf = ByteBuffer.allocate(10 * blockSize);
 		while (channel.read(buf) > 0) {
@@ -226,7 +244,9 @@ public class FileUtils {
 	public static ObjectBigList<String> loadStringList(String path, int blockSize) throws IOException{
 		ObjectBigList<String> list = new ObjectBigArrayBigList<String>();
 		FileInputStream fis = new FileInputStream(path);
-		FileChannel channel = fis.getChannel();
+		//FileChannel channel = fis.getChannel();
+		GZIPInputStream gos = new GZIPInputStream(fis);
+		ReadableByteChannel channel = Channels.newChannel(gos);
 		
 		ByteBuffer buf = ByteBuffer.allocate(4 * blockSize);
 		while (channel.read(buf) > 0) {
