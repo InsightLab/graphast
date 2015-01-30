@@ -2,6 +2,7 @@ package org.graphast.query.route.shortestpath;
 
 import static org.junit.Assert.assertEquals;
 
+import org.graphast.config.Configuration;
 import org.graphast.graphgenerator.GraphGenerator;
 import org.graphast.model.Graph;
 import org.graphast.query.route.shortestpath.dijkstra.DijkstraConstantWeight;
@@ -74,6 +75,7 @@ public class DijkstraConstantWeightTest {
 		
 		Long source = 1L; // External ID = 5
 		Long target = 4L; // External ID = 2
+		
 		AbstractShortestPathService dj = new DijkstraConstantWeight(graphExample);
 		assertEquals(9000, dj.shortestPath(source, target));
 		
@@ -106,8 +108,8 @@ public class DijkstraConstantWeightTest {
 	
 	@AfterClass
 	public static void tearDown() {
-		FileUtils.deleteDir("/tmp/graphhopper/test");
-		FileUtils.deleteDir("/tmp/graphast/test");
+		FileUtils.deleteDir(Configuration.USER_HOME + "/graphhopper/test");
+		FileUtils.deleteDir(Configuration.USER_HOME + "/graphast/test");
 	}
 
 }

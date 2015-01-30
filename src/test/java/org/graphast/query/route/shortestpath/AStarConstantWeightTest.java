@@ -3,6 +3,7 @@ package org.graphast.query.route.shortestpath;
 import static org.graphast.util.DistanceUtils.distanceLatLong;
 import static org.junit.Assert.assertEquals;
 
+import org.graphast.config.Configuration;
 import org.graphast.graphgenerator.GraphGenerator;
 import org.graphast.model.Graph;
 import org.graphast.query.route.shortestpath.astar.AStarConstantWeight;
@@ -73,7 +74,7 @@ public class AStarConstantWeightTest {
 		
 		@AfterClass
 		public static void tearDown() {
-			FileUtils.deleteDir("/tmp/graphhopper/test");
-			FileUtils.deleteDir("/tmp/graphast/test");
+			FileUtils.deleteDir(Configuration.USER_HOME + "/graphhopper/test");
+			FileUtils.deleteDir(Configuration.USER_HOME + "/graphast/test");
 		}
 	}

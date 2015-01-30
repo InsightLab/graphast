@@ -141,7 +141,7 @@ public interface Graph {
 	
 	/**
 	 * This method returns all neighbors of a given node. 
-	 * @param id of a node
+	 * @param vid of a node
 	 * @return a list of all neighboring nodes
 	 */
 	public LongList getOutNeighbors(long vid);
@@ -172,7 +172,7 @@ public interface Graph {
 	 * This method returns a cost value of a given edge based on a given time
 	 * @param edge
 	 * @param time Time used to get edge costs.
-	 * @return
+	 * @return return the cost of an edge in a give time
 	 */
 	public short getEdgeCost(Edge edge, int time);
 	
