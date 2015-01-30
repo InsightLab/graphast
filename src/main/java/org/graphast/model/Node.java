@@ -21,7 +21,7 @@ public interface Node {
 
 	/**
 	 * this method set a category from a node.
-	 * @param a category
+	 * @param	category a category
 	 */
 	public void setCategory(int category);
 	

@@ -43,9 +43,9 @@ public class GraphImpl implements Graph {
 	private ObjectBigList<String> edgesLabels;
 
 	private ShortBigArrayBigList edgesCosts;
-	
+
 	private ShortBigArrayBigList nodesCosts;
-	
+
 	private IntBigArrayBigList points;
 
 	protected int blockSize = 4096;
@@ -395,7 +395,7 @@ public class GraphImpl implements Graph {
 
 		} else {
 
-			
+
 			long next = 0;
 			EdgeImpl nextEdge = (EdgeImpl) getEdge(BigArrays.index(node.getFirstEdgeSegment(), node.getFirstEdgeOffset()));
 
@@ -549,28 +549,33 @@ public class GraphImpl implements Graph {
 		if (labelIndex >= 0) {
 			edge.setLabel(getEdgesLabels().get(labelIndex));
 		}
-		
-		if (costsIndex >= 0) {
-			edge.setCosts(getEdgeCosts(costsIndex));
-		}
 
 		if (costsIndex >= 0) {
-			edge.setCosts(getEdgeCosts(costsIndex));
+			edge.setCosts(getEdgeCostsByCostsIndex(costsIndex));
 		}
+
+
 
 		edge.validate();
 		return edge;
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Graphast#getEdgeCosts(long)
-	 */
 	@Override
-	public short[] getEdgeCosts(long id) {
+	public short[] getEdgeCosts(long edgeId) {
 
-//		EdgeImpl edge = (EdgeImpl)getEdge(id);
-		long costsIndex = id;
+		EdgeImpl edge = (EdgeImpl)getEdge(edgeId);
+		long costsIndex = edge.getCostsIndex();
+
+		if(costsIndex == -1 ) {
+			return null;
+		} else {
+			return getEdgeCostsByCostsIndex(costsIndex);
+		}
+	}
+
+	short[] getEdgeCostsByCostsIndex(long costsIndex) {
+
 		short size = edgesCosts.getShort(costsIndex);
 		short[] c = new short[size];
 		int i = 0;
@@ -583,10 +588,22 @@ public class GraphImpl implements Graph {
 		return c;
 	}
 
-	public short[] getNodeCosts(long id) {
 
-		//Node node = getNode(id);
-		long costsIndex = id;
+	public short[] getNodeCosts(long nodeId) {
+
+		NodeImpl node = (NodeImpl)getNode(nodeId);
+		long costsIndex = node.getCostsIndex();
+
+		if(costsIndex == -1 ) {
+			return null;
+		} else {
+			return getNodeCostsByCostsIndex(costsIndex);
+		}
+		
+	}
+
+	public short[] getNodeCostsByCostsIndex(long costsIndex) {
+
 		short size = nodesCosts.getShort(costsIndex);
 		short[] c = new short[size];
 		int i = 0;
@@ -681,7 +698,7 @@ public class GraphImpl implements Graph {
 	public String getEdgeLabel(long id) {
 		return edgesLabels.size64() > 0 ? edgesLabels.get(id) : null;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.graphast.model.Graphast#getNodes()
 	 */
@@ -824,7 +841,7 @@ public class GraphImpl implements Graph {
 		this.addNode(poi);
 		return poi;
 	}
-	
+
 	public int poiGetCost(long vid, int time){
 		int i = 0;
 		LinearFunction[] lf = convertToLinearFunction(getPoiCost(vid));
@@ -870,8 +887,8 @@ public class GraphImpl implements Graph {
 		if(costs==null) {
 			throw new IllegalArgumentException("Costs can not be null.");
 		}
-		
-		
+
+
 		short max = costs[0];
 
 		for (int i = 0; i < costs.length; i++) {
@@ -897,15 +914,15 @@ public class GraphImpl implements Graph {
 
 		return min;
 	}
-	
+
 	public boolean isPoi(long vid){
 		return getNode(vid).getCategory() >= 0;
 	}
-	
+
 	public Node getPoi(long vid){
 		Node v = getNode(vid);
 		if(v.getCategory() < 0)	return null;
 		else	return v;
 	}
-	
+
 }

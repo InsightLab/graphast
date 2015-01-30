@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Map;
 
+import org.graphast.config.Configuration;
 import org.graphast.model.Graph;
 import org.graphast.model.GraphBounds;
 import org.graphast.util.FileUtils;
@@ -59,7 +60,7 @@ public class GraphGeneratorTest {
 	
 	@AfterClass
 	public static void tearDown() {
-		FileUtils.deleteDir("/tmp/graphhopper/test");
-		FileUtils.deleteDir("/tmp/graphast/test");
+		FileUtils.deleteDir(Configuration.USER_HOME + "/graphhopper/test");
+		FileUtils.deleteDir(Configuration.USER_HOME + "/graphast/test");
 	}
 }

@@ -116,7 +116,14 @@ public class NodeImpl implements Node {
 		this.label = label;
 
 	}
+	
+	public NodeImpl(long externalId, double latitude, double longitude, short[] costs) {
 
+		this(externalId, latitude, longitude);
+		this.costs = costs;
+
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.graphast.model.Node#validate()
 	 */

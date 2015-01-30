@@ -1,12 +1,14 @@
 package org.graphast.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.LongList;
 
 import java.io.IOException;
 import java.util.List;
 
+import org.graphast.config.Configuration;
 import org.graphast.geometry.Point;
 import org.graphast.graphgenerator.GraphGenerator;
 import org.junit.BeforeClass;
@@ -141,7 +143,7 @@ public class GraphastTest {
 	@Test
 	public void saveLoadTest() throws IOException{
 		graphExample3.save();
-		Graph graph2 = new GraphImpl("/tmp/graphast/test/example3");
+		Graph graph2 = new GraphImpl(Configuration.USER_HOME + "/graphast/test/example3");
 		graph2.load();
 		assertEquals(graphExample3.getNodes(), graph2.getNodes());
 		assertEquals(graphExample3.getEdges(), graph2.getEdges());
@@ -215,5 +217,27 @@ public class GraphastTest {
 		assertEquals("Named Street 1", graphExample.getEdgeLabel(0));
 		assertEquals("Named Street 1", e.getLabel());
 	}
+	
+	@Test
+	public void getEdgeCostsTest() {
+		
+		assertEquals(4, graphExample3.getEdgeCosts(0).length);
+		assertEquals(5, graphExample3.getEdgeCosts(1).length);
+		assertEquals(1, graphExample3.getEdgeCosts(2).length);
+		assertEquals(5, graphExample3.getEdgeCosts(3).length);
+		assertEquals(1, graphExample3.getEdgeCosts(4).length);
+		assertNull(graphExample3.getEdgeCosts(5));
+		assertNull(graphExample3.getEdgeCosts(6));
+	}
+	
+	@Test
+	public void getNodeCostsTest() {
+
+		assertNull(graphExample3.getNodeCosts(0));
+		assertNull(graphExample3.getNodeCosts(1));
+		assertEquals(4, graphExample3.getNodeCosts(2).length);
+
+	}
+	
 	
 }

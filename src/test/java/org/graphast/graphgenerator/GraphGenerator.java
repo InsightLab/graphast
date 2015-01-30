@@ -3,6 +3,7 @@ package org.graphast.graphgenerator;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.graphast.config.Configuration;
 import org.graphast.geometry.Point;
 import org.graphast.importer.OSMImporterImpl;
 import org.graphast.model.Edge;
@@ -24,8 +25,8 @@ import com.graphhopper.util.Helper;
 public class GraphGenerator {
 
 	public Graph generateExample() {
-		String graphastExampleDir = "/tmp/graphast/test/example";
-		String graphHopperExampleDir = "/tmp/graphhopper/test/example";
+		String graphastExampleDir = Configuration.USER_HOME + "/graphast/test/example";
+		String graphHopperExampleDir = Configuration.USER_HOME + "/graphhopper/test/example";
 		Graph graph = new GraphImpl(graphHopperExampleDir);
 
 		EncodingManager encodingManager = new EncodingManager("car");
@@ -60,7 +61,9 @@ public class GraphGenerator {
 		
 		graphStorage.flush();
 		graphStorage.close();
-		graph = new OSMImporterImpl(graphHopperExampleDir, graphastExampleDir).execute();
+		graph = new OSMImporterImpl(null, graphHopperExampleDir, graphastExampleDir).execute();
+		
+		
 		
 		return graph;
 
@@ -68,7 +71,7 @@ public class GraphGenerator {
 	
 	public GraphBounds generateExample2() {
 		
- 		GraphBounds graph = new GraphBoundsImpl("/tmp/graphhopper/test/example2");
+ 		GraphBounds graph = new GraphBoundsImpl(Configuration.USER_HOME + "/graphhopper/test/example2");
 
  		Edge e;
  		NodeImpl v;
@@ -140,8 +143,8 @@ public class GraphGenerator {
 	
 	public Graph generateMonaco() {
 		String osmFile = DijkstraConstantWeight.class.getResource("/monaco-150112.osm.pbf").getPath();
-		String graphHopperMonacoDir = "/tmp/graphhopper/test/monaco";
-		String graphastMonacoDir = "/tmp/graphast/test/monaco";
+		String graphHopperMonacoDir = Configuration.USER_HOME + "/graphhopper/test/monaco";
+		String graphastMonacoDir = Configuration.USER_HOME + "/graphast/test/monaco";
 		
 		Graph graph = new OSMImporterImpl(osmFile, graphHopperMonacoDir, graphastMonacoDir).execute();
 		
@@ -149,7 +152,7 @@ public class GraphGenerator {
 	}
 	
 	public Graph generateExample3() {
-		Graph graph = new GraphImpl("/tmp/graphast/test/example3");
+		Graph graph = new GraphImpl(Configuration.USER_HOME + "/graphast/test/example3");
 		
 		NodeImpl v = new NodeImpl(3l, 10d, 10d, "label node 0");
 		graph.addNode(v);
@@ -157,7 +160,8 @@ public class GraphGenerator {
 		v = new NodeImpl(4l, 43.7294668047756,7.413772473047058);
 		graph.addNode(v);
 		
-		v = new NodeImpl(2l, 10d, 30d);
+		short[] nodeCosts = new short[]{1,2,3,4};
+		v = new NodeImpl(2l, 10d, 30d, nodeCosts);
 		graph.addNode(v);
 		
 		v = new NodeImpl(6l, 10d, 40d);
