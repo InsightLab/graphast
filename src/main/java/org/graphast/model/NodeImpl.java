@@ -117,6 +117,13 @@ public class NodeImpl implements Node {
 
 	}
 	
+	public NodeImpl(long externalId, double latitude, double longitude, int category) {
+
+		this(externalId, latitude, longitude);
+		this.category = category;
+
+	}
+	
 	public NodeImpl(long externalId, double latitude, double longitude, short[] costs) {
 
 		this(externalId, latitude, longitude);
