@@ -20,11 +20,10 @@ public class OSMImporterTest {
 
 	@Test
 	public void executeTest() {
-
 		Graph graph = new OSMImporterImpl(osmFile, graphastDir).execute();
 
-		assertEquals(67478, graph.getNumberOfNodes());
-		assertEquals(158497, graph.getNumberOfEdges());
+		assertEquals(751, graph.getNumberOfNodes());
+		assertEquals(1306, graph.getNumberOfEdges());
 
 	}
 
