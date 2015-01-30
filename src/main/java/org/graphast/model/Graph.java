@@ -1,6 +1,7 @@
 package org.graphast.model;
 
 import it.unimi.dsi.fastutil.ints.IntBigArrayBigList;
+import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.LongList;
 
@@ -278,5 +279,7 @@ public interface Graph {
 	public CompressionType getCompressionType();
 
 	public void setCompressionType(CompressionType compressionType);
+	
+	public IntSet getCategories();
 
 }
