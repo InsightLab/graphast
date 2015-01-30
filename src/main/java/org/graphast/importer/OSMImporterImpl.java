@@ -36,6 +36,7 @@ public class OSMImporterImpl implements Importer {
 		} else {
 			this.graphHopperDir = graphHopperDir;
 		}
+		this.graphastDir = graphastDir;
 	}
 	
 	public OSMImporterImpl(String osmFile, String graphastDir) {
