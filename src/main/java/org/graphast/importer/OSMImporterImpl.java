@@ -104,15 +104,16 @@ public class OSMImporterImpl implements Importer {
 				countInvalidDirection++;
 			}
 			
+			if(fromNodeId == toNodeId) {
+				logger.info("Edge not created, because fromNodeId({}) == toNodeId({})", fromNodeId, toNodeId);
+				continue;
+			}
+			
 			if(direction == 0) {          // Bidirectional
-				if(fromNodeId != toNodeId) {
-					Edge edge = new EdgeImpl(externalEdgeId, fromNodeId, toNodeId, distance, label);
-					graph.addEdge(edge);
-					edge = new EdgeImpl(externalEdgeId, toNodeId, fromNodeId, distance, label);
-					graph.addEdge(edge);
-				} else {
-					logger.info("Edge not created, because fromNodeId({}) == toNodeId({})", fromNodeId, toNodeId);
-				}
+				Edge edge = new EdgeImpl(externalEdgeId, fromNodeId, toNodeId, distance, label);
+				graph.addEdge(edge);
+				edge = new EdgeImpl(externalEdgeId, toNodeId, fromNodeId, distance, label);
+				graph.addEdge(edge);
 			} else if(direction == 1) {   // One direction: base -> adj
 				Edge edge = new EdgeImpl(externalEdgeId, fromNodeId, toNodeId, distance, label);
 				graph.addEdge(edge);
