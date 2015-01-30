@@ -1,6 +1,7 @@
 package org.graphast.model;
 
 import it.unimi.dsi.fastutil.ints.IntBigArrayBigList;
+import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.LongList;
 import it.unimi.dsi.fastutil.shorts.ShortBigArrayBigList;
@@ -274,5 +275,7 @@ public interface Graph {
 	public abstract short[] getPoiCost(long vid);
 	
 	public LinearFunction[] convertToLinearFunction(short[] costs);
+	
+	public IntSet getCategories();
 
 }

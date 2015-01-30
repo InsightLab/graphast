@@ -17,11 +17,13 @@ import org.junit.Test;
 public class GraphastTest {
 	
 	private static Graph graphExample3;
+	private static Graph graphExample2;
 	private static Graph graphExample;
 	
 	@BeforeClass
 	public static void setup(){
 		graphExample = new GraphGenerator().generateExample();
+		graphExample2 = new GraphGenerator().generateExample2();
 		graphExample3 = new GraphGenerator().generateExample3();
 	}
 	
@@ -237,6 +239,15 @@ public class GraphastTest {
 		assertNull(graphExample3.getNodeCosts(1));
 		assertEquals(4, graphExample3.getNodeCosts(2).length);
 
+	}
+	
+	@Test
+	public void getNodeCategory() {
+		
+		//TODO Create asserts
+		System.out.println(graphExample2.getCategories());
+		
+		
 	}
 	
 	
