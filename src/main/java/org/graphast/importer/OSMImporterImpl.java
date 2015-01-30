@@ -32,6 +32,7 @@ public class OSMImporterImpl implements Importer {
 		this.osmFile = osmFile;
 		if (graphHopperDir == null) {
 			this.graphHopperDir = graphastTmpDir;
+			FileUtils.deleteDir(graphastTmpDir);
 		} else {
 			this.graphHopperDir = graphHopperDir;
 		}
