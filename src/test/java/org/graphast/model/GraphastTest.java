@@ -24,7 +24,7 @@ public class GraphastTest {
 	}
 	
 	@Test
-	public void storeGetNode(){
+	public void storeGetNode() {
 		Node v = graphExample3.getNode(0);
 		assertEquals(0, (long) v.getId());
 		assertEquals(3, v.getExternalId());
@@ -58,7 +58,7 @@ public class GraphastTest {
 	}
 	
 	@Test
-	public void getCostsTest(){
+	public void getCostsTest() {
 		short[] costs = graphExample3.getEdgeCosts(0);
 		assertEquals(1, costs[0]);
 		assertEquals(2, costs[1]);
@@ -74,7 +74,7 @@ public class GraphastTest {
 	}
 	
 	@Test
-	public void getEdgeCostTest(){
+	public void getEdgeCostTest() {
 		Edge edge = graphExample3.getEdge(0);
 		assertEquals(1, graphExample3.getEdgeCost(edge, 3600));
 		assertEquals(1, graphExample3.getEdgeCost(edge, 7200));
@@ -91,7 +91,7 @@ public class GraphastTest {
 	}
 	
 	@Test
-	public void getEdgePointsTest(){
+	public void getEdgePointsTest() {
 		List<Point> points = graphExample3.getEdgePoints(0);
 		assertEquals((Double) 10.0,  (Double)points.get(0).getLatitude());
 		assertEquals((Double) 10.0,  (Double)points.get(0).getLongitude());
@@ -103,18 +103,18 @@ public class GraphastTest {
 	}
 	
 	@Test
-	public void getEdgeLabelTest(){
+	public void getEdgeLabelTest() {
 		assertEquals("rua1", graphExample3.getEdgeLabel(0));
 		assertEquals("rua2", graphExample3.getEdgeLabel(1));
 	}
 	
 	@Test
-	public void getNodeLabelTest(){
+	public void getNodeLabelTest() {
 		assertEquals("Banco", graphExample3.getNodeLabel(5));
 	}
 	
 	@Test
-	public void getOutNeighborsAndCostsTest(){
+	public void getOutNeighborsAndCostsTest() {
 		LongList neig = graphExample3.getOutNeighborsAndCosts(0, 36000);
 		int pos = 0;
 		

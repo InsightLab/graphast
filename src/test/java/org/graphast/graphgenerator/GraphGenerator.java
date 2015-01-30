@@ -169,7 +169,7 @@ public class GraphGenerator {
 		v = new NodeImpl(7, 11, 32, "Banco");
 		graph.addNode(v);
 		
-		short[] costs = {1,2,3,4};
+		short[] costs = new short[]{1,2,3,4};
 		List<Point> points = new ArrayList<Point>();
 		points.add(new Point(10,10));
 		points.add(new Point(10,20));
@@ -191,7 +191,7 @@ public class GraphGenerator {
 		e = new EdgeImpl(0l, 2l, 30, costs, points, "rua3");
 		graph.addEdge(e);
 		
-		costs = new short[]{2};
+		costs = new short[]{2, 4, 6, 8, 10};
 		points = new ArrayList<Point>();
 		points.add(new Point(10,30));
 		points.add(new Point(10,10));

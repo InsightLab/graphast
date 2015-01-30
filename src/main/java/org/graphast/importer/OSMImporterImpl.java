@@ -139,9 +139,11 @@ public class OSMImporterImpl implements Importer {
 		double total = finalTime - initialTime;
 		logger.info("Final date: {}", new Date());
 		logger.info("Total time: {}", total);
+		
 		if (graphHopperDir.equals(graphastTmpDir)) {
 			FileUtils.deleteDir(graphastTmpDir);
 		}
+		
 		return graph;
 	}
 
