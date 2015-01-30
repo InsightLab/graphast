@@ -59,6 +59,9 @@ public class OSMImporterImpl implements Importer {
 		Int2LongOpenHashMap hashExternalIdToId = new Int2LongOpenHashMap();
 		int count = 0;
 		int countInvalidDirection = 0;
+		int countBidirectional = 0;
+		int countOneWay = 0;
+		int countOneWayInverse = 0;
 		while(edgeIterator.next()) {
 			count++;
 
@@ -104,21 +107,26 @@ public class OSMImporterImpl implements Importer {
 				countInvalidDirection++;
 			}
 			
+			if(fromNodeId == toNodeId) {
+				logger.info("Edge not created, because fromNodeId({}) == toNodeId({})", fromNodeId, toNodeId);
+				continue;
+			}
+			
 			if(direction == 0) {          // Bidirectional
-				if(fromNodeId != toNodeId) {
-					Edge edge = new EdgeImpl(externalEdgeId, fromNodeId, toNodeId, distance, label);
-					graph.addEdge(edge);
-					edge = new EdgeImpl(externalEdgeId, toNodeId, fromNodeId, distance, label);
-					graph.addEdge(edge);
-				} else {
-					logger.info("Edge not created, because fromNodeId({}) == toNodeId({})", fromNodeId, toNodeId);
-				}
+				Edge edge = new EdgeImpl(externalEdgeId, fromNodeId, toNodeId, distance, label);
+				graph.addEdge(edge);
+				edge = new EdgeImpl(externalEdgeId, toNodeId, fromNodeId, distance, label);
+				graph.addEdge(edge);
+				countBidirectional++;
+				
 			} else if(direction == 1) {   // One direction: base -> adj
 				Edge edge = new EdgeImpl(externalEdgeId, fromNodeId, toNodeId, distance, label);
 				graph.addEdge(edge);
+				countOneWay++;
 			} else if(direction == -1) {  // One direction: adj -> base
 				Edge edge = new EdgeImpl(externalEdgeId, toNodeId, fromNodeId, distance, label);
 				graph.addEdge(edge);
+				countOneWayInverse++;
 			} else {
 				logger.info("Edge not created. Invalid direction: {}", direction);
 			}
@@ -128,6 +136,9 @@ public class OSMImporterImpl implements Importer {
 		logger.info("Number of Edges: {}", graph.getNumberOfEdges());
 		logger.info("Count: {}", count);
 		logger.info("Number of invalid direction in original edges: {}", countInvalidDirection);
+		logger.info("Number of Bidirectional edges: {}", countBidirectional);
+		logger.info("Number of OneWay edges: {}", countOneWay);
+		logger.info("Number of OneWayInverse edges: {}", countOneWayInverse);
 
 		try {
 			graph.save();
