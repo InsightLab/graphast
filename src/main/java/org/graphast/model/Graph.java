@@ -9,6 +9,7 @@ import it.unimi.dsi.fastutil.shorts.ShortBigArrayBigList;
 import java.io.IOException;
 import java.util.List;
 
+import org.graphast.enums.CompressionType;
 import org.graphast.geometry.Point;
 import org.graphast.util.FileUtils;
 
@@ -277,5 +278,9 @@ public interface Graph {
 	public LinearFunction[] convertToLinearFunction(short[] costs);
 	
 	public IntSet getCategories();
+
+	public CompressionType getCompressionType();
+
+	public void setCompressionType(CompressionType compressionType);
 
 }

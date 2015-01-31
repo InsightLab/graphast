@@ -16,11 +16,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
+import java.nio.channels.Channel;
 import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+
+import org.graphast.enums.CompressionType;
 
 public class FileUtils {
 
@@ -45,13 +49,56 @@ public class FileUtils {
 		return FileUtils.class.getResourceAsStream(resource);
 	}
 	
-	public static void saveIntList(String path, IntBigArrayBigList list, int blockSize) throws IOException{
+	public static Channel getOutputChannel(String path, CompressionType compressionType) throws IOException {
+		FileOutputStream fos = new FileOutputStream(path);
+		Channel channel = null;
+		if (compressionType == CompressionType.NO_COMPRESSION) {
+			channel = fos.getChannel();
+		} else  if (compressionType == CompressionType.GZIP_COMPRESSION) {
+			GZIPOutputStream gos = new GZIPOutputStream(fos);
+			channel = Channels.newChannel(gos);
+		}
+		return channel;
+	}
+	
+	public static Channel getInputChannel(String path, CompressionType compressionType) throws IOException {
+		FileInputStream fos = new FileInputStream(path);
+		Channel channel = null;
+		if (compressionType == CompressionType.NO_COMPRESSION) {
+			channel = fos.getChannel();
+		} else  if (compressionType == CompressionType.GZIP_COMPRESSION) {
+			GZIPInputStream gos = new GZIPInputStream(fos);
+			channel = Channels.newChannel(gos);
+		}
+		return channel;
+	}
+
+	public static void write(Channel channel, ByteBuffer buf) throws IOException {
+		if (channel instanceof WritableByteChannel) {
+			((WritableByteChannel)channel).write(buf);
+		} else if (channel instanceof FileChannel) {
+			((FileChannel)channel).write(buf);
+		} else {
+			throw new IOException("Invalid channel: " + channel);
+		}
+	}
+
+	public static int read(Channel channel, ByteBuffer buf) throws IOException {
+		int result;
+		if (channel instanceof ReadableByteChannel) {
+			result = ((ReadableByteChannel)channel).read(buf);
+		} else if (channel instanceof FileChannel) {
+			result = ((FileChannel)channel).read(buf);
+		} else {
+			throw new IOException("Invalid channel: " + channel);
+		}
+		return result;
+	}
+	
+	public static void saveIntList(String path, IntBigArrayBigList list, int blockSize, CompressionType compressionType) throws IOException{
 		String dir = path.substring(0, path.lastIndexOf("/"));
 		createDir(dir);
-		FileOutputStream fos = new FileOutputStream(path);
-		//FileChannel channel = fos.getChannel();
-		GZIPOutputStream gos = new GZIPOutputStream(fos);
-		WritableByteChannel channel = Channels.newChannel(gos);
+		Channel channel = getOutputChannel(path, compressionType);
 		
 		ByteBuffer buf = ByteBuffer.allocate(4 * blockSize);
 		int capacity = buf.capacity();
@@ -61,25 +108,21 @@ public class FileUtils {
 			used += 4;
 			if(used == capacity){
 				buf.flip();
-				channel.write(buf);
+				write(channel, buf); 
 				buf = ByteBuffer.allocate(4 * blockSize);
 				used = 0;
 			}else if(l == list.size64() - 1 && used < capacity){
 				buf.flip();
-				channel.write(buf);
+				write(channel, buf); 
 			}
 		}
 		channel.close();
-		fos.close();
 	}
 	
-	public static void saveShortList(String path, ShortBigArrayBigList list, int blockSize) throws IOException{
+	public static void saveShortList(String path, ShortBigArrayBigList list, int blockSize, CompressionType compressionType) throws IOException{
 		String dir = path.substring(0, path.lastIndexOf("/"));
 		createDir(dir);
-		FileOutputStream fos = new FileOutputStream(path);
-		//FileChannel channel = fos.getChannel();
-		GZIPOutputStream gos = new GZIPOutputStream(fos);
-		WritableByteChannel channel = Channels.newChannel(gos);
+		Channel channel = getOutputChannel(path, compressionType);
 		
 		ByteBuffer buf = ByteBuffer.allocate(2 * blockSize);
 		int capacity = buf.capacity();
@@ -89,25 +132,21 @@ public class FileUtils {
 			used += 2;
 			if(used == capacity){
 				buf.flip();
-				channel.write(buf);
+				write(channel, buf);
 				buf = ByteBuffer.allocate(2 * blockSize);
 				used = 0;
 			}else if(l == list.size64() - 1 && used < capacity){
 				buf.flip();
-				channel.write(buf);
+				write(channel, buf);
 			}
 		}
 		channel.close();
-		fos.close();
 	}
 	
-	public static void saveLong2ShortMap(String path, Long2ShortMap map, int blockSize) throws IOException{
+	public static void saveLong2ShortMap(String path, Long2ShortMap map, int blockSize, CompressionType compressionType) throws IOException{
 		String dir = path.substring(0, path.lastIndexOf("/"));
 		createDir(dir);
-		FileOutputStream fos = new FileOutputStream(path);
-		//FileChannel channel = fos.getChannel();
-		GZIPOutputStream gos = new GZIPOutputStream(fos);
-		WritableByteChannel channel = Channels.newChannel(gos);
+		Channel channel = getOutputChannel(path, compressionType);
 		
 		ByteBuffer buf = ByteBuffer.allocate(10 * blockSize);
 		int capacity = buf.capacity();
@@ -121,26 +160,22 @@ public class FileUtils {
 			used += 10;
 			if(used == capacity) {
 				buf.flip();
-				channel.write(buf);
+				write(channel, buf);
 				buf = ByteBuffer.allocate(10 * blockSize);
 				used = 0;
 			} else if(!iterator.hasNext() && used < capacity){
 				buf.flip();
-				channel.write(buf);
+				write(channel, buf);
 			}
 		}
 		
 		channel.close();
-		fos.close();
 	}
 	
-	public static void saveStringList(String path, ObjectBigList<String> list, int blockSize) throws IOException{
+	public static void saveStringList(String path, ObjectBigList<String> list, int blockSize, CompressionType compressionType) throws IOException{
 		String dir = path.substring(0, path.lastIndexOf("/"));
 		createDir(dir);
-		FileOutputStream fos = new FileOutputStream(path);
-		//FileChannel channel = fos.getChannel();
-		GZIPOutputStream gos = new GZIPOutputStream(fos);
-		WritableByteChannel channel = Channels.newChannel(gos);
+		Channel channel = getOutputChannel(path, compressionType);
 		
 		ByteBuffer buf = ByteBuffer.allocate(4 * blockSize);
 		int capacity = buf.capacity();
@@ -155,7 +190,7 @@ public class FileUtils {
 				used += 4;
 				if(used == capacity){
 					buf.flip();
-					channel.write(buf);
+					write(channel, buf);
 					buf = ByteBuffer.allocate(4 * blockSize);
 					used = 0;
 				}
@@ -167,27 +202,23 @@ public class FileUtils {
 			used += 4;
 			if(used == capacity){
 				buf.flip();
-				channel.write(buf);
+				write(channel, buf);
 				buf = ByteBuffer.allocate(4 * blockSize);
 				used = 0;
 			}else if(l == list.size64() - 1 && used < capacity){
 				buf.flip();
-				channel.write(buf);
+				write(channel, buf);
 			}
 		}
 		channel.close();
-		fos.close();
 	}
 	
-	public static IntBigArrayBigList loadIntList(String path, int blockSize) throws IOException{
+	public static IntBigArrayBigList loadIntList(String path, int blockSize, CompressionType compressionType) throws IOException{
 		IntBigArrayBigList list = new IntBigArrayBigList();
-		FileInputStream fis = new FileInputStream(path);
-		//FileChannel channel = fis.getChannel();
-		GZIPInputStream gos = new GZIPInputStream(fis);
-		ReadableByteChannel channel = Channels.newChannel(gos);
+		Channel channel = getInputChannel(path, compressionType);
 		
 		ByteBuffer buf = ByteBuffer.allocate(4 * blockSize);
-		while (channel.read(buf) > 0) {
+		while (read(channel, buf) > 0) {
 			buf.flip();
             while (buf.hasRemaining()) {
                 list.add(buf.getInt());
@@ -195,20 +226,16 @@ public class FileUtils {
             buf.clear();
 		}
 		channel.close();
-		fis.close();
 		return list;
 	}
 	
-	public static ShortBigArrayBigList loadShortList(String path, int blockSize) throws IOException{
+	public static ShortBigArrayBigList loadShortList(String path, int blockSize, CompressionType compressionType) throws IOException{
 		 
 		ShortBigArrayBigList list = new ShortBigArrayBigList();
-		FileInputStream fis = new FileInputStream(path);
-		//FileChannel channel = fis.getChannel();
-		GZIPInputStream gos = new GZIPInputStream(fis);
-		ReadableByteChannel channel = Channels.newChannel(gos);
+		Channel channel = getInputChannel(path, compressionType);
 		
 		ByteBuffer buf = ByteBuffer.allocate(4 * blockSize);
-		while (channel.read(buf) > 0) {
+		while (read(channel, buf) > 0) {
 			buf.flip();
             while (buf.hasRemaining()) {
                 list.add(buf.getShort());
@@ -216,20 +243,16 @@ public class FileUtils {
             buf.clear();
 		}
 		channel.close();
-		fis.close();
 		return list;
 	}
 	
-	public static Long2ShortMap loadLong2ShortMap(String path, int blockSize) throws IOException{
+	public static Long2ShortMap loadLong2ShortMap(String path, int blockSize, CompressionType compressionType) throws IOException{
 		 
 		Long2ShortMap list = new Long2ShortOpenHashMap();
-		FileInputStream fis = new FileInputStream(path);
-		//FileChannel channel = fis.getChannel();
-		GZIPInputStream gos = new GZIPInputStream(fis);
-		ReadableByteChannel channel = Channels.newChannel(gos);
+		Channel channel = getInputChannel(path, compressionType);
 		
 		ByteBuffer buf = ByteBuffer.allocate(10 * blockSize);
-		while (channel.read(buf) > 0) {
+		while (read(channel, buf) > 0) {
 			buf.flip();
             while (buf.hasRemaining()) {
             	list.put(buf.getLong(), buf.getShort());
@@ -237,19 +260,15 @@ public class FileUtils {
             buf.clear();
 		}
 		channel.close();
-		fis.close();
 		return list;
 	}
 	
-	public static ObjectBigList<String> loadStringList(String path, int blockSize) throws IOException{
+	public static ObjectBigList<String> loadStringList(String path, int blockSize, CompressionType compressionType) throws IOException{
 		ObjectBigList<String> list = new ObjectBigArrayBigList<String>();
-		FileInputStream fis = new FileInputStream(path);
-		//FileChannel channel = fis.getChannel();
-		GZIPInputStream gos = new GZIPInputStream(fis);
-		ReadableByteChannel channel = Channels.newChannel(gos);
+		Channel channel = getInputChannel(path, compressionType);
 		
 		ByteBuffer buf = ByteBuffer.allocate(4 * blockSize);
-		while (channel.read(buf) > 0) {
+		while (read(channel, buf) > 0) {
 			buf.flip();
 			String s = "";
             while (buf.hasRemaining()) {
@@ -268,7 +287,6 @@ public class FileUtils {
             buf.clear();
 		}
 		channel.close();
-		fis.close();
 		return list;
 	}
 	
