@@ -36,19 +36,19 @@ public class FileUtils {
 		while((line = br.readLine()) != null){
 			sb.append(line).append("\n");
 		}
-		
+
 		br.close();
 		return sb.toString();
 	}
-	
+
 	public static String getResourcePath(String resource){
 		return FileUtils.class.getResource(resource).getPath();
 	}
-	
+
 	public static InputStream getResourceStream(String resource){
 		return FileUtils.class.getResourceAsStream(resource);
 	}
-	
+
 	public static Channel getOutputChannel(String path, CompressionType compressionType) throws IOException {
 		FileOutputStream fos = new FileOutputStream(path);
 		Channel channel = null;
@@ -60,7 +60,7 @@ public class FileUtils {
 		}
 		return channel;
 	}
-	
+
 	public static Channel getInputChannel(String path, CompressionType compressionType) throws IOException {
 		FileInputStream fos = new FileInputStream(path);
 		Channel channel = null;
@@ -94,12 +94,12 @@ public class FileUtils {
 		}
 		return result;
 	}
-	
+
 	public static void saveIntList(String path, IntBigArrayBigList list, int blockSize, CompressionType compressionType) throws IOException{
 		String dir = path.substring(0, path.lastIndexOf("/"));
 		createDir(dir);
 		Channel channel = getOutputChannel(path, compressionType);
-		
+
 		ByteBuffer buf = ByteBuffer.allocate(4 * blockSize);
 		int capacity = buf.capacity();
 		int used = 0;
@@ -118,12 +118,12 @@ public class FileUtils {
 		}
 		channel.close();
 	}
-	
+
 	public static void saveShortList(String path, ShortBigArrayBigList list, int blockSize, CompressionType compressionType) throws IOException{
 		String dir = path.substring(0, path.lastIndexOf("/"));
 		createDir(dir);
 		Channel channel = getOutputChannel(path, compressionType);
-		
+
 		ByteBuffer buf = ByteBuffer.allocate(2 * blockSize);
 		int capacity = buf.capacity();
 		int used = 0;
@@ -142,17 +142,17 @@ public class FileUtils {
 		}
 		channel.close();
 	}
-	
+
 	public static void saveLong2IntMap(String path, Long2IntMap map, int blockSize, CompressionType compressionType) throws IOException{
 		String dir = path.substring(0, path.lastIndexOf("/"));
 		createDir(dir);
 		Channel channel = getOutputChannel(path, compressionType);
-		
+
 		ByteBuffer buf = ByteBuffer.allocate(10 * blockSize);
 		int capacity = buf.capacity();
 		int used = 0;
 		LongIterator iterator = map.keySet().iterator();
-		
+
 		while(iterator.hasNext()) {
 			long key = iterator.next();
 			buf.putLong(key);
@@ -168,15 +168,15 @@ public class FileUtils {
 				write(channel, buf);
 			}
 		}
-		
+
 		channel.close();
 	}
-	
+
 	public static void saveStringList(String path, ObjectBigList<String> list, int blockSize, CompressionType compressionType) throws IOException{
 		String dir = path.substring(0, path.lastIndexOf("/"));
 		createDir(dir);
 		Channel channel = getOutputChannel(path, compressionType);
-		
+
 		ByteBuffer buf = ByteBuffer.allocate(4 * blockSize);
 		int capacity = buf.capacity();
 		int used = 0;
@@ -195,7 +195,7 @@ public class FileUtils {
 					used = 0;
 				}
 			}
-			
+
 			if(!s.equals("\f")) { 
 				buf.putChar('\n');
 			}
@@ -212,98 +212,98 @@ public class FileUtils {
 		}
 		channel.close();
 	}
-	
+
 	public static IntBigArrayBigList loadIntList(String path, int blockSize, CompressionType compressionType) throws IOException{
 		IntBigArrayBigList list = new IntBigArrayBigList();
 		Channel channel = getInputChannel(path, compressionType);
-		
+
 		ByteBuffer buf = ByteBuffer.allocate(4 * blockSize);
 		while (read(channel, buf) > 0) {
 			buf.flip();
-            while (buf.hasRemaining()) {
-                list.add(buf.getInt());
-            }
-            buf.clear();
+			while (buf.hasRemaining()) {
+				list.add(buf.getInt());
+			}
+			buf.clear();
 		}
 		channel.close();
 		return list;
 	}
-	
+
 	public static ShortBigArrayBigList loadShortList(String path, int blockSize, CompressionType compressionType) throws IOException{
-		 
+
 		ShortBigArrayBigList list = new ShortBigArrayBigList();
 		Channel channel = getInputChannel(path, compressionType);
-		
+
 		ByteBuffer buf = ByteBuffer.allocate(4 * blockSize);
 		while (read(channel, buf) > 0) {
 			buf.flip();
-            while (buf.hasRemaining()) {
-                list.add(buf.getShort());
-            }
-            buf.clear();
+			while (buf.hasRemaining()) {
+				list.add(buf.getShort());
+			}
+			buf.clear();
 		}
 		channel.close();
 		return list;
 	}
-	
+
 	public static Long2IntMap loadLong2IntMap(String path, int blockSize, CompressionType compressionType) throws IOException{
-		 
+
 		Long2IntMap list = new Long2IntOpenHashMap();
 		Channel channel = getInputChannel(path, compressionType);
-		
+
 		ByteBuffer buf = ByteBuffer.allocate(10 * blockSize);
 		while (read(channel, buf) > 0) {
 			buf.flip();
-            while (buf.hasRemaining()) {
-            	list.put(buf.getLong(), buf.getInt());
-            }
-            buf.clear();
+			while (buf.hasRemaining()) {
+				list.put(buf.getLong(), buf.getInt());
+			}
+			buf.clear();
 		}
 		channel.close();
 		return list;
 	}
-	
+
 	public static ObjectBigList<String> loadStringList(String path, int blockSize, CompressionType compressionType) throws IOException{
 		ObjectBigList<String> list = new ObjectBigArrayBigList<String>();
 		Channel channel = getInputChannel(path, compressionType);
-		
+
 		ByteBuffer buf = ByteBuffer.allocate(4 * blockSize);
 		while (read(channel, buf) > 0) {
 			buf.flip();
 			String s = "";
-            while (buf.hasRemaining()) {
-            	char c = buf.getChar();
-            	if(c!='\n'){
-            		if(c=='\f'){
-            			list.add(null);
-            		} else{
-            			s+=c;
-            		}
-            	} else{
-            		list.add(s);
-            		s="";
-            	}
-            }
-            buf.clear();
+			while (buf.hasRemaining()) {
+				char c = buf.getChar();
+				if(c!='\n'){
+					if(c=='\f'){
+						list.add(null);
+					} else{
+						s+=c;
+					}
+				} else{
+					list.add(s);
+					s="";
+				}
+			}
+			buf.clear();
 		}
 		channel.close();
 		return list;
 	}
-	
-	
-	
+
+
+
 	public static void createDir(String dir){
 		File pathName = new File(dir);
 		if(!pathName.isDirectory()){
 			pathName.mkdirs();
 		}
 	}
-	
+
 	public static void deleteDir(String dir) {
 		File pathName = new File(dir);
 		if(!pathName.isDirectory()) {
 			pathName.delete();
 		}
 	}
-	
+
 }

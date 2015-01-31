@@ -282,4 +282,8 @@ public interface Graph {
 	
 	public IntSet getCategories();
 
+	public CompressionType getCompressionType();
+
+	public void setCompressionType(CompressionType compressionType);
+
 }

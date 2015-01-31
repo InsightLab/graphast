@@ -17,9 +17,7 @@ import it.unimi.dsi.fastutil.objects.ObjectBigList;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.graphast.enums.CompressionType;
 import org.graphast.exception.GraphastException;
