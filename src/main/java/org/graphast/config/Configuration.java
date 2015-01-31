@@ -17,7 +17,7 @@ public class Configuration {
 	public static final String CONFIG_FILE = "config.properties";
 	
 	public static final String MOBME_DIR = USER_HOME + "/mobme/";
-	
+
 	private static Logger logger = LoggerFactory.getLogger(Configuration.class);
 	
 	static {
