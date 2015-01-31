@@ -14,7 +14,7 @@ import org.graphast.graphgenerator.GraphGenerator;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class GraphastTest {
+public class GraphTest {
 	
 	private static Graph graphExample3;
 	private static Graph graphExample2;
