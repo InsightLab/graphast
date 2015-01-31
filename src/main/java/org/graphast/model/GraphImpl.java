@@ -18,10 +18,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.graphast.enums.CompressionType;
 import org.graphast.exception.GraphastException;
 import org.graphast.geometry.Point;
 import org.graphast.util.FileUtils;
-import org.graphast.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,6 +53,8 @@ public class GraphImpl implements Graph {
 	private static int secondsDay = 86400;
 
 	private short[] shortCosts;
+	
+	protected CompressionType compressionType;
 
 	/**
 	 * Creates a Graph for the given directory passed as parameter.
@@ -64,7 +66,12 @@ public class GraphImpl implements Graph {
 	 * @param directory Directory in which the graph is (or will be) persisted.
 	 */
 	public GraphImpl(String directory) {
+		this(directory, CompressionType.GZIP_COMPRESSION);
+	}
+	
+	public GraphImpl(String directory, CompressionType compressionType) {
 		this.directory = directory;
+		this.compressionType = compressionType;
 
 		nodes = new IntBigArrayBigList();
 		edges = new IntBigArrayBigList();
@@ -82,13 +89,13 @@ public class GraphImpl implements Graph {
 	 */
 	@Override
 	public void save() throws IOException {
-		FileUtils.saveIntList(directory + "/nodes", nodes, blockSize);
-		FileUtils.saveIntList(directory + "/edges", edges, blockSize);
-		FileUtils.saveStringList(directory + "/nodesLabels", nodesLabels, blockSize);
-		FileUtils.saveStringList(directory + "/edgesLabels", edgesLabels, blockSize);
-		FileUtils.saveShortList(directory + "/nodesCosts", nodesCosts, blockSize);
-		FileUtils.saveShortList(directory + "/edgesCosts", edgesCosts, blockSize);
-		FileUtils.saveIntList(directory + "/points", points, blockSize);
+		FileUtils.saveIntList(directory + "/nodes", nodes, blockSize, compressionType);
+		FileUtils.saveIntList(directory + "/edges", edges, blockSize, compressionType);
+		FileUtils.saveStringList(directory + "/nodesLabels", nodesLabels, blockSize, compressionType);
+		FileUtils.saveStringList(directory + "/edgesLabels", edgesLabels, blockSize, compressionType);
+		FileUtils.saveShortList(directory + "/nodesCosts", nodesCosts, blockSize, compressionType);
+		FileUtils.saveShortList(directory + "/edgesCosts", edgesCosts, blockSize, compressionType);
+		FileUtils.saveIntList(directory + "/points", points, blockSize, compressionType);
 	}
 
 	/* (non-Javadoc)
@@ -96,13 +103,13 @@ public class GraphImpl implements Graph {
 	 */
 	@Override
 	public void load() throws IOException {
-		nodes = FileUtils.loadIntList(directory + "/nodes", blockSize);
-		edges = FileUtils.loadIntList(directory + "/edges", blockSize);
-		nodesLabels = FileUtils.loadStringList(directory + "/nodesLabels", blockSize);
-		edgesLabels = FileUtils.loadStringList(directory + "/edgesLabels", blockSize);
-		nodesCosts = FileUtils.loadShortList(directory + "/nodesCosts", blockSize);
-		edgesCosts = FileUtils.loadShortList(directory + "/edgesCosts", blockSize);
-		points = FileUtils.loadIntList(directory + "/points", blockSize);
+		nodes = FileUtils.loadIntList(directory + "/nodes", blockSize, compressionType);
+		edges = FileUtils.loadIntList(directory + "/edges", blockSize, compressionType);
+		nodesLabels = FileUtils.loadStringList(directory + "/nodesLabels", blockSize, compressionType);
+		edgesLabels = FileUtils.loadStringList(directory + "/edgesLabels", blockSize, compressionType);
+		nodesCosts = FileUtils.loadShortList(directory + "/nodesCosts", blockSize, compressionType);
+		edgesCosts = FileUtils.loadShortList(directory + "/edgesCosts", blockSize, compressionType);
+		points = FileUtils.loadIntList(directory + "/points", blockSize, compressionType);
 		createNodeIndex();
 	}
 
@@ -924,5 +931,17 @@ public class GraphImpl implements Graph {
 		if(v.getCategory() < 0)	return null;
 		else	return v;
 	}
+
+	@Override
+	public CompressionType getCompressionType() {
+		return compressionType;
+	}
+
+	@Override
+	public void setCompressionType(CompressionType compressionType) {
+		this.compressionType = compressionType;
+	}
+	
+	
 
 }
