@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.graphast.graphgenerator.GraphGenerator;
 import org.graphast.model.Graph;
 import org.graphast.query.knn.BoundsKNN;
 import org.graphast.query.knn.KNNSearch;
@@ -22,9 +23,7 @@ import org.junit.Test;
 public abstract class KNNSearchTest {
 	private static KNNSearch knn;
 	
-	private static String testDir;
-	
-	private Graph graph;
+	private Graph graphPoI;
 	
 	private Graph lbgAdapter;
 	
@@ -32,8 +31,7 @@ public abstract class KNNSearchTest {
 	
 	@Before
 	public void setUp() throws Exception{
-		graph.load(getResourcePath("/tdg.json"), FileType.GRAPHSON);
-		graph.setInfo();
+		graphPoI = new GraphGenerator().generateExamplePoI();
 		lbgAdapter.load(getResourcePath("/lbg.json"), FileType.GRAPHSON);
 		ubgAdapter.load(getResourcePath("/ubg.json"), FileType.GRAPHSON);
 		
@@ -41,36 +39,32 @@ public abstract class KNNSearchTest {
 		BoundsKNN minBounds = new BoundsKNN(lbgAdapter, "localhost", MapName.LBKNN);
 		BoundsKNN maxBounds = new BoundsKNN(ubgAdapter, "localhost", MapName.UBKNN);
 		
-		knn = new KNNSearch(graph, minBounds, maxBounds);
+		knn = new KNNSearch(graphPoI, minBounds, maxBounds);
 	}
 	
 	@Test
 	public void search() throws ParseException{
 		Date date = DateUtils.parseDate(0, 550, 0);
     	
-    	ArrayList<NearestNeighbor> nn = knn.search(graph.getVertexByOId(1), date, 2);
+    	ArrayList<NearestNeighbor> nn = knn.search(graphPoI.getNode(1), date, 2);
     			
-    	assertEquals(convertToInt(graph.getVertexByOId(2).getId()), (int) nn.get(0).getId());
+    	assertEquals(graphPoI.getNode(2).getId(), nn.get(0).getId());
 		assertEquals(900000, nn.get(0).getDistance());
-		assertEquals(convertToInt(graph.getVertexByOId(5).getId()), (int) nn.get(1).getId());
+		assertEquals(graphPoI.getNode(5).getId(), nn.get(1).getId());
 		assertEquals(3120000, nn.get(1).getDistance());
 				
 	}
 	
-	public void setTestDir(String dir){
-		testDir = dir;
-	}
-	
 	@After
 	public void tearDown(){
-		graph.shutdown();
+		graphPoI.shutdown();
 		lbgAdapter.shutdown();
 		ubgAdapter.shutdown();
 	}
 	
 	@AfterClass
 	public static void shutdown() throws IOException{
-		FileUtils.deleteDirectory(new File(testDir));
+		FileUtils.deleteDirectory(new File());
 	}
 	
 }
