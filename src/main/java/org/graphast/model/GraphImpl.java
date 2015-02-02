@@ -948,6 +948,7 @@ public class GraphImpl implements Graph {
 		this.compressionType = compressionType;
 	}
 	
+	
 	public int getDelta() {
 		return delta;
 	}
