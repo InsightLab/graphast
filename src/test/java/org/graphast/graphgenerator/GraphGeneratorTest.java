@@ -18,32 +18,49 @@ public class GraphGeneratorTest {
 	private static Graph graphMonaco;
 	private static Graph graphExample;
 	private static GraphBounds graphExample2;
+	private static Graph graphExample3;
+	private static Graph graphExamplePoI;
 
 	@BeforeClass
 	public static void setup() {
 		graphMonaco = new GraphGenerator().generateMonaco();
 		graphExample = new GraphGenerator().generateExample();
 		graphExample2 = new GraphGenerator().generateExample2();
+		graphExample3 = new GraphGenerator().generateExample3();
+		graphExamplePoI = new GraphGenerator().generateExamplePoI();
 	}
 	
 
 	@Test
-	public void shortestPathMonacoTest() {
+	public void generateMonacoTest() {
 		assertEquals(751, graphMonaco.getNumberOfNodes());
 		assertEquals(1306, graphMonaco.getNumberOfEdges());
 	}
 	
 	@Test
-	public void shortestPathExampleTest() {
+	public void generateExampleTest() {
 		assertEquals(6, graphExample.getNumberOfNodes());
 		assertEquals(10, graphExample.getNumberOfEdges());
 	}	
 	
 	@Test
-	public void shortestPathExample2Test() {
+	public void generateExample2Test() {
 		assertEquals(7, graphExample2.getNumberOfNodes());
 		assertEquals(8, graphExample2.getNumberOfEdges());
 	}
+	
+	@Test
+	public void generateExample3Test() {
+		assertEquals(6, graphExample3.getNumberOfNodes());
+		assertEquals(7, graphExample3.getNumberOfEdges());
+	}
+	
+	@Test
+	public void generateExamplePoITest() {
+		assertEquals(10, graphExamplePoI.getNumberOfNodes());
+		assertEquals(13, graphExamplePoI.getNumberOfEdges());
+	}
+	
 	
 	@Test
 	public void upperAndLowerBoundsTest() {
@@ -57,6 +74,8 @@ public class GraphGeneratorTest {
 		assertEquals(true, MapUtils.equalMaps(realValueLower, graphExample2.getLowerBound()));
 
 	}
+	
+	
 	
 	@AfterClass
 	public static void tearDown() {
