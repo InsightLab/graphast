@@ -4,11 +4,7 @@ package org.graphast.query.model;
 		private long id;
 		private short travelTime;
 
-<<<<<<< HEAD
 		public QueueEntry(long id, int travelTime) {
-=======
-		public QueueEntry(long id, short travelTime) {
->>>>>>> modification on Bounds of KNN. need of cost modification
 			this.id = id;
 			this.travelTime = travelTime;
 		}
@@ -38,11 +34,7 @@ package org.graphast.query.model;
 			return travelTime;
 		}
 
-<<<<<<< HEAD
 		public void setTravelTime(int travelTime) {
-=======
-		public void setTravelTime(short travelTime) {
->>>>>>> modification on Bounds of KNN. need of cost modification
 			this.travelTime = travelTime;
 		}
 	}
