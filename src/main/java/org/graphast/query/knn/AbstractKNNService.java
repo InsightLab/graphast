@@ -17,7 +17,6 @@ public abstract class AbstractKNNService implements KNNService{
 	protected AbstractBoundsSearch minBounds;
 	protected AbstractBoundsSearch maxBounds;
 	
-	protected int maxTime;
 	protected static int wasRemoved = -1;
 	
 	public AbstractKNNService(Graph network, AbstractBoundsSearch minBounds, AbstractBoundsSearch maxBounds){
@@ -96,7 +95,7 @@ public abstract class AbstractKNNService implements KNNService{
 		Long2IntMap neig = network.accessNeighborhood(network.getNode(removed.getId()));
 		
 		for (long v : neig.keySet()) {
-			int at = getArrival(removed.getArrivalTime(), neig.get(v));
+			int at = network.getArrival(removed.getArrivalTime(), neig.get(v));
 			int tt = removed.getTravelTime() + neig.get(v);
 			Bound bMin = new Bound(minBounds.getBounds().get(v));
 			LowerBoundEntry newEntry = new LowerBoundEntry(	v, 
@@ -123,11 +122,5 @@ public abstract class AbstractKNNService implements KNNService{
 				includeCandidate(k, bMax.getId(), tt + bMax.getDistance(), kth, upperCandidates, isIn);
 			}
 		}
-	}
-	
-	public int getArrival(int dt, int tt) {
-		int at = dt + tt;
-		at = at % maxTime;
-		return at;
 	}
 }
