@@ -56,6 +56,10 @@ public class GraphImpl implements Graph {
 	
 	protected CompressionType compressionType;
 
+	protected int delta;
+	
+	protected int maxTime;
+
 	/**
 	 * Creates a Graph for the given directory passed as parameter.
 	 * 
@@ -82,6 +86,8 @@ public class GraphImpl implements Graph {
 		points = new IntBigArrayBigList();
 
 		nodeIndex.defaultReturnValue(-1);
+		//milliseconds
+		this.maxTime  = 60*60*24*1000;
 	}
 
 	/* (non-Javadoc)
@@ -942,6 +948,26 @@ public class GraphImpl implements Graph {
 		this.compressionType = compressionType;
 	}
 	
-	
+	public int getDelta() {
+		return delta;
+	}
 
+	public void setDelta(int delta) {
+		this.delta = delta;
+	}
+
+	public int getMaxTime() {
+		return maxTime;
+	}
+
+	public void setMaxTime(int maxTime) {
+		this.maxTime = maxTime;
+	}
+
+	public int getArrival(int dt, int tt) {
+		int at = dt + tt;
+		at = at % maxTime;
+		return at;
+	}
+	
 }

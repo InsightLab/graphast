@@ -275,6 +275,17 @@ public interface Graph {
 	public abstract short[] getPoiCost(long vid);
 	
 	public LinearFunction[] convertToLinearFunction(short[] costs);
+	
+	public int getDelta();
+
+	public void setDelta(int delta);
+
+	public int getMaxTime();
+
+	public void setMaxTime(int maxTime);
+	
+	public int getArrival(int dt, int tt);
+
 
 	public CompressionType getCompressionType();
 
