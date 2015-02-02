@@ -281,7 +281,10 @@ public interface Graph {
 	public void setMaxTime(int maxTime);
 	
 	public int getArrival(int dt, int tt);
+<<<<<<< HEAD
 
+=======
+>>>>>>> knn tests improving
 
 	public CompressionType getCompressionType();
 
