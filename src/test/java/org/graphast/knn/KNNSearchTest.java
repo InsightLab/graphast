@@ -1,11 +1,17 @@
 package org.graphast.knn;
 
 import static org.junit.Assert.assertEquals;
+import it.unimi.dsi.fastutil.longs.Long2IntMap;
+import it.unimi.dsi.fastutil.longs.Long2ShortMap;
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.PriorityQueue;
+import java.util.Set;
 
 import org.graphast.config.Configuration;
 import org.graphast.enums.GraphBoundsType;
@@ -14,6 +20,8 @@ import org.graphast.model.GraphBounds;
 import org.graphast.query.knn.BoundsKNN;
 import org.graphast.query.knn.KNNSearch;
 import org.graphast.query.knn.NearestNeighbor;
+import org.graphast.query.knn.model.Bound;
+import org.graphast.query.knn.model.QueueEntry;
 import org.graphast.util.DateUtils;
 import org.graphast.util.FileUtils;
 import org.junit.AfterClass;
