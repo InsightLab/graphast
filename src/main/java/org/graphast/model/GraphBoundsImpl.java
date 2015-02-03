@@ -74,4 +74,14 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 		return lowerBound;
 	}
 
+	@Override
+	public short getEdgeLowerCost(long id){
+		return lowerBound.get(id);
+	}
+	
+	@Override
+	public short getEdgeUpperCost(long id){
+		return upperBound.get(id);
+	}
+
 }

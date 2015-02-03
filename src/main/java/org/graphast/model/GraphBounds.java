@@ -9,5 +9,9 @@ public interface GraphBounds extends Graph {
 	public abstract Long2ShortMap getUpperBound();
 	
 	public abstract Long2ShortMap getLowerBound();
+	
+	public abstract short getEdgeLowerCost(long id);
+	
+	public abstract short getEdgeUpperCost(long id);
 
 }
