@@ -16,7 +16,6 @@ import org.graphast.query.knn.KNNSearch;
 import org.graphast.query.knn.NearestNeighbor;
 import org.graphast.util.DateUtils;
 import org.graphast.util.FileUtils;
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
