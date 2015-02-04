@@ -97,37 +97,37 @@ public class GraphGenerator {
  		v = new NodeImpl(6l, 60d, 0d);
  		graph.addNode(v);
 
- 		short[] costs = {3,2,3,4};
+ 		int[] costs = {3,2,3,4};
  		e = new EdgeImpl(0l, 1l, 1, costs);
  		graph.addEdge(e);
 
- 		costs = new short[]{4,2,6,8,10};
+ 		costs = new int[]{4,2,6,8,10};
  		e = new EdgeImpl(0l, 2l, 5, costs);
  		graph.addEdge(e);
 
- 		costs = new short[]{1,2};
+ 		costs = new int[]{1,2};
  		e = new EdgeImpl(1l, 2l, 3, costs);
  		graph.addEdge(e);
 
- 		costs = new short[]{4,4,7,6,11};
+ 		costs = new int[]{4,4,7,6,11};
 
  		e = new EdgeImpl(2l, 3l, 3, costs);
 
  		graph.addEdge(e);
 
- 		costs = new short[]{1,10};
+ 		costs = new int[]{1,10};
  		e = new EdgeImpl(3l, 4l, 3, costs);
  		graph.addEdge(e);
 
- 		costs = new short[]{2,12,13};
+ 		costs = new int[]{2,12,13};
  		e = new EdgeImpl(3l, 5l, 4, costs);
  		graph.addEdge(e);
 
- 		costs = new short[]{3,9,10,11};
+ 		costs = new int[]{3,9,10,11};
  		e = new EdgeImpl(4l, 5l, 2, costs);
  		graph.addEdge(e);
 
- 		costs = new short[]{5,2,4,6,8,15};
+ 		costs = new int[]{5,2,4,6,8,15};
  		e = new EdgeImpl(5l, 6l, 1, costs);
  		graph.addEdge(e);
 
@@ -160,7 +160,7 @@ public class GraphGenerator {
 		v = new NodeImpl(4l, 43.7294668047756,7.413772473047058);
 		graph.addNode(v);
 		
-		short[] nodeCosts = new short[]{1,2,3,4};
+		int[] nodeCosts = new int[]{1,2,3,4};
 		v = new NodeImpl(2l, 10d, 30d, nodeCosts);
 		graph.addNode(v);
 		
@@ -173,14 +173,14 @@ public class GraphGenerator {
 		v = new NodeImpl(7, 11, 32, "Banco");
 		graph.addNode(v);
 		
-		short[] costs = new short[]{1,2,3,4};
+		int[] costs = new int[]{1,2,3,4};
 		List<Point> points = new ArrayList<Point>();
 		points.add(new Point(10,10));
 		points.add(new Point(10,20));
 		Edge e = new EdgeImpl(0l, 1l, 10, costs, points, "rua1");
 		graph.addEdge(e);
 		
-		costs = new short[]{2,4,6,8,10};
+		costs = new int[]{2,4,6,8,10};
 		points = new ArrayList<Point>();
 		points.add(new Point(10,20));
 		points.add(new Point(10,15));
@@ -188,21 +188,21 @@ public class GraphGenerator {
 		e = new EdgeImpl(1l, 0l, 20, costs, points, "rua2");
 		graph.addEdge(e);
 		
-		costs = new short[]{2};
+		costs = new int[]{2};
 		points = new ArrayList<Point>();
 		points.add(new Point(10,10));
 		points.add(new Point(10,30));
 		e = new EdgeImpl(0l, 2l, 30, costs, points, "rua3");
 		graph.addEdge(e);
 		
-		costs = new short[]{2, 4, 6, 8, 10};
+		costs = new int[]{2, 4, 6, 8, 10};
 		points = new ArrayList<Point>();
 		points.add(new Point(10,30));
 		points.add(new Point(10,10));
 		e = new EdgeImpl(2l, 0l, 40, costs, points, "rua4");
 		graph.addEdge(e);
 		
-		costs = new short[]{3};
+		costs = new int[]{3};
 		points = new ArrayList<Point>();
 		points.add(new Point(10,10));
 		points.add(new Point(10,40));

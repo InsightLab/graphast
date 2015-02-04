@@ -26,7 +26,7 @@ public class LinearFunction {
 //	}
 
 	public int calculateCost(int time) {
-		return (int) getSlope() * (time - startInterval) + startCost;
+		return getSlope() * (time - startInterval) + startCost;
 	}
 		
 	public int getSlope(){

@@ -1,8 +1,8 @@
 package org.graphast.util;
 
 import it.unimi.dsi.fastutil.ints.IntBigArrayBigList;
-import it.unimi.dsi.fastutil.longs.Long2ShortMap;
-import it.unimi.dsi.fastutil.longs.Long2ShortOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2IntMap;
+import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.objects.ObjectBigArrayBigList;
 import it.unimi.dsi.fastutil.objects.ObjectBigList;
@@ -143,7 +143,7 @@ public class FileUtils {
 		channel.close();
 	}
 	
-	public static void saveLong2ShortMap(String path, Long2ShortMap map, int blockSize, CompressionType compressionType) throws IOException{
+	public static void saveLong2IntMap(String path, Long2IntMap map, int blockSize, CompressionType compressionType) throws IOException{
 		String dir = path.substring(0, path.lastIndexOf("/"));
 		createDir(dir);
 		Channel channel = getOutputChannel(path, compressionType);
@@ -156,7 +156,7 @@ public class FileUtils {
 		while(iterator.hasNext()) {
 			long key = iterator.next();
 			buf.putLong(key);
-			buf.putShort(map.get(key));
+			buf.putInt(map.get(key));
 			used += 10;
 			if(used == capacity) {
 				buf.flip();
@@ -246,16 +246,16 @@ public class FileUtils {
 		return list;
 	}
 	
-	public static Long2ShortMap loadLong2ShortMap(String path, int blockSize, CompressionType compressionType) throws IOException{
+	public static Long2IntMap loadLong2IntMap(String path, int blockSize, CompressionType compressionType) throws IOException{
 		 
-		Long2ShortMap list = new Long2ShortOpenHashMap();
+		Long2IntMap list = new Long2IntOpenHashMap();
 		Channel channel = getInputChannel(path, compressionType);
 		
 		ByteBuffer buf = ByteBuffer.allocate(10 * blockSize);
 		while (read(channel, buf) > 0) {
 			buf.flip();
             while (buf.hasRemaining()) {
-            	list.put(buf.getLong(), buf.getShort());
+            	list.put(buf.getLong(), buf.getInt());
             }
             buf.clear();
 		}

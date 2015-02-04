@@ -50,8 +50,8 @@ public class GraphGeneratorTest {
 		
 		graphExample2.getCosts();
 		
-		Map<Object, Object> realValueUpper = new SimpleMap(2,2,6,11,3,11,1,10,5,13,4,10,0,4,7,15);
-		Map<Object, Object> realValueLower = new SimpleMap(2,1, 6,3, 3,4, 1,2, 5,2, 4,1, 0,2, 7,2);
+		Map<Long, Integer> realValueUpper = new SimpleMap<Long, Integer>(2,2,6,11,3,11,1,10,5,13,4,10,0,4,7,15);
+		Map<Long, Integer> realValueLower = new SimpleMap<Long, Integer>(2,1, 6,3, 3,4, 1,2, 5,2, 4,1, 0,2, 7,2);
 
 		assertEquals(true, MapUtils.equalMaps(realValueUpper, graphExample2.getUpperBound()));
 		assertEquals(true, MapUtils.equalMaps(realValueLower, graphExample2.getLowerBound()));

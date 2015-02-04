@@ -97,6 +97,6 @@ public interface Node {
 	 */
 	public abstract String toString();
 	
-	public abstract short[] getCosts();
+	public abstract int[] getCosts();
 
 }
