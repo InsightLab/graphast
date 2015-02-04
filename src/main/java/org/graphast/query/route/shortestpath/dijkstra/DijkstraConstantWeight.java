@@ -9,6 +9,7 @@ import java.util.PriorityQueue;
 import org.graphast.model.Graph;
 import org.graphast.model.Node;
 import org.graphast.query.route.shortestpath.model.DistanceEntry;
+import org.graphast.query.route.shortestpath.model.Path;
 import org.graphast.query.route.shortestpath.model.RouteEntry;
 
 public class DijkstraConstantWeight extends Dijkstra {
@@ -67,17 +68,17 @@ public class DijkstraConstantWeight extends Dijkstra {
 	}
 
 	@Override
-	public int shortestPath(Node source, Node target) {
+	public Path shortestPath(Node source, Node target) {
 		return shortestPath(source, target, null);
 	}
 
 	@Override
-	public int shortestPath(long source, long target) {
+	public Path shortestPath(long source, long target) {
 		return shortestPath(source, target, null);
 	}
 
 	@Override
-	public int shortestPath(long source, long target, Date time) {
+	public Path shortestPath(long source, long target, Date time) {
 		return shortestPath(graph.getNode(source), graph.getNode(target), time);
 	}
 }

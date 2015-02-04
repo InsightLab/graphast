@@ -9,6 +9,7 @@ import java.util.PriorityQueue;
 import org.graphast.model.Graph;
 import org.graphast.model.Node;
 import org.graphast.query.model.LowerBoundEntry;
+import org.graphast.query.route.shortestpath.model.Path;
 import org.graphast.query.route.shortestpath.model.RouteEntry;
 import org.graphast.query.route.shortestpath.model.TimeEntry;
 
@@ -63,17 +64,17 @@ public class AStarConstantWeight extends AStar{
 	}
 
 	@Override
-	public int shortestPath(Node source, Node target) {
+	public Path shortestPath(Node source, Node target) {
 		return shortestPath(source, target, null);
 	}
 
 	@Override
-	public int shortestPath(long source, long target) {
+	public Path shortestPath(long source, long target) {
 		return shortestPath(graph.getNode(source), graph.getNode(target));
 	}
 
 	@Override
-	public int shortestPath(long source, long target, Date time) {
+	public Path shortestPath(long source, long target, Date time) {
 		return shortestPath(graph.getNode(source), graph.getNode(target), time);
 	}
 
