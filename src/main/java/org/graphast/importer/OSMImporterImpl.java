@@ -14,6 +14,7 @@ import org.graphast.model.EdgeImpl;
 import org.graphast.model.GraphImpl;
 import org.graphast.model.NodeImpl;
 import org.graphast.util.FileUtils;
+import org.graphast.util.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,7 +71,7 @@ public class OSMImporterImpl implements Importer {
 			int externalFromNodeId = edgeIterator.getBaseNode();
 			int externalToNodeId = edgeIterator.getAdjNode();
 			int externalEdgeId = edgeIterator.getEdge();
-			int distance = (int)(edgeIterator.getDistance() * 1000); // Convert distance from meters to millimeters
+			int distance = (int)NumberUtils.round(edgeIterator.getDistance() * 1000, 0); // Convert distance from meters to millimeters
 			String label = edgeIterator.getName();
 			
 			double latitudeFrom = latLongToDouble(latLongToInt(gs.getNodeAccess().getLatitude(externalFromNodeId)));

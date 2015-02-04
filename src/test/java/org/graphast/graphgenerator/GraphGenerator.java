@@ -136,7 +136,6 @@ public class GraphGenerator {
  		
  		graph.createBounds();
 
- 		
  		return graph;
  		
 	}

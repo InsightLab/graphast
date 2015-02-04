@@ -7,20 +7,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.PriorityQueue;
 
+import org.graphast.exception.PathNotFoundException;
 import org.graphast.model.Graph;
 import org.graphast.model.Node;
 import org.graphast.query.model.LowerBoundEntry;
 import org.graphast.query.route.shortestpath.AbstractShortestPathService;
+import org.graphast.query.route.shortestpath.model.Path;
 import org.graphast.query.route.shortestpath.model.RouteEntry;
 import org.graphast.query.route.shortestpath.model.TimeEntry;
 import org.graphast.util.DateUtils;
 import org.graphast.util.DistanceUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public abstract class AStar extends AbstractShortestPathService{
 
-	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	//private Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	public AStar(Graph graphAdapter) {
 		super(graphAdapter);
@@ -44,7 +44,7 @@ public abstract class AStar extends AbstractShortestPathService{
 		return path;
 	}
 	
-	public int shortestPath(Node source, Node target, Date time) {
+	public Path shortestPath(Node source, Node target, Date time) {
 		PriorityQueue<LowerBoundEntry> queue = new PriorityQueue<LowerBoundEntry>();
 		HashMap<Long, Integer> wasTraversed = new HashMap<Long, Integer>();
 		HashMap<Long, RouteEntry> parents = new HashMap<Long, RouteEntry>();
@@ -56,19 +56,24 @@ public abstract class AStar extends AbstractShortestPathService{
 		
 		while(!queue.isEmpty()){
 			removed = queue.poll();
-			//System.out.println("removed: " + removed.getId() + " tt: " + removed.getTt() + " lb: " + removed.getLb());
 			wasTraversed.put(removed.getId(), wasRemoved);	
 			
 			if(removed.getId() == targetId){
-				List<RouteEntry> path = reconstructPath(removed.getId(), parents);
-				logger.info("path: {}", path);
-				return removed.getTravelTime();
+				
+				Path path = new Path();
+				path.reconstructPath(removed.getId(), parents);
+				
+//				List<RouteEntry> path = reconstructPath(removed.getId(), parents);
+//				logger.info("path: {}", path);
+//				return removed.getTravelTime();
+				
+				return path;
 			}
 			
 			expandVertex(target, removed, wasTraversed, queue, parents);
 		}
-		
-		return Integer.MAX_VALUE;
+		throw new PathNotFoundException();
+		//return Integer.MAX_VALUE;
 	}
 
 	public void init(Node source, Node target, PriorityQueue<LowerBoundEntry> queue,
@@ -76,13 +81,9 @@ public abstract class AStar extends AbstractShortestPathService{
 		
 		long sourceId = source.getId();
 		
-		queue.offer(new LowerBoundEntry(sourceId, 
-				0, 
-				t, 
-				-1,
-				(int) DistanceUtils.timeCost(source, target)));
+		queue.offer(new LowerBoundEntry(sourceId, 0, t, -1,	(int) DistanceUtils.timeCost(source, target)));
 
-		parents.put(sourceId, null);		
+		//parents.put(sourceId, null);		
 	}
 	
 	public abstract void expandVertex(Node target, TimeEntry removed, HashMap<Long, Integer> wasTraversed, 
