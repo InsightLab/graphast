@@ -54,5 +54,10 @@ public class NumberUtilsTest {
 		assertEquals(Integer.MIN_VALUE, NumberUtils.index(segmentMin, offsetMin));
 		
 	}
+	
+	@Test
+	public void javaRoundingTest(){
+		assertEquals(129520, (int)(129.521d * 1000));
+	}
 
 }

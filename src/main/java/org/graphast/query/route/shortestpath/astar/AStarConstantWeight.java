@@ -31,10 +31,10 @@ public class AStarConstantWeight extends AStar{
 		for (long vid : neig.keySet()) {
 			//int vid = convertToInt(v.getId());
 			//int at = graph.getArrival(removed.getArrivalTime(), neig.get(v));
-			int tt = removed.getTravelTime() + neig.get(vid);
-			int lb = tt + (int) (distance.calcDist((double) graph.getNode(vid).getLatitude(), (double) graph.getNode(vid).getLongitude(),
-					(double) target.getLatitude(), (double) target.getLongitude())) * 100;
-			LowerBoundEntry newEntry = new LowerBoundEntry(vid, tt, 0, removed.getId(), lb);
+			int travelTime = removed.getTravelTime() + neig.get(vid);
+			int lowerBound = travelTime + (int)(distance.calcDist( (double)graph.getNode(vid).getLatitude(), (double) graph.getNode(vid).getLongitude(),
+					(double) target.getLatitude(), (double) target.getLongitude()));
+			LowerBoundEntry newEntry = new LowerBoundEntry(vid, travelTime, 0, removed.getId(), lowerBound);
 			
 			String label = null;
 			
@@ -49,14 +49,21 @@ public class AStarConstantWeight extends AStar{
 				}
 				
 				parents.put(vid, new RouteEntry(removed.getId(), neig.get(vid), label));
-			}else{
+			} else {
+				
 				int cost = wasTraversed.get(vid);
-				if(cost != wasRemoved){
-					if(cost>newEntry.getTravelTime()){
+				
+				if (cost != wasRemoved){
+					
+					if(cost > newEntry.getTravelTime()){
+						
 						queue.remove(newEntry);
 						queue.offer(newEntry);
 						wasTraversed.remove(newEntry.getId());
 						wasTraversed.put(newEntry.getId(), newEntry.getTravelTime());
+						parents.remove(vid);
+						parents.put(vid, new RouteEntry(removed.getId(), neig.get(vid), label));
+					
 					}
 				}
 			}

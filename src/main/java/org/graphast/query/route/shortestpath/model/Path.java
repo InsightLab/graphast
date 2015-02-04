@@ -24,8 +24,6 @@ public class Path {
 	public void reconstructPath(long id, HashMap<Long, RouteEntry> parents) {
 //	protected List<Instruction> reconstructPath(long id, HashMap<Long, RouteEntry> parents) {
 
-		System.out.println(parents);
-		
 		RouteEntry re = parents.get(id);
 		long parent = re.getId();
 
@@ -43,7 +41,9 @@ public class Path {
 
 			if(re != null) {
 
-				if((verificationQueue.peek().getLabel() == null && re.getLabel() == null) || verificationQueue.peek().getLabel().equals(re.getLabel())) {
+				String predecessorLabel = verificationQueue.peek().getLabel();
+				
+				if((predecessorLabel == null && re.getLabel() == null) || (predecessorLabel!=null  && predecessorLabel.equals(re.getLabel())) || (predecessorLabel!=null && (predecessorLabel.isEmpty() && re.getLabel()==null))) {
 
 					oldInstruction = verificationQueue.poll();
 					newInstruction = new Instruction(0, oldInstruction.getLabel(), oldInstruction.getCost() + re.getCost());
@@ -74,7 +74,7 @@ public class Path {
 
 	}
 
-	public double pathCost() {
+	public double getPathCost() {
 		
 		double pathCost = 0d;
 		
@@ -83,9 +83,9 @@ public class Path {
 		while(instructionIterator.hasNext()) {
 			
 			Instruction instruction = instructionIterator.next();
-			
+			double teste = pathCost + instruction.getCost();
+			System.out.println(pathCost + " + " + instruction.getCost() + " = " + teste);
 			pathCost = pathCost + instruction.getCost();
-			
 		}
 		
 		return pathCost;

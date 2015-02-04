@@ -58,6 +58,9 @@ public class DijkstraConstantWeight extends Dijkstra {
 						queue.offer(newDistanceEntry);
 						wasTraversed.remove(newDistanceEntry.getId());
 						wasTraversed.put(newDistanceEntry.getId(), newDistanceEntry.getDistance());
+						parents.remove(vid);
+						parents.put(vid, new RouteEntry(removed.getId(), neig.get(vid), label));
+						
 
 						//String label = graph.getEdgeLabel(vid);
 						//parents.put(vid, new RouteEntry(vid, neig.get(vid), label));
