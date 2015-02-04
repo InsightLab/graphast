@@ -234,7 +234,6 @@ public class DijkstraGeneric {
             		timeToService = e.getTravelTime() + waitingTime;
                 	if(bounds.keySet().contains(cat)){
                 		int cost = bounds.get(cat).getCost();
-                		if(timeToService < cost)	bounds.put(e.getId(), new Bound(e.getId(), timeToService));
                 		upper = updateUpper(bounds);
                 	}else{
                 		bounds.put((long)cat, new Bound(e.getId(), timeToService));
