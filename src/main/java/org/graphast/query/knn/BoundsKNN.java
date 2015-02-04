@@ -8,9 +8,16 @@ import org.graphast.query.route.shortestpath.dijkstra.DijkstraGeneric;
 
 public class BoundsKNN extends AbstractBoundsSearch{
 	
+<<<<<<< HEAD
 	public BoundsKNN(GraphBounds graph, int categoryId, GraphBoundsType type){
 			DijkstraGeneric d = new DijkstraGeneric(graph);
 			for(int i = 0; i < graph.getNumberOfNodes(); i++){
+=======
+	public BoundsKNN(Graph ga){
+		//if(bounds.keySetSize() == 0){
+			DijkstraGeneric d = new DijkstraGeneric(ga);
+			for(int i = 0; i < ga.getNumberOfNodes(); i++){
+>>>>>>> modification on Bounds of KNN. need of cost modification
 				long position = i*Node.NODE_BLOCKSIZE;
 				long vid = graph.getNodes().getInt(position);
 				
