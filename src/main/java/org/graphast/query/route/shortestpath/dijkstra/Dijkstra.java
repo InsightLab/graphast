@@ -41,6 +41,7 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 
 				Path path = new Path();
 				path.reconstructPath(removed.getId(), parents);
+				
 //				List<Instruction> path = reconstructPath(removed.getId(), parents);
 //				logger.info("path: {}", path);
 
@@ -48,6 +49,7 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 				
 				return path;
 			}
+			
 			expandVertex(target, removed, wasTraversed, queue, parents);
 		}
 		throw new PathNotFoundException();
