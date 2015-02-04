@@ -2,15 +2,15 @@ package org.graphast.query.model;
 
 	public class QueueEntry implements Comparable<QueueEntry> {
 		private long id;
-		private int travelTime;
+		private short travelTime;
 
-		public QueueEntry(long id, int tt) {
+		public QueueEntry(long id, short travelTime) {
 			this.id = id;
-			this.travelTime = tt;
+			this.travelTime = travelTime;
 		}
 
 		public int compareTo(QueueEntry another) {
-			return new Integer(this.travelTime).compareTo(another.getTravelTime());
+			return new Short(this.travelTime).compareTo(another.getTravelTime());
 		}
 		
 		@Override
@@ -30,11 +30,11 @@ package org.graphast.query.model;
 			this.id = id;
 		}
 
-		public int getTravelTime() {
+		public short getTravelTime() {
 			return travelTime;
 		}
 
-		public void setTravelTime(int tt) {
-			this.travelTime = tt;
+		public void setTravelTime(short travelTime) {
+			this.travelTime = travelTime;
 		}
 	}
