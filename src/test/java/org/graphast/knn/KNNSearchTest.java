@@ -1,7 +1,6 @@
 package org.graphast.knn;
 
 import static org.junit.Assert.assertEquals;
-import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.Long2ShortMap;
 
 import java.io.File;
@@ -9,21 +8,15 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.PriorityQueue;
-import java.util.Set;
 
 import org.graphast.config.Configuration;
 import org.graphast.graphgenerator.GraphGenerator;
 import org.graphast.model.Graph;
+import org.graphast.model.GraphBounds;
 import org.graphast.model.GraphBoundsImpl;
-import org.graphast.model.Node;
 import org.graphast.query.knn.BoundsKNN;
 import org.graphast.query.knn.KNNSearch;
 import org.graphast.query.knn.NearestNeighbor;
-import org.graphast.query.knn.model.Bound;
-import org.graphast.query.knn.model.QueueEntry;
 import org.graphast.util.DateUtils;
 import org.graphast.util.FileUtils;
 import org.junit.After;
@@ -43,8 +36,10 @@ public abstract class KNNSearchTest {
 	@Before
 	public void setUp() throws Exception{
 		graphPoI = new GraphGenerator().generateExamplePoI();
-		lbgAdapter = new GraphBoundsImpl(Configuration.USER_HOME + "/graphast/test").getLowerBound();
-		ubgAdapter = new GraphBoundsImpl(Configuration.USER_HOME + "/graphast/test").getUpperBound();
+		GraphBounds bounds = new GraphBoundsImpl(Configuration.USER_HOME + "/graphast/test"); 
+		bounds.createBounds();
+		lbgAdapter = bounds.getLowerBound();
+		ubgAdapter = bounds.getUpperBound();
 		
 		//calculate or load bounds
 		BoundsKNN minBounds = new BoundsKNN(lbgAdapter, "localhost", 1);
