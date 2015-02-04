@@ -36,7 +36,7 @@ public abstract class KNNSearchTest {
 	@Before
 	public void setUp() throws Exception{
 		graphPoI = new GraphGenerator().generateExamplePoI();
-		GraphBounds bounds = new GraphBoundsImpl(Configuration.USER_HOME + "/graphast/test"); 
+		GraphBounds bounds = new GraphBoundsImpl(Configuration.USER_HOME + "/graphast/test/examplePoI"); 
 		bounds.createBounds();
 		lbgAdapter = bounds.getLowerBound();
 		ubgAdapter = bounds.getUpperBound();

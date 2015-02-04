@@ -71,7 +71,7 @@ public class DijkstraGeneric {
 	    HashMap<Long, Integer> shortestDistances = new HashMap<Long, Integer>();
 	    
 	    shortestDistances.put(v, 0);
-	    QueueEntry e = new QueueEntry(v, 0);
+	    QueueEntry e = new QueueEntry(v, (short) 0);
         unsettledNodes.add(e);
         
         while ((e = unsettledNodes.poll()) != null){
@@ -101,10 +101,10 @@ public class DijkstraGeneric {
 	    HashMap<Long, Integer> shortestDistances = new HashMap<Long, Integer>();
 	    HashMap<Long, Bound> bounds = new HashMap<Long, Bound>();
 	    int upper = Integer.MIN_VALUE;
-	    int wt, ts;
+	    short wt, ts;
 	    
 	    shortestDistances.put(v, 0);
-	    QueueEntry e = new QueueEntry(v, 0);
+	    QueueEntry e = new QueueEntry(v, (short) 0);
         unsettledNodes.add(e);
         
         while ((e = unsettledNodes.poll()) != null){
@@ -120,7 +120,7 @@ public class DijkstraGeneric {
                 	wt = graph.poiGetCost(e.getId());
             		ts = e.getTravelTime() + wt;
                 	if(bounds.keySet().contains(cat)){
-                		int cost = bounds.get(cat).getDistance();
+                		int cost = bounds.get(cat).getCost();
                 		if(ts < cost)	bounds.put(e.getId(), new Bound(e.getId(), ts));
                 		upper = updateUpper(bounds);
                 	}else{

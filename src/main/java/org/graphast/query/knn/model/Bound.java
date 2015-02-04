@@ -5,25 +5,25 @@ import org.graphast.util.StringUtils;
 
 public class Bound {
 	private long id;
-	private int distance;
+	private short cost;
 	
-	public Bound(long id, int distance){
+	public Bound(long id, short cost){
 		this.id = id;
-		this.distance = distance;
+		this.cost = cost;
 	}
 	
 	public Bound(){
 		this.id = -1;
-		this.distance = Integer.MAX_VALUE;
+		this.cost = Short.MAX_VALUE;
 	}
 	
 	public Bound(long id) {
 		this.id = id;
-		this.distance = Integer.MAX_VALUE;
+		this.cost = Short.MAX_VALUE;
 	}
 	
 	public String toString(){
-		return StringUtils.append(",", id,distance);
+		return StringUtils.append(",", id,cost);
 	}
 
 	public long getId() {
@@ -34,11 +34,11 @@ public class Bound {
 		this.id = id;
 	}
 
-	public int getDistance() {
-		return distance;
+	public short getCost() {
+		return cost;
 	}
 
-	public void setDistance(int distance) {
-		this.distance = distance;
+	public void setCost(short cost) {
+		this.cost = cost;
 	}
 }
