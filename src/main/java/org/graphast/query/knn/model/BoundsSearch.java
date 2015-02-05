@@ -1,11 +1,12 @@
 package org.graphast.query.knn.model;
 
-import java.util.HashMap;
-
-
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import it.unimi.dsi.fastutil.objects.ObjectCollection;
 
 public interface BoundsSearch {
-	public HashMap<Long, Integer> getBounds();
 	
-	public void setBounds(HashMap<Long, Integer> bounds) ;
+	public Object2ObjectMap<Long, ObjectCollection<Bound>> getBounds();
+	
+	public void setBounds(Object2ObjectMap<Long, ObjectCollection<Bound>> bounds) ;
+
 }
