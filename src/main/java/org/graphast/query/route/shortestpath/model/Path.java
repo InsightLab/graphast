@@ -83,8 +83,6 @@ public class Path {
 		while(instructionIterator.hasNext()) {
 			
 			Instruction instruction = instructionIterator.next();
-			double teste = pathCost + instruction.getCost();
-			System.out.println(pathCost + " + " + instruction.getCost() + " = " + teste);
 			pathCost = pathCost + instruction.getCost();
 		}
 		
