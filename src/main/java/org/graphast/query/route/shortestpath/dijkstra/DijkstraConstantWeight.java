@@ -24,8 +24,7 @@ public class DijkstraConstantWeight extends Dijkstra {
 		Long2IntMap neig = graph.accessNeighborhood(graph.getNode(removed.getId()));
 		
 		for (long vid : neig.keySet()) {
-			//long vid = convertToInt(v);
-			//int arrivalTime = graph.getArrival(removed.getAt(), neig.get(v));
+
 			int travelDistance = removed.getDistance() + neig.get(vid);
 			DistanceEntry newDistanceEntry = new DistanceEntry(vid, travelDistance, removed.getId());
 			
@@ -61,9 +60,6 @@ public class DijkstraConstantWeight extends Dijkstra {
 						parents.remove(vid);
 						parents.put(vid, new RouteEntry(removed.getId(), neig.get(vid), label));
 						
-
-						//String label = graph.getEdgeLabel(vid);
-						//parents.put(vid, new RouteEntry(vid, neig.get(vid), label));
 					}
 				}
 			}

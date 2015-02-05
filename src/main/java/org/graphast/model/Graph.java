@@ -283,4 +283,6 @@ public interface Graph {
 
 	public void setCompressionType(CompressionType compressionType);
 
+	public void reverseGraph();
+	
 }
