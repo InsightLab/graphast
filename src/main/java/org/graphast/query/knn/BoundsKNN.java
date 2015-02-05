@@ -3,8 +3,6 @@ package org.graphast.query.knn;
 import org.graphast.model.Graph;
 import org.graphast.model.Node;
 import org.graphast.query.knn.model.AbstractBoundsSearch;
-import org.graphast.query.route.shortestpath.dijkstra.Dijkstra;
-import org.graphast.query.route.shortestpath.dijkstra.DijkstraConstantWeight;
 import org.graphast.query.route.shortestpath.dijkstra.DijkstraGeneric;
 
 public class BoundsKNN extends AbstractBoundsSearch{

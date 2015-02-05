@@ -250,5 +250,62 @@ public class GraphTest {
 		
 	}
 	
+	@Test
+	public void getReverseGraph() {
+		
+		graphExample.reverseGraph();
+		
+		assertEquals(1, graphExample.getEdge(0).getFromNode());
+		assertEquals(0, graphExample.getEdge(0).getToNode());
+		assertEquals(1, graphExample.getEdge(0).getFromNodeNextEdge());
+		assertEquals(1, graphExample.getEdge(0).getToNodeNextEdge());
+		
+		assertEquals(0, graphExample.getEdge(1).getFromNode());
+		assertEquals(1, graphExample.getEdge(1).getToNode());
+		assertEquals(-1, graphExample.getEdge(1).getFromNodeNextEdge());
+		assertEquals(2, graphExample.getEdge(1).getToNodeNextEdge());
+		
+		assertEquals(2, graphExample.getEdge(2).getFromNode());
+		assertEquals(1, graphExample.getEdge(2).getToNode());
+		assertEquals(3, graphExample.getEdge(2).getFromNodeNextEdge());
+		assertEquals(9, graphExample.getEdge(2).getToNodeNextEdge());
+		
+		assertEquals(3, graphExample.getEdge(3).getFromNode());
+		assertEquals(2, graphExample.getEdge(3).getToNode());
+		assertEquals(4, graphExample.getEdge(3).getFromNodeNextEdge());
+		assertEquals(4, graphExample.getEdge(3).getToNodeNextEdge());
+		
+		assertEquals(2, graphExample.getEdge(4).getFromNode());
+		assertEquals(3, graphExample.getEdge(4).getToNode());
+		assertEquals(-1, graphExample.getEdge(4).getFromNodeNextEdge());
+		assertEquals(5, graphExample.getEdge(4).getToNodeNextEdge());
+		
+		assertEquals(4, graphExample.getEdge(5).getFromNode());
+		assertEquals(3, graphExample.getEdge(5).getToNode());
+		assertEquals(6, graphExample.getEdge(5).getFromNodeNextEdge());
+		assertEquals(6, graphExample.getEdge(5).getToNodeNextEdge());
+		
+		assertEquals(3, graphExample.getEdge(6).getFromNode());
+		assertEquals(4, graphExample.getEdge(6).getToNode());
+		assertEquals(-1, graphExample.getEdge(6).getFromNodeNextEdge());
+		assertEquals(7, graphExample.getEdge(6).getToNodeNextEdge());
+		
+		assertEquals(5, graphExample.getEdge(7).getFromNode());
+		assertEquals(4, graphExample.getEdge(7).getToNode());
+		assertEquals(8, graphExample.getEdge(7).getFromNodeNextEdge());
+		assertEquals(8, graphExample.getEdge(7).getToNodeNextEdge());
+		
+		assertEquals(4, graphExample.getEdge(8).getFromNode());
+		assertEquals(5, graphExample.getEdge(8).getToNode());
+		assertEquals(-1, graphExample.getEdge(8).getFromNodeNextEdge());
+		assertEquals(9, graphExample.getEdge(8).getToNodeNextEdge());
+		
+		assertEquals(5, graphExample.getEdge(9).getFromNode());
+		assertEquals(1, graphExample.getEdge(9).getToNode());
+		assertEquals(-1, graphExample.getEdge(9).getFromNodeNextEdge());
+		assertEquals(-1, graphExample.getEdge(9).getToNodeNextEdge());
+		
+	}
+	
 	
 }

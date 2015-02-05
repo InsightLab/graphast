@@ -3,8 +3,6 @@ package org.graphast.util;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
-import org.graphast.query.knn.model.Bound;
-
 public class StringUtils {
 
 	public static String append(Object ... objects) {

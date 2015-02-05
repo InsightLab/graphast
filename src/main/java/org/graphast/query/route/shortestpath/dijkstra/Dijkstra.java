@@ -13,12 +13,10 @@ import org.graphast.query.route.shortestpath.AbstractShortestPathService;
 import org.graphast.query.route.shortestpath.model.DistanceEntry;
 import org.graphast.query.route.shortestpath.model.Path;
 import org.graphast.query.route.shortestpath.model.RouteEntry;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public abstract class Dijkstra extends AbstractShortestPathService {
 
-	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	//private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	public Dijkstra(Graph graph) {
 		super(graph);
@@ -41,11 +39,6 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 
 				Path path = new Path();
 				path.reconstructPath(removed.getId(), parents);
-				
-//				List<Instruction> path = reconstructPath(removed.getId(), parents);
-//				logger.info("path: {}", path);
-
-//				return removed.getDistance();
 				
 				return path;
 			}
