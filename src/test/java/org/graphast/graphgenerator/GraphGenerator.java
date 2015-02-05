@@ -131,9 +131,6 @@ public class GraphGenerator {
  		e = new EdgeImpl(5l, 6l, 1, costs);
  		graph.addEdge(e);
 
-
- 		System.out.println(graph.getCosts());
- 		
  		graph.createBounds();
 
  		return graph;

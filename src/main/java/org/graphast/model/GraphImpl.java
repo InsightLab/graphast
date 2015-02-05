@@ -18,9 +18,7 @@ import it.unimi.dsi.fastutil.shorts.ShortBigArrayBigList;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.graphast.enums.CompressionType;
 import org.graphast.exception.GraphastException;
@@ -962,6 +960,47 @@ public class GraphImpl implements Graph {
 		this.compressionType = compressionType;
 	}
 	
-	
+	public void reverseGraph() {
+		
+		for (long i = 0; i < (edges.size64() / Edge.EDGE_BLOCKSIZE); i++) {
+			
+			long pos = i * Edge.EDGE_BLOCKSIZE;
 
+//			long externalId = BigArrays.index(edges.getInt(pos++), edges.getInt(pos++));
+//			long fromId = BigArrays.index(edges.getInt(pos++), edges.getInt(pos++));
+//			long toId = BigArrays.index(edges.getInt(pos++), edges.getInt(pos++));
+//			long fromNodeNextEdge = BigArrays.index(edges.getInt(pos++), edges.getInt(pos++));
+//			long toNodeNextEdge = BigArrays.index(edges.getInt(pos++), edges.getInt(pos++));
+//			int distance = edges.getInt(pos++);
+//			long costsIndex = BigArrays.index(edges.getInt(pos++), edges.getInt(pos++));
+//			long geometryIndex = BigArrays.index(edges.getInt(pos++), edges.getInt(pos++));
+//			long labelIndex = BigArrays.index(edges.getInt(pos++), edges.getInt(pos++));
+			
+			int externalIdSegment = edges.getInt(pos++);
+			int externalIdOffset = edges.getInt(pos++);
+			int fromNodeSegment = edges.getInt(pos++);
+			int fromNodeOffset = edges.getInt(pos++);
+			int toNodeSegment = edges.getInt(pos++);
+			int toNodeOffset = edges.getInt(pos++);
+			int fromNodeNextEdgeSegment = edges.getInt(pos++);
+			int fromNodeNextEdgeOffset = edges.getInt(pos++);
+			int toNodeNextEdgeSegment = edges.getInt(pos++);
+			int toNodeNextEdgeOffset = edges.getInt(pos++);
+			
+			pos = i * Edge.EDGE_BLOCKSIZE;
+			edges.set(pos++, externalIdSegment);
+			edges.set(pos++, externalIdOffset);
+			edges.set(pos++, toNodeSegment);
+			edges.set(pos++, toNodeOffset);
+			edges.set(pos++, fromNodeSegment);
+			edges.set(pos++, fromNodeOffset);
+			edges.set(pos++, toNodeNextEdgeSegment);
+			edges.set(pos++, toNodeNextEdgeOffset);
+			edges.set(pos++, fromNodeNextEdgeSegment);
+			edges.set(pos++, fromNodeNextEdgeOffset);
+			
+		}
+		
+	}
+	
 }

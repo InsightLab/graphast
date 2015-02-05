@@ -139,6 +139,52 @@ public class DijkstraConstantWeightTest {
 		assertEquals(3610712.0, shortestPath.getPathCost(), 0);
 
 	}
+	
+	@Test
+	public void shortestPathGraphExampleReverseTest1() {
+
+		Long source = 5L; // External ID = 1
+		Long target = 0L; // External ID = 4
+
+		graphExample.reverseGraph();
+		
+		AbstractShortestPathService dj = new DijkstraConstantWeight(graphExample);
+
+		StopWatch sw = new StopWatch();
+
+		sw.start();
+		Path shortestPath = dj.shortestPath(source, target);
+		sw.stop();
+
+		logger.debug(shortestPath.toString());
+		logger.debug("Execution Time of shortestPathExampleTest(): {}ms", sw.getTime());
+		logger.debug("Path Cost: {}", shortestPath.getPathCost());
+
+		assertEquals(8100, shortestPath.getPathCost(), 0);		
+	}
+	
+	@Test
+	public void shortestPathGraphExampleReverseTest2() {
+
+		Long target = graphMonaco.getNodeId(43.72636792197156, 7.417292499928754);
+		Long source = graphMonaco.getNodeId(43.74766484829034, 7.430716770083832);
+
+		graphMonaco.reverseGraph();
+		
+		AbstractShortestPathService dj = new DijkstraConstantWeight(graphMonaco);
+
+		StopWatch sw = new StopWatch();
+
+		sw.start();
+		Path shortestPath = dj.shortestPath(source, target);
+		sw.stop();
+
+		logger.debug(shortestPath.toString());
+		logger.debug("Execution Time of shortestPathMonacoTest3(): {}ms", sw.getTime());
+		logger.debug("Path Cost: {}", shortestPath.getPathCost());
+
+		assertEquals(3610712.0, shortestPath.getPathCost(), 0);
+	}
 
 	@AfterClass
 	public static void tearDown() {
