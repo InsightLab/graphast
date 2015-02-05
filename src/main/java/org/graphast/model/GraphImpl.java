@@ -965,16 +965,6 @@ public class GraphImpl implements Graph {
 		for (long i = 0; i < (edges.size64() / Edge.EDGE_BLOCKSIZE); i++) {
 			
 			long pos = i * Edge.EDGE_BLOCKSIZE;
-
-//			long externalId = BigArrays.index(edges.getInt(pos++), edges.getInt(pos++));
-//			long fromId = BigArrays.index(edges.getInt(pos++), edges.getInt(pos++));
-//			long toId = BigArrays.index(edges.getInt(pos++), edges.getInt(pos++));
-//			long fromNodeNextEdge = BigArrays.index(edges.getInt(pos++), edges.getInt(pos++));
-//			long toNodeNextEdge = BigArrays.index(edges.getInt(pos++), edges.getInt(pos++));
-//			int distance = edges.getInt(pos++);
-//			long costsIndex = BigArrays.index(edges.getInt(pos++), edges.getInt(pos++));
-//			long geometryIndex = BigArrays.index(edges.getInt(pos++), edges.getInt(pos++));
-//			long labelIndex = BigArrays.index(edges.getInt(pos++), edges.getInt(pos++));
 			
 			int externalIdSegment = edges.getInt(pos++);
 			int externalIdOffset = edges.getInt(pos++);

@@ -1,20 +1,22 @@
 package org.graphast.query.knn.model;
 
-import java.util.HashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectCollection;
 
 
 public class AbstractBoundsSearch implements BoundsSearch{
-	protected HashMap<Long, Integer> bounds;
+	protected Object2ObjectMap<Long, ObjectCollection<Bound>> bounds;
 
-	public AbstractBoundsSearch(long host, int index) {
-		this.bounds = new HashMap<Long, Integer>();
+	public AbstractBoundsSearch() {
+		this.bounds = new Object2ObjectOpenHashMap<Long, ObjectCollection<Bound>>();
 	}
 
-	public HashMap<Long, Integer> getBounds() {
+	public Object2ObjectMap<Long, ObjectCollection<Bound>> getBounds() {
 		return bounds;
 	}
 
-	public void setBounds(HashMap<Long, Integer> bounds) {
+	public void setBounds(Object2ObjectMap<Long, ObjectCollection<Bound>> bounds) {
 		this.bounds = bounds;		
 	}
 	
