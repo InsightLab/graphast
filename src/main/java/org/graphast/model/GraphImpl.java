@@ -52,7 +52,11 @@ public class GraphImpl implements Graph {
 
 	private static int secondsDay = 86400;
 
+<<<<<<< HEAD
 	private int[] intCosts;
+=======
+	private short[] shortCosts;
+>>>>>>> de970cdd38205dff3483c22b1ce3b33a228020a2
 	
 	protected CompressionType compressionType;
 
@@ -93,8 +97,13 @@ public class GraphImpl implements Graph {
 		FileUtils.saveIntList(directory + "/edges", edges, blockSize, compressionType);
 		FileUtils.saveStringList(directory + "/nodesLabels", nodesLabels, blockSize, compressionType);
 		FileUtils.saveStringList(directory + "/edgesLabels", edgesLabels, blockSize, compressionType);
+<<<<<<< HEAD
 		FileUtils.saveIntList(directory + "/nodesCosts", nodesCosts, blockSize, compressionType);
 		FileUtils.saveIntList(directory + "/edgesCosts", edgesCosts, blockSize, compressionType);
+=======
+		FileUtils.saveShortList(directory + "/nodesCosts", nodesCosts, blockSize, compressionType);
+		FileUtils.saveShortList(directory + "/edgesCosts", edgesCosts, blockSize, compressionType);
+>>>>>>> de970cdd38205dff3483c22b1ce3b33a228020a2
 		FileUtils.saveIntList(directory + "/points", points, blockSize, compressionType);
 	}
 
@@ -107,8 +116,13 @@ public class GraphImpl implements Graph {
 		edges = FileUtils.loadIntList(directory + "/edges", blockSize, compressionType);
 		nodesLabels = FileUtils.loadStringList(directory + "/nodesLabels", blockSize, compressionType);
 		edgesLabels = FileUtils.loadStringList(directory + "/edgesLabels", blockSize, compressionType);
+<<<<<<< HEAD
 		nodesCosts = FileUtils.loadIntList(directory + "/nodesCosts", blockSize, compressionType);
 		edgesCosts = FileUtils.loadIntList(directory + "/edgesCosts", blockSize, compressionType);
+=======
+		nodesCosts = FileUtils.loadShortList(directory + "/nodesCosts", blockSize, compressionType);
+		edgesCosts = FileUtils.loadShortList(directory + "/edgesCosts", blockSize, compressionType);
+>>>>>>> de970cdd38205dff3483c22b1ce3b33a228020a2
 		points = FileUtils.loadIntList(directory + "/points", blockSize, compressionType);
 		createNodeIndex();
 	}
@@ -948,6 +962,7 @@ public class GraphImpl implements Graph {
 		
 		return categories;
 	}
+<<<<<<< HEAD
 
 	@Override
 	public CompressionType getCompressionType() {
@@ -955,6 +970,15 @@ public class GraphImpl implements Graph {
 	}
 
 	@Override
+=======
+
+	@Override
+	public CompressionType getCompressionType() {
+		return compressionType;
+	}
+
+	@Override
+>>>>>>> de970cdd38205dff3483c22b1ce3b33a228020a2
 	public void setCompressionType(CompressionType compressionType) {
 		this.compressionType = compressionType;
 	}

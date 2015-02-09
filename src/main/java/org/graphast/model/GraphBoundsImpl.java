@@ -10,31 +10,52 @@ import org.graphast.util.FileUtils;
 
 public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 
+<<<<<<< HEAD
 	private Long2IntMap upperBound;
 	private Long2IntMap lowerBound;
 
+=======
+	private Long2ShortMap upperBound;
+	private Long2ShortMap lowerBound;
+	
+>>>>>>> de970cdd38205dff3483c22b1ce3b33a228020a2
 	public GraphBoundsImpl(String directory) {
 		this(directory, CompressionType.GZIP_COMPRESSION);
 	}
 
 	public GraphBoundsImpl(String directory, CompressionType compressionType) {
 		super(directory, compressionType);
+<<<<<<< HEAD
 		upperBound = new Long2IntOpenHashMap();
 		lowerBound = new Long2IntOpenHashMap();
+=======
+		upperBound = new Long2ShortOpenHashMap();
+		lowerBound = new Long2ShortOpenHashMap();
+>>>>>>> de970cdd38205dff3483c22b1ce3b33a228020a2
 
 	}
 
 	public void save() throws IOException {
 		super.save();
+<<<<<<< HEAD
 		FileUtils.saveLong2IntMap(directory + "/upperBound", upperBound, blockSize, compressionType);
 		FileUtils.saveLong2IntMap(directory + "/lowerBound", lowerBound, blockSize, compressionType);
+=======
+		FileUtils.saveLong2ShortMap(directory + "/upperBound", upperBound, blockSize, compressionType);
+		FileUtils.saveLong2ShortMap(directory + "/lowerBound", lowerBound, blockSize, compressionType);
+>>>>>>> de970cdd38205dff3483c22b1ce3b33a228020a2
 	}
 
 
 	public void load() throws IOException {
 		super.load();
+<<<<<<< HEAD
 		FileUtils.loadLong2IntMap(directory + "/upperBound", blockSize, compressionType);
 		FileUtils.loadLong2IntMap(directory + "/lowerBound", blockSize, compressionType);
+=======
+		FileUtils.loadLong2ShortMap(directory + "/upperBound", blockSize, compressionType);
+		FileUtils.loadLong2ShortMap(directory + "/lowerBound", blockSize, compressionType);
+>>>>>>> de970cdd38205dff3483c22b1ce3b33a228020a2
 	}
 
 	public void createLowerBounds() {

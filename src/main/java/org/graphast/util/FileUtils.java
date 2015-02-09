@@ -250,7 +250,6 @@ public class FileUtils {
 
 		Long2IntMap list = new Long2IntOpenHashMap();
 		Channel channel = getInputChannel(path, compressionType);
-
 		ByteBuffer buf = ByteBuffer.allocate(10 * blockSize);
 		while (read(channel, buf) > 0) {
 			buf.flip();
@@ -266,7 +265,6 @@ public class FileUtils {
 	public static ObjectBigList<String> loadStringList(String path, int blockSize, CompressionType compressionType) throws IOException{
 		ObjectBigList<String> list = new ObjectBigArrayBigList<String>();
 		Channel channel = getInputChannel(path, compressionType);
-
 		ByteBuffer buf = ByteBuffer.allocate(4 * blockSize);
 		while (read(channel, buf) > 0) {
 			buf.flip();
