@@ -274,7 +274,6 @@ public interface Graph {
 	
 	public abstract int[] getPoiCost(long vid);
 	
-<<<<<<< HEAD
 	public LinearFunction[] convertToLinearFunction(int[] costs);
 
 	public CompressionType getCompressionType();
@@ -282,15 +281,6 @@ public interface Graph {
 	public void setCompressionType(CompressionType compressionType);
 	
 	public IntSet getCategories();
-=======
-	public LinearFunction[] convertToLinearFunction(short[] costs);
-	
-	public IntSet getCategories();
-
-	public CompressionType getCompressionType();
-
-	public void setCompressionType(CompressionType compressionType);
->>>>>>> de970cdd38205dff3483c22b1ce3b33a228020a2
 
 	public void reverseGraph();
 	

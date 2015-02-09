@@ -115,24 +115,14 @@ public class NodeImpl implements Node {
 		this.label = label;
 
 	}
-<<<<<<< HEAD
-
-=======
-	
->>>>>>> de970cdd38205dff3483c22b1ce3b33a228020a2
 	public NodeImpl(long externalId, double latitude, double longitude, int category) {
 
 		this(externalId, latitude, longitude);
 		this.category = category;
 
 	}
-<<<<<<< HEAD
 
 	public NodeImpl(long externalId, double latitude, double longitude, int[] costs) {
-=======
-	
-	public NodeImpl(long externalId, double latitude, double longitude, short[] costs) {
->>>>>>> de970cdd38205dff3483c22b1ce3b33a228020a2
 
 		this(externalId, latitude, longitude);
 		this.costs = costs;
