@@ -13,3 +13,7 @@ target
 graph
 neo4j
 null
+.DS_Store
+*.aux
+*.synctex*
+
