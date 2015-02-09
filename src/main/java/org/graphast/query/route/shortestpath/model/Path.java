@@ -20,55 +20,53 @@ public class Path {
 
 		RouteEntry re = parents.get(id);
 
-		
+		long parent = re.getId();
 
-			long parent = re.getId();
+		path = new ArrayList<Instruction>();
+		LinkedList<Instruction> verificationQueue = new LinkedList<Instruction>();
 
-			path = new ArrayList<Instruction>();
-			LinkedList<Instruction> verificationQueue = new LinkedList<Instruction>();
+		Instruction oldInstruction, newInstruction;
+		newInstruction = new Instruction(0, re.getLabel(), re.getCost());
 
-			Instruction oldInstruction, newInstruction;
-			newInstruction = new Instruction(0, re.getLabel(), re.getCost());
+		verificationQueue.add(newInstruction);
 
-			verificationQueue.add(newInstruction);
+		while(parent!=-1) {
 
-			while(parent!=-1) {
+			re = parents.get(parent);
 
-				re = parents.get(parent);
+			if(re != null) {
 
-				if(re != null) {
+				String predecessorLabel = verificationQueue.peek().getLabel();
 
-					String predecessorLabel = verificationQueue.peek().getLabel();
+				if((predecessorLabel == null && re.getLabel() == null) || (predecessorLabel!=null  && predecessorLabel.equals(re.getLabel())) || (predecessorLabel!=null && (predecessorLabel.isEmpty() && re.getLabel()==null))) {
 
-					if((predecessorLabel == null && re.getLabel() == null) || (predecessorLabel!=null  && predecessorLabel.equals(re.getLabel())) || (predecessorLabel!=null && (predecessorLabel.isEmpty() && re.getLabel()==null))) {
-
-						oldInstruction = verificationQueue.poll();
-						newInstruction = new Instruction(0, oldInstruction.getLabel(), oldInstruction.getCost() + re.getCost());
-						verificationQueue.addFirst(newInstruction);
-
-					} else {
-
-						newInstruction = new Instruction(0, re.getLabel(), re.getCost());
-						verificationQueue.addFirst(newInstruction);
-
-					}
-
-					parent = re.getId();
+					oldInstruction = verificationQueue.poll();
+					newInstruction = new Instruction(0, oldInstruction.getLabel(), oldInstruction.getCost() + re.getCost());
+					verificationQueue.addFirst(newInstruction);
 
 				} else {
 
-					break;
+					newInstruction = new Instruction(0, re.getLabel(), re.getCost());
+					verificationQueue.addFirst(newInstruction);
 
 				}
 
+				parent = re.getId();
+
+			} else {
+
+				break;
+
 			}
 
-			while(!verificationQueue.isEmpty()) {
-				path.add(verificationQueue.poll());
-			}
+		}
 
-			//return path;
-		
+		while(!verificationQueue.isEmpty()) {
+			path.add(verificationQueue.poll());
+		}
+
+		//return path;
+
 	}
 
 	public double getPathCost() {

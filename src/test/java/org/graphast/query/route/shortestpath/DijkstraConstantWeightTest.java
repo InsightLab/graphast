@@ -94,7 +94,7 @@ public class DijkstraConstantWeightTest {
 		logger.debug("Path Cost: {}", shortestPath.getPathCost());
 
 		assertEquals(8100, shortestPath.getPathCost(), 0);
-		
+
 	}
 
 	@Test
@@ -140,7 +140,7 @@ public class DijkstraConstantWeightTest {
 		assertEquals(3610712.0, shortestPath.getPathCost(), 0);
 
 	}
-	
+
 	@Test
 	public void shortestPathGraphExampleReverseTest1() {
 
@@ -148,7 +148,7 @@ public class DijkstraConstantWeightTest {
 		Long target = 0L; // External ID = 4
 
 		graphExample.reverseGraph();
-		
+
 		AbstractShortestPathService dj = new DijkstraConstantWeight(graphExample);
 
 		StopWatch sw = new StopWatch();
@@ -163,7 +163,7 @@ public class DijkstraConstantWeightTest {
 
 		assertEquals(8100, shortestPath.getPathCost(), 0);		
 	}
-	
+
 	@Test
 	public void shortestPathGraphExampleReverseTest2() {
 
@@ -171,7 +171,7 @@ public class DijkstraConstantWeightTest {
 		Long source = graphMonaco.getNodeId(43.74766484829034, 7.430716770083832);
 
 		graphMonaco.reverseGraph();
-		
+
 		AbstractShortestPathService dj = new DijkstraConstantWeight(graphMonaco);
 
 		StopWatch sw = new StopWatch();
