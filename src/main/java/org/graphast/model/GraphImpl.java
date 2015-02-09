@@ -4,6 +4,8 @@ import static org.graphast.util.GeoUtils.latLongToDouble;
 import static org.graphast.util.GeoUtils.latLongToInt;
 import it.unimi.dsi.fastutil.BigArrays;
 import it.unimi.dsi.fastutil.ints.IntBigArrayBigList;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2LongMap;
@@ -23,7 +25,6 @@ import org.graphast.geometry.Point;
 import org.graphast.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 public class GraphImpl implements Graph {
 
@@ -790,7 +791,7 @@ public class GraphImpl implements Graph {
 		}
 		return neig;
 	}	
-
+	
 	public boolean hasNode(long id) {
 		try {
 			long position = id * Node.NODE_BLOCKSIZE;
@@ -930,6 +931,23 @@ public class GraphImpl implements Graph {
 		if(v.getCategory() < 0)	return null;
 		else	return v;
 	}
+	
+	//TODO Verify if this access is correct
+	@Override
+	public IntSet getCategories(){
+		IntSet categories = new IntOpenHashSet();
+		
+		for(int i = 0; i < getNumberOfNodes(); i++) {
+			long position = i*Node.NODE_BLOCKSIZE;
+			int category = getNodes().getInt(position+2);
+			categories.add(category);
+//			long position = i*Node.NODE_BLOCKSIZE;
+//			long vid = ga.getNodes().getInt(position);
+//			bounds.put(vid,  d.shortestPathPoi(vid, -1).getDistance());
+		}	
+		
+		return categories;
+	}
 
 	@Override
 	public CompressionType getCompressionType() {
@@ -941,6 +959,37 @@ public class GraphImpl implements Graph {
 		this.compressionType = compressionType;
 	}
 	
+	public void reverseGraph() {
+		
+		for (long i = 0; i < (edges.size64() / Edge.EDGE_BLOCKSIZE); i++) {
+			
+			long pos = i * Edge.EDGE_BLOCKSIZE;
+			
+			int externalIdSegment = edges.getInt(pos++);
+			int externalIdOffset = edges.getInt(pos++);
+			int fromNodeSegment = edges.getInt(pos++);
+			int fromNodeOffset = edges.getInt(pos++);
+			int toNodeSegment = edges.getInt(pos++);
+			int toNodeOffset = edges.getInt(pos++);
+			int fromNodeNextEdgeSegment = edges.getInt(pos++);
+			int fromNodeNextEdgeOffset = edges.getInt(pos++);
+			int toNodeNextEdgeSegment = edges.getInt(pos++);
+			int toNodeNextEdgeOffset = edges.getInt(pos++);
+			
+			pos = i * Edge.EDGE_BLOCKSIZE;
+			edges.set(pos++, externalIdSegment);
+			edges.set(pos++, externalIdOffset);
+			edges.set(pos++, toNodeSegment);
+			edges.set(pos++, toNodeOffset);
+			edges.set(pos++, fromNodeSegment);
+			edges.set(pos++, fromNodeOffset);
+			edges.set(pos++, toNodeNextEdgeSegment);
+			edges.set(pos++, toNodeNextEdgeOffset);
+			edges.set(pos++, fromNodeNextEdgeSegment);
+			edges.set(pos++, fromNodeNextEdgeOffset);
+			
+		}
+		
+	}
 	
-
 }
