@@ -61,7 +61,7 @@ public class GraphTest {
 	
 	@Test
 	public void getCostsTest() {
-		short[] costs = graphExample3.getEdgeCosts(0);
+		int[] costs = graphExample3.getEdgeCosts(0);
 		assertEquals(1, costs[0]);
 		assertEquals(2, costs[1]);
 		assertEquals(3, costs[2]);

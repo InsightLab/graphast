@@ -12,7 +12,6 @@ import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongList;
 import it.unimi.dsi.fastutil.objects.ObjectBigArrayBigList;
 import it.unimi.dsi.fastutil.objects.ObjectBigList;
-import it.unimi.dsi.fastutil.shorts.ShortBigArrayBigList;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,9 +41,9 @@ public class GraphImpl implements Graph {
 
 	private ObjectBigList<String> edgesLabels;
 
-	private ShortBigArrayBigList edgesCosts;
+	private IntBigArrayBigList edgesCosts;
 
-	private ShortBigArrayBigList nodesCosts;
+	private IntBigArrayBigList nodesCosts;
 
 	private IntBigArrayBigList points;
 
@@ -52,7 +51,7 @@ public class GraphImpl implements Graph {
 
 	private static int secondsDay = 86400;
 
-	private short[] shortCosts;
+	private int[] intCosts;
 	
 	protected CompressionType compressionType;
 
@@ -77,8 +76,8 @@ public class GraphImpl implements Graph {
 		edges = new IntBigArrayBigList();
 		nodesLabels = new ObjectBigArrayBigList<String>();
 		edgesLabels = new ObjectBigArrayBigList<String>();
-		nodesCosts = new ShortBigArrayBigList();
-		edgesCosts = new ShortBigArrayBigList();
+		nodesCosts = new IntBigArrayBigList();
+		edgesCosts = new IntBigArrayBigList();
 		points = new IntBigArrayBigList();
 
 		nodeIndex.defaultReturnValue(-1);
@@ -93,8 +92,8 @@ public class GraphImpl implements Graph {
 		FileUtils.saveIntList(directory + "/edges", edges, blockSize, compressionType);
 		FileUtils.saveStringList(directory + "/nodesLabels", nodesLabels, blockSize, compressionType);
 		FileUtils.saveStringList(directory + "/edgesLabels", edgesLabels, blockSize, compressionType);
-		FileUtils.saveShortList(directory + "/nodesCosts", nodesCosts, blockSize, compressionType);
-		FileUtils.saveShortList(directory + "/edgesCosts", edgesCosts, blockSize, compressionType);
+		FileUtils.saveIntList(directory + "/nodesCosts", nodesCosts, blockSize, compressionType);
+		FileUtils.saveIntList(directory + "/edgesCosts", edgesCosts, blockSize, compressionType);
 		FileUtils.saveIntList(directory + "/points", points, blockSize, compressionType);
 	}
 
@@ -107,8 +106,8 @@ public class GraphImpl implements Graph {
 		edges = FileUtils.loadIntList(directory + "/edges", blockSize, compressionType);
 		nodesLabels = FileUtils.loadStringList(directory + "/nodesLabels", blockSize, compressionType);
 		edgesLabels = FileUtils.loadStringList(directory + "/edgesLabels", blockSize, compressionType);
-		nodesCosts = FileUtils.loadShortList(directory + "/nodesCosts", blockSize, compressionType);
-		edgesCosts = FileUtils.loadShortList(directory + "/edgesCosts", blockSize, compressionType);
+		nodesCosts = FileUtils.loadIntList(directory + "/nodesCosts", blockSize, compressionType);
+		edgesCosts = FileUtils.loadIntList(directory + "/edgesCosts", blockSize, compressionType);
 		points = FileUtils.loadIntList(directory + "/points", blockSize, compressionType);
 		createNodeIndex();
 	}
@@ -310,7 +309,7 @@ public class GraphImpl implements Graph {
 	 * @param	c	list of costs that will be stored
 	 * @return	the costId (position where the cost was inserted).
 	 */
-	private long storeCosts(short[] c, ShortBigArrayBigList costs) {
+	private long storeCosts(int[] c, IntBigArrayBigList costs) {
 		if (c == null || c.length == 0) {
 			return -1l;
 		}
@@ -319,7 +318,7 @@ public class GraphImpl implements Graph {
 
 		synchronized (costs) {
 			costId = costs.size64();
-			costs.add((short) c.length);
+			costs.add(c.length);
 
 			for (int i = 0; i < c.length; i++) {
 				costs.add(c[i]);
@@ -345,7 +344,7 @@ public class GraphImpl implements Graph {
 
 		synchronized (points) {
 			listId = points.size64();
-			points.add((short) listPoints.size());
+			points.add(listPoints.size());
 
 			for (Point p : listPoints) {
 				points.add(latLongToInt(p.getLatitude()));
@@ -466,9 +465,9 @@ public class GraphImpl implements Graph {
 	 * @see org.graphast.model.Graphast#getEdgesCosts(it.unimi.dsi.fastutil.longs.LongList, int)
 	 */
 	@Override
-	public short[] getEdgesCosts(LongList edges, int time) {
+	public int[] getEdgesCosts(LongList edges, int time) {
 
-		short[] costs = new short[edges.size()];
+		int[] costs = new int[edges.size()];
 		Edge e;
 		for (int i = 0; i < edges.size(); i++) {
 			e = getEdge(edges.get(i));
@@ -482,7 +481,7 @@ public class GraphImpl implements Graph {
 	 * @see org.graphast.model.Graphast#getCosts()
 	 */
 	@Override
-	public ShortBigArrayBigList getCosts() {
+	public IntBigArrayBigList getCosts() {
 
 		return edgesCosts;
 	}
@@ -569,7 +568,7 @@ public class GraphImpl implements Graph {
 	}
 
 	@Override
-	public short[] getEdgeCosts(long edgeId) {
+	public int[] getEdgeCosts(long edgeId) {
 
 		EdgeImpl edge = (EdgeImpl)getEdge(edgeId);
 		long costsIndex = edge.getCostsIndex();
@@ -581,14 +580,14 @@ public class GraphImpl implements Graph {
 		}
 	}
 
-	short[] getEdgeCostsByCostsIndex(long costsIndex) {
+	int[] getEdgeCostsByCostsIndex(long costsIndex) {
 
-		short size = edgesCosts.getShort(costsIndex);
-		short[] c = new short[size];
+		int size = edgesCosts.getInt(costsIndex);
+		int[] c = new int[size];
 		int i = 0;
 		while (size > 0) {
 			costsIndex++;
-			c[i] = edgesCosts.getShort(costsIndex);
+			c[i] = edgesCosts.getInt(costsIndex);
 			size--;
 			i++;
 		}
@@ -596,7 +595,7 @@ public class GraphImpl implements Graph {
 	}
 
 
-	public short[] getNodeCosts(long nodeId) {
+	public int[] getNodeCosts(long nodeId) {
 
 		NodeImpl node = (NodeImpl)getNode(nodeId);
 		long costsIndex = node.getCostsIndex();
@@ -609,14 +608,14 @@ public class GraphImpl implements Graph {
 		
 	}
 
-	public short[] getNodeCostsByCostsIndex(long costsIndex) {
+	public int[] getNodeCostsByCostsIndex(long costsIndex) {
 
-		short size = nodesCosts.getShort(costsIndex);
-		short[] c = new short[size];
+		int size = nodesCosts.getInt(costsIndex);
+		int[] c = new int[size];
 		int i = 0;
 		while (size > 0) {
 			costsIndex++;
-			c[i] = nodesCosts.getShort(costsIndex);
+			c[i] = nodesCosts.getInt(costsIndex);
 			size--;
 			i++;
 		}
@@ -627,17 +626,17 @@ public class GraphImpl implements Graph {
 	 * @see org.graphast.model.Graphast#getEdgeCost(org.graphast.model.GraphastEdge, int)
 	 */
 	@Override
-	public short getEdgeCost(Edge e, int time) {
+	public int getEdgeCost(Edge e, int time) {
 		EdgeImpl edge = (EdgeImpl)e;
 		long costsIndex = edge.getCostsIndex();
 		if (costsIndex < 0) {
 			throw new GraphastException("Edge without costs: " + edge);
 		}
-		short size = edgesCosts.getShort(costsIndex++);
+		int size = edgesCosts.getInt(costsIndex++);
 		int intervalSize = secondsDay / size;
 		long index = (long) (costsIndex + (time / intervalSize));
 
-		return edgesCosts.getShort(index);
+		return edgesCosts.getInt(index);
 
 	}
 
@@ -843,8 +842,8 @@ public class GraphImpl implements Graph {
 	@Override
 	public Node addPoi(long id, double lat, double lon, int category,
 			LinearFunction[] costs) {
-		short[] shortCosts = linearFunctionArrayToCostShortArray(costs);
-		Node poi = new NodeImpl(id, category, lat, lon, 0l, 0l, 0l, shortCosts);
+		int[] intCosts = linearFunctionArrayToCostIntArray(costs);
+		Node poi = new NodeImpl(id, category, lat, lon, 0l, 0l, 0l, intCosts);
 		this.addNode(poi);
 		return poi;
 	}
@@ -863,11 +862,11 @@ public class GraphImpl implements Graph {
 		return lf[0].calculateCost(0);
 	}
 
-	public short[] getPoiCost(long vid){
+	public int[] getPoiCost(long vid){
 		return getNodeCosts(vid);
 	}
 
-	public LinearFunction[] convertToLinearFunction(short[] costs){
+	public LinearFunction[] convertToLinearFunction(int[] costs){
 		LinearFunction[] result = new LinearFunction[costs.length];
 		int interval = (60*60*24)/costs.length;
 		int startInterval = 0;
@@ -880,23 +879,23 @@ public class GraphImpl implements Graph {
 		return result;
 	}
 
-	private short[] linearFunctionArrayToCostShortArray(LinearFunction[] linearFunction) {
-		shortCosts = null;
+	private int[] linearFunctionArrayToCostIntArray(LinearFunction[] linearFunction) {
+		intCosts = null;
 		for(int i = 0; i < linearFunction.length; i++) {
-			shortCosts[i] = (short)linearFunction[i].getStartCost(); 
+			intCosts[i] = linearFunction[i].getStartCost(); 
 		}
-		return shortCosts;
+		return intCosts;
 
 	}
 
-	public short getMaximunCostValue(short[] costs) {
+	public int getMaximunCostValue(int[] costs) {
 
 		if(costs==null) {
 			throw new IllegalArgumentException("Costs can not be null.");
 		}
 
 
-		short max = costs[0];
+		int max = costs[0];
 
 		for (int i = 0; i < costs.length; i++) {
 
@@ -908,9 +907,9 @@ public class GraphImpl implements Graph {
 		return max;
 	}
 
-	public short getMinimunCostValue(short[] costs) {
+	public int getMinimunCostValue(int[] costs) {
 
-		short min = costs[0];
+		int min = costs[0];
 
 		for (int i = 0; i < costs.length; i++) {
 

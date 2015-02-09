@@ -3,7 +3,6 @@ package org.graphast.model;
 import it.unimi.dsi.fastutil.ints.IntBigArrayBigList;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.LongList;
-import it.unimi.dsi.fastutil.shorts.ShortBigArrayBigList;
 
 import java.io.IOException;
 import java.util.List;
@@ -129,16 +128,16 @@ public interface Graph {
 	 * @param time Time used to get edge costs.
 	 * @return Edge costs.
 	 */
-	public short[] getEdgesCosts(LongList edges, int time);
+	public int[] getEdgesCosts(LongList edges, int time);
 	
 	//TODO documentation
-	public short[] getNodeCosts(long id);
+	public int[] getNodeCosts(long id);
 
 	/**
 	 * This method returns all costs of all edges stored in a BigArrayBigList.
 	 * @return all costs of all edges
 	 */
-	public ShortBigArrayBigList getCosts();
+	public IntBigArrayBigList getCosts();
 	
 	/**
 	 * This method returns all neighbors of a given node. 
@@ -167,7 +166,7 @@ public interface Graph {
 	 * @param id Id of a edge
 	 * @return a array containing all time costs
 	 */
-	public short[] getEdgeCosts(long id);
+	public int[] getEdgeCosts(long id);
 	
 	/**
 	 * This method returns a cost value of a given edge based on a given time
@@ -175,7 +174,7 @@ public interface Graph {
 	 * @param time Time used to get edge costs.
 	 * @return return the cost of an edge in a give time
 	 */
-	public short getEdgeCost(Edge edge, int time);
+	public int getEdgeCost(Edge edge, int time);
 	
 	/**
 	 * This method returns a list of points that are part of a given edge in the map.
@@ -272,9 +271,9 @@ public interface Graph {
 
 	public abstract int poiGetCost(long vid);
 	
-	public abstract short[] getPoiCost(long vid);
+	public abstract int[] getPoiCost(long vid);
 	
-	public LinearFunction[] convertToLinearFunction(short[] costs);
+	public LinearFunction[] convertToLinearFunction(int[] costs);
 
 	public CompressionType getCompressionType();
 

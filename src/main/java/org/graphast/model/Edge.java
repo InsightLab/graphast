@@ -57,7 +57,7 @@ public interface Edge {
 	 * This method returns a array containing all time costs.
 	 * @return a array containing all time costs
 	 */
-	public abstract short[] getCosts();
+	public abstract int[] getCosts();
 
 	/**
 	 * This method returns a list of points that are part of the edge in the map.

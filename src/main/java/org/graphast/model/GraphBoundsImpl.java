@@ -1,7 +1,7 @@
 package org.graphast.model;
 
-import it.unimi.dsi.fastutil.longs.Long2ShortMap;
-import it.unimi.dsi.fastutil.longs.Long2ShortOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2IntMap;
+import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 
 import java.io.IOException;
 
@@ -10,8 +10,8 @@ import org.graphast.util.FileUtils;
 
 public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 
-	private Long2ShortMap upperBound;
-	private Long2ShortMap lowerBound;
+	private Long2IntMap upperBound;
+	private Long2IntMap lowerBound;
 	
 	public GraphBoundsImpl(String directory) {
 		this(directory, CompressionType.GZIP_COMPRESSION);
@@ -19,22 +19,22 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 
 	public GraphBoundsImpl(String directory, CompressionType compressionType) {
 		super(directory, compressionType);
-		upperBound = new Long2ShortOpenHashMap();
-		lowerBound = new Long2ShortOpenHashMap();
+		upperBound = new Long2IntOpenHashMap();
+		lowerBound = new Long2IntOpenHashMap();
 
 	}
 	
 	public void save() throws IOException {
 		super.save();
-		FileUtils.saveLong2ShortMap(directory + "/upperBound", upperBound, blockSize, compressionType);
-		FileUtils.saveLong2ShortMap(directory + "/lowerBound", lowerBound, blockSize, compressionType);
+		FileUtils.saveLong2IntMap(directory + "/upperBound", upperBound, blockSize, compressionType);
+		FileUtils.saveLong2IntMap(directory + "/lowerBound", lowerBound, blockSize, compressionType);
 	}
 
 	
 	public void load() throws IOException {
 		super.load();
-		FileUtils.loadLong2ShortMap(directory + "/upperBound", blockSize, compressionType);
-		FileUtils.loadLong2ShortMap(directory + "/lowerBound", blockSize, compressionType);
+		FileUtils.loadLong2IntMap(directory + "/upperBound", blockSize, compressionType);
+		FileUtils.loadLong2IntMap(directory + "/lowerBound", blockSize, compressionType);
 	}
 	
 	public void createLowerBounds() {
@@ -65,12 +65,12 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 	}
 	
 	@Override
-	public Long2ShortMap getUpperBound() {
+	public Long2IntMap getUpperBound() {
 		return upperBound;
 	}
 
 	@Override
-	public Long2ShortMap getLowerBound() {
+	public Long2IntMap getLowerBound() {
 		return lowerBound;
 	}
 

@@ -30,7 +30,7 @@ public class EdgeImpl implements Edge {
 
 	private long costsIndex;
 
-	private short[] costs;
+	private int[] costs;
 
 	private long geometryIndex;
 
@@ -41,7 +41,7 @@ public class EdgeImpl implements Edge {
 	private String label;
 
 	public EdgeImpl(long fromNode, long toNode, int distance,
-			short[] costs, List<Point> geometry, String label) {
+			int[] costs, List<Point> geometry, String label) {
 
 		this(fromNode, toNode, distance);
 		this.costs = costs;
@@ -56,7 +56,7 @@ public class EdgeImpl implements Edge {
 
 	}
 	
-	public EdgeImpl(long fromNode, long toNode, int distance, short[] costs){
+	public EdgeImpl(long fromNode, long toNode, int distance, int[] costs){
 		this(fromNode, toNode, distance);
 		this.costs = costs;
 	}
@@ -218,11 +218,11 @@ public class EdgeImpl implements Edge {
 	}
 
 	@Override
-	public short[] getCosts() {
+	public int[] getCosts() {
 		return costs;
 	}
 
-	public void setCosts(short[] costs) {
+	public void setCosts(int[] costs) {
 		this.costs = costs;
 	}
 
