@@ -1,10 +1,18 @@
 package org.graphast.query.route.osr;
 
+import static org.graphast.util.NumberUtils.convertToInt;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.PriorityQueue;
+
+import org.graphast.model.Graph;
+import org.graphast.model.Node;
+import org.graphast.query.route.shortestpath.dijkstra.Dijkstra;
+import org.graphast.query.route.shortestpath.model.Path;
+import org.graphast.util.DateUtils;
 
 public class OSRSearch implements RouteService {
 	private Graph graph;
@@ -14,29 +22,29 @@ public class OSRSearch implements RouteService {
 	protected static int wasRemoved = -1;
 
 
-	public OSRSearch(Graph graphAdapter, BoundsRoute bounds, Graph lbgRev){
-		this.graphAdapter = graphAdapter;
+	public OSRSearch(Graph graph, BoundsRoute bounds, Graph reverseGraph){
+		this.graph = graph;
 		this.bounds = bounds;
-		this.dij = new Dijkstra(lbgRev);
+		this.dij = new Dijkstra(reverseGraph);
 	}
 
-	public ArrayList<Integer> reconstructPath(Vertex q, Vertex d, RouteQueueEntry route, 
-			HashMap<Integer, HashMap<Integer, Integer>> parents){
-		ArrayList<Integer> path = new ArrayList<Integer>();
-		int qId = convertToInt(q.getId());
-		int size = route.getR().size();
-		for(int id = 0; id < size; id++){
-			path.addAll(pathToPoi(id, qId, route.getR().get(id).getId(), parents));
-			qId = route.getR().get(id).getId();
-		}
+//	public ArrayList<Integer> reconstructPath(Node q, Node d, RouteQueueEntry route, 
+//			HashMap<Integer, HashMap<Integer, Integer>> parents){
+//		ArrayList<Integer> path = new ArrayList<Integer>();
+//		int qId = convertToInt(q.getId());
+//		int size = route.getR().size();
+//		for(int id = 0; id < size; id++){
+//			path.addAll(pathToPoi(id, qId, route.getR().get(id).getId(), parents));
+//			qId = route.getR().get(id).getId();
+//		}
+//		
+//		path.addAll(pathToDestination(d, size, route.getR().get(size - 1).getId(), parents));
+//		path.add(convertToInt(d.getId()));
+//		return path;
+//	}
 
-		path.addAll(pathToDestination(d, size, route.getR().get(size - 1).getId(), parents));
-		path.add(convertToInt(d.getId()));
-		return path;
-	}
-
-	private ArrayList<Integer> pathToPoi(int pos, int id, int pid, HashMap<Integer, HashMap<Integer, Integer>> parents){
-		ArrayList<Integer> path = new ArrayList<Integer>();
+	private Path pathToPoi(int pos, int id, long pid, HashMap<Integer, HashMap<Integer, Integer>> parents){
+		Path path = new Path();
 		int parent = parents.get(pos + 1).get(pid);
 		while(parent != id && parent != -1){
 			path.add(parent);
@@ -47,7 +55,7 @@ public class OSRSearch implements RouteService {
 		return path;
 	}
 
-	private ArrayList<Integer> pathToDestination(Vertex d, int pos, int id, 
+	private ArrayList<Integer> pathToDestination(Node d, int pos, int id, 
 			HashMap<Integer, HashMap<Integer, Integer>> parents){
 		int did = convertToInt(d.getId());
 		ArrayList<Integer> path = new ArrayList<Integer>();
@@ -61,7 +69,7 @@ public class OSRSearch implements RouteService {
 		return path;
 	}
 
-	public Sequence search(Vertex q, Vertex d, Date time, ArrayList<Integer> c){
+	public Sequence search(Node q, Node d, Date time, ArrayList<Integer> c){
 		PriorityQueue<RouteQueueEntry> queue = new PriorityQueue<RouteQueueEntry>();
 		HashMap<Integer, HashMap<Integer, Integer>> parents = new HashMap<Integer, HashMap<Integer, Integer>>();
 		HashMap<Integer, HashMap<Integer, Integer>> wasTraversed = new HashMap<Integer, HashMap<Integer, Integer>>();
@@ -83,28 +91,28 @@ public class OSRSearch implements RouteService {
 
 			if(removed.getId() == convertToInt(d.getId())){
 				if(removed.getR().size() >= c.size()){
-					return new Sequence(removed.getId(), removed.getTt(), 
+					return new Sequence(removed.getId(), removed.getTravelTime(), 
 							reconstructPath(q, d, removed, parents), removed.getR());
 				}
 			}
 
-			if(removed.getLb() > upper)	return seq;
+			if(removed.getLowerBound() > upper)	return seq;
 
-			HashMap<Vertex, Integer> neig = graphAdapter.accessNeighborhood(graphAdapter.getVertex(removed.getId()), removed.getAt(), NEIGHBOR);
+			HashMap<Node, Integer> neig = graph.accessNeighborhood(graph.getVertex(removed.getId()), removed.getArrivalTime(), NEIGHBOR);
 
-			for (Vertex v : neig.keySet()) {
+			for (Node v : neig.keySet()) {
 				int vid = convertToInt(v.getId());
 				nextId = removed.getR().size();
-				int tt = removed.getTt() + neig.get(v);
+				int tt = removed.getTravelTime() + neig.get(v);
 				wt = 0;
 				reachedNN = new ArrayList<NearestNeighborTC>(removed.getR());
 
 				if(nextId < c.size()){
 					nextCat = c.get(nextId);
-					Vertex poi = ((RoadGraphAdapter) graphAdapter).getPoi(vid);
+					Node poi = ((Graph) graph).getPoi(vid);
 					if(poi != null){
 						if((Integer) poi.getProperty(CATEGORY) == nextCat){
-							wt = ((RoadGraphAdapter) graphAdapter).poiGetCost(vid, removed.getAt());
+							wt = ((Graph) graph).poiGetCost(vid, removed.getAt());
 							ts = wt + tt;
 							NearestNeighborTC nn = new NearestNeighborTC(vid, tt, wt, ts);
 							reachedNN.add(nn);
@@ -112,21 +120,16 @@ public class OSRSearch implements RouteService {
 						}
 					}
 				}
-				int at = graphAdapter.getArrival(removed.getAt() + wt, neig.get(v));
+				int at = graph.getArrival(removed.getArrivalTime() + wt, neig.get(v));
 				int lb = lowerBound(vid, nextId, c, destination);
-				RouteQueueEntry newEntry = new RouteQueueEntry(	vid, 
-						tt, 
-						at, 
-						removed.getId(),
-						tt + lb,
-						reachedNN);
+				RouteQueueEntry newEntry = new RouteQueueEntry(	vid, tt, at, convertToInt(removed.getId()), tt + lb, reachedNN);
 
 				int pos = newEntry.getR().size();
 				if(!wasRemoved(vid, pos, c, wasTraversed)){
 					if(!isInQ(vid, pos, tt, wasTraversed, c)){
 						if(isInQ(vid, pos, wasTraversed)){
 							int cost = wasTraversed.get(pos).get(vid);
-							if(cost>newEntry.getTt()){
+							if(cost>newEntry.getTravelTime()){
 								queue.remove(newEntry);
 								queue.offer(newEntry);
 								wasTraversed.get(pos).remove(vid);
@@ -203,7 +206,7 @@ public class OSRSearch implements RouteService {
 		parents.get(pos).put(id, parent);
 	}
 
-	private void init(Vertex q, Vertex d, ArrayList<Integer> c, int t, PriorityQueue<RouteQueueEntry> queue, 
+	private void init(Node q, Node d, ArrayList<Integer> c, int t, PriorityQueue<RouteQueueEntry> queue, 
 			HashMap<Integer, Integer> destination){
 		int pos = 0;
 		ArrayList<NearestNeighborTC> reached = new ArrayList<NearestNeighborTC>();
@@ -211,11 +214,11 @@ public class OSRSearch implements RouteService {
 		tt = 0;
 		int qid = convertToInt(q.getId());
 
-		Vertex poi = ((RoadGraphAdapter) graphAdapter).getPoi(qid);
+		Node poi = ((Graph) graph).getPoi(qid);
 		if(poi != null){
 			if(poi.getProperty(CATEGORY) == c.get(0)){
 				pos++;
-				wt = ((RoadGraphAdapter) graphAdapter).poiGetCost(qid, t);
+				wt = ((Graph) graph).poiGetCost(qid, t);
 				ts = tt + wt;
 				NearestNeighborTC nn = new NearestNeighborTC(qid, tt, wt, ts);
 				reached.add(nn);
@@ -232,11 +235,11 @@ public class OSRSearch implements RouteService {
 				reached));
 	}
 
-	public GraphAdapter getGraphAdapter() {
-		return graphAdapter;
+	public Graph getGraphAdapter() {
+		return graph;
 	}
 
-	public void setGraphAdapter(GraphAdapter graphAdapter) {
-		this.graphAdapter = graphAdapter;
+	public void setGraphAdapter(Graph graphAdapter) {
+		this.graph = graphAdapter;
 	}
 }
