@@ -53,8 +53,8 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 	//TODO Create appropriate tests for this method!
 	/**
 	 * This method is going to calculate the shortest path from a node v to all other nodes.
-	 * @param v
-	 * @return
+	 * @param source source node where the shortest path is going to start
+	 * @return a map with nodesId's and their respective paths
 	 */
 	public Int2ObjectMap<Path> shortestPath(Node source) {
 		PriorityQueue<DistanceEntry> queue = new PriorityQueue<DistanceEntry>();
