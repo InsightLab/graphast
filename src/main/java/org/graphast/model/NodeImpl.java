@@ -1,11 +1,10 @@
 package org.graphast.model;
 
+import static org.graphast.util.GeoUtils.latLongToDouble;
+import static org.graphast.util.GeoUtils.latLongToInt;
 import it.unimi.dsi.fastutil.BigArrays;
 
 import org.graphast.exception.GraphastException;
-
-import static org.graphast.util.GeoUtils.latLongToInt;
-import static org.graphast.util.GeoUtils.latLongToDouble;
 
 public class NodeImpl implements Node {
 
@@ -25,7 +24,7 @@ public class NodeImpl implements Node {
 
 	private long costsIndex;
 	
-	private short[] costs;
+	private int[] costs;
 
 	private String label;
 
@@ -63,7 +62,7 @@ public class NodeImpl implements Node {
 	 * @param costIndex
 	 */
 	NodeImpl(long externalId, int category, double latitude, 
-			double longitude, long firstEdge, long labelIndex, long costIndex, short[] costs) {
+			double longitude, long firstEdge, long labelIndex, long costIndex, int[] costs) {
 
 		this(latitude, longitude);
 		this.externalId = externalId;
@@ -117,7 +116,7 @@ public class NodeImpl implements Node {
 
 	}
 	
-	public NodeImpl(long externalId, double latitude, double longitude, short[] costs) {
+	public NodeImpl(long externalId, double latitude, double longitude, int[] costs) {
 
 		this(externalId, latitude, longitude);
 		this.costs = costs;
@@ -276,11 +275,11 @@ public class NodeImpl implements Node {
 	}
 	
 	@Override
-	public short[] getCosts() {
+	public int[] getCosts() {
 		return costs;
 	}
 
-	public void setCosts(short[] costs) {
+	public void setCosts(int[] costs) {
 		this.costs = costs;
 	}
 

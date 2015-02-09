@@ -1,13 +1,13 @@
 package org.graphast.model;
 
-import it.unimi.dsi.fastutil.longs.Long2ShortMap;
+import it.unimi.dsi.fastutil.longs.Long2IntMap;
 
 public interface GraphBounds extends Graph {
 
 	public abstract void createBounds();
 	
-	public abstract Long2ShortMap getUpperBound();
+	public abstract Long2IntMap getUpperBound();
 	
-	public abstract Long2ShortMap getLowerBound();
+	public abstract Long2IntMap getLowerBound();
 
 }
