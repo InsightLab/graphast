@@ -1,5 +1,6 @@
 package org.graphast.query.route.shortestpath.dijkstra;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 
 import java.util.Date;
@@ -66,6 +67,11 @@ public class DijkstraConstantWeight extends Dijkstra {
 		}
 	}
 
+	@Override
+	public Int2ObjectMap<Path> shortestPath(Node source) {
+		return super.shortestPath(source);
+	}
+	
 	@Override
 	public Path shortestPath(Node source, Node target) {
 		return shortestPath(source, target, null);
