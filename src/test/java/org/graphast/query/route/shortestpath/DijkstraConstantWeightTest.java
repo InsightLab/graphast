@@ -93,7 +93,8 @@ public class DijkstraConstantWeightTest {
 		logger.debug("Execution Time of shortestPathExampleTest(): {}ms", sw.getTime());
 		logger.debug("Path Cost: {}", shortestPath.getPathCost());
 
-		assertEquals(8100, shortestPath.getPathCost(), 0);		
+		assertEquals(8100, shortestPath.getPathCost(), 0);
+		
 	}
 
 	@Test

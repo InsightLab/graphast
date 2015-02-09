@@ -1,23 +1,27 @@
 package org.graphast.query.route.osr;
 
 import static org.graphast.util.NumberUtils.convertToInt;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.PriorityQueue;
 
 import org.graphast.model.Graph;
 import org.graphast.model.Node;
 import org.graphast.query.route.shortestpath.dijkstra.Dijkstra;
+import org.graphast.query.route.shortestpath.model.Instruction;
 import org.graphast.query.route.shortestpath.model.Path;
 import org.graphast.util.DateUtils;
 
 public class OSRSearch implements RouteService {
 	private Graph graph;
 	private BoundsRoute bounds;
-	private Dijkstra dij;
+	private Dijkstra dijkstra;
 
 	protected static int wasRemoved = -1;
 
@@ -25,26 +29,27 @@ public class OSRSearch implements RouteService {
 	public OSRSearch(Graph graph, BoundsRoute bounds, Graph reverseGraph){
 		this.graph = graph;
 		this.bounds = bounds;
-		this.dij = new Dijkstra(reverseGraph);
+		this.dijkstra = new Dijkstra(reverseGraph);
 	}
 
-//	public ArrayList<Integer> reconstructPath(Node q, Node d, RouteQueueEntry route, 
-//			HashMap<Integer, HashMap<Integer, Integer>> parents){
-//		ArrayList<Integer> path = new ArrayList<Integer>();
-//		int qId = convertToInt(q.getId());
-//		int size = route.getR().size();
-//		for(int id = 0; id < size; id++){
-//			path.addAll(pathToPoi(id, qId, route.getR().get(id).getId(), parents));
-//			qId = route.getR().get(id).getId();
-//		}
-//		
-//		path.addAll(pathToDestination(d, size, route.getR().get(size - 1).getId(), parents));
-//		path.add(convertToInt(d.getId()));
-//		return path;
-//	}
+	public ArrayList<Integer> reconstructPath(Node origin, Node destination, RouteQueueEntry route, 
+			HashMap<Integer, HashMap<Integer, Integer>> parents){
+		List<Instruction> path = new ArrayList<Instruction>();
+		//ArrayList<Integer> path = new ArrayList<Integer>();
+		int qId = convertToInt(origin.getId());
+		int size = route.getR().size();
+		for(int id = 0; id < size; id++){
+			path.addAll(pathToPoi(id, qId, route.getR().get(id).getId(), parents));
+			qId = route.getR().get(id).getId();
+		}
+		
+		path.addAll(pathToDestination(destination, size, route.getR().get(size - 1).getId(), parents));
+		path.add(convertToInt(destination.getId()));
+		return path;
+	}
 
-	private Path pathToPoi(int pos, int id, long pid, HashMap<Integer, HashMap<Integer, Integer>> parents){
-		Path path = new Path();
+	private ArrayList<Integer> pathToPoi(int pos, int id, int pid, HashMap<Integer, HashMap<Integer, Integer>> parents){
+		ArrayList<Integer> path = new ArrayList<Integer>();
 		int parent = parents.get(pos + 1).get(pid);
 		while(parent != id && parent != -1){
 			path.add(parent);
@@ -69,36 +74,40 @@ public class OSRSearch implements RouteService {
 		return path;
 	}
 
-	public Sequence search(Node q, Node d, Date time, ArrayList<Integer> c){
+	public Sequence search(Node origin, Node destination, Date time, ArrayList<Integer> categories){
+		
 		PriorityQueue<RouteQueueEntry> queue = new PriorityQueue<RouteQueueEntry>();
 		HashMap<Integer, HashMap<Integer, Integer>> parents = new HashMap<Integer, HashMap<Integer, Integer>>();
 		HashMap<Integer, HashMap<Integer, Integer>> wasTraversed = new HashMap<Integer, HashMap<Integer, Integer>>();
 
-		HashMap<Integer, Integer> destination = new HashMap<Integer, Integer>();
-		destination = dij.shortestPath(convertToInt(d.getId()));
+		// Is this 'destinationPaths' keeping all shortest paths 
+		// from the destination node of OSR to all other nodes?
+		Int2ObjectMap<Path> destinationPaths = new Int2ObjectOpenHashMap<Path>();
+		destinationPaths = dijkstra.shortestPath(destination);
 
 		Sequence seq = new Sequence();
 		int t = DateUtils.dateToMinutes(time);
 		int wt, ts, upper = Integer.MAX_VALUE;
 		int nextCat, nextId;
-		init(q, d, c, t, queue, destination);;
+		init(origin, destination, categories, t, queue, destinationPaths);
 		RouteQueueEntry removed = null;
 		ArrayList<NearestNeighborTC> reachedNN;
+		
 		while(!queue.isEmpty()){
 			removed = queue.poll();
-			addWasTraversed(removed.getR().size(), removed.getId(), wasRemoved, wasTraversed);
-			addParent(removed.getR().size(), removed.getId(), removed.getParent(), parents);
+			addWasTraversed(removed.getR().size(), convertToInt(removed.getId()), wasRemoved, wasTraversed);
+			addParent(removed.getR().size(), convertToInt(removed.getId()), convertToInt(removed.getParent()), parents);
 
-			if(removed.getId() == convertToInt(d.getId())){
-				if(removed.getR().size() >= c.size()){
+			if(removed.getId() == convertToInt(destination.getId())){
+				if(removed.getR().size() >= categories.size()){
 					return new Sequence(removed.getId(), removed.getTravelTime(), 
-							reconstructPath(q, d, removed, parents), removed.getR());
+							reconstructPath(origin, destination, removed, parents), removed.getR());
 				}
 			}
 
 			if(removed.getLowerBound() > upper)	return seq;
 
-			HashMap<Node, Integer> neig = graph.accessNeighborhood(graph.getVertex(removed.getId()), removed.getArrivalTime(), NEIGHBOR);
+			HashMap<Node, Integer> neig = graph.accessNeighborhood(graph.getNode(removed.getId()), removed.getArrivalTime(), NEIGHBOR);
 
 			for (Node v : neig.keySet()) {
 				int vid = convertToInt(v.getId());
@@ -107,12 +116,12 @@ public class OSRSearch implements RouteService {
 				wt = 0;
 				reachedNN = new ArrayList<NearestNeighborTC>(removed.getR());
 
-				if(nextId < c.size()){
-					nextCat = c.get(nextId);
+				if(nextId < categories.size()){
+					nextCat = categories.get(nextId);
 					Node poi = ((Graph) graph).getPoi(vid);
 					if(poi != null){
-						if((Integer) poi.getProperty(CATEGORY) == nextCat){
-							wt = ((Graph) graph).poiGetCost(vid, removed.getAt());
+						if(poi.getCategory() == nextCat){
+							wt = ((Graph) graph).poiGetCost(vid, removed.getArrivalTime());
 							ts = wt + tt;
 							NearestNeighborTC nn = new NearestNeighborTC(vid, tt, wt, ts);
 							reachedNN.add(nn);
@@ -121,12 +130,12 @@ public class OSRSearch implements RouteService {
 					}
 				}
 				int at = graph.getArrival(removed.getArrivalTime() + wt, neig.get(v));
-				int lb = lowerBound(vid, nextId, c, destination);
+				int lb = lowerBound(vid, nextId, categories, destinationPaths);
 				RouteQueueEntry newEntry = new RouteQueueEntry(	vid, tt, at, convertToInt(removed.getId()), tt + lb, reachedNN);
 
 				int pos = newEntry.getR().size();
-				if(!wasRemoved(vid, pos, c, wasTraversed)){
-					if(!isInQ(vid, pos, tt, wasTraversed, c)){
+				if(!wasRemoved(vid, pos, categories, wasTraversed)){
+					if(!isInQ(vid, pos, tt, wasTraversed, categories)){
 						if(isInQ(vid, pos, wasTraversed)){
 							int cost = wasTraversed.get(pos).get(vid);
 							if(cost>newEntry.getTravelTime()){
@@ -180,13 +189,13 @@ public class OSRSearch implements RouteService {
 		return false;
 	}
 
-	private int lowerBound(int id, int pos, ArrayList<Integer> c, HashMap<Integer, Integer> destination){
-		Integer max = destination.get(id);
-		if(pos < c.size()){
-			int dist;
-			for(int i = pos; i < c.size(); i++){
-				dist = bounds.getBound(id, c.get(i)).getDistance();
-				if(dist > max)	max = dist;
+	private double lowerBound(int id, int pos, ArrayList<Integer> categories, Int2ObjectMap<Path> destination){
+		double max = destination.get(id).getPathCost();
+		if(pos < categories.size()){
+			int distance;
+			for(int i = pos; i < categories.size(); i++){
+				distance = bounds.getBound(id, categories.get(i)).getDistance();
+				if(distance > max)	max = distance;
 			}
 		}
 		return max;
@@ -206,33 +215,31 @@ public class OSRSearch implements RouteService {
 		parents.get(pos).put(id, parent);
 	}
 
-	private void init(Node q, Node d, ArrayList<Integer> c, int t, PriorityQueue<RouteQueueEntry> queue, 
-			HashMap<Integer, Integer> destination){
+	private void init(Node origin, Node d, ArrayList<Integer> categories, int t, PriorityQueue<RouteQueueEntry> queue, 
+			Int2ObjectMap<Path> destinationPaths){
+		
 		int pos = 0;
 		ArrayList<NearestNeighborTC> reached = new ArrayList<NearestNeighborTC>();
-		int tt, wt, ts;
-		tt = 0;
-		int qid = convertToInt(q.getId());
+		int travelTime, waitingTime, timeToService;
+		travelTime = 0;
+		int originId = convertToInt(origin.getId());
 
-		Node poi = ((Graph) graph).getPoi(qid);
-		if(poi != null){
-			if(poi.getProperty(CATEGORY) == c.get(0)){
+		Node poi = ((Graph) graph).getPoi(originId);
+		
+		if(poi != null) {
+			
+			if(poi.getCategory() == categories.get(0)){
 				pos++;
-				wt = ((Graph) graph).poiGetCost(qid, t);
-				ts = tt + wt;
-				NearestNeighborTC nn = new NearestNeighborTC(qid, tt, wt, ts);
+				waitingTime = ((Graph) graph).poiGetCost(originId, t);
+				timeToService = travelTime + waitingTime;
+				NearestNeighborTC nn = new NearestNeighborTC(originId, travelTime, waitingTime, timeToService);
 				reached.add(nn);
 			}
 		}
 
-		int lb = lowerBound(qid, pos, c, destination);
+		int lb = convertToInt(lowerBound(originId, pos, categories, destinationPaths));
 
-		queue.offer(new RouteQueueEntry(	qid, 
-				tt, 
-				t, 
-				-1,
-				t + lb,
-				reached));
+		queue.offer(new RouteQueueEntry(originId, travelTime, t, -1, t + lb, reached));
 	}
 
 	public Graph getGraphAdapter() {

@@ -791,7 +791,7 @@ public class GraphImpl implements Graph {
 		}
 		return neig;
 	}	
-
+	
 	public boolean hasNode(long id) {
 		try {
 			long position = id * Node.NODE_BLOCKSIZE;
