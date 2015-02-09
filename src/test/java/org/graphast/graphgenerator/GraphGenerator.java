@@ -76,19 +76,19 @@ public class GraphGenerator {
  		Edge e;
  		NodeImpl v;
 
- 		v = new NodeImpl(0l, 0d, 10d);
+ 		v = new NodeImpl(0l, 0d, 10d, 0);
  		graph.addNode(v);
 
- 		v = new NodeImpl(1l, 10d, 0d);
+ 		v = new NodeImpl(1l, 10d, 0d, 1);
  		graph.addNode(v);
 
- 		v = new NodeImpl(2l, 30d, 20d);
+ 		v = new NodeImpl(2l, 30d, 20d, 2);
  		graph.addNode(v);
 
- 		v = new NodeImpl(3l, 40d, 20d);
+ 		v = new NodeImpl(3l, 40d, 20d, 4);
  		graph.addNode(v);
 
- 		v = new NodeImpl(4l, 50d, 30d);
+ 		v = new NodeImpl(4l, 50d, 30d, 0);
  		graph.addNode(v);
 
  		v = new NodeImpl(5l, 60d, 20d);
@@ -131,12 +131,8 @@ public class GraphGenerator {
  		e = new EdgeImpl(5l, 6l, 1, costs);
  		graph.addEdge(e);
 
-
- 		System.out.println(graph.getCosts());
- 		
  		graph.createBounds();
 
- 		
  		return graph;
  		
 	}

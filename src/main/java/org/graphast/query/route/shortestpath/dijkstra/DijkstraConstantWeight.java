@@ -1,5 +1,6 @@
 package org.graphast.query.route.shortestpath.dijkstra;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 
 import java.util.Date;
@@ -9,6 +10,7 @@ import java.util.PriorityQueue;
 import org.graphast.model.Graph;
 import org.graphast.model.Node;
 import org.graphast.query.route.shortestpath.model.DistanceEntry;
+import org.graphast.query.route.shortestpath.model.Path;
 import org.graphast.query.route.shortestpath.model.RouteEntry;
 
 public class DijkstraConstantWeight extends Dijkstra {
@@ -23,8 +25,7 @@ public class DijkstraConstantWeight extends Dijkstra {
 		Long2IntMap neig = graph.accessNeighborhood(graph.getNode(removed.getId()));
 		
 		for (long vid : neig.keySet()) {
-			//long vid = convertToInt(v);
-			//int arrivalTime = graph.getArrival(removed.getAt(), neig.get(v));
+
 			int travelDistance = removed.getDistance() + neig.get(vid);
 			DistanceEntry newDistanceEntry = new DistanceEntry(vid, travelDistance, removed.getId());
 			
@@ -57,9 +58,9 @@ public class DijkstraConstantWeight extends Dijkstra {
 						queue.offer(newDistanceEntry);
 						wasTraversed.remove(newDistanceEntry.getId());
 						wasTraversed.put(newDistanceEntry.getId(), newDistanceEntry.getDistance());
-
-						//String label = graph.getEdgeLabel(vid);
-						//parents.put(vid, new RouteEntry(vid, neig.get(vid), label));
+						parents.remove(vid);
+						parents.put(vid, new RouteEntry(removed.getId(), neig.get(vid), label));
+						
 					}
 				}
 			}
@@ -67,17 +68,22 @@ public class DijkstraConstantWeight extends Dijkstra {
 	}
 
 	@Override
-	public int shortestPath(Node source, Node target) {
+	public Int2ObjectMap<Path> shortestPath(Node source) {
+		return super.shortestPath(source);
+	}
+	
+	@Override
+	public Path shortestPath(Node source, Node target) {
 		return shortestPath(source, target, null);
 	}
 
 	@Override
-	public int shortestPath(long source, long target) {
+	public Path shortestPath(long source, long target) {
 		return shortestPath(source, target, null);
 	}
 
 	@Override
-	public int shortestPath(long source, long target, Date time) {
+	public Path shortestPath(long source, long target, Date time) {
 		return shortestPath(graph.getNode(source), graph.getNode(target), time);
 	}
 }

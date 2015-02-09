@@ -3,8 +3,12 @@ package org.graphast.query.knn.model;
 import org.graphast.util.StringUtils;
 
 
+
 public class Bound {
+
+	//id = identifier of a category.
 	private long id;
+	//distance = the distance from a vertex to the current category (represented by the id above).
 	private int distance;
 	
 	public Bound(long id, int distance){

@@ -7,8 +7,7 @@ public class Instruction {
     protected String label;
     private double cost;
 	
-    public Instruction(int direction, String label, double cost )
-    {
+    public Instruction(int direction, String label, double cost) {
     	
     	this.direction = direction;
     	this.label = label;

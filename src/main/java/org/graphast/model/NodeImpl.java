@@ -23,7 +23,7 @@ public class NodeImpl implements Node {
 	private long labelIndex;
 
 	private long costsIndex;
-	
+
 	private int[] costs;
 
 	private String label;
@@ -72,7 +72,7 @@ public class NodeImpl implements Node {
 		this.costsIndex = costIndex;
 		this.costs = costs;
 	}
-	
+
 	NodeImpl(long externalId, int category, double latitude, 
 			double longitude, long firstEdge, long labelIndex, long costIndex) {
 
@@ -115,14 +115,20 @@ public class NodeImpl implements Node {
 		this.label = label;
 
 	}
-	
+	public NodeImpl(long externalId, double latitude, double longitude, int category) {
+
+		this(externalId, latitude, longitude);
+		this.category = category;
+
+	}
+
 	public NodeImpl(long externalId, double latitude, double longitude, int[] costs) {
 
 		this(externalId, latitude, longitude);
 		this.costs = costs;
 
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.graphast.model.Node#validate()
 	 */
@@ -155,7 +161,7 @@ public class NodeImpl implements Node {
 	public long getExternalId() {
 		return externalId;
 	}
-	
+
 	int getExternalIdSegment(){
 		return BigArrays.segment(externalId);
 	}
@@ -176,11 +182,11 @@ public class NodeImpl implements Node {
 	public double getLatitude() {
 		return latLongToDouble(latitude);
 	}
-	
+
 	int getLatitudeConvertedToInt() {
 		return latitude;
 	}
-	
+
 
 	@Override
 	public void setLatitude(double latitude) {
@@ -198,7 +204,7 @@ public class NodeImpl implements Node {
 	int getLongitudeConvertedToInt() {
 		return longitude;
 	}
-	
+
 	@Override
 	public void setLongitude(double longitude) {
 		this.longitude = latLongToInt(longitude);
@@ -252,7 +258,7 @@ public class NodeImpl implements Node {
 	int getCostsIndexOffset(){
 		return BigArrays.displacement(costsIndex);
 	}
-	
+
 	public long getCostsIndex() {
 		return costsIndex;
 	}
@@ -273,7 +279,7 @@ public class NodeImpl implements Node {
 	public void setLabel(String label) {
 		this.label = label;
 	}
-	
+
 	@Override
 	public int[] getCosts() {
 		return costs;
