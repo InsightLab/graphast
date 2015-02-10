@@ -12,6 +12,7 @@ import org.graphast.model.Graph;
 import org.graphast.model.GraphBounds;
 import org.graphast.model.GraphBoundsImpl;
 import org.graphast.model.GraphImpl;
+import org.graphast.model.Node;
 import org.graphast.model.NodeImpl;
 import org.graphast.query.route.shortestpath.dijkstra.DijkstraConstantWeight;
 
@@ -212,6 +213,152 @@ public class GraphGenerator {
 		graph.addEdge(e);
 		
 		return graph;
+	}
+	
+	public Graph generateExamplePoI() {
+		
+		Graph graph = new GraphImpl(Configuration.USER_HOME + "/graphast/test/examplePoI");
+		
+		Node node;
+		Edge edge;
+		
+		//NODES
+		
+		node = new NodeImpl(4l, 0.0d, 30.0d);
+ 		graph.addNode(node);
+
+        node = new NodeImpl(3l, 0.0d, 20.0d);
+ 		graph.addNode(node);
+
+ 		node = new NodeImpl(2l, 0.0d, 10.0d);
+ 		int[] costs = new int[]{30300000, 1500000, 1500000, 1500000, 900000, 900000, 59100000, 30300000};
+ 		node.setCategory(1);
+ 		node.setCosts(costs);
+ 		graph.addNode(node);
+         
+		node = new NodeImpl(1l, 0.0d, 0.0d);
+ 		graph.addNode(node);
+
+		node = new NodeImpl(8l, 10.0d, 20.0d);
+ 		graph.addNode(node);
+
+		node = new NodeImpl(7l, 10.0d, 10.0d);
+ 		graph.addNode(node);
+
+		node = new NodeImpl(6l, 10.0d, 0.0d);
+ 		graph.addNode(node);
+
+		node = new NodeImpl(5l, 0.0d, 40.0d);
+		costs = new int[]{29700000, 900000, 900000, 900000, 1500000, 1500000, 58500000, 17700000};
+ 		node.setCategory(2);
+ 		node.setCosts(costs);
+ 		graph.addNode(node);
+       
+		node = new NodeImpl(10l, 10.0d, 40.0d);
+		costs = new int[]{30300000, 1500000, 1500000, 1500000, 900000, 900000, 59100000, 30300000};
+        node.setCategory(2);
+        node.setCosts(costs);
+        graph.addNode(node);
+
+		node = new NodeImpl(9l, 10.0d, 30.0d);
+ 		graph.addNode(node);
+ 		
+ 		//TODO Create a constructor without the distance
+ 		
+ 		//EDGES
+ 		
+ 		costs = new int[]{900000, 900000, 900000, 900000, 900000, 900000, 900000, 900000, 900000,
+ 							900000, 900000, 900000, 900000, 900000, 900000, 900000, 900000, 900000, 
+ 							900000, 900000, 900000, 900000, 900000, 900000};
+ 		edge = new EdgeImpl(10l, 7l, 2l, 1);
+ 		edge.setCosts(costs);
+ 		graph.addEdge(edge);
+         
+ 		costs = new int[]{900000, 900000, 900000, 900000, 900000, 900000, 900000, 900000, 900000,
+					900000, 900000, 900000, 900000, 900000, 900000, 900000, 900000, 900000, 
+					900000, 900000, 900000, 900000, 900000, 900000};
+ 		edge = new EdgeImpl(13l, 9l, 8l, 1);
+ 		edge.setCosts(costs);
+ 		graph.addEdge(edge);
+
+ 		costs = new int[]{720000, 720000, 600000, 600000, 600000, 600000, 600000, 600000, 600000,
+ 							1080000, 1080000, 1080000, 600000, 600000, 600000, 1080000,	1080000, 1080000,
+ 							1080000, 600000, 600000, 600000, 600000, 600000};
+ 		edge = new EdgeImpl(8l, 5l, 0l, 1);
+ 		edge.setCosts(costs);
+ 		graph.addEdge(edge);
+
+ 		costs = new int[]{900000, 900000, 900000, 900000, 900000, 900000, 900000, 900000, 900000,
+ 				1200000, 1200000, 1200000, 900000, 900000, 900000, 1500000, 1500000, 1500000, 1500000,
+ 				900000, 900000, 900000, 900000, 900000};
+ 		edge = new EdgeImpl(9l, 6l, 5l, 1);
+ 		edge.setCosts(costs);
+ 		graph.addEdge(edge);
+
+ 		costs = new int[]{720000, 720000, 720000, 720000, 720000, 720000, 720000, 720000, 720000, 720000,
+ 				720000,	720000,	720000,	720000,	720000,	720000,	720000,	720000,	720000,	720000,	720000,
+ 				720000,	720000,	720000};
+ 		edge = new EdgeImpl(6l, 4l, 8l, 1);
+ 		edge.setCosts(costs);
+ 		graph.addEdge(edge);
+
+ 		costs = new int[]{720000, 720000, 600000, 600000, 600000, 600000, 600000, 600000, 600000, 1080000,
+ 				1080000, 1080000, 600000, 600000, 600000, 1500000, 1500000, 1500000, 1500000, 600000, 600000,
+ 				600000,	600000,	600000};
+ 		edge = new EdgeImpl(7l, 4l, 9l, 1);
+ 		edge.setCosts(costs);
+ 		graph.addEdge(edge);
+
+ 		costs = new int[]{600000, 600000, 600000, 600000, 600000, 600000, 600000, 600000, 600000, 600000,
+ 				600000,	600000,	600000,	600000,	600000,	600000,	600000,	600000,	600000,	600000,	600000,
+ 				600000,	600000,	600000};
+ 		edge = new EdgeImpl(4l, 2l, 3l, 1);
+ 		edge.setCosts(costs);
+ 		graph.addEdge(edge);
+
+ 		costs = new int[]{720000, 720000, 720000, 720000, 720000, 720000, 720000, 720000, 720000, 1320000,
+ 				1320000, 1320000, 720000, 720000, 720000, 1800000, 1800000, 1800000, 1800000, 720000,
+ 				720000, 720000, 720000, 720000};
+ 		edge = new EdgeImpl(5l, 3l, 4l, 1);
+ 		edge.setCosts(costs);
+ 		graph.addEdge(edge);
+
+ 		costs = new int[]{900000, 900000, 900000, 900000, 900000, 900000, 900000, 900000, 900000,
+				900000, 900000, 900000, 900000, 900000, 900000, 900000, 900000, 900000, 
+				900000, 900000, 900000, 900000, 900000, 900000};
+ 		edge = new EdgeImpl(2l, 1l, 2l, 1);
+ 		edge.setCosts(costs);
+ 		graph.addEdge(edge);
+         
+ 		costs = new int[]{720000, 720000, 720000, 720000, 720000, 720000, 720000, 720000, 720000, 1320000,
+ 				1320000, 1320000, 720000, 720000, 720000, 1800000, 1800000, 1800000, 1800000, 720000, 720000,
+ 				720000, 720000,	720000};
+ 		edge = new EdgeImpl(3l, 1l, 7l, 1);
+ 		edge.setCosts(costs);
+ 		graph.addEdge(edge);
+        
+ 		costs = new int[]{720000, 720000, 720000, 720000, 720000, 720000, 720000, 720000, 720000, 1320000,
+ 				1320000, 1320000, 720000, 720000, 720000, 1800000, 1800000, 1800000, 1800000, 720000, 720000,
+ 				720000, 720000,	720000};
+ 		edge = new EdgeImpl(12l, 8l, 7l, 1);
+ 		edge.setCosts(costs);
+ 		graph.addEdge(edge);
+
+ 		costs = new int[]{720000, 720000, 600000, 600000, 600000, 600000, 600000, 600000, 600000, 1080000,
+ 				1080000, 1080000, 600000, 600000, 600000, 1080000, 1080000, 1080000, 1080000, 600000, 600000,
+ 				600000, 600000,	600000};
+ 		edge = new EdgeImpl(11l, 7l, 6l, 1);
+ 		edge.setCosts(costs);
+ 		graph.addEdge(edge);
+
+ 		costs = new int[]{900000, 900000, 900000, 900000, 900000, 900000, 900000, 900000, 900000, 1200000,
+ 				1200000, 1200000, 900000, 900000, 900000, 1500000, 1500000, 1500000, 1500000, 900000, 900000,
+ 				900000,	900000, 900000};
+ 		edge = new EdgeImpl(1l, 0l, 1l, 1);
+ 		edge.setCosts(costs);
+ 		graph.addEdge(edge);
+ 		
+ 		return graph;
 	}
 	
 }
