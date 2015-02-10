@@ -1,4 +1,4 @@
-package org.graphast.query.knn.model;
+package org.graphast.query.model;
 
 import org.graphast.util.StringUtils;
 

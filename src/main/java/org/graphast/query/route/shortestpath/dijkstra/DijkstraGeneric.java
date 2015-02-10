@@ -12,8 +12,8 @@ import java.util.Set;
 
 import org.graphast.model.Graph;
 import org.graphast.model.Node;
-import org.graphast.query.knn.model.Bound;
-import org.graphast.query.knn.model.QueueEntry;
+import org.graphast.query.model.Bound;
+import org.graphast.query.model.QueueEntry;
 
 public class DijkstraGeneric {
 	private Graph graph;
