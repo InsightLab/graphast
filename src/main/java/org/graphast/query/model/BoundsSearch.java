@@ -1,11 +1,12 @@
 package org.graphast.query.model;
 
-import java.util.HashMap;
-
-
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
+import it.unimi.dsi.fastutil.objects.ObjectCollection;
 
 public interface BoundsSearch {
-	public HashMap<Long, Integer> getBounds();
 	
-	public void setBounds(HashMap<Long, Integer> bounds) ;
+	public Long2ObjectMap<ObjectCollection<Bound>> getBounds();
+	
+	public void setBounds(Long2ObjectMap<ObjectCollection<Bound>> bounds);
+
 }

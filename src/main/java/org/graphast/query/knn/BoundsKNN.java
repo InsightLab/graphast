@@ -7,8 +7,8 @@ import org.graphast.query.route.shortestpath.dijkstra.DijkstraGeneric;
 
 public class BoundsKNN extends AbstractBoundsSearch{
 	
-	public BoundsKNN(Graph ga, long host, int index){
-		super(host, index);
+	public BoundsKNN(Graph ga){
+		super();
 		//if(bounds.keySetSize() == 0){
 			DijkstraGeneric d = new DijkstraGeneric(ga);
 			for(int i = 0; i < ga.getNumberOfNodes(); i++){
@@ -24,7 +24,7 @@ public class BoundsKNN extends AbstractBoundsSearch{
 //			}
 	}
 	
-	public BoundsKNN(long host, int index){
-		super(host, index);
+	public BoundsKNN(){
+		super();
 	}
 }
