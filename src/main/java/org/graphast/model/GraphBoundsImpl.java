@@ -65,16 +65,6 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 	}
 
 	@Override
-	public Long2IntMap getUpperBound() {
-		return upperBound;
-	}
-
-	@Override
-	public Long2IntMap getLowerBound() {
-		return lowerBound;
-	}
-
-	@Override
 	public int getEdgeLowerCost(long id){
 		return lowerBound.get(id);
 	}

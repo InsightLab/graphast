@@ -30,12 +30,12 @@ public abstract class AbstractKNNService implements KNNService{
 		Bound bMin = new Bound(minBounds.getBounds().get(vid));
 		Bound bMax = new Bound(maxBounds.getBounds().get(vid));
 		long unn = bMax.getId();
-		int utdd = t + bMax.getDistance();
+		int utdd = t + bMax.getCost();
 		queue.offer(new LowerBoundEntry(	vid, 
 									0, 
 									t, 
 									-1,
-									t + bMin.getDistance()));
+									t + bMin.getCost()));
 		
 		includeCandidate(k, unn, utdd, kth, upperCandidates, isIn);	
 		parents.put(vid, null);
@@ -102,7 +102,7 @@ public abstract class AbstractKNNService implements KNNService{
 													tt, 
 													at, 
 													removed.getId(),
-													tt + bMin.getDistance());
+													tt + bMin.getCost());
 			if(kth >= newEntry.getLowerBound()){
 				if(!wasTraversed.containsKey(v)){					
 					queue.offer(newEntry);
@@ -119,7 +119,7 @@ public abstract class AbstractKNNService implements KNNService{
 					}
 				}
 				Bound bMax = new Bound(maxBounds.getBounds().get(v));
-				includeCandidate(k, bMax.getId(), tt + bMax.getDistance(), kth, upperCandidates, isIn);
+				includeCandidate(k, bMax.getId(), tt + bMax.getCost(), kth, upperCandidates, isIn);
 			}
 		}
 	}

@@ -1,6 +1,7 @@
 package org.graphast.query.route.shortestpath.dijkstra;
 
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
+import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectCollection;
@@ -10,21 +11,69 @@ import java.util.HashSet;
 import java.util.PriorityQueue;
 import java.util.Set;
 
+import org.graphast.model.Edge;
 import org.graphast.model.Graph;
+import org.graphast.model.GraphBounds;
 import org.graphast.model.Node;
 import org.graphast.query.model.Bound;
 import org.graphast.query.model.QueueEntry;
 
 public class DijkstraGeneric {
-	private Graph graph;
+	private GraphBounds graph;
 	
-	public DijkstraGeneric(Graph ga){
+	public DijkstraGeneric(GraphBounds ga){
 		this.graph = ga;
 	}
 	
 	public void expandVertex(QueueEntry e, Set<Long> settledNodes, HashMap<Long, Integer> shortestDistances,
 			PriorityQueue<QueueEntry> unsettledNodes){
 		Long2IntMap adj = graph.accessNeighborhood(graph.getNode(e.getId()));
+        if(adj != null){
+        	for (long v : adj.keySet()){
+        		long vid = v;
+                if (settledNodes.contains(vid))    continue;
+                
+                int shortDist = getShortestDistance(e.getId(), shortestDistances) + adj.get(v);
+                
+                if (shortDist < getShortestDistance(vid, shortestDistances))
+                {
+                	// assign new shortest distance and mark unsettled
+                	
+                	QueueEntry eNew = new QueueEntry(vid, shortDist);
+                	unsettledNodes.remove(eNew);
+                	unsettledNodes.add(eNew);
+                    shortestDistances.put(vid, shortDist);
+                }
+            } 
+        }
+	}
+	
+	public void expandVertexUpperBound(QueueEntry e, Set<Long> settledNodes, HashMap<Long, Integer> shortestDistances,
+			PriorityQueue<QueueEntry> unsettledNodes){
+		Long2IntMap adj = accessNeighborhoodUpperBound(graph.getNode(e.getId()));
+        if(adj != null){
+        	for (long v : adj.keySet()){
+        		long vid = v;
+                if (settledNodes.contains(vid))    continue;
+                
+                int shortDist = getShortestDistance(e.getId(), shortestDistances) + adj.get(v);
+                
+                if (shortDist < getShortestDistance(vid, shortestDistances))
+                {
+                	// assign new shortest distance and mark unsettled
+                	
+                	QueueEntry eNew = new QueueEntry(vid, shortDist);
+                	unsettledNodes.remove(eNew);
+                	unsettledNodes.add(eNew);
+                    shortestDistances.put(vid, shortDist);
+                }
+            } 
+        }
+	}
+	
+	public void expandVertexLowerBound(QueueEntry e, Set<Long> settledNodes, HashMap<Long, Integer> shortestDistances,
+			PriorityQueue<QueueEntry> unsettledNodes){
+		Long2IntMap adj = accessNeighborhoodLowerBound(graph.getNode(e.getId()));
         if(adj != null){
         	for (long v : adj.keySet()){
         		long vid = v;
@@ -73,7 +122,7 @@ public class DijkstraGeneric {
 	    HashMap<Long, Integer> shortestDistances = new HashMap<Long, Integer>();
 	    
 	    shortestDistances.put(v, 0);
-	    QueueEntry e = new QueueEntry(v, (short) 0);
+	    QueueEntry e = new QueueEntry(v, 0);
         unsettledNodes.add(e);
         
         while ((e = unsettledNodes.poll()) != null){
@@ -92,6 +141,66 @@ public class DijkstraGeneric {
                 }
                 
                 expandVertex(e, settledNodes, shortestDistances, unsettledNodes);
+        	}
+        }        
+        return new Bound();
+	}
+	
+	public Bound shortestUpperPathPoi(long v, int idCat){
+		PriorityQueue<QueueEntry> unsettledNodes = new PriorityQueue<QueueEntry>();
+	    Set<Long> settledNodes = new HashSet<Long>();
+	    HashMap<Long, Integer> shortestDistances = new HashMap<Long, Integer>();
+	    
+	    shortestDistances.put(v, 0);
+	    QueueEntry e = new QueueEntry(v, 0);
+        unsettledNodes.add(e);
+        
+        while ((e = unsettledNodes.poll()) != null){
+        	if(!settledNodes.contains(e.getId())){
+        		settledNodes.add(e.getId());
+        		
+                Node poi = graph.getPoi(e.getId());
+                if(poi != null){
+                	
+                	if(idCat == -1)	return new Bound(e.getId(), e.getTravelTime());
+                	else{
+                		if(poi.getCategory() == idCat){
+                			return new Bound(e.getId(), e.getTravelTime());
+                		}
+                	}
+                }
+                
+                expandVertexUpperBound(e, settledNodes, shortestDistances, unsettledNodes);
+        	}
+        }        
+        return new Bound();
+	}
+	
+	public Bound shortestLowerPathPoi(long v, int idCat){
+		PriorityQueue<QueueEntry> unsettledNodes = new PriorityQueue<QueueEntry>();
+	    Set<Long> settledNodes = new HashSet<Long>();
+	    HashMap<Long, Integer> shortestDistances = new HashMap<Long, Integer>();
+	    
+	    shortestDistances.put(v, 0);
+	    QueueEntry e = new QueueEntry(v,0);
+        unsettledNodes.add(e);
+        
+        while ((e = unsettledNodes.poll()) != null){
+        	if(!settledNodes.contains(e.getId())){
+        		settledNodes.add(e.getId());
+        		
+                Node poi = ((Graph) graph).getPoi(e.getId());
+                if(poi != null){
+                	
+                	if(idCat == -1)	return new Bound(e.getId(), e.getTravelTime());
+                	else{
+                		if(poi.getCategory() == idCat){
+                			return new Bound(e.getId(), e.getTravelTime());
+                		}
+                	}
+                }
+                
+                expandVertexLowerBound(e, settledNodes, shortestDistances, unsettledNodes);
         	}
         }        
         return new Bound();
@@ -122,7 +231,7 @@ public class DijkstraGeneric {
                 	waitingTime = graph.poiGetCost(e.getId());
             		timeToService = e.getTravelTime() + waitingTime;
                 	if(bounds.keySet().contains(cat)){
-                		int cost = bounds.get(cat).getDistance();
+                		int cost = bounds.get(cat).getCost();
                 		if(timeToService < cost)	bounds.put(e.getId(), new Bound(e.getId(), timeToService));
                 		upper = updateUpper(bounds);
                 	}else{
@@ -140,7 +249,7 @@ public class DijkstraGeneric {
 	public int updateUpper(Long2ObjectMap<Bound> bounds){
 		int upper = Integer.MIN_VALUE;
 		for(Bound b: bounds.values()){
-			if(b.getDistance() > upper)	upper = b.getDistance();
+			if(b.getCost() > upper)	upper = b.getCost();
 		}
 		return upper;
 	}
@@ -157,7 +266,7 @@ public class DijkstraGeneric {
         unsettledNodes.add(e);
         
         while ((e = unsettledNodes.poll()) != null){
-            if(e.getTravelTime() > best.getDistance()){
+            if(e.getTravelTime() > best.getCost()){
             	return best;
             }
             
@@ -165,7 +274,7 @@ public class DijkstraGeneric {
             	settledNodes.add(e.getId());
                 Node poi = graph.getPoi(e.getId());
                 if(poi != null){
-                	if(e.getTravelTime() < best.getDistance()){
+                	if(e.getTravelTime() < best.getCost()){
                 		wt = graph.poiGetCost(e.getId());
                 		ts = e.getTravelTime() + wt;
                 		best = new Bound(e.getId(), ts);
@@ -214,5 +323,39 @@ public class DijkstraGeneric {
 		else
          return Integer.MAX_VALUE;
     }
+	
+	public Long2IntMap accessNeighborhoodUpperBound(Node v){
+		Long2IntMap neig = new Long2IntOpenHashMap();
+		for (Long e : graph.getOutEdges( v.getId())) {
+			Edge edge = graph.getEdge(e);
+			long vNeig =  edge.getToNode();
+			int cost =  graph.getEdgeUpperCost(e);
+			if(!neig.containsKey(vNeig)){
+				neig.put(vNeig, cost);
+			}else{
+				if(neig.get(vNeig) > cost){
+					neig.put(vNeig, cost);
+				}
+			}
+		}
+		return neig;
+	}	
+	
+	public Long2IntMap accessNeighborhoodLowerBound(Node v){
+		Long2IntMap neig = new Long2IntOpenHashMap();
+		for (Long e : graph.getOutEdges( v.getId())) {
+			Edge edge = graph.getEdge(e);
+			long vNeig =  edge.getToNode();
+			int cost =  graph.getEdgeLowerCost(e);
+			if(!neig.containsKey(vNeig)){
+				neig.put(vNeig, cost);
+			}else{
+				if(neig.get(vNeig) > cost){
+					neig.put(vNeig, cost);
+				}
+			}
+		}
+		return neig;
+	}	
 }		
 	
