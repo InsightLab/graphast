@@ -1,4 +1,4 @@
-package org.graphast.query.knn.model;
+package org.graphast.query.model;
 
 	public class QueueEntry implements Comparable<QueueEntry> {
 		private long id;

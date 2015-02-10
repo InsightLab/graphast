@@ -8,8 +8,8 @@ import java.util.HashMap;
 import java.util.PriorityQueue;
 
 import org.graphast.model.Graph;
-import org.graphast.query.knn.model.AbstractBoundsSearch;
-import org.graphast.query.knn.model.Bound;
+import org.graphast.query.model.AbstractBoundsSearch;
+import org.graphast.query.model.Bound;
 import org.graphast.query.model.LowerBoundEntry;
 
 public abstract class AbstractKNNService implements KNNService{
