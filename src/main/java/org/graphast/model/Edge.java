@@ -58,6 +58,8 @@ public interface Edge {
 	 * @return a array containing all time costs
 	 */
 	public abstract int[] getCosts();
+	
+	public void setCosts(int[] costs);
 
 	/**
 	 * This method returns a list of points that are part of the edge in the map.
