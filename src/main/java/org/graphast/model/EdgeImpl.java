@@ -221,7 +221,8 @@ public class EdgeImpl implements Edge {
 	public int[] getCosts() {
 		return costs;
 	}
-
+	
+	@Override
 	public void setCosts(int[] costs) {
 		this.costs = costs;
 	}

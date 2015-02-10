@@ -285,6 +285,7 @@ public class NodeImpl implements Node {
 		return costs;
 	}
 
+	@Override
 	public void setCosts(int[] costs) {
 		this.costs = costs;
 	}

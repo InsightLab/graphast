@@ -33,9 +33,9 @@ public class OSRSearch {
 		this.dijkstra = new DijkstraConstantWeight(reverseGraph);
 	}
 
-	public ArrayList<Integer> reconstructPath(Node origin, Node destination, RouteQueueEntry route, 
+	public ArrayList<Long> reconstructPath(Node origin, Node destination, RouteQueueEntry route, 
 			HashMap<Integer, HashMap<Integer, Integer>> parents){
-		ArrayList<Integer> path = new ArrayList<Integer>();
+		ArrayList<Long> path = new ArrayList<Long>();
 		//ArrayList<Integer> path = new ArrayList<Integer>();
 		int qId = convertToInt(origin.getId());
 		int size = route.getR().size();
@@ -45,34 +45,34 @@ public class OSRSearch {
 		}
 
 		path.addAll(pathToDestination(destination, size, convertToInt(route.getR().get(size - 1).getId()), parents));
-		path.add(convertToInt(destination.getId()));
+		path.add(destination.getId());
 		return path;
 	}
 
-	private ArrayList<Integer> pathToPoi(int pos, int id, int poiId, HashMap<Integer, HashMap<Integer, Integer>> parents){
+	private ArrayList<Long> pathToPoi(int pos, int id, int poiId, HashMap<Integer, HashMap<Integer, Integer>> parents){
 		
-		ArrayList<Integer> path = new ArrayList<Integer>();
-		int parent = parents.get(pos + 1).get(poiId);
+		ArrayList<Long> path = new ArrayList<Long>();
+		long parent = parents.get(pos + 1).get(poiId);
 		
 		while(parent != id && parent != -1){
 			path.add(parent);
 			parent = parents.get(pos).get(parent);
 		}
-		path.add(id);
+		path.add((long)id);
 		Collections.reverse(path);
 		return path;
 	}
 
-	private ArrayList<Integer> pathToDestination(Node d, int pos, int id, 
+	private ArrayList<Long> pathToDestination(Node d, int pos, int id, 
 			HashMap<Integer, HashMap<Integer, Integer>> parents){
 		int did = convertToInt(d.getId());
-		ArrayList<Integer> path = new ArrayList<Integer>();
-		int parent = parents.get(pos).get(did);
+		ArrayList<Long> path = new ArrayList<Long>();
+		long parent = parents.get(pos).get(did);
 		while(parent != id && parent != -1){
 			path.add(parent);
 			parent = parents.get(pos).get(parent);
 		}
-		path.add(id);
+		path.add((long)id);
 		Collections.reverse(path);
 		return path;
 	}
@@ -103,7 +103,9 @@ public class OSRSearch {
 
 			if(removed.getId() == convertToInt(destination.getId())){
 				if(removed.getR().size() >= categories.size()){
-					return new Sequence(removed.getId(), removed.getTravelTime(), reconstructPath(origin, destination, removed, parents), removed.getR());
+					return new Sequence(removed.getId(), 
+							removed.getTravelTime(), 
+							reconstructPath(origin, destination, removed, parents), removed.getR());
 				}
 			}
 
@@ -132,7 +134,7 @@ public class OSRSearch {
 					}
 				}
 				int at = graph.getArrival(removed.getArrivalTime() + wt, neig.get(v));
-				int lb = lowerBound(vid, nextId, categories, destinationPaths);
+				int lb = (int) lowerBound(vid, nextId, categories, destinationPaths);
 				RouteQueueEntry newEntry = new RouteQueueEntry(	vid, tt, at, convertToInt(removed.getId()), tt + lb, reachedNN);
 
 				int pos = newEntry.getR().size();

@@ -17,6 +17,7 @@ import it.unimi.dsi.fastutil.objects.ObjectBigList;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.graphast.enums.CompressionType;
@@ -55,6 +56,10 @@ public class GraphImpl implements Graph {
 	private int[] intCosts;
 	
 	protected CompressionType compressionType;
+	
+	protected int delta;
+	
+	protected int maxTime;
 
 	/**
 	 * Creates a Graph for the given directory passed as parameter.
@@ -67,6 +72,12 @@ public class GraphImpl implements Graph {
 	 */
 	public GraphImpl(String directory) {
 		this(directory, CompressionType.GZIP_COMPRESSION);
+	}
+	
+	public GraphImpl(String directory, int delta, int maxTime) {
+		this(directory);
+		this.delta = delta;
+		this.maxTime = maxTime;
 	}
 	
 	public GraphImpl(String directory, CompressionType compressionType) {
@@ -626,6 +637,7 @@ public class GraphImpl implements Graph {
 	/* (non-Javadoc)
 	 * @see org.graphast.model.Graphast#getEdgeCost(org.graphast.model.GraphastEdge, int)
 	 */
+	//TODO getEdgeCost
 	@Override
 	public int getEdgeCost(Edge e, int time) {
 		EdgeImpl edge = (EdgeImpl)e;
@@ -776,6 +788,7 @@ public class GraphImpl implements Graph {
 	}
 
 	public Long2IntMap accessNeighborhood(Node v){
+		
 		Long2IntMap neig = new Long2IntOpenHashMap();
 		for (Long e : this.getOutEdges( v.getId())) {
 			Edge edge = this.getEdge(e);
@@ -789,8 +802,32 @@ public class GraphImpl implements Graph {
 				}
 			}
 		}
+		
 		return neig;
+	
 	}	
+	//TODO Reimplement this method
+	public HashMap<Node, Integer> accessNeighborhood(Node v, int time) {
+		
+		HashMap<Node, Integer> neig = new HashMap<Node, Integer>();
+		for (Long e : this.getOutEdges( v.getId())) {
+			Edge edge = this.getEdge(e);
+			long vNeig =  edge.getToNode();
+			int cost = getEdgeCost(edge, time);
+			//int cost =  edge.getDistance();
+			if(!neig.containsKey(vNeig)){
+				
+				neig.put(getNode(vNeig), cost);
+			}else{
+				if(neig.get(vNeig) > cost){
+					neig.put(getNode(vNeig), cost);
+				}
+			}
+		}
+		
+		return neig;
+	
+	}
 	
 	public boolean hasNode(long id) {
 		try {
@@ -990,6 +1027,12 @@ public class GraphImpl implements Graph {
 			
 		}
 		
+	}
+	
+	public int getArrival(int dt, int tt) {
+		int arrivalTime = dt + tt;
+		arrivalTime = arrivalTime % maxTime;
+		return arrivalTime;
 	}
 	
 }
