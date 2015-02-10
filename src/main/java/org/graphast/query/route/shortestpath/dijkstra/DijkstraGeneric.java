@@ -122,7 +122,7 @@ public class DijkstraGeneric {
 	    HashMap<Long, Integer> shortestDistances = new HashMap<Long, Integer>();
 	    
 	    shortestDistances.put(v, 0);
-	    QueueEntry e = new QueueEntry(v, (short) 0);
+	    QueueEntry e = new QueueEntry(v, 0);
         unsettledNodes.add(e);
         
         while ((e = unsettledNodes.poll()) != null){
