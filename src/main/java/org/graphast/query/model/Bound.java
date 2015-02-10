@@ -8,21 +8,21 @@ public class Bound {
 
 	//id = identifier of a category.
 	private long id;
-	private short cost;
+	private int cost;
 	
-	public Bound(long id, short cost){
+	public Bound(long id, int cost){
 		this.id = id;
 		this.cost = cost;
 	}
 	
 	public Bound(){
 		this.id = -1;
-		this.cost = Short.MAX_VALUE;
+		this.cost = Integer.MAX_VALUE;
 	}
 	
 	public Bound(long id) {
 		this.id = id;
-		this.cost = Short.MAX_VALUE;
+		this.cost = Integer.MAX_VALUE;
 	}
 	
 	public String toString(){
@@ -37,11 +37,11 @@ public class Bound {
 		this.id = id;
 	}
 
-	public short getCost() {
+	public int getCost() {
 		return cost;
 	}
 
-	public void setCost(short cost) {
+	public void setCost(int cost) {
 		this.cost = cost;
 	}
 }

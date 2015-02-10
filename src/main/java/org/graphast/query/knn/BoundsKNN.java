@@ -1,29 +1,28 @@
 package org.graphast.query.knn;
 
-import org.graphast.model.Graph;
+import org.graphast.enums.GraphBoundsType;
+import org.graphast.model.GraphBounds;
 import org.graphast.model.Node;
 import org.graphast.query.model.AbstractBoundsSearch;
 import org.graphast.query.route.shortestpath.dijkstra.DijkstraGeneric;
 
 public class BoundsKNN extends AbstractBoundsSearch{
 	
-	public BoundsKNN(Graph ga){
-		//if(bounds.keySetSize() == 0){
+	public BoundsKNN(GraphBounds ga, int categoryId, GraphBoundsType type){
 			DijkstraGeneric d = new DijkstraGeneric(ga);
 			for(int i = 0; i < ga.getNumberOfNodes(); i++){
 				long position = i*Node.NODE_BLOCKSIZE;
 				long vid = ga.getNodes().getInt(position);
-				bounds.put(vid,  d.shortestPathPoi(vid, -1).getDistance());
+				
+				if(type.equals(GraphBoundsType.NORMAL)) {
+					bounds.put(vid,  d.shortestPathPoi(vid, categoryId).getCost());
+				}
+				else if (type.equals(GraphBoundsType.LOWER)) {
+					bounds.put(vid,  d.shortestLowerPathPoi(vid, categoryId).getCost());
+				}
+				else {
+					bounds.put(vid,  d.shortestUpperPathPoi(vid, categoryId).getCost());
+				}
 			}	
-//			Dijkstra dcw = new DijkstraConstantWeight(ga);
-//			for(int i = 0; i < ga.getNumberOfNodes(); i++){
-//				long position = i*Node.NODE_BLOCKSIZE;
-//				long vid = ga.getNodes().getInt(position);
-//				bounds.put(Long.toString(vid),  dcw.shortestPathPoi(vid, -1).toString());
-//			}
-	}
-	
-	public BoundsKNN(long host, int index){
-		super(host, index);
 	}
 }

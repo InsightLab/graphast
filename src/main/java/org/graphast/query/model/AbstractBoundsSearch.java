@@ -1,16 +1,16 @@
 package org.graphast.query.model;
 
-import it.unimi.dsi.fastutil.longs.Long2ShortMap;
+import it.unimi.dsi.fastutil.longs.Long2IntMap;
 
 
 public class AbstractBoundsSearch implements BoundsSearch{
-	protected Long2ShortMap bounds;
+	protected Long2IntMap bounds;
 
-	public Long2ShortMap getBounds() {
+	public Long2IntMap getBounds() {
 		return bounds;
 	}
 
-	public void setBounds(Long2ShortMap bounds) {
+	public void setBounds(Long2IntMap bounds) {
 		this.bounds = bounds;		
 	}
 	
