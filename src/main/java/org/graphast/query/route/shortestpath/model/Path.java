@@ -10,12 +10,13 @@ public class Path {
 
 	private long removedId;
 	private HashMap<Long, RouteEntry> parents;
-	List<Instruction> path;
+	private List<Instruction> path;
 
 	public Path() {
 
 	}
 
+	//TODO Rename to constructPath
 	public void reconstructPath(long id, HashMap<Long, RouteEntry> parents) {
 
 		RouteEntry re = parents.get(id);
