@@ -6,6 +6,7 @@ import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.LongList;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import org.graphast.enums.CompressionType;
@@ -243,6 +244,8 @@ public interface Graph {
 	 */
 	public Long2IntMap accessNeighborhood(Node v);
 	
+	public HashMap<Node, Integer> accessNeighborhood(Node v, int time);
+	
 	/**
 	 * This method verify if a given nodeId exists on graph.
 	 * @param id Id of a node
@@ -281,5 +284,6 @@ public interface Graph {
 	public void reverseGraph();
 	
 	public void setEdgeCosts(long edgeId, int[] costs);
+	public int getArrival(int dt, int tt);
 	
 }
