@@ -1,7 +1,6 @@
 package org.graphast.knn;
 
 import static org.junit.Assert.assertEquals;
-
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -57,5 +56,4 @@ public class KNNSearchTest {
 	public static void shutdown() throws IOException{
 		FileUtils.deleteDir(Configuration.USER_HOME + "/graphast/test/examplePoI");
 	}
-	
-}
+}	

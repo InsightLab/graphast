@@ -286,6 +286,7 @@ public interface Graph {
 	
 	public int getArrival(int dt, int tt);
 
+
 	public CompressionType getCompressionType();
 
 	public void setCompressionType(CompressionType compressionType);

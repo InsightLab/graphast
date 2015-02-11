@@ -73,5 +73,4 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 	public int getEdgeUpperCost(long id){
 		return upperBound.get(id);
 	}
-
 }

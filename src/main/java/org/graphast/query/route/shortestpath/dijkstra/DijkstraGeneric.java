@@ -122,7 +122,7 @@ public class DijkstraGeneric {
 	    HashMap<Long, Integer> shortestDistances = new HashMap<Long, Integer>();
 	    
 	    shortestDistances.put(v, 0);
-	    QueueEntry e = new QueueEntry(v, 0);
+	    QueueEntry e = new QueueEntry(v, (short) 0);
         unsettledNodes.add(e);
         
         while ((e = unsettledNodes.poll()) != null){
@@ -150,9 +150,11 @@ public class DijkstraGeneric {
 		PriorityQueue<QueueEntry> unsettledNodes = new PriorityQueue<QueueEntry>();
 	    Set<Long> settledNodes = new HashSet<Long>();
 	    HashMap<Long, Integer> shortestDistances = new HashMap<Long, Integer>();
-	    
+	    HashMap<Long, Bound> bounds = new HashMap<Long, Bound>();
+	    int upper = Integer.MIN_VALUE;
+	    int waitingTime, timeToService;
 	    shortestDistances.put(v, 0);
-	    QueueEntry e = new QueueEntry(v, 0);
+	    QueueEntry e = new QueueEntry(v, (short) 0);
         unsettledNodes.add(e);
         
         while ((e = unsettledNodes.poll()) != null){
