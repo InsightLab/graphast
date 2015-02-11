@@ -1,6 +1,7 @@
 package org.graphast.knn;
 
 import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -9,9 +10,7 @@ import java.util.Date;
 import org.graphast.config.Configuration;
 import org.graphast.enums.GraphBoundsType;
 import org.graphast.graphgenerator.GraphGenerator;
-import org.graphast.model.Graph;
 import org.graphast.model.GraphBounds;
-import org.graphast.model.GraphBoundsImpl;
 import org.graphast.query.knn.BoundsKNN;
 import org.graphast.query.knn.KNNSearch;
 import org.graphast.query.knn.NearestNeighbor;
@@ -22,14 +21,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class KNNSearchTest {
+	
 	private static KNNSearch knn;
 	
 	private GraphBounds graphPoI;
 	
 	@Before
 	public void setUp() throws Exception{
-		Graph graph = new GraphGenerator().generateExamplePoI();
-		graphPoI = (GraphBounds) graph; 
+		graphPoI = new GraphGenerator().generateExamplePoI();
 		graphPoI.createBounds();
 		
 		//calculate or load bounds
