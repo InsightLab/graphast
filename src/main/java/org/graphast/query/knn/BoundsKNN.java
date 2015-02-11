@@ -8,11 +8,11 @@ import org.graphast.query.route.shortestpath.dijkstra.DijkstraGeneric;
 
 public class BoundsKNN extends AbstractBoundsSearch{
 	
-	public BoundsKNN(GraphBounds ga, int categoryId, GraphBoundsType type){
-			DijkstraGeneric d = new DijkstraGeneric(ga);
-			for(int i = 0; i < ga.getNumberOfNodes(); i++){
+	public BoundsKNN(GraphBounds graph, int categoryId, GraphBoundsType type){
+			DijkstraGeneric d = new DijkstraGeneric(graph);
+			for(int i = 0; i < graph.getNumberOfNodes(); i++){
 				long position = i*Node.NODE_BLOCKSIZE;
-				long vid = ga.getNodes().getInt(position);
+				long vid = graph.getNodes().getInt(position);
 				
 				if(type.equals(GraphBoundsType.NORMAL)) {
 					bounds.put(vid,  d.shortestPathPoi(vid, categoryId).getCost());

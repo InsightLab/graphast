@@ -214,8 +214,8 @@ public class GraphGenerator {
 		return graph;
 	}
 	
-	public Graph generateExamplePoI() {
-		Graph graph = new GraphImpl(Configuration.USER_HOME + "/graphast/test/examplePoI");
+	public GraphBounds generateExamplePoI() {
+		GraphBounds graph = new GraphBoundsImpl(Configuration.USER_HOME + "/graphast/test/examplePoI");
 		
 		NodeImpl v = new NodeImpl(4l, 0.0d, 30.0d);
  		graph.addNode(v);
