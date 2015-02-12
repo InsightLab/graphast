@@ -71,7 +71,7 @@ public class GraphGenerator {
 	
 	public GraphBounds generateExample2() {
 		
- 		GraphBounds graph = new GraphBoundsImpl(Configuration.USER_HOME + "/graphhopper/test/example2");
+ 		GraphBounds graph = new GraphBoundsImpl(Configuration.USER_HOME + "/graphast/test/example2");
 
  		Edge e;
  		NodeImpl v;
