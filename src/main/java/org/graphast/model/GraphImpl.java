@@ -478,13 +478,22 @@ public class GraphImpl implements Graph {
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.graphast.model.Graphast#getCosts()
+	/**
+	 * This method returns all costs of all edges stored in a BigArrayBigList.
+	 * @return all costs of all edges
 	 */
-	@Override
-	public IntBigArrayBigList getCosts() {
+	IntBigArrayBigList getCosts() {
 
 		return edgesCosts;
+	}
+	
+	/**
+	 * This method returns all costs of all nodes stored in a BigArrayBigList.
+	 * @return all costs of all nodes
+	 */
+	IntBigArrayBigList getNodesCosts() {
+
+		return nodesCosts;
 	}
 
 	/* (non-Javadoc)
@@ -659,7 +668,7 @@ public class GraphImpl implements Graph {
 		return listPoints;
 	}
 
-	public Long getNodeId(int latitude, int longitude) {
+	Long getNodeId(int latitude, int longitude) {
 
 		Long result = nodeIndex.get(BigArrays.index(latitude, longitude));
 
@@ -993,11 +1002,23 @@ public class GraphImpl implements Graph {
 	}
 	
 	public void setEdgeCosts(long edgeId, int[] costs) {
+		
 		EdgeImpl edge = (EdgeImpl)getEdge(edgeId);
 		edge.setCosts(costs);
 		
+		/*
+		 * In this part of the method setEdgeCosts, we're multiplying the edgeCostsSize
+		 * by -1 because we can optimize the entire array of costs by shifting the unused
+		 * positions (we'll know that a sequence of positions is not being used by the 
+		 * minus sign in front of the edgeCostsSize).
+		 */
+		long costsIndex = edge.getCostsIndex();
+		if(costsIndex != -1) {
+		int edgeCostsSize = edgesCosts.getInt(costsIndex);
+		edgesCosts.set(costsIndex, -edgeCostsSize);
+		}
 		long position = edge.getId() * Edge.EDGE_BLOCKSIZE;
-		long costsIndex = storeCosts(edge.getCosts(), edgesCosts);
+		costsIndex = storeCosts(edge.getCosts(), edgesCosts);
 		edge.setCostsIndex(costsIndex);
 		
 		position = position + 11;
@@ -1009,18 +1030,37 @@ public class GraphImpl implements Graph {
 		
 		}
 		
-//		NodeImpl node = (NodeImpl)n;
-//
-//		long position = node.getId() * Node.NODE_BLOCKSIZE;
-//		position = position + 3;
-//
-//		synchronized(nodes){
-//			nodes.set(position++, node.getLatitudeConvertedToInt());
-//			nodes.set(position++, node.getLongitudeConvertedToInt());
-//			nodes.set(position++, node.getFirstEdgeSegment());
-//			nodes.set(position++, node.getFirstEdgeOffset());
-//		}
-
+	}
+	
+	public void setNodeCosts(long nodeId, int[] costs) {
+		
+		NodeImpl node = (NodeImpl)getNode(nodeId);
+		node.setCosts(costs);
+		
+		/*
+		 * In this part of the method setNodeCosts, we're multiplying the nodeCostsSize
+		 * by -1 because we can optimize the entire array of costs by shifting the unused
+		 * positions (we'll know that a sequence of positions is not being used by the 
+		 * minus sign in front of the nodeCostsSize).
+		 */
+		long costsIndex = node.getCostsIndex();
+		if(costsIndex != -1) {
+		int nodeCostsSize = nodesCosts.getInt(costsIndex);
+		nodesCosts.set(costsIndex, -nodeCostsSize);
+		}
+		long position = node.getId() * Node.NODE_BLOCKSIZE;
+		costsIndex = storeCosts(node.getCosts(), nodesCosts);
+		node.setCostsIndex(costsIndex);
+		
+		position = position + 9;
+		
+		synchronized(nodes) {
+			
+			nodes.set(position++, node.getCostsIndexSegment());
+			nodes.set(position++, node.getCostsIndexOffset());
+		
+		}
+		
 	}
 	
 }
