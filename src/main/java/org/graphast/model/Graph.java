@@ -134,11 +134,7 @@ public interface Graph {
 	//TODO documentation
 	public int[] getNodeCosts(long id);
 
-	/**
-	 * This method returns all costs of all edges stored in a BigArrayBigList.
-	 * @return all costs of all edges
-	 */
-	public IntBigArrayBigList getCosts();
+	
 	
 	/**
 	 * This method returns all neighbors of a given node. 
