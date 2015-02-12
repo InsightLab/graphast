@@ -131,7 +131,6 @@ public class GraphGenerator {
 		costs = new int[]{5,2,4,6,8,15};
 		e = new EdgeImpl(5l, 6l, 1, costs);
 		graph.addEdge(e);
-
 		graph.createBounds();
 
 		return graph;
@@ -363,5 +362,6 @@ public class GraphGenerator {
 
 		return graph;
 	}
+
 
 }
