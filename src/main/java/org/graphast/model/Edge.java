@@ -78,4 +78,6 @@ public interface Edge {
 	 */
 	public abstract String toString();
 	
+	public void setCosts(int[] costs);
+	
 }
