@@ -1019,4 +1019,35 @@ public class GraphImpl implements Graph {
 		return at;
 	}
 	
+	public void setEdgeCosts(long edgeId, int[] costs) {
+		EdgeImpl edge = (EdgeImpl)getEdge(edgeId);
+		edge.setCosts(costs);
+		
+		long position = edge.getId() * Edge.EDGE_BLOCKSIZE;
+		long costsIndex = storeCosts(edge.getCosts(), edgesCosts);
+		edge.setCostsIndex(costsIndex);
+		
+		position = position + 11;
+		
+		synchronized(edges) {
+			
+			edges.set(position++, edge.getCostsSegment());
+			edges.set(position++, edge.getCostsOffset());
+		
+		}
+		
+//		NodeImpl node = (NodeImpl)n;
+//
+//		long position = node.getId() * Node.NODE_BLOCKSIZE;
+//		position = position + 3;
+//
+//		synchronized(nodes){
+//			nodes.set(position++, node.getLatitudeConvertedToInt());
+//			nodes.set(position++, node.getLongitudeConvertedToInt());
+//			nodes.set(position++, node.getFirstEdgeSegment());
+//			nodes.set(position++, node.getFirstEdgeOffset());
+//		}
+
+	}
+	
 }
