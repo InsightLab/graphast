@@ -278,17 +278,28 @@ public class GraphTest {
 
 	@Test
 	public void setEdgeCostsTest() {
-		System.out.println(graphExample.getEdge(1));
+		
 		int[] costs = {3,2,3,4};
 		graphExample.setEdgeCosts(1, costs);
-		System.out.println(graphExample.getEdge(1));
 		int[] costs2 = {3,2};
 		graphExample.setEdgeCosts(1, costs2);
-		System.out.println(graphExample.getEdge(1));
-		
+
+		assertArrayEquals ( new int[]{-4, 3, 2, 3, 4, 2, 3, 2}, graphExample.getCosts().toIntArray());
+	
 	}
 	
+	@Test
+	public void setNodeCostsTest() {
+		
+		int[] costs = {9,8,7,6};
+		graphExample.setNodeCosts(1, costs);
+		int[] costs2 = {5,4};
+		graphExample.setNodeCosts(1, costs2);
+		
+		assertArrayEquals ( new int[]{-4, 9, 8, 7, 6, 2, 5, 4}, graphExample.getNodesCosts().toIntArray());
 	
+	}
+
 	@Test
 	public void getReverseGraph() {
 
