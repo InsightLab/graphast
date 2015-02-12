@@ -27,8 +27,8 @@ public abstract class AbstractKNNService implements KNNService{
 	
 	protected void init(long vid, int t, int k, int kth, PriorityQueue<LowerBoundEntry> queue, PriorityQueue<UpperEntry> upperCandidates, 
 			HashMap<Long, Integer> isIn, HashMap<Long, Long> parents){
-		Bound bMin = new Bound(minBounds.getBounds().get(vid));
-		Bound bMax = new Bound(maxBounds.getBounds().get(vid));
+		Bound bMin = new Bound(vid, minBounds.getBounds().get(vid));
+		Bound bMax = new Bound(vid, maxBounds.getBounds().get(vid));
 		long unn = bMax.getId();
 		int utdd = t + bMax.getCost();
 		queue.offer(new LowerBoundEntry(	vid, 

@@ -32,8 +32,8 @@ public class KNNSearchTest {
 		graphPoI.createBounds();
 		
 		//calculate or load bounds
-		BoundsKNN minBounds = new BoundsKNN(graphPoI, 1, GraphBoundsType.LOWER);
-		BoundsKNN maxBounds = new BoundsKNN(graphPoI, 2, GraphBoundsType.UPPER);
+		BoundsKNN minBounds = new BoundsKNN(graphPoI, GraphBoundsType.LOWER);
+		BoundsKNN maxBounds = new BoundsKNN(graphPoI, GraphBoundsType.UPPER);
 		
 		knn = new KNNSearch(graphPoI, minBounds, maxBounds);
 	}
