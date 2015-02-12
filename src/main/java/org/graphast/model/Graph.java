@@ -295,4 +295,6 @@ public interface Graph {
 
 	public void reverseGraph();
 	
+	public void setEdgeCosts(long edgeId, int[] costs);
+	
 }
