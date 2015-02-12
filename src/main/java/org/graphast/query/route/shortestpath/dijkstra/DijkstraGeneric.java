@@ -1,8 +1,8 @@
 package org.graphast.query.route.shortestpath.dijkstra;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectCollection;
 
 import java.util.HashMap;
@@ -97,11 +97,12 @@ public class DijkstraGeneric {
         return new Bound();
 	}
 	
-	public ObjectCollection<Bound> shortestPathCategories(long v, Set<Integer> idCat){
+	public ObjectCollection<Bound> shortestPathCategories(long v, Set<Integer> idCategory){
 		PriorityQueue<QueueEntry> unsettledNodes = new PriorityQueue<QueueEntry>();
 	    Set<Long> settledNodes = new HashSet<Long>();
 	    HashMap<Long, Integer> shortestDistances = new HashMap<Long, Integer>();
-	    Long2ObjectMap<Bound> bounds = new Long2ObjectOpenHashMap<Bound>();
+	    
+	    Int2ObjectMap<Bound> bounds = new Int2ObjectOpenHashMap<Bound>();
 	    int upper = Integer.MIN_VALUE;
 	    int waitingTime, timeToService;
 	    
@@ -110,23 +111,25 @@ public class DijkstraGeneric {
         unsettledNodes.add(e);
         
         while ((e = unsettledNodes.poll()) != null){
-            if(bounds.keySet().containsAll(idCat) && e.getTravelTime() > upper){
+            if(bounds.keySet().containsAll(idCategory) && e.getTravelTime() > upper){
             	return bounds.values();
             }
             if(!settledNodes.contains(e.getId())){
             	settledNodes.add(e.getId());
             	
                 Node poi = ((Graph) graph).getPoi(e.getId());
-                if(poi != null){
+                if(poi != null) {
                 	int cat = poi.getCategory();
                 	waitingTime = graph.poiGetCost(e.getId());
             		timeToService = e.getTravelTime() + waitingTime;
                 	if(bounds.keySet().contains(cat)){
                 		int cost = bounds.get(cat).getDistance();
-                		if(timeToService < cost)	bounds.put(e.getId(), new Bound(e.getId(), timeToService));
+                		
+                		if(timeToService < cost)	bounds.put(cat, new Bound(e.getId(), timeToService));
+//                		if(timeToService < cost)	bounds.put(e.getId(), new Bound(e.getId(), timeToService));
                 		upper = updateUpper(bounds);
                 	}else{
-                		bounds.put((long)cat, new Bound(e.getId(), timeToService));
+                		bounds.put(cat, new Bound(e.getId(), timeToService));
                 		if(timeToService > upper)	upper = timeToService;
                 	}
                 }
@@ -137,7 +140,7 @@ public class DijkstraGeneric {
         return bounds.values();
 	}
 	
-	public int updateUpper(Long2ObjectMap<Bound> bounds){
+	public int updateUpper(Int2ObjectMap<Bound> bounds){
 		int upper = Integer.MIN_VALUE;
 		for(Bound b: bounds.values()){
 			if(b.getDistance() > upper)	upper = b.getDistance();

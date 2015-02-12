@@ -19,8 +19,8 @@ public class BoundsRoute extends AbstractBoundsSearch {
 		IntSet categories = graph.getCategories();
 
 		for(int i = 0; i < graph.getNumberOfNodes(); i++){
-			long position = i*Node.NODE_BLOCKSIZE;
-			long vid = graph.getNodes().getInt(position);
+			long vid = graph.getNode(i).getId();
+			
 			//The next line is going to return a collection of Bound containing the distance from this vid to 
 			// the set of categories passed by argument on the variable 'categories'.
 			ObjectCollection<Bound> bound = d.shortestPathCategories(vid, categories);
