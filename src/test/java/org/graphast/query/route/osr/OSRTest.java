@@ -1,7 +1,5 @@
 package org.graphast.query.route.osr;
 
-import static org.junit.Assert.fail;
-
 import org.graphast.graphgenerator.GraphGenerator;
 import org.graphast.model.GraphBounds;
 import org.junit.BeforeClass;
