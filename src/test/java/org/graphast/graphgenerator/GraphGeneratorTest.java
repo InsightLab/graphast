@@ -18,12 +18,14 @@ public class GraphGeneratorTest {
 	private static Graph graphMonaco;
 	private static Graph graphExample;
 	private static GraphBounds graphExample2;
+	private static GraphBounds graphPoI;
 
 	@BeforeClass
 	public static void setup() {
 		graphMonaco = new GraphGenerator().generateMonaco();
 		graphExample = new GraphGenerator().generateExample();
 		graphExample2 = new GraphGenerator().generateExample2();
+		graphPoI = new GraphGenerator().generateExamplePoI();
 	}
 	
 
@@ -43,6 +45,14 @@ public class GraphGeneratorTest {
 	public void shortestPathExample2Test() {
 		assertEquals(7, graphExample2.getNumberOfNodes());
 		assertEquals(8, graphExample2.getNumberOfEdges());
+	}
+	
+	@Test
+	public void examplePoITest() {
+		
+		assertEquals(10, graphPoI.getNumberOfNodes());
+		assertEquals(13, graphPoI.getNumberOfEdges());
+		
 	}
 	
 	@Test
