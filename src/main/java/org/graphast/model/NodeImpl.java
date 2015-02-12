@@ -96,6 +96,7 @@ public class NodeImpl implements Node {
 
 		this(latitude, longitude);
 		this.externalId = externalId;
+		this.category = -1;
 
 	}
 
