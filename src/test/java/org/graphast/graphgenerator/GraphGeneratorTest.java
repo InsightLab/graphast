@@ -65,7 +65,7 @@ public class GraphGeneratorTest {
 	@Test
 	public void upperAndLowerBoundsTest() {
 		
-		graphExample2.getCosts();
+//		graphExample2.getCosts();
 		
 		// Upper cost test
 		assertEquals(10, graphExample2.getEdgeUpperCost(1l));
