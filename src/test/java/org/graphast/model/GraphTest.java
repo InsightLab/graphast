@@ -277,6 +277,19 @@ public class GraphTest {
 	}
 
 	@Test
+	public void setEdgeCostsTest() {
+		System.out.println(graphExample.getEdge(1));
+		int[] costs = {3,2,3,4};
+		graphExample.setEdgeCosts(1, costs);
+		System.out.println(graphExample.getEdge(1));
+		int[] costs2 = {3,2};
+		graphExample.setEdgeCosts(1, costs2);
+		System.out.println(graphExample.getEdge(1));
+		
+	}
+	
+	
+	@Test
 	public void getReverseGraph() {
 
 		graphExample.reverseGraph();
