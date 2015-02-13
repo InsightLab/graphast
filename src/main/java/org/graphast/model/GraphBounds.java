@@ -9,5 +9,7 @@ public interface GraphBounds extends Graph {
 	public abstract Long2IntMap getUpperBound();
 	
 	public abstract Long2IntMap getLowerBound();
+	
+	public Long2IntMap accessNeighborhood(Node v, short graphType);
 
 }

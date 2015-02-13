@@ -12,10 +12,19 @@ public class OSRTest {
 	@BeforeClass
 	public static void setup() {
 		
-		graphBoundsPoI = new GraphGenerator().generateExamplePoI();
-		BoundsRoute bounds = new BoundsRoute(graphBoundsPoI);
+		/*
+		 * The type of graph the will be used to retrieve costs needed. 
+		 * 		0 = Regular Costs;
+		 * 		1 = Lower Bound Costs;
+		 * 		3 = Upper Bound Costs.
+		 */
+		short graphType = 1;
 		
-		System.out.println(bounds);
+		graphBoundsPoI = new GraphGenerator().generateExamplePoI();
+		
+		BoundsRoute bounds = new BoundsRoute(graphBoundsPoI, graphType);
+		
+		//System.out.println(bounds);
 		
 		
 //		graphAdapter.load(getResourcePath("/tdg.json"), FileType.GRAPHSON);
@@ -31,7 +40,7 @@ public class OSRTest {
 	
 	@Test
 	public void test() {
-		//fail("Not yet implemented");
+
 	}
 
 }

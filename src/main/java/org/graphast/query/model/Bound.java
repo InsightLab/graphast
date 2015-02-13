@@ -2,15 +2,25 @@ package org.graphast.query.model;
 
 import org.graphast.util.StringUtils;
 
-
+/**
+ * The structure Bound represents the distance from a certain node to a PoI.
+ * The distance is represented by the variable 'distance' and the PoI by the 'id' variable.
+ * 
+ * @author NEX2ME
+ *
+ */
 
 public class Bound {
 
-	//id = identifier of a category.
 	private long id;
-	//distance = the distance from a vertex to the current category (represented by the id above).
 	private int distance;
 	
+	/**
+	 * This constructor creates a distance bound for a given PoI.
+	 * 
+	 * @param	id	identifier of a node (that is also a PoI).
+	 * @param	distance	the distance from a node to the PoI in this constructor.
+	 */
 	public Bound(long id, int distance){
 		this.id = id;
 		this.distance = distance;
