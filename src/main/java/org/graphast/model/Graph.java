@@ -115,7 +115,7 @@ public interface Graph {
 	public void updateNodeNeighborhood(Node node, long eid);
 
 	/**
-	 * This method will return all outgoing edges for a given node
+	 * This method will return all outgoing edges for a given node.
 	 * 
 	 * @param nodeId Given node id.
 	 * @return Outgoing edges for a given node.
@@ -243,6 +243,7 @@ public interface Graph {
 	 * @return a map containing the distances of neighbors being the key their id's
 	 */
 	public Long2IntMap accessNeighborhood(Node v);
+	
 	
 	public HashMap<Node, Integer> accessNeighborhood(Node v, int time);
 	

@@ -57,6 +57,44 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 			upperBound.put((long)edge.getId(), getMaximunCostValue(edge.getCosts()));
 		}
 	}
+	
+	/**
+	 * 
+	 * @param v
+	 * @param graphType The type of graph the will be used to retrieve costs needed. 0 = Regular Costs; 1 = Lower Bound Costs;
+	 * 					3 = Upper Bound Costs.
+	 * @return
+	 */
+	public Long2IntMap accessNeighborhood(Node v, short graphType){
+
+		Long2IntMap neighbors = new Long2IntOpenHashMap();
+		int cost;
+		
+		for (Long e : this.getOutEdges(v.getId()) ) {
+
+			Edge edge = this.getEdge(e);
+			long neighborNodeId =  edge.getToNode();
+			
+			if(graphType == 0) {
+				cost =  edge.getDistance();
+			} else if(graphType == 1) {
+				cost = getLowerBound().get(edge.getId());
+			} else {
+				cost = getUpperBound().get(edge.getId());
+			}
+			
+			if(!neighbors.containsKey(neighborNodeId)) {
+				neighbors.put(neighborNodeId, cost);
+			}else{
+				if(neighbors.get(neighborNodeId) > cost){
+					neighbors.put(neighborNodeId, cost);
+				}
+			}
+		}
+
+		return neighbors;
+
+	}	
 
 	@Override
 	public void createBounds() {

@@ -795,24 +795,26 @@ public class GraphImpl implements Graph {
 	public int getNumberOfEdges(){
 		return (int) getEdges().size64()/Edge.EDGE_BLOCKSIZE;
 	}
-
+	
 	public Long2IntMap accessNeighborhood(Node v){
 		
-		Long2IntMap neig = new Long2IntOpenHashMap();
-		for (Long e : this.getOutEdges( v.getId())) {
+		Long2IntMap neighbors = new Long2IntOpenHashMap();
+		
+		for (Long e : this.getOutEdges(v.getId()) ) {
+			
 			Edge edge = this.getEdge(e);
-			long vNeig =  edge.getToNode();
+			long neighborNodeId =  edge.getToNode();
 			int cost =  edge.getDistance();
-			if(!neig.containsKey(vNeig)){
-				neig.put(vNeig, cost);
+			if(!neighbors.containsKey(neighborNodeId)){
+				neighbors.put(neighborNodeId, cost);
 			}else{
-				if(neig.get(vNeig) > cost){
-					neig.put(vNeig, cost);
+				if(neighbors.get(neighborNodeId) > cost){
+					neighbors.put(neighborNodeId, cost);
 				}
 			}
 		}
 		
-		return neig;
+		return neighbors;
 	
 	}	
 	//TODO Reimplement this method

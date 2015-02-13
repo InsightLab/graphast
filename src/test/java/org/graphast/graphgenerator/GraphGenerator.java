@@ -260,8 +260,8 @@ public class GraphGenerator {
 
 		node = new NodeImpl(9l, 10.0d, 40.0d);
 		costs = new int[]{30300000, 1500000, 1500000, 1500000, 900000, 900000, 59100000, 30300000};
-		node.setCategory(2);
-		node.setLabel("Padaria Panebox");
+		node.setCategory(3);
+		node.setLabel("Escola Vila");
 		node.setCosts(costs);
 		graph.addNode(node);
 
@@ -360,6 +360,8 @@ public class GraphGenerator {
 		edge.setCosts(costs);
 		graph.addEdge(edge);
 
+		graph.createBounds();
+		
 		return graph;
 	}
 
