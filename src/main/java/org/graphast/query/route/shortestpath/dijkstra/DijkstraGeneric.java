@@ -157,7 +157,7 @@ public class DijkstraGeneric {
 
 					int cat = poi.getCategory();
 
-					waitingTime = graphBounds.poiGetCost(queryEntry.getId());
+					waitingTime = graphBounds.poiGetCost(queryEntry.getId(), graphType);
 					timeToService = queryEntry.getTravelTime() + waitingTime;
 
 					if(bounds.keySet().contains(cat)) {

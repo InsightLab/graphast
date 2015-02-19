@@ -18,15 +18,20 @@ public class Path {
 
 	//TODO Rename to constructPath
 	public void reconstructPath(long id, HashMap<Long, RouteEntry> parents) {
-
+		Instruction oldInstruction, newInstruction;
+		LinkedList<Instruction> verificationQueue = new LinkedList<Instruction>();
+		if(parents.get(id) == null) {
+			path = new ArrayList<Instruction>();
+			newInstruction = new Instruction(0, "On Start", 0);
+			path.add(newInstruction);
+			return;
+		}
 		RouteEntry re = parents.get(id);
 
 		long parent = re.getId();
 
 		path = new ArrayList<Instruction>();
-		LinkedList<Instruction> verificationQueue = new LinkedList<Instruction>();
 
-		Instruction oldInstruction, newInstruction;
 		newInstruction = new Instruction(0, re.getLabel(), re.getCost());
 
 		verificationQueue.add(newInstruction);

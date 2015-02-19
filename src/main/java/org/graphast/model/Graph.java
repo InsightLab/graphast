@@ -269,7 +269,7 @@ public interface Graph {
 	public abstract Node getPoi(long vid);
 	
 	public abstract int poiGetCost(long vid, int time);
-
+	
 	public abstract int poiGetCost(long vid);
 	
 	public abstract int[] getPoiCost(long vid);

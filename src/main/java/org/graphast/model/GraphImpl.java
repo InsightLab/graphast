@@ -237,6 +237,12 @@ public class GraphImpl implements Graph {
 		if (labelIndex >= 0) {
 			node.setLabel(getNodesLabels().get(labelIndex));
 		}
+		
+		long costsIndex = node.getCostsIndex();
+		if (costsIndex >= 0) {
+			node.setCosts(getNodeCostsByCostsIndex(costsIndex));
+		}
+		
 		node.validate();
 
 		return node;
@@ -910,7 +916,8 @@ public class GraphImpl implements Graph {
 		LinearFunction[] lf = convertToLinearFunction(getPoiCost(vid));
 		return lf[0].calculateCost(0);
 	}
-
+	
+	
 	public int[] getPoiCost(long vid){
 		return getNodeCosts(vid);
 	}
@@ -925,6 +932,7 @@ public class GraphImpl implements Graph {
 			startInterval = endInterval;
 			endInterval = endInterval + interval;
 		}
+		
 		return result;
 	}
 
@@ -940,7 +948,8 @@ public class GraphImpl implements Graph {
 	public int getMaximunCostValue(int[] costs) {
 
 		if(costs==null) {
-			throw new IllegalArgumentException("Costs can not be null.");
+			//throw new IllegalArgumentException("Costs can not be null.");
+			return -1;
 		}
 
 
@@ -958,6 +967,11 @@ public class GraphImpl implements Graph {
 
 	public int getMinimunCostValue(int[] costs) {
 
+		if(costs==null) {
+			//throw new IllegalArgumentException("Costs can not be null.");
+			return -1;
+		}
+		
 		int min = costs[0];
 
 		for (int i = 0; i < costs.length; i++) {
@@ -988,7 +1002,10 @@ public class GraphImpl implements Graph {
 		for(int i = 0; i < getNumberOfNodes(); i++) {
 			long position = i*Node.NODE_BLOCKSIZE;
 			int category = getNodes().getInt(position+2);
-			categories.add(category);
+			if(category!=-1) {
+				
+				categories.add(category);
+			}
 //			long position = i*Node.NODE_BLOCKSIZE;
 //			long vid = ga.getNodes().getInt(position);
 //			bounds.put(vid,  d.shortestPathPoi(vid, -1).getDistance());

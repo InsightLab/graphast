@@ -6,10 +6,16 @@ public interface GraphBounds extends Graph {
 
 	public abstract void createBounds();
 	
-	public abstract Long2IntMap getUpperBound();
+	public abstract Long2IntMap getEdgesUpperBound();
 	
-	public abstract Long2IntMap getLowerBound();
+	public abstract Long2IntMap getEdgesLowerBound();
+	
+	public abstract Long2IntMap getNodesUpperBound();
+	
+	public abstract Long2IntMap getNodesLowerBound();
 	
 	public Long2IntMap accessNeighborhood(Node v, short graphType);
-
+	
+	public int poiGetCost(long vid, short graphType);
+	
 }
