@@ -10,8 +10,8 @@ import org.graphast.util.FileUtils;
 
 public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 
-	private Long2IntMap upperBound;
-	private Long2IntMap lowerBound;
+	private Long2IntMap edgesUpperBound, edgesLowerBound;
+	private Long2IntMap nodesUpperBound, nodesLowerBound;
 
 	public GraphBoundsImpl(String directory) {
 		this(directory, CompressionType.GZIP_COMPRESSION);
@@ -19,45 +19,77 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 
 	public GraphBoundsImpl(String directory, CompressionType compressionType) {
 		super(directory, compressionType);
-		upperBound = new Long2IntOpenHashMap();
-		lowerBound = new Long2IntOpenHashMap();
+		edgesUpperBound = new Long2IntOpenHashMap();
+		edgesLowerBound = new Long2IntOpenHashMap();
+		nodesUpperBound = new Long2IntOpenHashMap();
+		nodesLowerBound = new Long2IntOpenHashMap();
 
 	}
 
 	public void save() throws IOException {
 		super.save();
-		FileUtils.saveLong2IntMap(directory + "/upperBound", upperBound, blockSize, compressionType);
-		FileUtils.saveLong2IntMap(directory + "/lowerBound", lowerBound, blockSize, compressionType);
+		FileUtils.saveLong2IntMap(directory + "/edgesUpperBound", edgesUpperBound, blockSize, compressionType);
+		FileUtils.saveLong2IntMap(directory + "/edgesLowerBound", edgesLowerBound, blockSize, compressionType);
+
+		FileUtils.saveLong2IntMap(directory + "/nodesUpperBound", nodesUpperBound, blockSize, compressionType);
+		FileUtils.saveLong2IntMap(directory + "/nodesLowerBound", nodesLowerBound, blockSize, compressionType);
 	}
 
 
 	public void load() throws IOException {
 		super.load();
-		FileUtils.loadLong2IntMap(directory + "/upperBound", blockSize, compressionType);
-		FileUtils.loadLong2IntMap(directory + "/lowerBound", blockSize, compressionType);
+		FileUtils.loadLong2IntMap(directory + "/edgesUpperBound", blockSize, compressionType);
+		FileUtils.loadLong2IntMap(directory + "/edgesLowerBound", blockSize, compressionType);
+
+		FileUtils.loadLong2IntMap(directory + "/nodesUpperBound", blockSize, compressionType);
+		FileUtils.loadLong2IntMap(directory + "/nodesLowerBound", blockSize, compressionType);
 	}
 
-	public void createLowerBounds() {
+	public void createEdgesLowerBounds() {
 		int numberOfEdges = getNumberOfEdges();
 		Edge edge; 
 
 		for(long i=0; i<numberOfEdges; i++) {
 			edge = super.getEdge(i);
-			lowerBound.put((long)edge.getId(), getMinimunCostValue(edge.getCosts()));
+			edgesLowerBound.put((long)edge.getId(), getMinimunCostValue(edge.getCosts()));
 		}
 	}
 
-	public void createUpperBounds() {
+	public void createEdgesUpperBounds() {
 
 		int numberOfEdges = getNumberOfEdges();
 		Edge edge; 
 
 		for(int i=0; i<numberOfEdges; i++) {
 			edge = getEdge(i);
-			upperBound.put((long)edge.getId(), getMaximunCostValue(edge.getCosts()));
+			edgesUpperBound.put((long)edge.getId(), getMaximunCostValue(edge.getCosts()));
 		}
 	}
-	
+
+	public void createNodesLowerBounds() {
+		int numberOfNodes = getNumberOfNodes();
+		Node node; 
+
+		for(long i=0; i<numberOfNodes; i++) {
+			node = super.getNode(i);
+			nodesLowerBound.put((long)node.getId(), getMinimunCostValue(node.getCosts()));
+		}
+		
+//		System.out.println(nodesLowerBound);
+		
+	}
+
+	public void createNodesUpperBounds() {
+
+		int numberOfNodes = getNumberOfNodes();
+		Node node; 
+
+		for(int i=0; i<numberOfNodes; i++) {
+			node = getNode(i);
+			nodesUpperBound.put((long)node.getId(), getMaximunCostValue(node.getCosts()));
+		}
+	}
+
 	/**
 	 * 
 	 * @param v
@@ -69,20 +101,20 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 
 		Long2IntMap neighbors = new Long2IntOpenHashMap();
 		int cost;
-		
+
 		for (Long e : this.getOutEdges(v.getId()) ) {
 
 			Edge edge = this.getEdge(e);
 			long neighborNodeId =  edge.getToNode();
-			
+
 			if(graphType == 0) {
 				cost =  edge.getDistance();
 			} else if(graphType == 1) {
-				cost = getLowerBound().get(edge.getId());
+				cost = getEdgesLowerBound().get(edge.getId());
 			} else {
-				cost = getUpperBound().get(edge.getId());
+				cost = getEdgesUpperBound().get(edge.getId());
 			}
-			
+
 			if(!neighbors.containsKey(neighborNodeId)) {
 				neighbors.put(neighborNodeId, cost);
 			}else{
@@ -94,22 +126,58 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 
 		return neighbors;
 
-	}	
+	}
+
+	public int poiGetCost(long vid, short graphType){
+		LinearFunction[] lf = convertToLinearFunction(getPoiCost(vid));
+		return lf[0].calculateCost(0);
+	}
+
+	public int[] getPoiCost(long vid){
+		return getNodeCosts(vid);
+	}
+	
+	public int[] getNodeCosts(long nodeId) {
+		int[] lowerBound = {getNodesLowerBound().get(nodeId)};
+		return lowerBound;
+		
+//		NodeImpl node = (NodeImpl)getNode(nodeId);
+//		long costsIndex = node.getCostsIndex();
+//
+//		if(costsIndex == -1 ) {
+//			return null;
+//		} else {
+//			return getNodeCostsByCostsIndex(costsIndex);
+//		}
+		
+	}
 
 	@Override
 	public void createBounds() {
-		createUpperBounds();
-		createLowerBounds();
+		createEdgesUpperBounds();
+		createEdgesLowerBounds();
+		createNodesUpperBounds();
+		createNodesLowerBounds();
 	}
 
 	@Override
-	public Long2IntMap getUpperBound() {
-		return upperBound;
+	public Long2IntMap getEdgesUpperBound() {
+		return edgesUpperBound;
 	}
 
 	@Override
-	public Long2IntMap getLowerBound() {
-		return lowerBound;
+	public Long2IntMap getEdgesLowerBound() {
+		return edgesLowerBound;
+	}
+
+	@Override
+	public Long2IntMap getNodesUpperBound() {
+		return nodesUpperBound;
+	}
+
+	@Override
+	public Long2IntMap getNodesLowerBound() {
+		return nodesLowerBound;
 	}
 
 }

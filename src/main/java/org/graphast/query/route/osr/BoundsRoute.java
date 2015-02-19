@@ -1,5 +1,7 @@
 package org.graphast.query.route.osr;
 
+import java.util.Arrays;
+
 import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.objects.ObjectCollection;
 
@@ -20,25 +22,25 @@ public class BoundsRoute extends AbstractBoundsSearch {
 
 		super();
 
-		System.out.println(graph);
-		
 		DijkstraGeneric d = new DijkstraGeneric(graph);
 		IntSet categoriesIds = graph.getCategories();
 
+//		System.out.println(categoriesIds);
+		
 		for(int i = 0; i < graph.getNumberOfNodes(); i++){
 
 			long nodeId = graph.getNode(i).getId();
-			
+
 			/*
 			 * The next line is going to return a collection of Bound containing the distance from this vid to 
 			 * the set of categories passed by argument on the variable 'categories'.
 			 */
 			ObjectCollection<Bound> bound = d.shortestPathCategories(nodeId, categoriesIds, graphType);
 
-			//System.out.println(bound);
+//			System.out.println("nodeId: " + graph.getNode(i).getId() + " Bound: " + bound);
 			//The next line is going to associate the current vid to the bounds of the previous line.
 			bounds.put(nodeId,  bound);
-			
+
 		} 
 
 	}
