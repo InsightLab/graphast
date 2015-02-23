@@ -1,5 +1,8 @@
 package org.graphast.query.route.shortestpath.dijkstra;
 
+import static org.graphast.util.NumberUtils.convertToInt;
+import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
+import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
@@ -8,6 +11,7 @@ import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 import it.unimi.dsi.fastutil.objects.ObjectCollection;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 import java.util.Set;
@@ -17,18 +21,18 @@ import org.graphast.model.GraphBounds;
 import org.graphast.model.Node;
 import org.graphast.query.model.Bound;
 import org.graphast.query.model.QueueEntry;
+import org.graphast.query.route.shortestpath.model.DistanceEntry;
+import org.graphast.query.route.shortestpath.model.Path;
+import org.graphast.query.route.shortestpath.model.RouteEntry;
 
-public class DijkstraGeneric {
+public class DijkstraVariableWeight extends Dijkstra {
 
-	private Graph graph;
-	private GraphBounds graphBounds;
-
-	public DijkstraGeneric(Graph ga){
-		this.graph = ga;
+	public DijkstraVariableWeight(Graph graph){
+		super(graph);
 	}
 	
-	public DijkstraGeneric(GraphBounds ga){
-		this.graphBounds = ga;
+	public DijkstraVariableWeight(GraphBounds graphBounds){
+		super(graphBounds);
 	}
 
 	public void expandVertex(QueueEntry e, LongSet settledNodes, Long2IntMap shortestDistances,
@@ -66,21 +70,21 @@ public class DijkstraGeneric {
 		}
 	}
 
-	public HashMap<Long, Integer> shortestPath(long v){
+	public Int2DoubleMap shortestPath(long v){
 		PriorityQueue<QueueEntry> unsettledNodes = new PriorityQueue<QueueEntry>();
 		LongSet settledNodes = new LongOpenHashSet();
 		Long2IntMap shortestDistances = new Long2IntOpenHashMap();
-		HashMap<Long, Integer> distance = new HashMap<Long, Integer>();
+		Int2DoubleMap distance = new Int2DoubleOpenHashMap();
 
 		shortestDistances.put(v, 0);
-		distance.put(v, 0);
+		distance.put(convertToInt(v), 0);
 		QueueEntry e = new QueueEntry(v, 0);
 		unsettledNodes.add(e);
 
 		while ((e = unsettledNodes.poll()) != null){
 			if(!settledNodes.contains(e.getId())){
 				settledNodes.add(e.getId());
-				distance.put(e.getId(), e.getTravelTime());
+				distance.put(convertToInt(e.getId()), e.getTravelTime());
 
 				expandVertex(e, settledNodes, shortestDistances, unsettledNodes);
 			}
@@ -261,5 +265,32 @@ public class DijkstraGeneric {
 			return minCost.get(id);
 		else
 			return Integer.MAX_VALUE;
+	}
+
+	@Override
+	public Path shortestPath(Node source, Node target) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Path shortestPath(long source, long target) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Path shortestPath(long source, long target, Date time) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void expandVertex(Node target, DistanceEntry removed,
+			HashMap<Long, Integer> wasTraversed,
+			PriorityQueue<DistanceEntry> queue,
+			HashMap<Long, RouteEntry> parents) {
+		// TODO Auto-generated method stub
+		
 	}
 }		

@@ -63,8 +63,8 @@ public class GraphGeneratorTest {
 		Map<Long, Integer> realValueUpper = new SimpleMap<Long, Integer>(2l,2, 6l,11, 3l,11, 1l,10, 5l,13, 4l,10, 0l,4, 7l,15);
 		Map<Long, Integer> realValueLower = new SimpleMap<Long, Integer>(2l,1, 6l,3, 3l,4, 1l,2, 5l,2, 4l,1, 0l,2, 7l,2);
 
-		assertEquals(true, MapUtils.equalMaps(realValueUpper, graphExample2.getUpperBound()));
-		assertEquals(true, MapUtils.equalMaps(realValueLower, graphExample2.getLowerBound()));
+		assertEquals(true, MapUtils.equalMaps(realValueUpper, graphExample2.getEdgesUpperBound()));
+		assertEquals(true, MapUtils.equalMaps(realValueLower, graphExample2.getEdgesLowerBound()));
 
 	}
 	

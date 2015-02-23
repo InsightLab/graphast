@@ -1,8 +1,8 @@
 package org.graphast.query.route.osr;
 
 import static org.graphast.util.NumberUtils.convertToInt;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
+import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,16 +12,14 @@ import java.util.PriorityQueue;
 
 import org.graphast.model.Graph;
 import org.graphast.model.Node;
-import org.graphast.query.route.shortestpath.dijkstra.Dijkstra;
-import org.graphast.query.route.shortestpath.dijkstra.DijkstraConstantWeight;
-import org.graphast.query.route.shortestpath.model.Path;
+import org.graphast.query.route.shortestpath.dijkstra.DijkstraVariableWeight;
 import org.graphast.util.DateUtils;
 
 public class OSRSearch {
 
 	private Graph graph;
 	private BoundsRoute bounds;
-	private Dijkstra dijkstra;
+	private DijkstraVariableWeight dijkstra;
 
 	protected static int wasRemoved = -1;
 
@@ -30,7 +28,7 @@ public class OSRSearch {
 		this.graph = graph;
 		this.bounds = bounds;
 		//Double check this instantiation
-		this.dijkstra = new DijkstraConstantWeight(reverseGraph);
+		this.dijkstra = new DijkstraVariableWeight(reverseGraph);
 	}
 
 	public ArrayList<Long> reconstructPath(Node origin, Node destination, RouteQueueEntry route, 
@@ -85,9 +83,11 @@ public class OSRSearch {
 
 		// Is this 'destinationPaths' keeping all shortest paths 
 		// from the destination node of OSR to all other nodes?
-		Int2ObjectMap<Path> destinationPaths = new Int2ObjectOpenHashMap<Path>();
-		destinationPaths = dijkstra.shortestPath(destination);
+		Int2DoubleMap destinationPaths = new Int2DoubleOpenHashMap();
+		destinationPaths = dijkstra.shortestPath(destination.getId());
 
+		System.out.println(destinationPaths);
+		
 		Sequence seq = new Sequence();
 		int t = DateUtils.dateToMinutes(time);
 		int wt, ts, upper = Integer.MAX_VALUE;
@@ -193,8 +193,8 @@ public class OSRSearch {
 		return false;
 	}
 
-	private double lowerBound(int id, int pos, ArrayList<Integer> categories, Int2ObjectMap<Path> destination){
-		double max = destination.get(id).getPathCost();
+	private double lowerBound(int id, int pos, ArrayList<Integer> categories, Int2DoubleMap destination){
+		double max = destination.get(id);
 		if(pos < categories.size()){
 			int distance;
 			for(int i = pos; i < categories.size(); i++){
@@ -220,7 +220,7 @@ public class OSRSearch {
 	}
 
 	private void init(Node origin, Node d, ArrayList<Integer> categories, int t, PriorityQueue<RouteQueueEntry> queue, 
-			Int2ObjectMap<Path> destinationPaths){
+			Int2DoubleMap destinationPaths){
 
 		int pos = 0;
 		ArrayList<NearestNeighborTC> reached = new ArrayList<NearestNeighborTC>();
