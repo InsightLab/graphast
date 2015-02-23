@@ -10,6 +10,7 @@ import java.util.PriorityQueue;
 
 import org.graphast.exception.PathNotFoundException;
 import org.graphast.model.Graph;
+import org.graphast.model.GraphBounds;
 import org.graphast.model.Node;
 import org.graphast.query.route.shortestpath.AbstractShortestPathService;
 import org.graphast.query.route.shortestpath.model.DistanceEntry;
@@ -20,6 +21,10 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 
 	//private Logger logger = LoggerFactory.getLogger(this.getClass());
 
+	public Dijkstra(GraphBounds graphBounds) {
+		super(graphBounds);
+	}
+	
 	public Dijkstra(Graph graph) {
 		super(graph);
 	}

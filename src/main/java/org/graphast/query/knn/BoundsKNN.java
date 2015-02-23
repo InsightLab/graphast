@@ -3,14 +3,14 @@ package org.graphast.query.knn;
 import org.graphast.model.Graph;
 import org.graphast.model.Node;
 import org.graphast.query.model.AbstractBoundsSearch;
-import org.graphast.query.route.shortestpath.dijkstra.DijkstraGeneric;
+import org.graphast.query.route.shortestpath.dijkstra.DijkstraVariableWeight;
 
 public class BoundsKNN extends AbstractBoundsSearch{
 	
 	public BoundsKNN(Graph ga){
 		super();
 		//if(bounds.keySetSize() == 0){
-			DijkstraGeneric d = new DijkstraGeneric(ga);
+			DijkstraVariableWeight d = new DijkstraVariableWeight(ga);
 			for(int i = 0; i < ga.getNumberOfNodes(); i++){
 				long position = i*Node.NODE_BLOCKSIZE;
 				long vid = ga.getNodes().getInt(position);

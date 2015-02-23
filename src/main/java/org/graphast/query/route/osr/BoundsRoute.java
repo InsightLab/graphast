@@ -1,14 +1,12 @@
 package org.graphast.query.route.osr;
 
-import java.util.Arrays;
-
 import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.objects.ObjectCollection;
 
 import org.graphast.model.GraphBounds;
 import org.graphast.query.model.AbstractBoundsSearch;
 import org.graphast.query.model.Bound;
-import org.graphast.query.route.shortestpath.dijkstra.DijkstraGeneric;
+import org.graphast.query.route.shortestpath.dijkstra.DijkstraVariableWeight;
 
 public class BoundsRoute extends AbstractBoundsSearch {
 
@@ -22,7 +20,7 @@ public class BoundsRoute extends AbstractBoundsSearch {
 
 		super();
 
-		DijkstraGeneric d = new DijkstraGeneric(graph);
+		DijkstraVariableWeight d = new DijkstraVariableWeight(graph);
 		IntSet categoriesIds = graph.getCategories();
 
 //		System.out.println(categoriesIds);
