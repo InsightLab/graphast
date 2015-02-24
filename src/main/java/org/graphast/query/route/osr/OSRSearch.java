@@ -11,21 +11,22 @@ import java.util.HashMap;
 import java.util.PriorityQueue;
 
 import org.graphast.model.Graph;
+import org.graphast.model.GraphBounds;
 import org.graphast.model.Node;
 import org.graphast.query.route.shortestpath.dijkstra.DijkstraVariableWeight;
 import org.graphast.util.DateUtils;
 
 public class OSRSearch {
 
-	private Graph graph;
+	private GraphBounds graphBounds;
 	private BoundsRoute bounds;
 	private DijkstraVariableWeight dijkstra;
 
 	protected static int wasRemoved = -1;
 
 
-	public OSRSearch(Graph graph, BoundsRoute bounds, Graph reverseGraph){
-		this.graph = graph;
+	public OSRSearch(GraphBounds graphBounds, BoundsRoute bounds, GraphBounds reverseGraph){
+		this.graphBounds = graphBounds;
 		this.bounds = bounds;
 		//Double check this instantiation
 		this.dijkstra = new DijkstraVariableWeight(reverseGraph);
@@ -111,7 +112,7 @@ public class OSRSearch {
 
 			if(removed.getLowerBound() > upper)	return seq;
 
-			HashMap<Node, Integer> neig = graph.accessNeighborhood(graph.getNode(removed.getId()), removed.getArrivalTime());
+			HashMap<Node, Integer> neig = graphBounds.accessNeighborhood(graphBounds.getNode(removed.getId()), removed.getArrivalTime());
 
 			for (Node v : neig.keySet()) {
 				int vid = convertToInt(v.getId());
@@ -122,10 +123,10 @@ public class OSRSearch {
 
 				if(nextId < categories.size()){
 					nextCat = categories.get(nextId);
-					Node poi = ((Graph) graph).getPoi(vid);
+					Node poi = ((Graph) graphBounds).getPoi(vid);
 					if(poi != null){
 						if(poi.getCategory() == nextCat){
-							wt = ((Graph) graph).poiGetCost(vid, removed.getArrivalTime());
+							wt = ((Graph) graphBounds).poiGetCost(vid, removed.getArrivalTime());
 							ts = wt + tt;
 							NearestNeighborTC nn = new NearestNeighborTC(vid, tt, wt, ts);
 							reachedNN.add(nn);
@@ -133,7 +134,7 @@ public class OSRSearch {
 						}
 					}
 				}
-				int at = graph.getArrival(removed.getArrivalTime() + wt, neig.get(v));
+				int at = graphBounds.getArrival(removed.getArrivalTime() + wt, neig.get(v));
 				int lb = (int) lowerBound(vid, nextId, categories, destinationPaths);
 				RouteQueueEntry newEntry = new RouteQueueEntry(	vid, tt, at, convertToInt(removed.getId()), tt + lb, reachedNN);
 
@@ -228,13 +229,13 @@ public class OSRSearch {
 		travelTime = 0;
 		int originId = convertToInt(origin.getId());
 
-		Node poi = ((Graph) graph).getPoi(originId);
+		Node poi = ((Graph) graphBounds).getPoi(originId);
 
 		if(poi != null) {
 
 			if(poi.getCategory() == categories.get(0)){
 				pos++;
-				waitingTime = ((Graph) graph).poiGetCost(originId, t);
+				waitingTime = ((Graph) graphBounds).poiGetCost(originId, t);
 				timeToService = travelTime + waitingTime;
 				NearestNeighborTC nn = new NearestNeighborTC(originId, travelTime, waitingTime, timeToService);
 				reached.add(nn);
@@ -247,11 +248,11 @@ public class OSRSearch {
 	}
 
 	public Graph getGraphAdapter() {
-		return graph;
+		return graphBounds;
 	}
 
-	public void setGraphAdapter(Graph graphAdapter) {
-		this.graph = graphAdapter;
+	public void setGraphAdapter(GraphBounds graphAdapter) {
+		this.graphBounds = graphAdapter;
 	}
 
 }

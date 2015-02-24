@@ -14,7 +14,7 @@ public interface GraphBounds extends Graph {
 	
 	public abstract Long2IntMap getNodesLowerBound();
 	
-	public Long2IntMap accessNeighborhood(Node v, short graphType);
+	public Long2IntMap accessNeighborhood(Node v, short graphType, int time);
 	
 	public int poiGetCost(long vid, short graphType);
 	

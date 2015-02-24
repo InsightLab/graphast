@@ -97,7 +97,7 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 	 * 					3 = Upper Bound Costs.
 	 * @return
 	 */
-	public Long2IntMap accessNeighborhood(Node v, short graphType){
+	public Long2IntMap accessNeighborhood(Node v, short graphType, int time){
 
 		Long2IntMap neighbors = new Long2IntOpenHashMap();
 		int cost;
@@ -108,7 +108,8 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 			long neighborNodeId =  edge.getToNode();
 
 			if(graphType == 0) {
-				cost =  edge.getDistance();
+				cost = this.getEdgeCost(edge, time);
+//				cost =  edge.getDistance();
 			} else if(graphType == 1) {
 				cost = getEdgesLowerBound().get(edge.getId());
 			} else {
@@ -127,6 +128,8 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 		return neighbors;
 
 	}
+	
+	
 
 	public int poiGetCost(long vid, short graphType){
 		LinearFunction[] lf = convertToLinearFunction(getPoiCost(vid));
