@@ -109,7 +109,6 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 
 			if(graphType == 0) {
 				cost = this.getEdgeCost(edge, time);
-//				cost =  edge.getDistance();
 			} else if(graphType == 1) {
 				cost = getEdgesLowerBound().get(edge.getId());
 			} else {

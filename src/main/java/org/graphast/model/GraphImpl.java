@@ -59,7 +59,7 @@ public class GraphImpl implements Graph {
 	
 	protected int delta;
 	
-	protected int maxTime;
+	protected int maxTime = 86400000;
 
 	/**
 	 * Creates a Graph for the given directory passed as parameter.
