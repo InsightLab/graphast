@@ -194,8 +194,8 @@ public class OSRSearch {
 		return false;
 	}
 
-	private double lowerBound(int id, int pos, ArrayList<Integer> categories, Int2DoubleMap destination){
-		double max = destination.get(id);
+	private int lowerBound(int id, int pos, ArrayList<Integer> categories, Int2DoubleMap destination){
+		int max = (int) destination.get(id);
 		if(pos < categories.size()){
 			int distance;
 			for(int i = pos; i < categories.size(); i++){
@@ -242,7 +242,7 @@ public class OSRSearch {
 			}
 		}
 
-		int lb = convertToInt(lowerBound(originId, pos, categories, destinationPaths));
+		int lb = lowerBound(originId, pos, categories, destinationPaths);
 
 		queue.offer(new RouteQueueEntry(originId, travelTime, t, -1, t + lb, reached));
 	}

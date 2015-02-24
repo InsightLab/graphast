@@ -76,9 +76,6 @@ public class DijkstraVariableWeight extends Dijkstra {
 		Long2IntMap shortestDistances = new Long2IntOpenHashMap();
 		Int2DoubleMap distance = new Int2DoubleOpenHashMap();
 
-		System.out.println(graph);
-		System.out.println(graphBounds);
-		
 		shortestDistances.put(v, 0);
 		distance.put(convertToInt(v), 0);
 		QueueEntry e = new QueueEntry(v, 0);
