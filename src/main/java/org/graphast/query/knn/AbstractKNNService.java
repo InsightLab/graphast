@@ -97,7 +97,7 @@ public abstract class AbstractKNNService implements KNNService{
 		for (long v : neig.keySet()) {
 			int at = network.getArrival(removed.getArrivalTime(), neig.get(v));
 			int tt = removed.getTravelTime() + neig.get(v);
-			Bound bMin = new Bound(minBounds.getBounds().get(v));
+			Bound bMin = new Bound(v, minBounds.getBounds().get(v));
 			LowerBoundEntry newEntry = new LowerBoundEntry(	v, 
 													tt, 
 													at, 
@@ -118,7 +118,7 @@ public abstract class AbstractKNNService implements KNNService{
 						}
 					}
 				}
-				Bound bMax = new Bound(maxBounds.getBounds().get(v));
+				Bound bMax = new Bound(v, maxBounds.getBounds().get(v));
 				includeCandidate(k, bMax.getId(), tt + bMax.getCost(), kth, upperCandidates, isIn);
 			}
 		}
