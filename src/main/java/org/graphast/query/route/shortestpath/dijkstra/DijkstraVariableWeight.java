@@ -45,7 +45,7 @@ public class DijkstraVariableWeight extends Dijkstra {
 	public void expandVertex(QueueEntry e, LongSet settledNodes, Long2IntMap shortestDistances,
 			PriorityQueue<QueueEntry> unsettledNodes, short graphType){
 		
-		Long2IntMap adjacents = graphBounds.accessNeighborhood(graphBounds.getNode(e.getId()), graphType);
+		Long2IntMap adjacents = graphBounds.accessNeighborhood(graphBounds.getNode(e.getId()), graphType, 0);
 		
 		if(adjacents != null) {
 			
@@ -76,6 +76,9 @@ public class DijkstraVariableWeight extends Dijkstra {
 		Long2IntMap shortestDistances = new Long2IntOpenHashMap();
 		Int2DoubleMap distance = new Int2DoubleOpenHashMap();
 
+		System.out.println(graph);
+		System.out.println(graphBounds);
+		
 		shortestDistances.put(v, 0);
 		distance.put(convertToInt(v), 0);
 		QueueEntry e = new QueueEntry(v, 0);
