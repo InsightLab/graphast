@@ -42,12 +42,12 @@ public class KNNSearchTest {
 	public void search() throws ParseException{
 		Date date = DateUtils.parseDate(0, 550, 0);
     	
-    	ArrayList<NearestNeighbor> nn = knn.search(graphPoI.getNode(4), date, 2);
+    	ArrayList<NearestNeighbor> nn = knn.search(graphPoI.getNode(7), date, 2);
     			
-    	assertEquals((long)graphPoI.getNode(2).getId(), nn.get(0).getId());
-		assertEquals(900000, nn.get(0).getDistance());
-		assertEquals((long)graphPoI.getNode(5).getId(), nn.get(1).getId());
-		assertEquals(3120000, nn.get(1).getDistance());
+    	assertEquals((long)graphPoI.getNode(4).getId(), nn.get(0).getId());
+		assertEquals(190, nn.get(0).getDistance());
+		assertEquals((long)graphPoI.getNode(9).getId(), nn.get(1).getId());
+		assertEquals(260, nn.get(1).getDistance());
 				
 	}
 	
