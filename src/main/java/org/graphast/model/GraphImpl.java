@@ -955,7 +955,9 @@ public class GraphImpl implements Graph {
 		for(int i = 0; i < getNumberOfNodes(); i++) {
 			long position = i*Node.NODE_BLOCKSIZE;
 			int category = getNodes().getInt(position+2);
-			categories.add(category);
+			if(category != -1) {
+				categories.add(category);
+			}	
 //			long position = i*Node.NODE_BLOCKSIZE;
 //			long vid = ga.getNodes().getInt(position);
 //			bounds.put(vid,  d.shortestPathPoi(vid, -1).getDistance());
