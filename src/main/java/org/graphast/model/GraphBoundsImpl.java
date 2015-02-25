@@ -140,17 +140,17 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 	}
 	
 	public int[] getNodeCosts(long nodeId) {
-		int[] lowerBound = {getNodesLowerBound().get(nodeId)};
-		return lowerBound;
+//		int[] lowerBound = {getNodesLowerBound().get(nodeId)};
+//		return lowerBound;
 		
-//		NodeImpl node = (NodeImpl)getNode(nodeId);
-//		long costsIndex = node.getCostsIndex();
-//
-//		if(costsIndex == -1 ) {
-//			return null;
-//		} else {
-//			return getNodeCostsByCostsIndex(costsIndex);
-//		}
+		NodeImpl node = (NodeImpl)getNode(nodeId);
+		long costsIndex = node.getCostsIndex();
+
+		if(costsIndex == -1 ) {
+			return null;
+		} else {
+			return getNodeCostsByCostsIndex(costsIndex);
+		}
 		
 	}
 

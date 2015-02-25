@@ -3,6 +3,7 @@ package org.graphast.query.route.osr;
 import static org.graphast.util.NumberUtils.convertToInt;
 import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
 import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2IntMap;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,7 +56,7 @@ public class OSRSearch {
 		
 		while(parent != id && parent != -1){
 			path.add(parent);
-			parent = parents.get(pos).get(parent);
+			parent = parents.get(pos).get((int)parent);
 		}
 		path.add((long)id);
 		Collections.reverse(path);
@@ -104,18 +105,16 @@ public class OSRSearch {
 
 			if(removed.getId() == convertToInt(destination.getId())){
 				if(removed.getR().size() >= categories.size()){
-					return new Sequence(removed.getId(), 
-							removed.getTravelTime(), 
-							reconstructPath(origin, destination, removed, parents), removed.getR());
+					return new Sequence(removed.getId(), removed.getTravelTime(), reconstructPath(origin, destination, removed, parents), removed.getR());
 				}
 			}
 
 			if(removed.getLowerBound() > upper)	return seq;
 
-			HashMap<Node, Integer> neig = graphBounds.accessNeighborhood(graphBounds.getNode(removed.getId()), removed.getArrivalTime());
+			Long2IntMap neig = graphBounds.accessNeighborhood(graphBounds.getNode(removed.getId()),(short)1, removed.getArrivalTime());
 
-			for (Node v : neig.keySet()) {
-				int vid = convertToInt(v.getId());
+			for (long v : neig.keySet()) {
+				int vid = convertToInt(v);
 				nextId = removed.getR().size();
 				int tt = removed.getTravelTime() + neig.get(v);
 				wt = 0;
