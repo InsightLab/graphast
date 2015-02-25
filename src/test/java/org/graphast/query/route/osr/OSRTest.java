@@ -64,7 +64,9 @@ public class OSRTest {
     	
     	Graph graph = osr.getGraphAdapter();
 
-    	Sequence seq = osr.search(graph.getNode(3), graph.getNode(5), date, categories);
+//    	Sequence seq = osr.search(graph.getNode(3), graph.getNode(5), date, categories);
+
+    	Sequence seq = osr.search(graph.getNode(1), graph.getNode(7), date, categories);
 //		assertEquals(convertToInt(graph.getNode(5).getId()), (long) seq.getPois().get(0).getId());
 //		assertEquals(3120000, (int) seq.getPois().get(0).getDistance());
 //		assertEquals(convertToInt(graph.getNode(2).getId()), (long) seq.getPois().get(1).getId());
