@@ -63,36 +63,28 @@ public class GraphTest {
 	}
 
 	@Test
-	public void getCostsTest() {
-		int[] costs = graphExample3.getEdgeCosts(0);
-		assertEquals(1, costs[0]);
-		assertEquals(2, costs[1]);
-		assertEquals(3, costs[2]);
-		assertEquals(4, costs[3]);
-
-		costs = graphExample3.getEdgeCosts(1);
-		assertEquals(2, costs[0]);
-		assertEquals(4, costs[1]);
-		assertEquals(6, costs[2]);
-		assertEquals(8, costs[3]);
-		assertEquals(10, costs[4]);
-	}
-
-	@Test
 	public void getEdgeCostTest() {
 		Edge edge = graphExample3.getEdge(0);
-		assertEquals(1, graphExample3.getEdgeCost(edge, 3600));
-		assertEquals(1, graphExample3.getEdgeCost(edge, 7200));
-		assertEquals(2, graphExample3.getEdgeCost(edge, 36000));
-		assertEquals(3, graphExample3.getEdgeCost(edge, 61200));
-		assertEquals(4, graphExample3.getEdgeCost(edge, 75600));
+		assertEquals((Integer)1, graphExample3.getEdgeCost(edge, 3600));
+		assertEquals((Integer)1, graphExample3.getEdgeCost(edge, 7200));
+		assertEquals((Integer)2, graphExample3.getEdgeCost(edge, 36000));
+		assertEquals((Integer)3, graphExample3.getEdgeCost(edge, 61200));
+		assertEquals((Integer)4, graphExample3.getEdgeCost(edge, 75600));
 
 		edge = graphExample3.getEdge(1);
-		assertEquals(2, graphExample3.getEdgeCost(edge, 3600));
-		assertEquals(2, graphExample3.getEdgeCost(edge, 7200));
-		assertEquals(6, graphExample3.getEdgeCost(edge, 36000));
-		assertEquals(8, graphExample3.getEdgeCost(edge, 61200));
-		assertEquals(10, graphExample3.getEdgeCost(edge, 75600));
+		assertEquals((Integer)2, graphExample3.getEdgeCost(edge, 3600));
+		assertEquals((Integer)2, graphExample3.getEdgeCost(edge, 7200));
+		assertEquals((Integer)6, graphExample3.getEdgeCost(edge, 36000));
+		assertEquals((Integer)8, graphExample3.getEdgeCost(edge, 61200));
+		assertEquals((Integer)10, graphExample3.getEdgeCost(edge, 75600));
+		
+		// No costs test
+		edge = graphExample3.getEdge(5);
+		assertNull(graphExample3.getEdgeCost(edge, 3600));
+		assertNull(graphExample3.getEdgeCost(edge, 7200));
+		assertNull(graphExample3.getEdgeCost(edge, 36000));
+		assertNull(graphExample3.getEdgeCost(edge, 61200));
+		assertNull(graphExample3.getEdgeCost(edge, 75600));
 	}
 
 	@Test
@@ -111,11 +103,16 @@ public class GraphTest {
 	public void getEdgeLabelTest() {
 		assertEquals("rua1", graphExample3.getEdgeLabel(0));
 		assertEquals("rua2", graphExample3.getEdgeLabel(1));
+		// No label test
+		assertNull(graphExample3.getEdgeLabel(5));
 	}
 
 	@Test
 	public void getNodeLabelTest() {
+		assertEquals("label node 0", graphExample3.getNodeLabel(0));
 		assertEquals("Banco", graphExample3.getNodeLabel(5));
+		// No label test
+		assertNull(graphExample3.getNodeLabel(1));
 	}
 
 	@Test
@@ -222,6 +219,10 @@ public class GraphTest {
 		Edge e =  graphExample.getEdge(0);
 		assertEquals("Named Street 1", graphExample.getEdgeLabel(0));
 		assertEquals("Named Street 1", e.getLabel());
+		
+		// No label test
+		e = graphExample3.getEdge(5);
+		assertNull(graphExample3.getEdgeLabel(5));
 	}
 
 	@Test
@@ -232,6 +233,7 @@ public class GraphTest {
 		assertEquals(1, graphExample3.getEdgeCosts(2).length);
 		assertEquals(5, graphExample3.getEdgeCosts(3).length);
 		assertEquals(1, graphExample3.getEdgeCosts(4).length);
+		//No costs test
 		assertNull(graphExample3.getEdgeCosts(5));
 		assertNull(graphExample3.getEdgeCosts(6));
 	}
@@ -239,17 +241,17 @@ public class GraphTest {
 	@Test
 	public void getNodeCostsTest() {
 
+		assertEquals(4, graphExample3.getNodeCosts(2).length);
+		// No costs test
 		assertNull(graphExample3.getNodeCosts(0));
 		assertNull(graphExample3.getNodeCosts(1));
-		assertEquals(4, graphExample3.getNodeCosts(2).length);
+		
 
 	}
 
 	@Test
 	public void getNodeCategory() {
-
 		assertArrayEquals ( new int[]{0, 2, 1, 4}, graphExample2.getCategories().toIntArray());
-
 	}
 
 	@Test
