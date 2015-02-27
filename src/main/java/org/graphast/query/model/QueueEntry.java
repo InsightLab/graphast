@@ -4,9 +4,9 @@ package org.graphast.query.model;
 		private long id;
 		private int travelTime;
 
-		public QueueEntry(long id, int tt) {
+		public QueueEntry(long id, int travelTime) {
 			this.id = id;
-			this.travelTime = tt;
+			this.travelTime = travelTime;
 		}
 
 		public int compareTo(QueueEntry another) {
@@ -34,7 +34,7 @@ package org.graphast.query.model;
 			return travelTime;
 		}
 
-		public void setTravelTime(int tt) {
-			this.travelTime = tt;
+		public void setTravelTime(int travelTime) {
+			this.travelTime = travelTime;
 		}
 	}

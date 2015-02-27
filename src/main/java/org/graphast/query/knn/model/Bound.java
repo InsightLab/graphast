@@ -1,28 +1,25 @@
-package org.graphast.query.model;
+package org.graphast.query.knn.model;
 
 import org.graphast.util.StringUtils;
 
 
-
 public class Bound {
-
-	//id = identifier of a category.
 	private long id;
-	private int cost;
+	private short cost;
 	
-	public Bound(long id, int cost){
+	public Bound(long id, short cost){
 		this.id = id;
 		this.cost = cost;
 	}
 	
 	public Bound(){
 		this.id = -1;
-		this.cost = Integer.MAX_VALUE;
+		this.cost = Short.MAX_VALUE;
 	}
 	
 	public Bound(long id) {
 		this.id = id;
-		this.cost = Integer.MAX_VALUE;
+		this.cost = Short.MAX_VALUE;
 	}
 	
 	public String toString(){
@@ -37,11 +34,11 @@ public class Bound {
 		this.id = id;
 	}
 
-	public int getCost() {
+	public short getCost() {
 		return cost;
 	}
 
-	public void setCost(int cost) {
+	public void setCost(short cost) {
 		this.cost = cost;
 	}
 }
