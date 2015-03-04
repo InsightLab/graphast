@@ -103,6 +103,10 @@ public class OSRSearch {
 			addWasTraversed(removed.getR().size(), convertToInt(removed.getId()), wasRemoved, wasTraversed);
 			addParent(removed.getR().size(), convertToInt(removed.getId()), convertToInt(removed.getParent()), parents);
 
+//			System.out.println("Removed: " + removed.getId());
+//			System.out.println("Parents: " + parents + "\n");
+			
+			
 			if(removed.getId() == convertToInt(destination.getId())){
 				if(removed.getR().size() >= categories.size()){
 					return new Sequence(removed.getId(), removed.getTravelTime(), reconstructPath(origin, destination, removed, parents), removed.getR());

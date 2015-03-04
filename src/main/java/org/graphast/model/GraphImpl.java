@@ -924,13 +924,13 @@ public class GraphImpl implements Graph {
 
 	public LinearFunction[] convertToLinearFunction(int[] costs){
 		LinearFunction[] result = new LinearFunction[costs.length/2];
-		int interval = (60*60*24*1000)/(costs.length/2-1);
+		int interval = 86400000/(costs.length/2);
 		int startInterval = 0;
 		int endInterval = interval;
 		for(int i = 0; i < costs.length/2; i++){
 			result[i] = new LinearFunction(startInterval, costs[(i*2)], endInterval, costs[(i*2)+1]);
 			startInterval = endInterval;
-			endInterval = endInterval + interval/2;
+			endInterval = endInterval + interval;
 		}
 		
 		return result;

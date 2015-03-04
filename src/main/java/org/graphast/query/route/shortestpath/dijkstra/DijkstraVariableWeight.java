@@ -86,7 +86,7 @@ public class DijkstraVariableWeight extends Dijkstra {
 				settledNodes.add(e.getId());
 				distance.put(convertToInt(e.getId()), e.getTravelTime());
 
-				expandVertex(e, settledNodes, shortestDistances, unsettledNodes);
+				expandVertex(e, settledNodes, shortestDistances, unsettledNodes, (short)0);
 			}
 		} 
 		return distance;
