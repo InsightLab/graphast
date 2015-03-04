@@ -128,6 +128,22 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 
 	}
 	
+	public int getEdgeCost(Edge e, int t){
+	
+		LinearFunction[] lf = convertToLinearFunction(getEdgeCosts(e.getId()));
+		return lf[0].calculateCost(t);
+		
+//		int[] costs = getEdgeCosts(e.getId());
+//		int t1 = t;
+//		t = t - (t % 2);
+//		int pos = t/2;
+//		int s = costs[pos];
+//		//LinearFunction f = new LinearFunction(s);
+//		//return f.calculateCost(t1);
+//		return 0;
+		
+		
+	}
 	
 
 	public int poiGetCost(long vid, short graphType){

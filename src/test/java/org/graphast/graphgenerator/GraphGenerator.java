@@ -223,47 +223,91 @@ public class GraphGenerator {
 
 		//NODES
 
-		node = new NodeImpl(1l, 0.0d, 1.0d);
+		node = new NodeImpl(0l, 0.0d, 1.0d);
 		graph.addNode(node);
 
-		node = new NodeImpl(2l, 0.0d, 10.0d);
+		node = new NodeImpl(1l, 0.0d, 10.0d);
 		int[] costs = new int[]{30300000, 1500000, 1500000, 1500000, 900000, 900000, 59100000, 30300000};
 		node.setCategory(1);
 		node.setLabel("Bradesco");
 		node.setCosts(costs);
 		graph.addNode(node);
 
-		node = new NodeImpl(3l, 0.0d, 20.0d);
+		node = new NodeImpl(2l, 0.0d, 20.0d);
 		graph.addNode(node);
 
-		node = new NodeImpl(4l, 0.0d, 30.0d);
+		node = new NodeImpl(3l, 0.0d, 30.0d);
 		graph.addNode(node);
 
-		node = new NodeImpl(5l, 0.0d, 40.0d);
+		node = new NodeImpl(4l, 0.0d, 40.0d);
 		costs = new int[]{29700000, 900000, 900000, 900000, 1500000, 1500000, 58500000, 17700000};
 		node.setCategory(2);
 		node.setLabel("Padaria Costa Mendes");
 		node.setCosts(costs);
 		graph.addNode(node);
 
-		node = new NodeImpl(6l, 10.0d, 0.0d);
+		node = new NodeImpl(5l, 10.0d, 0.0d);
 		graph.addNode(node);
 
-		node = new NodeImpl(7l, 10.0d, 10.0d);
+		node = new NodeImpl(6l, 10.0d, 10.0d);
 		graph.addNode(node);
 
-		node = new NodeImpl(8l, 10.0d, 20.0d);
+		node = new NodeImpl(7l, 10.0d, 20.0d);
 		graph.addNode(node);
 
-		node = new NodeImpl(9l, 10.0d, 30.0d);
+		node = new NodeImpl(8l, 10.0d, 30.0d);
 		graph.addNode(node);
 
-		node = new NodeImpl(10l, 10.0d, 40.0d);
+		node = new NodeImpl(9l, 10.0d, 40.0d);
 		costs = new int[]{30300000, 1500000, 1500000, 1500000, 900000, 900000, 59100000, 30300000};
 		node.setCategory(3);
 		node.setLabel("Escola Vila");
 		node.setCosts(costs);
 		graph.addNode(node);
+		
+//		node = new NodeImpl(1l, 0.0d, 1.0d);
+//		graph.addNode(node);
+//
+//		node = new NodeImpl(2l, 0.0d, 10.0d);
+//		int[] costs = new int[]{30300000, 1500000, 1500000, 1500000, 900000, 900000, 59100000, 30300000};
+//		node.setCategory(1);
+//		node.setLabel("Bradesco");
+//		node.setCosts(costs);
+//		graph.addNode(node);
+//
+//		node = new NodeImpl(3l, 0.0d, 20.0d);
+//		graph.addNode(node);
+//
+//		node = new NodeImpl(4l, 0.0d, 30.0d);
+//		graph.addNode(node);
+//
+//		node = new NodeImpl(5l, 0.0d, 40.0d);
+//		costs = new int[]{29700000, 900000, 900000, 900000, 1500000, 1500000, 58500000, 17700000};
+//		node.setCategory(2);
+//		node.setLabel("Padaria Costa Mendes");
+//		node.setCosts(costs);
+//		graph.addNode(node);
+//
+//		node = new NodeImpl(6l, 10.0d, 0.0d);
+//		graph.addNode(node);
+//
+//		node = new NodeImpl(7l, 10.0d, 10.0d);
+//		graph.addNode(node);
+//
+//		node = new NodeImpl(8l, 10.0d, 20.0d);
+//		graph.addNode(node);
+//
+//		node = new NodeImpl(9l, 10.0d, 30.0d);
+//		graph.addNode(node);
+//
+//		node = new NodeImpl(10l, 10.0d, 40.0d);
+//		costs = new int[]{30300000, 1500000, 1500000, 1500000, 900000, 900000, 59100000, 30300000};
+//		node.setCategory(3);
+//		node.setLabel("Escola Vila");
+//		node.setCosts(costs);
+//		graph.addNode(node);
+		
+		
 
 		//TODO Create a constructor for edge without the distance
 
