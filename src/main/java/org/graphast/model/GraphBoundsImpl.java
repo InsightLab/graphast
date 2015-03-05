@@ -74,9 +74,9 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 			node = super.getNode(i);
 			nodesLowerBound.put((long)node.getId(), getMinimunCostValue(node.getCosts()));
 		}
-		
-//		System.out.println(nodesLowerBound);
-		
+
+		//		System.out.println(nodesLowerBound);
+
 	}
 
 	public void createNodesUpperBounds() {
@@ -127,38 +127,54 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 		return neighbors;
 
 	}
-	
+
+	//TODO Refactor this method
 	public int getEdgeCost(Edge e, int t){
-	
+
 		LinearFunction[] lf = convertToLinearFunction(getEdgeCosts(e.getId()));
-		return lf[0].calculateCost(t);
 		
-//		int[] costs = getEdgeCosts(e.getId());
-//		int t1 = t;
-//		t = t - (t % 2);
-//		int pos = t/2;
-//		int s = costs[pos];
-//		//LinearFunction f = new LinearFunction(s);
-//		//return f.calculateCost(t1);
-//		return 0;
-		
-		
+		int x = lf.length;
+		int minutesInADay = 86400000;
+		int position = t/(minutesInADay/x);
+		return lf[position].calculateCost(t);
+
+		//		int[] costs = getEdgeCosts(e.getId());
+		//		int t1 = t;
+		//		t = t - (t % 2);
+		//		int pos = t/2;
+		//		int s = costs[pos];
+		//		//LinearFunction f = new LinearFunction(s);
+		//		//return f.calculateCost(t1);
+		//		return 0;
+
+
 	}
-	
+
 
 	public int poiGetCost(long vid, short graphType){
-		LinearFunction[] lf = convertToLinearFunction(getPoiCost(vid));
-		return lf[0].calculateCost(0);
+		
+		if(graphType == 0) {
+			LinearFunction[] lf = convertToLinearFunction(getPoiCost(vid));
+			return lf[0].calculateCost(0);
+		} else if(graphType == 1){
+			int[] nodeLowerBound = new int[] {getNodesLowerBound().get(vid), getNodesLowerBound().get(vid)};
+			LinearFunction[] lf = convertToLinearFunction(nodeLowerBound);
+			return lf[0].calculateCost(0);
+		} else {
+			int[] nodeUpperBound = new int[] {getNodesUpperBound().get(vid), getNodesUpperBound().get(vid)};
+			LinearFunction[] lf = convertToLinearFunction(nodeUpperBound);
+			return lf[0].calculateCost(0);
+		}
 	}
 
 	public int[] getPoiCost(long vid){
 		return getNodeCosts(vid);
 	}
-	
+
 	public int[] getNodeCosts(long nodeId) {
-//		int[] lowerBound = {getNodesLowerBound().get(nodeId)};
-//		return lowerBound;
-		
+		//		int[] lowerBound = {getNodesLowerBound().get(nodeId)};
+		//		return lowerBound;
+
 		NodeImpl node = (NodeImpl)getNode(nodeId);
 		long costsIndex = node.getCostsIndex();
 
@@ -167,7 +183,7 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 		} else {
 			return getNodeCostsByCostsIndex(costsIndex);
 		}
-		
+
 	}
 
 	@Override
