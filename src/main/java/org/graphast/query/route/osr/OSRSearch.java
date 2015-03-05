@@ -100,6 +100,7 @@ public class OSRSearch {
 
 		while(!queue.isEmpty()){
 			removed = queue.poll();
+			System.out.println(removed);
 			addWasTraversed(removed.getR().size(), convertToInt(removed.getId()), wasRemoved, wasTraversed);
 			addParent(removed.getR().size(), convertToInt(removed.getId()), convertToInt(removed.getParent()), parents);
 
@@ -115,7 +116,7 @@ public class OSRSearch {
 
 			if(removed.getLowerBound() > upper)	return seq;
 
-			Long2IntMap neig = graphBounds.accessNeighborhood(graphBounds.getNode(removed.getId()),(short)1, removed.getArrivalTime());
+			Long2IntMap neig = graphBounds.accessNeighborhood(graphBounds.getNode(removed.getId()),(short)0, removed.getArrivalTime());
 
 			for (long v : neig.keySet()) {
 				int vid = convertToInt(v);
