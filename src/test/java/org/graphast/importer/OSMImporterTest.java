@@ -25,7 +25,7 @@ public class OSMImporterTest {
 		FileUtils.deleteDir(graphastDir);
 		monaco = new OSMImporterImpl(osmFile, graphastDir).execute();
 		
-		osmFile = OSMImporterTest.class.getResource("/andorra-latest.osm.pbf").getPath();
+		osmFile = OSMImporterTest.class.getResource("/andorra-150305.osm.pbf").getPath();
 		graphastDir = Configuration.USER_HOME + "/graphast/test/andorra";
 		FileUtils.deleteDir(graphastDir);
 		andorra = new OSMImporterImpl(osmFile, graphastDir).execute();
