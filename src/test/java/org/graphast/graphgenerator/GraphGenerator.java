@@ -363,5 +363,15 @@ public class GraphGenerator {
 
 		return graph;
 	}
+	
+	public Graph generateAndorra() {
+		String osmFile = DijkstraConstantWeight.class.getResource("/andorra-150305.osm.pbf").getPath();
+		String graphHopperAndorraDir = Configuration.USER_HOME + "/graphhopper/test/andorra";
+		String graphastAndorraDir = Configuration.USER_HOME + "/graphast/test/andorra";
+		
+		Graph graph = new OSMImporterImpl(osmFile, graphHopperAndorraDir, graphastAndorraDir).execute();
+		
+		return graph;
+	}
 
 }

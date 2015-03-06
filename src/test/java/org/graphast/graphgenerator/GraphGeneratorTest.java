@@ -20,6 +20,7 @@ public class GraphGeneratorTest {
 	private static GraphBounds graphExample2;
 	private static Graph graphExample3;
 	private static Graph graphExamplePoI;
+	private static Graph graphAndorra;
 
 	@BeforeClass
 	public static void setup() {
@@ -28,6 +29,7 @@ public class GraphGeneratorTest {
 		graphExample2 = new GraphGenerator().generateExample2();
 		graphExample3 = new GraphGenerator().generateExample3();
 		graphExamplePoI = new GraphGenerator().generateExamplePoI();
+		graphAndorra = new GraphGenerator().generateAndorra();
 	}
 	
 
@@ -59,6 +61,12 @@ public class GraphGeneratorTest {
 	public void generateExamplePoITest() {
 		assertEquals(10, graphExamplePoI.getNumberOfNodes());
 		assertEquals(13, graphExamplePoI.getNumberOfEdges());
+	}
+	
+	@Test
+	public void generateAndorraTest() {
+		assertEquals(2621, graphAndorra.getNumberOfNodes());
+		assertEquals(5326, graphAndorra.getNumberOfEdges());
 	}
 	
 	
