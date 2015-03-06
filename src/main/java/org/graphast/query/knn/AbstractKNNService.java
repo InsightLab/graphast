@@ -17,7 +17,6 @@ public abstract class AbstractKNNService implements KNNService{
 	protected AbstractBoundsSearch minBounds;
 	protected AbstractBoundsSearch maxBounds;
 	
-	protected int maxTime;
 	protected static int wasRemoved = -1;
 	
 	public AbstractKNNService(Graph network, AbstractBoundsSearch minBounds, AbstractBoundsSearch maxBounds){
@@ -28,15 +27,15 @@ public abstract class AbstractKNNService implements KNNService{
 	
 	protected void init(long vid, int t, int k, int kth, PriorityQueue<LowerBoundEntry> queue, PriorityQueue<UpperEntry> upperCandidates, 
 			HashMap<Long, Integer> isIn, HashMap<Long, Long> parents){
-		Bound bMin = new Bound(minBounds.getBounds().get(vid));
-		Bound bMax = new Bound(maxBounds.getBounds().get(vid));
+		Bound bMin = new Bound(vid, minBounds.getBounds().get(vid));
+		Bound bMax = new Bound(vid, maxBounds.getBounds().get(vid));
 		long unn = bMax.getId();
-		int utdd = t + bMax.getDistance();
+		int utdd = t + bMax.getCost();
 		queue.offer(new LowerBoundEntry(	vid, 
 									0, 
 									t, 
 									-1,
-									t + bMin.getDistance()));
+									t + bMin.getCost()));
 		
 		includeCandidate(k, unn, utdd, kth, upperCandidates, isIn);	
 		parents.put(vid, null);
@@ -96,14 +95,14 @@ public abstract class AbstractKNNService implements KNNService{
 		Long2IntMap neig = network.accessNeighborhood(network.getNode(removed.getId()));
 		
 		for (long v : neig.keySet()) {
-			int at = getArrival(removed.getArrivalTime(), neig.get(v));
+			int at = network.getArrival(removed.getArrivalTime(), neig.get(v));
 			int tt = removed.getTravelTime() + neig.get(v);
-			Bound bMin = new Bound(minBounds.getBounds().get(v));
+			Bound bMin = new Bound(v, minBounds.getBounds().get(v));
 			LowerBoundEntry newEntry = new LowerBoundEntry(	v, 
 													tt, 
 													at, 
 													removed.getId(),
-													tt + bMin.getDistance());
+													tt + bMin.getCost());
 			if(kth >= newEntry.getLowerBound()){
 				if(!wasTraversed.containsKey(v)){					
 					queue.offer(newEntry);
@@ -119,15 +118,9 @@ public abstract class AbstractKNNService implements KNNService{
 						}
 					}
 				}
-				Bound bMax = new Bound(maxBounds.getBounds().get(v));
-				includeCandidate(k, bMax.getId(), tt + bMax.getDistance(), kth, upperCandidates, isIn);
+				Bound bMax = new Bound(v, maxBounds.getBounds().get(v));
+				includeCandidate(k, bMax.getId(), tt + bMax.getCost(), kth, upperCandidates, isIn);
 			}
 		}
-	}
-	
-	public int getArrival(int dt, int tt) {
-		int at = dt + tt;
-		at = at % maxTime;
-		return at;
 	}
 }
