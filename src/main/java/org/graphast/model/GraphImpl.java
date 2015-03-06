@@ -55,6 +55,10 @@ public class GraphImpl implements Graph {
 	
 	protected CompressionType compressionType;
 
+	protected int delta;
+	
+	protected int maxTime;
+
 	/**
 	 * Creates a Graph for the given directory passed as parameter.
 	 * 
@@ -81,6 +85,8 @@ public class GraphImpl implements Graph {
 		points = new IntBigArrayBigList();
 
 		nodeIndex.defaultReturnValue(-1);
+		//milliseconds
+		this.maxTime  = 60*60*24*1000;
 	}
 
 	/* (non-Javadoc)
@@ -948,7 +954,9 @@ public class GraphImpl implements Graph {
 		for(int i = 0; i < getNumberOfNodes(); i++) {
 			long position = i*Node.NODE_BLOCKSIZE;
 			int category = getNodes().getInt(position+2);
-			categories.add(category);
+			if(category != -1) {
+				categories.add(category);
+			}	
 //			long position = i*Node.NODE_BLOCKSIZE;
 //			long vid = ga.getNodes().getInt(position);
 //			bounds.put(vid,  d.shortestPathPoi(vid, -1).getDistance());
@@ -997,7 +1005,28 @@ public class GraphImpl implements Graph {
 			edges.set(pos++, fromNodeNextEdgeOffset);
 			
 		}
-		
+	}
+	
+	public int getDelta() {
+		return delta;
+	}
+
+	public void setDelta(int delta) {
+		this.delta = delta;
+	}
+
+	public int getMaxTime() {
+		return maxTime;
+	}
+
+	public void setMaxTime(int maxTime) {
+		this.maxTime = maxTime;
+	}
+
+	public int getArrival(int dt, int tt) {
+		int at = dt + tt;
+		at = at % maxTime;
+		return at;
 	}
 	
 	public void setEdgeCosts(long edgeId, int[] costs) {
@@ -1061,5 +1090,4 @@ public class GraphImpl implements Graph {
 		}
 		
 	}
-	
 }
