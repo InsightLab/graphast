@@ -11,6 +11,7 @@ import it.unimi.dsi.fastutil.shorts.ShortBigArrayBigList;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,6 +26,7 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import org.graphast.enums.CompressionType;
+import org.graphast.exception.GraphastException;
 
 public class FileUtils {
 
@@ -299,9 +301,84 @@ public class FileUtils {
 
 	public static void deleteDir(String dir) {
 		File pathName = new File(dir);
-		if(!pathName.isDirectory()) {
-			pathName.delete();
-		}
+		deleteDir(pathName);
 	}
+	
+	public static void deleteDir(File dir) {
+		
+		if(dir.isDirectory()) {
+			cleanDirectory(dir);
+		}
+        if (!dir.delete() && dir.exists()) {
+            String message =
+                "Unable to delete directory " + dir + ".";
+            throw new GraphastException(message);
+        }
+	}
+	
+    /**
+     * Clean a directory without deleting it.
+     * @param directory directory to clean
+     * @throws IOException in case cleaning is unsuccessful
+     */
+    private static void cleanDirectory(File directory) {
+        if (!directory.exists()) {
+            String message = directory + " does not exist";
+            throw new IllegalArgumentException(message);
+        }
 
+        if (!directory.isDirectory()) {
+            String message = directory + " is not a directory";
+            throw new IllegalArgumentException(message);
+        }
+
+        File[] files = directory.listFiles();
+        if (files == null) {  // null if security restricted
+            throw new GraphastException("Failed to list contents of " + directory);
+        }
+
+        GraphastException exception = null;
+        for (int i = 0; i < files.length; i++) {
+            File file = files[i];
+            try {
+                forceDelete(file);
+            } catch (IOException ioe) {
+                exception = new GraphastException(ioe.getMessage(),ioe);
+            }
+        }
+
+        if (null != exception) {
+            throw exception;
+        }
+    }
+    
+    /**
+     * <p>
+     * Delete a file. If file is a directory, delete it and all sub-directories.
+     * </p>
+     * <p>
+     * The difference between File.delete() and this method are:
+     * </p>
+     * <ul>
+     * <li>A directory to be deleted does not have to be empty.</li>
+     * <li>You get exceptions when a file or directory cannot be deleted.
+     *      (java.io.File methods returns a boolean)</li>
+     * </ul>
+     * @param file file or directory to delete.
+     * @throws IOException in case deletion is unsuccessful
+     */
+    private static void forceDelete(File file) throws IOException {
+        if (file.isDirectory()) {
+            deleteDir(file);
+        } else {
+            if (!file.exists()) {
+                throw new FileNotFoundException("File does not exist: " + file);
+            }
+            if (!file.delete()) {
+                String message =
+                    "Unable to delete file: " + file;
+                throw new IOException(message);
+            }
+        }
+    }
 }
