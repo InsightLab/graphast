@@ -61,6 +61,12 @@ public class GraphGeneratorTest {
 		assertEquals(13, graphExamplePoI.getNumberOfEdges());
 	}
 	
+	@Test
+	public void generateAndorraTest() {
+		assertEquals(2621, graphExamplePoI.getNumberOfNodes());
+		assertEquals(5326, graphExamplePoI.getNumberOfEdges());
+	}
+	
 	
 	@Test
 	public void upperAndLowerBoundsTest() {
