@@ -365,7 +365,7 @@ public class GraphGenerator {
 	}
 	
 	public Graph generateAndorra() {
-		String osmFile = DijkstraConstantWeight.class.getResource("/andorra-latest.osm.pbf").getPath();
+		String osmFile = DijkstraConstantWeight.class.getResource("/andorra-150305.osm.pbf").getPath();
 		String graphHopperAndorraDir = Configuration.USER_HOME + "/graphhopper/test/andorra";
 		String graphastAndorraDir = Configuration.USER_HOME + "/graphast/test/andorra";
 		
