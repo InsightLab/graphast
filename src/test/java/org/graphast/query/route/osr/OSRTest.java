@@ -81,7 +81,7 @@ public class OSRTest {
     	
 //    	Sequence seq = osr.search(graph.getNode(3), graph.getNode(5), date, categories);
 
-    	Sequence seq = osr.search(graph.getNode(2), graph.getNode(7), date, categories);
+    	Sequence seq = osr.search(graph.getNode(6), graph.getNode(1), date, categories);
     	
     	System.out.println(seq);
 //		assertEquals(convertToInt(graph.getNode(5).getId()), (long) seq.getPois().get(0).getId());

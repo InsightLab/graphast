@@ -63,14 +63,14 @@ public class OSRSearch {
 		return path;
 	}
 
-	private ArrayList<Long> pathToDestination(Node d, int pos, int id, 
-			HashMap<Integer, HashMap<Integer, Integer>> parents){
+	private ArrayList<Long> pathToDestination(Node d, int pos, int id, 	HashMap<Integer, HashMap<Integer, Integer>> parents){
 		int did = convertToInt(d.getId());
+		//System.out.println("did = " + did + " id = " + id);
 		ArrayList<Long> path = new ArrayList<Long>();
 		long parent = parents.get(pos).get(did);
 		while(parent != id && parent != -1){
 			path.add(parent);
-			parent = parents.get(pos).get(parent);
+			parent = parents.get(pos).get((int)parent);
 		}
 		path.add((long)id);
 		Collections.reverse(path);
@@ -88,7 +88,7 @@ public class OSRSearch {
 		Int2DoubleMap destinationPaths = new Int2DoubleOpenHashMap();
 		destinationPaths = dijkstra.shortestPath(destination.getId());
 
-		System.out.println(destinationPaths);
+//		System.out.println(destinationPaths);
 		
 		Sequence seq = new Sequence();
 		int t = DateUtils.dateToMinutes(time);
@@ -100,7 +100,7 @@ public class OSRSearch {
 
 		while(!queue.isEmpty()){
 			removed = queue.poll();
-			System.out.println(removed);
+//			System.out.println(removed);
 			addWasTraversed(removed.getR().size(), convertToInt(removed.getId()), wasRemoved, wasTraversed);
 			addParent(removed.getR().size(), convertToInt(removed.getId()), convertToInt(removed.getParent()), parents);
 
@@ -110,6 +110,7 @@ public class OSRSearch {
 			
 			if(removed.getId() == convertToInt(destination.getId())){
 				if(removed.getR().size() >= categories.size()){
+				//	System.out.println("Parents: " + parents + "\n");
 					return new Sequence(removed.getId(), removed.getTravelTime(), reconstructPath(origin, destination, removed, parents), removed.getR());
 				}
 			}
