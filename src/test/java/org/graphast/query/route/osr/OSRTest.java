@@ -43,28 +43,10 @@ public class OSRTest {
 		//The variable 'bounds' represents a lowerBound shortestPath of starting in each vertex to all PoI.
 		//For a better understanding, try to print the variable 'bounds'
 		BoundsRoute bounds = new BoundsRoute(graphBoundsPoI, graphType);
-
-		
 		
 		osr = new OSRSearch(graphBoundsPoI, bounds, graphBoundsPoIReverse);
 		
-//		for(int i=0; i<graphBoundsPoI.getNumberOfNodes();i++) {
-//			System.out.println(graphBoundsPoI.getNode(i));
-//		}
-//		
-//		for(int i=0; i<graphBoundsPoI.getNumberOfEdges();i++) {
-//			System.out.println(graphBoundsPoI.getEdge(i));
-//		}
-		
 	}
-	
-//	@Test
-//	public void dijkstra() {
-//		DijkstraVariableWeight dijkstra = new DijkstraVariableWeight(graphBoundsPoIReverse);
-//		dijkstra.shortestPath(7);
-//		System.out.println(dijkstra.shortestPath(7));
-//	}
-	
 	
 	@Test
 	public void search() throws ParseException{
@@ -76,19 +58,13 @@ public class OSRTest {
     	Date date = DateUtils.parseDate(0, 550, 0);
     	
     	Graph graph = osr.getGraphAdapter();
-
     	
+    	Sequence seq = osr.search(graph.getNode(1), graph.getNode(7), date, categories);
     	
-//    	Sequence seq = osr.search(graph.getNode(3), graph.getNode(5), date, categories);
-
-    	Sequence seq = osr.search(graph.getNode(6), graph.getNode(1), date, categories);
+    	assertEquals(7980000, seq.getDistance());
+    	assertEquals(37679450, seq.getTimeToService());
+    	assertEquals(29699450, seq.getWaitingTime());
     	
-    	System.out.println(seq);
-//		assertEquals(convertToInt(graph.getNode(5).getId()), (long) seq.getPois().get(0).getId());
-//		assertEquals(3120000, (int) seq.getPois().get(0).getDistance());
-//		assertEquals(convertToInt(graph.getNode(2).getId()), (long) seq.getPois().get(1).getId());
-//		assertEquals(7560000, (int) seq.getPois().get(1).getDistance());
-//		
 	}
 
 }
