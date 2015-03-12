@@ -3,7 +3,7 @@ package org.graphast.query.model;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 
-
+@Deprecated
 public class AbstractBoundsSearch implements BoundsSearch{
 	protected Long2IntMap bounds;
 

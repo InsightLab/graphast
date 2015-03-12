@@ -6,6 +6,7 @@ import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.LongList;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 import org.graphast.enums.CompressionType;
@@ -114,7 +115,7 @@ public interface Graph {
 	public void updateNodeNeighborhood(Node node, long eid);
 
 	/**
-	 * This method will return all outgoing edges for a given node
+	 * This method will return all outgoing edges for a given node.
 	 * 
 	 * @param nodeId Given node id.
 	 * @return Outgoing edges for a given node.
@@ -243,6 +244,9 @@ public interface Graph {
 	 */
 	public Long2IntMap accessNeighborhood(Node v);
 	
+	
+	public HashMap<Node, Integer> accessNeighborhood(Node v, int time);
+	
 	/**
 	 * This method verify if a given nodeId exists on graph.
 	 * @param id Id of a node
@@ -265,7 +269,7 @@ public interface Graph {
 	public abstract Node getPoi(long vid);
 	
 	public abstract int poiGetCost(long vid, int time);
-
+	
 	public abstract int poiGetCost(long vid);
 	
 	public abstract int[] getPoiCost(long vid);
@@ -281,7 +285,6 @@ public interface Graph {
 	public void setMaxTime(int maxTime);
 	
 	public int getArrival(int dt, int tt);
-
 
 	public CompressionType getCompressionType();
 

@@ -26,6 +26,7 @@ import com.graphhopper.util.Helper;
 public class GraphGenerator {
 
 	public Graph generateExample() {
+		
 		String graphastExampleDir = Configuration.USER_HOME + "/graphast/test/example";
 		String graphHopperExampleDir = Configuration.USER_HOME + "/graphhopper/test/example";
 		Graph graph = new GraphImpl(graphHopperExampleDir);
@@ -59,124 +60,124 @@ public class GraphGenerator {
 		iter5.setName("Named Street 5");
 		iter6.setName("Named Street 6");
 		iter7.setName("Named Street 7");
-		
+
 		graphStorage.flush();
 		graphStorage.close();
 		graph = new OSMImporterImpl(null, graphHopperExampleDir, graphastExampleDir).execute();
-		
-		
-		
+
 		return graph;
 
 	}
-	
+
 	public GraphBounds generateExample2() {
-		
- 		GraphBounds graph = new GraphBoundsImpl(Configuration.USER_HOME + "/graphast/test/example2");
 
- 		Edge e;
- 		NodeImpl v;
+		GraphBounds graph = new GraphBoundsImpl(Configuration.USER_HOME + "/graphast/test/example2");
 
- 		v = new NodeImpl(0l, 0d, 10d, 0);
- 		graph.addNode(v);
+		Edge e;
+		NodeImpl v;
 
- 		v = new NodeImpl(1l, 10d, 0d, 1);
- 		graph.addNode(v);
+		v = new NodeImpl(0l, 0d, 10d, 0);
+		graph.addNode(v);
 
- 		v = new NodeImpl(2l, 30d, 20d, 2);
- 		graph.addNode(v);
+		v = new NodeImpl(1l, 10d, 0d, 1);
+		graph.addNode(v);
 
- 		v = new NodeImpl(3l, 40d, 20d, 4);
- 		graph.addNode(v);
+		v = new NodeImpl(2l, 30d, 20d, 2);
+		graph.addNode(v);
 
- 		v = new NodeImpl(4l, 50d, 30d, 0);
- 		graph.addNode(v);
+		v = new NodeImpl(3l, 40d, 20d, 4);
+		graph.addNode(v);
 
- 		v = new NodeImpl(5l, 60d, 20d);
- 		graph.addNode(v);
+		v = new NodeImpl(4l, 50d, 30d, 0);
+		graph.addNode(v);
 
- 		v = new NodeImpl(6l, 60d, 0d);
- 		graph.addNode(v);
+		v = new NodeImpl(5l, 60d, 20d);
+		graph.addNode(v);
 
- 		int[] costs = {3,2,3,4};
- 		e = new EdgeImpl(0l, 1l, 1, costs);
- 		graph.addEdge(e);
+		v = new NodeImpl(6l, 60d, 0d);
+		graph.addNode(v);
 
- 		costs = new int[]{4,2,6,8,10};
- 		e = new EdgeImpl(0l, 2l, 5, costs);
- 		graph.addEdge(e);
+		int[] costs = {3,2,3,4};
+		e = new EdgeImpl(0l, 1l, 1, costs);
+		graph.addEdge(e);
 
- 		costs = new int[]{1,2};
- 		e = new EdgeImpl(1l, 2l, 3, costs);
- 		graph.addEdge(e);
+		costs = new int[]{4,2,6,8,10};
+		e = new EdgeImpl(0l, 2l, 5, costs);
+		graph.addEdge(e);
 
- 		costs = new int[]{4,4,7,6,11};
+		costs = new int[]{1,2};
+		e = new EdgeImpl(1l, 2l, 3, costs);
+		graph.addEdge(e);
 
- 		e = new EdgeImpl(2l, 3l, 3, costs);
+		costs = new int[]{4,4,7,6,11};
 
- 		graph.addEdge(e);
+		e = new EdgeImpl(2l, 3l, 3, costs);
 
- 		costs = new int[]{1,10};
- 		e = new EdgeImpl(3l, 4l, 3, costs);
- 		graph.addEdge(e);
+		graph.addEdge(e);
 
- 		costs = new int[]{2,12,13};
- 		e = new EdgeImpl(3l, 5l, 4, costs);
- 		graph.addEdge(e);
+		costs = new int[]{1,10};
+		e = new EdgeImpl(3l, 4l, 3, costs);
+		graph.addEdge(e);
 
- 		costs = new int[]{3,9,10,11};
- 		e = new EdgeImpl(4l, 5l, 2, costs);
- 		graph.addEdge(e);
+		costs = new int[]{2,12,13};
+		e = new EdgeImpl(3l, 5l, 4, costs);
+		graph.addEdge(e);
 
- 		costs = new int[]{5,2,4,6,8,15};
- 		e = new EdgeImpl(5l, 6l, 1, costs);
- 		graph.addEdge(e);
+		costs = new int[]{3,9,10,11};
+		e = new EdgeImpl(4l, 5l, 2, costs);
+		graph.addEdge(e);
 
- 		graph.createBounds();
+		costs = new int[]{5,2,4,6,8,15};
+		e = new EdgeImpl(5l, 6l, 1, costs);
+		graph.addEdge(e);
+		graph.createBounds();
 
- 		return graph;
- 		
+		return graph;
+
 	}
-	
+
 	public Graph generateMonaco() {
+		
 		String osmFile = DijkstraConstantWeight.class.getResource("/monaco-150112.osm.pbf").getPath();
 		String graphHopperMonacoDir = Configuration.USER_HOME + "/graphhopper/test/monaco";
 		String graphastMonacoDir = Configuration.USER_HOME + "/graphast/test/monaco";
-		
+
 		Graph graph = new OSMImporterImpl(osmFile, graphHopperMonacoDir, graphastMonacoDir).execute();
-		
+
 		return graph;
-	}
-	
-	public Graph generateExample3() {
-		Graph graph = new GraphImpl(Configuration.USER_HOME + "/graphast/test/example3");
 		
+	}
+
+	public Graph generateExample3() {
+		
+		Graph graph = new GraphImpl(Configuration.USER_HOME + "/graphast/test/example3");
+
 		NodeImpl v = new NodeImpl(3l, 10d, 10d, "label node 0");
 		graph.addNode(v);
-		
+
 		v = new NodeImpl(4l, 43.7294668047756,7.413772473047058);
 		graph.addNode(v);
-		
+
 		int[] nodeCosts = new int[]{1,2,3,4};
 		v = new NodeImpl(2l, 10d, 30d, nodeCosts);
 		graph.addNode(v);
-		
+
 		v = new NodeImpl(6l, 10d, 40d);
 		graph.addNode(v);
-		
+
 		v = new NodeImpl(7l, 11d, 32d);
 		graph.addNode(v);
-		
+
 		v = new NodeImpl(7, 11, 32, "Banco");
 		graph.addNode(v);
-		
+
 		int[] costs = new int[]{1,2,3,4};
 		List<Point> points = new ArrayList<Point>();
 		points.add(new Point(10,10));
 		points.add(new Point(10,20));
 		Edge e = new EdgeImpl(0l, 1l, 10, costs, points, "rua1");
 		graph.addEdge(e);
-		
+
 		costs = new int[]{2,4,6,8,10};
 		points = new ArrayList<Point>();
 		points.add(new Point(10,20));
@@ -184,37 +185,37 @@ public class GraphGenerator {
 		points.add(new Point(10,10));
 		e = new EdgeImpl(1l, 0l, 20, costs, points, "rua2");
 		graph.addEdge(e);
-		
+
 		costs = new int[]{2};
 		points = new ArrayList<Point>();
 		points.add(new Point(10,10));
 		points.add(new Point(10,30));
 		e = new EdgeImpl(0l, 2l, 30, costs, points, "rua3");
 		graph.addEdge(e);
-		
+
 		costs = new int[]{2, 4, 6, 8, 10};
 		points = new ArrayList<Point>();
 		points.add(new Point(10,30));
 		points.add(new Point(10,10));
 		e = new EdgeImpl(2l, 0l, 40, costs, points, "rua4");
 		graph.addEdge(e);
-		
+
 		costs = new int[]{3};
 		points = new ArrayList<Point>();
 		points.add(new Point(10,10));
 		points.add(new Point(10,40));
 		e = new EdgeImpl(0l, 3l, 50, costs, points, "");
 		graph.addEdge(e);
-		
+
 		e = new EdgeImpl(2l, 4l, 60);
 		graph.addEdge(e);
-		
+
 		e = new EdgeImpl(3l, 0l, 70);
 		graph.addEdge(e);
-		
+
 		return graph;
 	}
-	
+
 	public GraphBounds generateExamplePoI() {
 
 		GraphBounds graph = new GraphBoundsImpl(Configuration.USER_HOME + "/graphast/test/examplePoI");
@@ -230,7 +231,7 @@ public class GraphGenerator {
 		node = new NodeImpl(1l, 0.0d, 10.0d);
 		int[] costs = new int[]{30300000, 1500000, 1500000, 1500000, 900000, 900000, 59100000, 30300000};
 		node.setCategory(1);
-		node.setLabel("Banco");
+		node.setLabel("Bradesco");
 		node.setCosts(costs);
 		graph.addNode(node);
 
@@ -243,7 +244,7 @@ public class GraphGenerator {
 		node = new NodeImpl(4l, 0.0d, 40.0d);
 		costs = new int[]{29700000, 900000, 900000, 900000, 1500000, 1500000, 58500000, 17700000};
 		node.setCategory(2);
-		node.setLabel("Padaria");
+		node.setLabel("Padaria Costa Mendes");
 		node.setCosts(costs);
 		graph.addNode(node);
 
@@ -262,7 +263,7 @@ public class GraphGenerator {
 		node = new NodeImpl(9l, 10.0d, 40.0d);
 		costs = new int[]{30300000, 1500000, 1500000, 1500000, 900000, 900000, 59100000, 30300000};
 		node.setCategory(3);
-		node.setLabel("Farmacia");
+		node.setLabel("Escola Vila");
 		node.setCosts(costs);
 		graph.addNode(node);
 
@@ -361,17 +362,22 @@ public class GraphGenerator {
 		edge.setCosts(costs);
 		graph.addEdge(edge);
 
+		graph.createBounds();
+
 		return graph;
+		
 	}
-	
+
 	public Graph generateAndorra() {
+		
 		String osmFile = DijkstraConstantWeight.class.getResource("/andorra-150305.osm.pbf").getPath();
 		String graphHopperAndorraDir = Configuration.USER_HOME + "/graphhopper/test/andorra";
 		String graphastAndorraDir = Configuration.USER_HOME + "/graphast/test/andorra";
-		
+
 		Graph graph = new OSMImporterImpl(osmFile, graphHopperAndorraDir, graphastAndorraDir).execute();
-		
+
 		return graph;
+		
 	}
 
 }
