@@ -293,4 +293,6 @@ public class DijkstraVariableWeight extends Dijkstra {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	
 }		

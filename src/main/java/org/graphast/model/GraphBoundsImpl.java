@@ -95,7 +95,8 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 	 * @param v
 	 * @param graphType The type of graph the will be used to retrieve costs needed. 0 = Regular Costs; 1 = Lower Bound Costs;
 	 * 					3 = Upper Bound Costs.
-	 * @return
+	 * @param time	The time that will be used to get the time-dependent cost
+	 * @return	all neighbors for the given parameters
 	 */
 	public Long2IntMap accessNeighborhood(Node v, short graphType, int time){
 

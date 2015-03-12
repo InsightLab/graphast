@@ -4,11 +4,11 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.objects.ObjectCollection;
 
 import org.graphast.model.GraphBounds;
-import org.graphast.query.model.AbstractBoundsSearch;
+import org.graphast.query.model.AbstractBoundsSearchPoI;
 import org.graphast.query.model.Bound;
 import org.graphast.query.route.shortestpath.dijkstra.DijkstraVariableWeight;
 
-public class BoundsRoute extends AbstractBoundsSearch {
+public class BoundsRoute extends AbstractBoundsSearchPoI {
 
 	/**
 	 * This constructor calculates the minimum path (we call this bound) from each vertex 

@@ -6,7 +6,7 @@ import org.graphast.enums.GraphBoundsType;
 import org.graphast.model.GraphBounds;
 import org.graphast.model.Node;
 import org.graphast.query.model.AbstractBoundsSearch;
-import org.graphast.query.route.shortestpath.dijkstra.DijkstraVariableWeight;
+import org.graphast.query.route.shortestpath.dijkstra.DijkstraGeneric;
 
 public class BoundsKNN extends AbstractBoundsSearch{
 	
