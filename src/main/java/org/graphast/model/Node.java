@@ -99,6 +99,7 @@ public interface Node {
 	
 	public abstract int[] getCosts();
 	
-	public void setCosts(int[] costs);
+	public abstract void setCosts(int[] costs);
+
 
 }

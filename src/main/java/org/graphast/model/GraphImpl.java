@@ -17,6 +17,7 @@ import it.unimi.dsi.fastutil.objects.ObjectBigList;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.graphast.enums.CompressionType;
@@ -55,10 +56,10 @@ public class GraphImpl implements Graph {
 	private int[] intCosts;
 	
 	protected CompressionType compressionType;
-
+	
 	protected int delta;
 	
-	protected int maxTime;
+	protected int maxTime = 86400000;
 
 	/**
 	 * Creates a Graph for the given directory passed as parameter.
@@ -71,6 +72,12 @@ public class GraphImpl implements Graph {
 	 */
 	public GraphImpl(String directory) {
 		this(directory, CompressionType.GZIP_COMPRESSION);
+	}
+	
+	public GraphImpl(String directory, int delta, int maxTime) {
+		this(directory);
+		this.delta = delta;
+		this.maxTime = maxTime;
 	}
 	
 	public GraphImpl(String directory, CompressionType compressionType) {
@@ -232,6 +239,12 @@ public class GraphImpl implements Graph {
 		if (labelIndex >= 0) {
 			node.setLabel(getNodesLabels().get(labelIndex));
 		}
+		
+		long costsIndex = node.getCostsIndex();
+		if (costsIndex >= 0) {
+			node.setCosts(getNodeCostsByCostsIndex(costsIndex));
+		}
+		
 		node.validate();
 
 		return node;
@@ -641,6 +654,7 @@ public class GraphImpl implements Graph {
 	/* (non-Javadoc)
 	 * @see org.graphast.model.Graphast#getEdgeCost(org.graphast.model.GraphastEdge, int)
 	 */
+	//TODO getEdgeCost
 	@Override
 	public int getEdgeCost(Edge e, int time) {
 		EdgeImpl edge = (EdgeImpl)e;
@@ -789,23 +803,50 @@ public class GraphImpl implements Graph {
 	public int getNumberOfEdges(){
 		return (int) getEdges().size64()/Edge.EDGE_BLOCKSIZE;
 	}
-
+	
 	public Long2IntMap accessNeighborhood(Node v){
-		Long2IntMap neig = new Long2IntOpenHashMap();
-		for (Long e : this.getOutEdges( v.getId())) {
+		
+		Long2IntMap neighbors = new Long2IntOpenHashMap();
+		
+		for (Long e : this.getOutEdges(v.getId()) ) {
+			
 			Edge edge = this.getEdge(e);
-			long vNeig =  edge.getToNode();
+			long neighborNodeId =  edge.getToNode();
 			int cost =  edge.getDistance();
-			if(!neig.containsKey(vNeig)){
-				neig.put(vNeig, cost);
+			if(!neighbors.containsKey(neighborNodeId)){
+				neighbors.put(neighborNodeId, cost);
 			}else{
-				if(neig.get(vNeig) > cost){
-					neig.put(vNeig, cost);
+				if(neighbors.get(neighborNodeId) > cost){
+					neighbors.put(neighborNodeId, cost);
 				}
 			}
 		}
-		return neig;
+		
+		return neighbors;
+	
 	}	
+	//TODO Reimplement this method
+	public HashMap<Node, Integer> accessNeighborhood(Node v, int time) {
+		
+		HashMap<Node, Integer> neig = new HashMap<Node, Integer>();
+		for (Long e : this.getOutEdges( v.getId())) {
+			Edge edge = this.getEdge(e);
+			long vNeig =  edge.getToNode();
+			int cost = getEdgeCost(edge, time);
+			//int cost =  edge.getDistance();
+			if(!neig.containsKey(vNeig)){
+				
+				neig.put(getNode(vNeig), cost);
+			}else{
+				if(neig.get(vNeig) > cost){
+					neig.put(getNode(vNeig), cost);
+				}
+			}
+		}
+		
+		return neig;
+	
+	}
 	
 	public boolean hasNode(long id) {
 		try {
@@ -877,21 +918,23 @@ public class GraphImpl implements Graph {
 		LinearFunction[] lf = convertToLinearFunction(getPoiCost(vid));
 		return lf[0].calculateCost(0);
 	}
-
+	
+	
 	public int[] getPoiCost(long vid){
 		return getNodeCosts(vid);
 	}
 
 	public LinearFunction[] convertToLinearFunction(int[] costs){
-		LinearFunction[] result = new LinearFunction[costs.length];
-		int interval = (60*60*24)/costs.length;
+		LinearFunction[] result = new LinearFunction[costs.length/2];
+		int interval = 86400000/(costs.length/2);
 		int startInterval = 0;
 		int endInterval = interval;
-		for(int i = 0; i < costs.length; i++){
-			result[i] = new LinearFunction(startInterval, costs[i], endInterval, costs[i]);
+		for(int i = 0; i < costs.length/2; i++){
+			result[i] = new LinearFunction(startInterval, costs[(i*2)], endInterval, costs[(i*2)+1]);
 			startInterval = endInterval;
 			endInterval = endInterval + interval;
 		}
+		
 		return result;
 	}
 
@@ -907,7 +950,8 @@ public class GraphImpl implements Graph {
 	public int getMaximunCostValue(int[] costs) {
 
 		if(costs==null) {
-			throw new IllegalArgumentException("Costs can not be null.");
+			//throw new IllegalArgumentException("Costs can not be null.");
+			return -1;
 		}
 
 
@@ -925,6 +969,11 @@ public class GraphImpl implements Graph {
 
 	public int getMinimunCostValue(int[] costs) {
 
+		if(costs==null) {
+			//throw new IllegalArgumentException("Costs can not be null.");
+			return -1;
+		}
+		
 		int min = costs[0];
 
 		for (int i = 0; i < costs.length; i++) {
@@ -955,9 +1004,10 @@ public class GraphImpl implements Graph {
 		for(int i = 0; i < getNumberOfNodes(); i++) {
 			long position = i*Node.NODE_BLOCKSIZE;
 			int category = getNodes().getInt(position+2);
-			if(category != -1) {
+			if(category!=-1) {
+				
 				categories.add(category);
-			}	
+			}
 //			long position = i*Node.NODE_BLOCKSIZE;
 //			long vid = ga.getNodes().getInt(position);
 //			bounds.put(vid,  d.shortestPathPoi(vid, -1).getDistance());
@@ -1024,11 +1074,6 @@ public class GraphImpl implements Graph {
 		this.maxTime = maxTime;
 	}
 
-	public int getArrival(int dt, int tt) {
-		int at = dt + tt;
-		at = at % maxTime;
-		return at;
-	}
 	
 	public void setEdgeCosts(long edgeId, int[] costs) {
 		
@@ -1091,4 +1136,11 @@ public class GraphImpl implements Graph {
 		}
 		
 	}
+		
+	public int getArrival(int dt, int tt) {
+		int arrivalTime = dt + tt;
+		arrivalTime = arrivalTime % maxTime;
+		return arrivalTime;
+	}
+	
 }

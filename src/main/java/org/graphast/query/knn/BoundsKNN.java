@@ -10,6 +10,7 @@ import org.graphast.query.route.shortestpath.dijkstra.DijkstraGeneric;
 
 public class BoundsKNN extends AbstractBoundsSearch{
 	
+
 	public BoundsKNN(GraphBounds graph,GraphBoundsType type){
 			DijkstraGeneric d = new DijkstraGeneric(graph);
 			for(int i = 0; i < graph.getNumberOfNodes(); i++){
