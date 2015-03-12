@@ -1,7 +1,6 @@
 package org.graphast.query.route.osr;
 
 import static org.junit.Assert.assertEquals;
-import static org.graphast.util.NumberUtils.convertToInt;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -10,7 +9,6 @@ import java.util.Date;
 import org.graphast.graphgenerator.GraphGenerator;
 import org.graphast.model.Graph;
 import org.graphast.model.GraphBounds;
-import org.graphast.query.route.shortestpath.dijkstra.DijkstraVariableWeight;
 import org.graphast.util.DateUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;

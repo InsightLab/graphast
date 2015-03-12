@@ -132,7 +132,7 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 	public int getEdgeCost(Edge e, int t){
 
 		LinearFunction[] lf = convertToLinearFunction(getEdgeCosts(e.getId()));
-		
+
 		int x = lf.length;
 		int minutesInADay = 86400000;
 		int position = t/(minutesInADay/x);
@@ -152,7 +152,7 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 
 
 	public int poiGetCost(long vid, short graphType){
-		
+
 		if(graphType == 0) {
 			LinearFunction[] lf = convertToLinearFunction(getPoiCost(vid));
 			return lf[0].calculateCost(0);
@@ -208,10 +208,15 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 	public Long2IntMap getNodesUpperBound() {
 		return nodesUpperBound;
 	}
+	public int getEdgeLowerCost(long id){
+		return edgesLowerBound.get(id);
+	}
 
 	@Override
 	public Long2IntMap getNodesLowerBound() {
 		return nodesLowerBound;
 	}
-
+	public int getEdgeUpperCost(long id){
+		return edgesUpperBound.get(id);
+	}
 }

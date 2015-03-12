@@ -26,6 +26,7 @@ import com.graphhopper.util.Helper;
 public class GraphGenerator {
 
 	public Graph generateExample() {
+		
 		String graphastExampleDir = Configuration.USER_HOME + "/graphast/test/example";
 		String graphHopperExampleDir = Configuration.USER_HOME + "/graphhopper/test/example";
 		Graph graph = new GraphImpl(graphHopperExampleDir);
@@ -64,15 +65,13 @@ public class GraphGenerator {
 		graphStorage.close();
 		graph = new OSMImporterImpl(null, graphHopperExampleDir, graphastExampleDir).execute();
 
-
-
 		return graph;
 
 	}
 
 	public GraphBounds generateExample2() {
-		
- 		GraphBounds graph = new GraphBoundsImpl(Configuration.USER_HOME + "/graphast/test/example2");
+
+		GraphBounds graph = new GraphBoundsImpl(Configuration.USER_HOME + "/graphast/test/example2");
 
 		Edge e;
 		NodeImpl v;
@@ -138,6 +137,7 @@ public class GraphGenerator {
 	}
 
 	public Graph generateMonaco() {
+		
 		String osmFile = DijkstraConstantWeight.class.getResource("/monaco-150112.osm.pbf").getPath();
 		String graphHopperMonacoDir = Configuration.USER_HOME + "/graphhopper/test/monaco";
 		String graphastMonacoDir = Configuration.USER_HOME + "/graphast/test/monaco";
@@ -145,9 +145,11 @@ public class GraphGenerator {
 		Graph graph = new OSMImporterImpl(osmFile, graphHopperMonacoDir, graphastMonacoDir).execute();
 
 		return graph;
+		
 	}
 
 	public Graph generateExample3() {
+		
 		Graph graph = new GraphImpl(Configuration.USER_HOME + "/graphast/test/example3");
 
 		NodeImpl v = new NodeImpl(3l, 10d, 10d, "label node 0");
@@ -264,50 +266,6 @@ public class GraphGenerator {
 		node.setLabel("Escola Vila");
 		node.setCosts(costs);
 		graph.addNode(node);
-		
-//		node = new NodeImpl(1l, 0.0d, 1.0d);
-//		graph.addNode(node);
-//
-//		node = new NodeImpl(2l, 0.0d, 10.0d);
-//		int[] costs = new int[]{30300000, 1500000, 1500000, 1500000, 900000, 900000, 59100000, 30300000};
-//		node.setCategory(1);
-//		node.setLabel("Bradesco");
-//		node.setCosts(costs);
-//		graph.addNode(node);
-//
-//		node = new NodeImpl(3l, 0.0d, 20.0d);
-//		graph.addNode(node);
-//
-//		node = new NodeImpl(4l, 0.0d, 30.0d);
-//		graph.addNode(node);
-//
-//		node = new NodeImpl(5l, 0.0d, 40.0d);
-//		costs = new int[]{29700000, 900000, 900000, 900000, 1500000, 1500000, 58500000, 17700000};
-//		node.setCategory(2);
-//		node.setLabel("Padaria Costa Mendes");
-//		node.setCosts(costs);
-//		graph.addNode(node);
-//
-//		node = new NodeImpl(6l, 10.0d, 0.0d);
-//		graph.addNode(node);
-//
-//		node = new NodeImpl(7l, 10.0d, 10.0d);
-//		graph.addNode(node);
-//
-//		node = new NodeImpl(8l, 10.0d, 20.0d);
-//		graph.addNode(node);
-//
-//		node = new NodeImpl(9l, 10.0d, 30.0d);
-//		graph.addNode(node);
-//
-//		node = new NodeImpl(10l, 10.0d, 40.0d);
-//		costs = new int[]{30300000, 1500000, 1500000, 1500000, 900000, 900000, 59100000, 30300000};
-//		node.setCategory(3);
-//		node.setLabel("Escola Vila");
-//		node.setCosts(costs);
-//		graph.addNode(node);
-		
-		
 
 		//TODO Create a constructor for edge without the distance
 
@@ -405,9 +363,21 @@ public class GraphGenerator {
 		graph.addEdge(edge);
 
 		graph.createBounds();
-		
+
 		return graph;
+		
 	}
 
+	public Graph generateAndorra() {
+		
+		String osmFile = DijkstraConstantWeight.class.getResource("/andorra-150305.osm.pbf").getPath();
+		String graphHopperAndorraDir = Configuration.USER_HOME + "/graphhopper/test/andorra";
+		String graphastAndorraDir = Configuration.USER_HOME + "/graphast/test/andorra";
+
+		Graph graph = new OSMImporterImpl(osmFile, graphHopperAndorraDir, graphastAndorraDir).execute();
+
+		return graph;
+		
+	}
 
 }

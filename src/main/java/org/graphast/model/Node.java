@@ -101,4 +101,5 @@ public interface Node {
 	
 	public abstract void setCosts(int[] costs);
 
+
 }

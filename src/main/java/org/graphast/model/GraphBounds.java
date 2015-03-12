@@ -2,6 +2,7 @@ package org.graphast.model;
 
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 
+
 public interface GraphBounds extends Graph {
 
 	public abstract void createBounds();
@@ -18,4 +19,8 @@ public interface GraphBounds extends Graph {
 	
 	public int poiGetCost(long vid, short graphType);
 	
+	public abstract int getEdgeLowerCost(long id);
+	
+	public abstract int getEdgeUpperCost(long id);
+
 }

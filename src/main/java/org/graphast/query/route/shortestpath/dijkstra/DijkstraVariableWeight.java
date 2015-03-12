@@ -166,7 +166,7 @@ public class DijkstraVariableWeight extends Dijkstra {
 
 					if(bounds.keySet().contains(cat)) {
 						
-						int cost = bounds.get(cat).getDistance();
+						int cost = bounds.get(cat).getCost();
 
 						if(timeToService < cost)	bounds.put(cat, new Bound(queryEntry.getId(), timeToService));
 //                		if(timeToService < cost)	bounds.put(e.getId(), new Bound(e.getId(), timeToService));
@@ -192,7 +192,7 @@ public class DijkstraVariableWeight extends Dijkstra {
 	public int updateUpper(Int2ObjectMap<Bound> bounds){
 		int upper = Integer.MIN_VALUE;
 		for(Bound b: bounds.values()){
-			if(b.getDistance() > upper)	upper = b.getDistance();
+			if(b.getCost() > upper)	upper = b.getCost();
 		}
 		return upper;
 	}
@@ -209,7 +209,7 @@ public class DijkstraVariableWeight extends Dijkstra {
 		unsettledNodes.add(e);
 
 		while ((e = unsettledNodes.poll()) != null){
-			if(e.getTravelTime() > best.getDistance()){
+			if(e.getTravelTime() > best.getCost()){
 				return best;
 			}
 
@@ -217,7 +217,7 @@ public class DijkstraVariableWeight extends Dijkstra {
 				settledNodes.add(e.getId());
 				Node poi = graph.getPoi(e.getId());
 				if(poi != null){
-					if(e.getTravelTime() < best.getDistance()){
+					if(e.getTravelTime() < best.getCost()){
 						wt = graph.poiGetCost(e.getId());
 						ts = e.getTravelTime() + wt;
 						best = new Bound(e.getId(), ts);
