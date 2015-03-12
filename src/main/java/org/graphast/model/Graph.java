@@ -275,6 +275,16 @@ public interface Graph {
 	public abstract int[] getPoiCost(long vid);
 	
 	public LinearFunction[] convertToLinearFunction(int[] costs);
+	
+	public int getDelta();
+
+	public void setDelta(int delta);
+
+	public int getMaxTime();
+
+	public void setMaxTime(int maxTime);
+	
+	public int getArrival(int dt, int tt);
 
 	public CompressionType getCompressionType();
 
@@ -285,6 +295,5 @@ public interface Graph {
 	public void reverseGraph();
 	
 	public void setEdgeCosts(long edgeId, int[] costs);
-	public int getArrival(int dt, int tt);
 	
 }

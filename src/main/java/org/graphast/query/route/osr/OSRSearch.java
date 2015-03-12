@@ -204,7 +204,7 @@ public class OSRSearch {
 		if(pos < categories.size()){
 			int distance;
 			for(int i = pos; i < categories.size(); i++){
-				distance = bounds.getBound(id, categories.get(i)).getDistance();
+				distance = bounds.getBound(id, categories.get(i)).getCost();
 				if(distance > max)	max = distance;
 			}
 		}
