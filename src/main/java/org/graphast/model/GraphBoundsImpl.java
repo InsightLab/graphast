@@ -130,7 +130,7 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 	}
 
 	//TODO Refactor this method
-	public int getEdgeCost(Edge e, int t){
+	public Integer getEdgeCost(Edge e, int t){
 
 		LinearFunction[] lf = convertToLinearFunction(getEdgeCosts(e.getId()));
 
