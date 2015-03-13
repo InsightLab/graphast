@@ -172,7 +172,7 @@ public interface Graph {
 	 * @param time Time used to get edge costs.
 	 * @return return the cost of an edge in a give time
 	 */
-	public int getEdgeCost(Edge edge, int time);
+	public Integer getEdgeCost(Edge edge, int time);
 	
 	/**
 	 * This method returns a list of points that are part of a given edge in the map.

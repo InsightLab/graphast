@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.graphast.enums.CompressionType;
-import org.graphast.exception.GraphastException;
 import org.graphast.geometry.Point;
 import org.graphast.util.FileUtils;
 import org.slf4j.Logger;
@@ -656,11 +655,11 @@ public class GraphImpl implements Graph {
 	 */
 	//TODO getEdgeCost
 	@Override
-	public int getEdgeCost(Edge e, int time) {
+	public Integer getEdgeCost(Edge e, int time) {
 		EdgeImpl edge = (EdgeImpl)e;
 		long costsIndex = edge.getCostsIndex();
 		if (costsIndex < 0) {
-			throw new GraphastException("Edge without costs: " + edge);
+			return null;
 		}
 		int size = edgesCosts.getInt(costsIndex++);
 		int intervalSize = secondsDay / size;
@@ -722,9 +721,8 @@ public class GraphImpl implements Graph {
 	 */
 	@Override
 	public String getNodeLabel(long id) {
-		long position =  id*Node.NODE_BLOCKSIZE;
-		long labelIndex = BigArrays.index(nodes.getInt(position + 7), nodes.getInt(position + 8));
-		return nodesLabels.get(labelIndex);
+		Node node = this.getNode(id);
+		return node.getLabel();
 	}
 
 	/* (non-Javadoc)
@@ -732,7 +730,8 @@ public class GraphImpl implements Graph {
 	 */
 	@Override
 	public String getEdgeLabel(long id) {
-		return edgesLabels.size64() > 0 ? edgesLabels.get(id) : null;
+		Edge edge = this.getEdge(id);
+		return edge.getLabel();
 	}
 
 	/* (non-Javadoc)
