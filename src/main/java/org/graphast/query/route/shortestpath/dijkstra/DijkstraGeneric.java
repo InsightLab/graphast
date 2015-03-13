@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.PriorityQueue;
 import java.util.Set;
 
+import org.graphast.enums.GraphBoundsType;
 import org.graphast.model.Edge;
 import org.graphast.model.Graph;
 import org.graphast.model.GraphBounds;
@@ -116,7 +117,7 @@ public class DijkstraGeneric {
         return distance;
 	}
 	
-	public Bound shortestPathPoi(long v, int idCat){
+	public Bound shortestPathPoi(long v, int idCat, GraphBoundsType type){
 		PriorityQueue<QueueEntry> unsettledNodes = new PriorityQueue<QueueEntry>();
 	    Set<Long> settledNodes = new HashSet<Long>();
 	    HashMap<Long, Integer> shortestDistances = new HashMap<Long, Integer>();
@@ -139,74 +140,21 @@ public class DijkstraGeneric {
                 		}
                 	}
                 }
+                if(type.equals(GraphBoundsType.NORMAL)) {
+                	expandVertex(e, settledNodes, shortestDistances, unsettledNodes);
+				}
+				else if (type.equals(GraphBoundsType.LOWER)) {
+					expandVertexLowerBound(e, settledNodes, shortestDistances, unsettledNodes);
+				}
+				else {
+					expandVertexUpperBound(e, settledNodes, shortestDistances, unsettledNodes);
+				}
                 
-                expandVertex(e, settledNodes, shortestDistances, unsettledNodes);
         	}
         }        
         return new Bound();
 	}
 	
-	public Bound shortestUpperPathPoi(long v, int idCat){
-		PriorityQueue<QueueEntry> unsettledNodes = new PriorityQueue<QueueEntry>();
-	    Set<Long> settledNodes = new HashSet<Long>();
-	    HashMap<Long, Integer> shortestDistances = new HashMap<Long, Integer>();
-	    HashMap<Long, Bound> bounds = new HashMap<Long, Bound>();
-	    int upper = Integer.MIN_VALUE;
-	    int waitingTime, timeToService;
-	    shortestDistances.put(v, 0);
-	    QueueEntry e = new QueueEntry(v, (short) 0);
-        unsettledNodes.add(e);
-        
-        while ((e = unsettledNodes.poll()) != null){
-        	if(!settledNodes.contains(e.getId())){
-        		settledNodes.add(e.getId());
-        		
-                Node poi = graph.getPoi(e.getId());
-                if(poi != null){
-                	
-                	if(idCat == -1)	return new Bound(e.getId(), e.getTravelTime());
-                	else{
-                		if(poi.getCategory() == idCat){
-                			return new Bound(e.getId(), e.getTravelTime());
-                		}
-                	}
-                }
-                
-                expandVertexUpperBound(e, settledNodes, shortestDistances, unsettledNodes);
-        	}
-        }        
-        return new Bound();
-	}
-	
-	public Bound shortestLowerPathPoi(long v, int idCat){
-		PriorityQueue<QueueEntry> unsettledNodes = new PriorityQueue<QueueEntry>();
-	    Set<Long> settledNodes = new HashSet<Long>();
-	    HashMap<Long, Integer> shortestDistances = new HashMap<Long, Integer>();
-	    
-	    shortestDistances.put(v, 0);
-	    QueueEntry e = new QueueEntry(v,0);
-        unsettledNodes.add(e);
-        
-        while ((e = unsettledNodes.poll()) != null){
-        	if(!settledNodes.contains(e.getId())){
-        		settledNodes.add(e.getId());
-        		
-                Node poi = ((Graph) graph).getPoi(e.getId());
-                if(poi != null){
-                	
-                	if(idCat == -1)	return new Bound(e.getId(), e.getTravelTime());
-                	else{
-                		if(poi.getCategory() == idCat){
-                			return new Bound(e.getId(), e.getTravelTime());
-                		}
-                	}
-                }
-                
-                expandVertexLowerBound(e, settledNodes, shortestDistances, unsettledNodes);
-        	}
-        }        
-        return new Bound();
-	}
 	
 	public ObjectCollection<Bound> shortestPathCategories(long v, Set<Integer> idCat){
 		PriorityQueue<QueueEntry> unsettledNodes = new PriorityQueue<QueueEntry>();
@@ -255,7 +203,7 @@ public class DijkstraGeneric {
 		return upper;
 	}
 	
-	public Bound shortestTS(long v){
+	public Bound shortestTS(long v, GraphBoundsType type){
 		PriorityQueue<QueueEntry> unsettledNodes = new PriorityQueue<QueueEntry>();
 	    Set<Long> settledNodes = new HashSet<Long>();
 	    HashMap<Long, Integer> shortestDistances = new HashMap<Long, Integer>();
@@ -281,8 +229,16 @@ public class DijkstraGeneric {
                 		best = new Bound(e.getId(), ts);
                 	}
                 }
+                if(type.equals(GraphBoundsType.NORMAL)) {
+                	expandVertex(e, settledNodes, shortestDistances, unsettledNodes);
+				}
+				else if (type.equals(GraphBoundsType.LOWER)) {
+					expandVertexLowerBound(e, settledNodes, shortestDistances, unsettledNodes);
+				}
+				else {
+					expandVertexUpperBound(e, settledNodes, shortestDistances, unsettledNodes);
+				}
                 
-                expandVertex(e, settledNodes, shortestDistances, unsettledNodes);
             }
         }        
         return best;
