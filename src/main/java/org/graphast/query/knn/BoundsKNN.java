@@ -20,7 +20,7 @@ public class BoundsKNN extends AbstractBoundsSearchPoI{
 				long position = i*Node.NODE_BLOCKSIZE;
 				long vid = BigArrays.index(graph.getNodes().getInt(position), graph.getNodes().getInt(position + 1));
 				Bound b = new Bound(vid,  d.shortestPathPoi(vid, -1, type).getCost());
-				ObjectCollection<Bound> oc = new AbstractObjectCollection<Bound>();
+				ObjectCollection<Bound> oc = new ObjectCollection<Bound>();
 				oc.add(b);
 				bounds.put(vid, oc);
 			}	
