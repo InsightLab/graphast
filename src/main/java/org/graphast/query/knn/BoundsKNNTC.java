@@ -1,6 +1,7 @@
 package org.graphast.query.knn;
 
 import it.unimi.dsi.fastutil.BigArrays;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectCollection;
 
 import org.graphast.enums.GraphBoundsType;
@@ -18,7 +19,7 @@ public class BoundsKNNTC extends AbstractBoundsSearchPoI{
 				long position = i*Node.NODE_BLOCKSIZE;
 				long vid = BigArrays.index(graph.getNodes().getInt(position), graph.getNodes().getInt(position + 1));
 				Bound b = new Bound(vid,  d.shortestTS(vid, type).getCost());
-				ObjectCollection<Bound> oc = null;
+				ObjectCollection<Bound> oc = new ObjectArrayList<>();
 				oc.add(b);
 				bounds.put(vid, oc);	
 			}
