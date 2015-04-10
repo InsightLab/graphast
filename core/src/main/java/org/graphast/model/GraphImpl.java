@@ -1236,14 +1236,10 @@ public class GraphImpl implements Graph {
 		Node point = new NodeImpl();
 		point.setLatitude(latitude);
 		point.setLongitude(longitude);
-		Node aproximated = new NodeImpl();
-		aproximated.setLatitude(latitude+1);
-		aproximated.setLongitude(longitude+1);
+		Node aproximated = getNode(nodes.get(0));
 		Node aux = new NodeImpl();
-		long position = 0;
 		for (long i = 0; i<getNumberOfNodes(); i++) {
-			position = i*Node.NODE_BLOCKSIZE;
-			aux = getNode(nodes.get(position));
+			aux = getNode(i);
 			if (DistanceUtils.distanceLatLong(point, aux) < DistanceUtils.distanceLatLong(point, aproximated)) {
 				aproximated = aux;
 			}
