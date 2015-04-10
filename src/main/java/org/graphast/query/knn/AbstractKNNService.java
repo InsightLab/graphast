@@ -9,17 +9,18 @@ import java.util.PriorityQueue;
 
 import org.graphast.model.Graph;
 import org.graphast.query.model.AbstractBoundsSearch;
+import org.graphast.query.model.AbstractBoundsSearchPoI;
 import org.graphast.query.model.Bound;
 import org.graphast.query.model.LowerBoundEntry;
 
 public abstract class AbstractKNNService implements KNNService{
 	protected Graph network;
-	protected AbstractBoundsSearch minBounds;
-	protected AbstractBoundsSearch maxBounds;
+	protected AbstractBoundsSearchPoI minBounds;
+	protected AbstractBoundsSearchPoI maxBounds;
 	
 	protected static int wasRemoved = -1;
 	
-	public AbstractKNNService(Graph network, AbstractBoundsSearch minBounds, AbstractBoundsSearch maxBounds){
+	public AbstractKNNService(Graph network, AbstractBoundsSearchPoI minBounds, AbstractBoundsSearchPoI maxBounds){
 		this.network = network;
 		this.minBounds = minBounds;
 		this.maxBounds = maxBounds;
@@ -27,8 +28,8 @@ public abstract class AbstractKNNService implements KNNService{
 	
 	protected void init(long vid, int t, int k, int kth, PriorityQueue<LowerBoundEntry> queue, PriorityQueue<UpperEntry> upperCandidates, 
 			HashMap<Long, Integer> isIn, HashMap<Long, Long> parents){
-		Bound bMin = new Bound(vid, minBounds.getBounds().get(vid));
-		Bound bMax = new Bound(vid, maxBounds.getBounds().get(vid));
+		Bound bMin = minBounds.getBounds().get(vid).iterator().next();
+		Bound bMax = maxBounds.getBounds().get(vid).iterator().next();
 		long unn = bMax.getId();
 		int utdd = t + bMax.getCost();
 		queue.offer(new LowerBoundEntry(	vid, 
@@ -97,7 +98,7 @@ public abstract class AbstractKNNService implements KNNService{
 		for (long v : neig.keySet()) {
 			int at = network.getArrival(removed.getArrivalTime(), neig.get(v));
 			int tt = removed.getTravelTime() + neig.get(v);
-			Bound bMin = new Bound(v, minBounds.getBounds().get(v));
+			Bound bMin = minBounds.getBounds().get(v).iterator().next();
 			LowerBoundEntry newEntry = new LowerBoundEntry(	v, 
 													tt, 
 													at, 
@@ -118,7 +119,7 @@ public abstract class AbstractKNNService implements KNNService{
 						}
 					}
 				}
-				Bound bMax = new Bound(v, maxBounds.getBounds().get(v));
+				Bound bMax = maxBounds.getBounds().get(v).iterator().next();
 				includeCandidate(k, bMax.getId(), tt + bMax.getCost(), kth, upperCandidates, isIn);
 			}
 		}
