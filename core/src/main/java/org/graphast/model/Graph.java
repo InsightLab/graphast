@@ -296,4 +296,6 @@ public interface Graph {
 	
 	public void setEdgeCosts(long edgeId, int[] costs);
 	
+	public Node getAproximatedNode (double latitude, double longitude);
+	
 }
