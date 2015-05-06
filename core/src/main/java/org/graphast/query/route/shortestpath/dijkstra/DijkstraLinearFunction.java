@@ -1,7 +1,5 @@
 package org.graphast.query.route.shortestpath.dijkstra;
 
-import it.unimi.dsi.fastutil.bytes.Byte2BooleanMap.Entry;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.PriorityQueue;
@@ -19,7 +17,7 @@ public class DijkstraLinearFunction extends Dijkstra{
 		super(graph);
 	}
 	
-	public void expandVertex(Node target, TimeEntry removed, HashMap<Integer, Integer> wasTraversed, 
+	public void expandVertex(Node target, TimeEntry removed, HashMap<Long, Integer> wasTraversed, 
 			PriorityQueue<TimeEntry> queue, HashMap<Integer, RouteEntry> parents){
 		
 		HashMap<Node, Integer> neig = graph.accessNeighborhood(graph.getNode(removed.getId()), removed.getArrivalTime());
