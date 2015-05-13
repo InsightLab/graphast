@@ -521,11 +521,8 @@ public class GraphImpl implements Graph {
 			if (next != -1) {
 				nextEdge = getEdge(next);
 			}
-
 		}
-
 		return outEdges;
-
 	}
 
 	/*

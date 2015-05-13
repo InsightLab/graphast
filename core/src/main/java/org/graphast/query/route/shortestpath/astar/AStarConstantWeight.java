@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 
+import org.graphast.model.Edge;
 import org.graphast.model.Graph;
 import org.graphast.model.Node;
 import org.graphast.query.model.LowerBoundEntry;
@@ -38,18 +39,21 @@ public class AStarConstantWeight extends AStar{
 			LowerBoundEntry newEntry = new LowerBoundEntry(vid, travelTime, 0, removed.getId(), lowerBound);
 			
 			String label = null;
+			Edge edge = null;
+			long edgeId = -1;
 			
 			if(!wasTraversed.containsKey(vid)){					
 				queue.offer(newEntry);
 				wasTraversed.put(newEntry.getId(), newEntry.getTravelTime());
 				
 				for(Long outEdges : graph.getOutEdges(removed.getId())) {
-					if ((int) graph.getEdge(outEdges).getToNode() == vid) {
-						label = graph.getEdge(outEdges).getLabel();
+					edge = graph.getEdge(outEdges);
+					if ((int) edge.getToNode() == vid) {
+						label = edge.getLabel();
+						edgeId = edge.getId();
 					}
 				}
-				
-				parents.put(vid, new RouteEntry(removed.getId(), neig.get(vid), label));
+				parents.put(vid, new RouteEntry(removed.getId(), neig.get(vid), edgeId, label));
 			} else {
 				
 				int cost = wasTraversed.get(vid);
@@ -63,8 +67,7 @@ public class AStarConstantWeight extends AStar{
 						wasTraversed.remove(newEntry.getId());
 						wasTraversed.put(newEntry.getId(), newEntry.getTravelTime());
 						parents.remove(vid);
-						parents.put(vid, new RouteEntry(removed.getId(), neig.get(vid), label));
-					
+						parents.put(vid, new RouteEntry(removed.getId(), neig.get(vid), edgeId, label));
 					}
 				}
 			}

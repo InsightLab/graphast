@@ -4,11 +4,13 @@ public class RouteEntry {
 
 	private long id;
 	private int cost;
+	private long edgeId;
 	private String label;
 	
-	public RouteEntry(long id, int cost, String label){
+	public RouteEntry(long id, int cost, long edgeId, String label){
 		this.id = id;
 		this.cost = cost;
+		this.edgeId = edgeId;
 		this.label = label;
 	}
 	
@@ -25,6 +27,14 @@ public class RouteEntry {
 		this.cost = cost;
 	}
 
+	public long getEdgeId() {
+		return edgeId;
+	}
+
+	public void setEdgeId(long edgeId) {
+		this.edgeId = edgeId;
+	}
+
 	public String getLabel() {
 		return label;
 	}
@@ -35,7 +45,8 @@ public class RouteEntry {
 
 	@Override
 	public String toString() {
-		return "RouteEntry [id=" + id + ", cost=" + cost + ", label=" + label + "]";
+		return "RouteEntry [id=" + id + ", cost=" + cost + ", edgeId=" + edgeId
+				+ ", label=" + label + "]";
 	}
 	
 }
