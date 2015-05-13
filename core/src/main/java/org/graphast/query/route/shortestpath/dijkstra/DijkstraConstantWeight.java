@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 
+import org.graphast.model.Edge;
 import org.graphast.model.Graph;
 import org.graphast.model.Node;
 import org.graphast.query.route.shortestpath.model.DistanceEntry;
@@ -29,44 +30,50 @@ public class DijkstraConstantWeight extends Dijkstra {
 			int travelDistance = removed.getDistance() + neig.get(vid);
 			DistanceEntry newDistanceEntry = new DistanceEntry(vid, travelDistance, removed.getId());
 			
-			String label = null;
+			Edge edge = null;
+			int distance = -1;
 			
 			if (!wasTraversed.containsKey(vid)) {		
 				
 				queue.offer(newDistanceEntry);
 				wasTraversed.put(newDistanceEntry.getId(), newDistanceEntry.getDistance());
 				
-				for(Long outEdges : graph.getOutEdges(removed.getId())) {
-					
-					if ((int) graph.getEdge(outEdges).getToNode() == vid) {
-						label = graph.getEdge(outEdges).getLabel();
-					}
-				
-				}
-				
-				parents.put(vid, new RouteEntry(removed.getId(), neig.get(vid), label));
-				
+				distance = neig.get(vid);
+				edge = getEdge(removed.getId(), vid, distance);
+				parents.put(vid, new RouteEntry(removed.getId(), distance, edge.getId(), edge.getLabel()));
 			} else {
 				
 				int cost = wasTraversed.get(vid);
 				
 				if (cost != wasRemoved) {
-					
 					if(cost > newDistanceEntry.getDistance()) {
-						
 						queue.remove(newDistanceEntry);
 						queue.offer(newDistanceEntry);
 						wasTraversed.remove(newDistanceEntry.getId());
 						wasTraversed.put(newDistanceEntry.getId(), newDistanceEntry.getDistance());
 						parents.remove(vid);
-						parents.put(vid, new RouteEntry(removed.getId(), neig.get(vid), label));
-						
+
+						distance = neig.get(vid);
+						edge = getEdge(removed.getId(), vid, distance);
+						parents.put(vid, new RouteEntry(removed.getId(), distance, edge.getId(), edge.getLabel()));
 					}
 				}
 			}
 		}
 	}
 
+	private Edge getEdge(long fromNodeId, long toNodeId, int distance) {
+		Edge edge = null;
+		for(Long outEdge : graph.getOutEdges(fromNodeId)) {
+			edge = graph.getEdge(outEdge);
+			if ((int) edge.getToNode() == toNodeId && edge.getDistance() == distance) {
+				break;
+			}
+		}
+		return edge;
+	}
+
+	
 	@Override
 	public Int2ObjectMap<Path> shortestPath(Node source) {
 		return super.shortestPath(source);

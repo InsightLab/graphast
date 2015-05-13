@@ -1,6 +1,7 @@
 package org.graphast.query.route.shortestpath.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -11,6 +12,7 @@ public class Path {
 	private long removedId;
 	private HashMap<Long, RouteEntry> parents;
 	private List<Instruction> path;
+	private List<Long> edges;
 
 	public Path() {
 
@@ -31,48 +33,35 @@ public class Path {
 		long parent = re.getId();
 
 		path = new ArrayList<Instruction>();
-
+		edges = new ArrayList<Long>();
+		
 		newInstruction = new Instruction(0, re.getLabel(), re.getCost());
-
+		edges.add(re.getEdgeId());
 		verificationQueue.add(newInstruction);
 
 		while(parent!=-1) {
-
 			re = parents.get(parent);
-
 			if(re != null) {
-
 				String predecessorLabel = verificationQueue.peek().getLabel();
 
 				if((predecessorLabel == null && re.getLabel() == null) || (predecessorLabel!=null  && predecessorLabel.equals(re.getLabel())) || (predecessorLabel!=null && (predecessorLabel.isEmpty() && re.getLabel()==null))) {
-
 					oldInstruction = verificationQueue.poll();
 					newInstruction = new Instruction(0, oldInstruction.getLabel(), oldInstruction.getCost() + re.getCost());
-					verificationQueue.addFirst(newInstruction);
-
 				} else {
-
 					newInstruction = new Instruction(0, re.getLabel(), re.getCost());
-					verificationQueue.addFirst(newInstruction);
-
 				}
-
+				edges.add(re.getEdgeId());
+				verificationQueue.addFirst(newInstruction);
 				parent = re.getId();
-
 			} else {
-
 				break;
-
 			}
-
 		}
-
+		
+		Collections.reverse(edges);
 		while(!verificationQueue.isEmpty()) {
 			path.add(verificationQueue.poll());
 		}
-
-		//return path;
-
 	}
 
 	public double getPathCost() {
@@ -137,5 +126,15 @@ public class Path {
 	public void setPath(List<Instruction> path) {
 		this.path = path;
 	}
+
+	public List<Long> getEdges() {
+		return edges;
+	}
+
+	public void setEdges(List<Long> edges) {
+		this.edges = edges;
+	}
+	
+	
 
 }
