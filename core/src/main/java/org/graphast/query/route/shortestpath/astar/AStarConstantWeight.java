@@ -1,6 +1,5 @@
 package org.graphast.query.route.shortestpath.astar;
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 
 import java.util.Date;
@@ -88,11 +87,11 @@ public class AStarConstantWeight extends AStar{
 	public Path shortestPath(long source, long target, Date time) {
 		return shortestPath(graph.getNode(source), graph.getNode(target), time);
 	}
-
-	@Override
-	public Int2ObjectMap<Path> shortestPath(Node source) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+//
+//	@Override
+//	public Int2ObjectMap<Path> shortestPath(Node source) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 }
