@@ -1,18 +1,16 @@
 package org.graphast.query.route.shortestpath.dijkstra;
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 
 import org.graphast.model.Edge;
 import org.graphast.model.Graph;
+import org.graphast.model.GraphBounds;
 import org.graphast.model.Node;
-import org.graphast.query.route.shortestpath.model.DistanceEntry;
-import org.graphast.query.route.shortestpath.model.Path;
 import org.graphast.query.route.shortestpath.model.RouteEntry;
+import org.graphast.query.route.shortestpath.model.TimeEntry;
 
 public class DijkstraConstantWeight extends Dijkstra {
 
@@ -20,23 +18,28 @@ public class DijkstraConstantWeight extends Dijkstra {
 		super(graph);
 	}
 	
-	public void expandVertex(Node target, DistanceEntry removed, HashMap<Long, Integer> wasTraversed, 
-			PriorityQueue<DistanceEntry> queue, HashMap<Long, RouteEntry> parents){
+	public DijkstraConstantWeight(GraphBounds graphBounds) {
+		super(graphBounds);
+	}
+	
+	public void expandVertex(Node target, TimeEntry removed, HashMap<Long, Integer> wasTraversed, 
+			PriorityQueue<TimeEntry> queue, HashMap<Long, RouteEntry> parents){
 		
 		Long2IntMap neig = graph.accessNeighborhood(graph.getNode(removed.getId()));
 		
 		for (long vid : neig.keySet()) {
-
-			int travelDistance = removed.getDistance() + neig.get(vid);
-			DistanceEntry newDistanceEntry = new DistanceEntry(vid, travelDistance, removed.getId());
 			
+			int arrivalTime = graph.getArrival(removed.getArrivalTime(), neig.get(vid));
+			int travelTime = removed.getTravelTime() + neig.get(vid);
+			TimeEntry newEntry = new TimeEntry(	vid, travelTime, arrivalTime, removed.getId());
+
 			Edge edge = null;
 			int distance = -1;
 			
 			if (!wasTraversed.containsKey(vid)) {		
 				
-				queue.offer(newDistanceEntry);
-				wasTraversed.put(newDistanceEntry.getId(), newDistanceEntry.getDistance());
+				queue.offer(newEntry);
+				wasTraversed.put(newEntry.getId(), newEntry.getTravelTime());
 				
 				distance = neig.get(vid);
 				edge = getEdge(removed.getId(), vid, distance);
@@ -46,11 +49,11 @@ public class DijkstraConstantWeight extends Dijkstra {
 				int cost = wasTraversed.get(vid);
 				
 				if (cost != wasRemoved) {
-					if(cost > newDistanceEntry.getDistance()) {
-						queue.remove(newDistanceEntry);
-						queue.offer(newDistanceEntry);
-						wasTraversed.remove(newDistanceEntry.getId());
-						wasTraversed.put(newDistanceEntry.getId(), newDistanceEntry.getDistance());
+					if(cost > newEntry.getTravelTime()) {
+						queue.remove(newEntry);
+						queue.offer(newEntry);
+						wasTraversed.remove(newEntry.getId());
+						wasTraversed.put(newEntry.getId(), newEntry.getTravelTime());
 						parents.remove(vid);
 
 						distance = neig.get(vid);
@@ -73,24 +76,4 @@ public class DijkstraConstantWeight extends Dijkstra {
 		return edge;
 	}
 
-	
-	@Override
-	public Int2ObjectMap<Path> shortestPath(Node source) {
-		return super.shortestPath(source);
-	}
-	
-	@Override
-	public Path shortestPath(Node source, Node target) {
-		return shortestPath(source, target, null);
-	}
-
-	@Override
-	public Path shortestPath(long source, long target) {
-		return shortestPath(source, target, null);
-	}
-
-	@Override
-	public Path shortestPath(long source, long target, Date time) {
-		return shortestPath(graph.getNode(source), graph.getNode(target), time);
-	}
 }

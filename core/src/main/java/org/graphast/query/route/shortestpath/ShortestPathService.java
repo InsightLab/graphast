@@ -1,7 +1,5 @@
 package org.graphast.query.route.shortestpath;
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-
 import java.util.Date;
 
 import org.graphast.model.Node;
@@ -17,6 +15,6 @@ public interface ShortestPathService {
 	
 	public Path shortestPath(long source, long target, Date time);
 	
-	public Int2ObjectMap<Path> shortestPath(Node source);
+//	public Int2ObjectMap<Path> shortestPath(Node source);
 
 }
