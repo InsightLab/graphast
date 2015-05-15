@@ -29,6 +29,8 @@ public class LowerBoundEntry extends TimeEntry{
 	@Override
 	public int compareTo(Object o) {
 		
+		
+//		return new Integer(((LowerBoundEntry)o).lowerBound).compareTo(lowerBound);
 		return new Integer(lowerBound).compareTo(((LowerBoundEntry)o).lowerBound);
 	
 	}
