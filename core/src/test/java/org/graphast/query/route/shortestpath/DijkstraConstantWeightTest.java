@@ -102,6 +102,8 @@ public class DijkstraConstantWeightTest {
 
 	}
 
+	
+	//TODO Este teste esta errado no AStarConstantWeightTest
 	@Test
 	public void shortestPathExample2Test() {
 
@@ -124,93 +126,93 @@ public class DijkstraConstantWeightTest {
 
 	}
 
-	@Test
-	public void shortestPathMonacoTest3() {
-
-		Long source = graphMonaco.getNodeId(43.72636792197156, 7.417292499928754);
-		Long target = graphMonaco.getNodeId(43.74766484829034, 7.430716770083832);
-
-		AbstractShortestPathService dj = new DijkstraConstantWeight(graphMonaco);
-
-		StopWatch sw = new StopWatch();
-
-		sw.start();
-		Path shortestPath = dj.shortestPath(source, target);
-		sw.stop();
-
-		logger.debug(shortestPath.toString());
-		logger.debug("Execution Time of shortestPathMonacoTest3(): {}ms", sw.getTime());
-		logger.debug("Path Cost: {}", shortestPath.getPathCost());
-
-		assertEquals(3610712.0, shortestPath.getPathCost(), 0);
-
-	}
-
-	@Test
-	public void shortestPathGraphExampleReverseTest1() {
-
-		Long source = 5L; // External ID = 1
-		Long target = 0L; // External ID = 4
-
-		graphExample.reverseGraph();
-
-		AbstractShortestPathService dj = new DijkstraConstantWeight(graphExample);
-
-		StopWatch sw = new StopWatch();
-
-		sw.start();
-		Path shortestPath = dj.shortestPath(source, target);
-		sw.stop();
-
-		logger.debug(shortestPath.toString());
-		logger.debug("Execution Time of shortestPathExampleTest(): {}ms", sw.getTime());
-		logger.debug("Path Cost: {}", shortestPath.getPathCost());
-
-		assertEquals(8100, shortestPath.getPathCost(), 0);		
-	}
-
-	@Test
-	public void shortestPathGraphExampleReverseTest2() {
-
-		Long target = graphMonaco.getNodeId(43.72636792197156, 7.417292499928754);
-		Long source = graphMonaco.getNodeId(43.74766484829034, 7.430716770083832);
-
-		graphMonaco.reverseGraph();
-
-		AbstractShortestPathService dj = new DijkstraConstantWeight(graphMonaco);
-
-		StopWatch sw = new StopWatch();
-
-		sw.start();
-		Path shortestPath = dj.shortestPath(source, target);
-		sw.stop();
-
-		logger.debug(shortestPath.toString());
-		logger.debug("Execution Time of shortestPathMonacoTest3(): {}ms", sw.getTime());
-		logger.debug("Path Cost: {}", shortestPath.getPathCost());
-
-		assertEquals(3610712.0, shortestPath.getPathCost(), 0);
-	}
-
-	@Test
-	public void shortestPathGraphExample4Test() {
-		ShortestPathService shortestPath = new DijkstraConstantWeight(graphExample4);
-		Path path = shortestPath.shortestPath(0, 6);
-		assertEquals(12, path.getPathCost(), 0);
-		List<Instruction> instructions = path.getPath();
-		assertEquals("Rua A", instructions.get(0).getLabel());
-		assertEquals("Rua C", instructions.get(1).getLabel());
-		assertEquals("Rua D", instructions.get(2).getLabel());
-		assertEquals("Rua F", instructions.get(3).getLabel());
-		assertEquals("Rua H", instructions.get(4).getLabel());
-		assertEquals(5, path.getEdges().size());
-		assertEquals("[0, 2, 3, 5, 7]", path.getEdges().toString());
-		assertEquals("Rua A", graphExample4.getEdge(path.getEdges().get(0)).getLabel());
-		assertEquals("Rua C", graphExample4.getEdge(path.getEdges().get(1)).getLabel());
-		assertEquals("Rua D", graphExample4.getEdge(path.getEdges().get(2)).getLabel());
-		assertEquals("Rua F", graphExample4.getEdge(path.getEdges().get(3)).getLabel());
-		assertEquals("Rua H", graphExample4.getEdge(path.getEdges().get(4)).getLabel());
-	}
+//	@Test
+//	public void shortestPathMonacoTest3() {
+//
+//		Long source = graphMonaco.getNodeId(43.72636792197156, 7.417292499928754);
+//		Long target = graphMonaco.getNodeId(43.74766484829034, 7.430716770083832);
+//
+//		AbstractShortestPathService dj = new DijkstraConstantWeight(graphMonaco);
+//
+//		StopWatch sw = new StopWatch();
+//
+//		sw.start();
+//		Path shortestPath = dj.shortestPath(source, target);
+//		sw.stop();
+//
+//		logger.debug(shortestPath.toString());
+//		logger.debug("Execution Time of shortestPathMonacoTest3(): {}ms", sw.getTime());
+//		logger.debug("Path Cost: {}", shortestPath.getPathCost());
+//
+//		assertEquals(3610712.0, shortestPath.getPathCost(), 0);
+//
+//	}
+//
+//	@Test
+//	public void shortestPathGraphExampleReverseTest1() {
+//
+//		Long source = 5L; // External ID = 1
+//		Long target = 0L; // External ID = 4
+//
+//		graphExample.reverseGraph();
+//
+//		AbstractShortestPathService dj = new DijkstraConstantWeight(graphExample);
+//
+//		StopWatch sw = new StopWatch();
+//
+//		sw.start();
+//		Path shortestPath = dj.shortestPath(source, target);
+//		sw.stop();
+//
+//		logger.debug(shortestPath.toString());
+//		logger.debug("Execution Time of shortestPathExampleTest(): {}ms", sw.getTime());
+//		logger.debug("Path Cost: {}", shortestPath.getPathCost());
+//
+//		assertEquals(8100, shortestPath.getPathCost(), 0);		
+//	}
+//
+//	@Test
+//	public void shortestPathGraphExampleReverseTest2() {
+//
+//		Long target = graphMonaco.getNodeId(43.72636792197156, 7.417292499928754);
+//		Long source = graphMonaco.getNodeId(43.74766484829034, 7.430716770083832);
+//
+//		graphMonaco.reverseGraph();
+//
+//		AbstractShortestPathService dj = new DijkstraConstantWeight(graphMonaco);
+//
+//		StopWatch sw = new StopWatch();
+//
+//		sw.start();
+//		Path shortestPath = dj.shortestPath(source, target);
+//		sw.stop();
+//
+//		logger.debug(shortestPath.toString());
+//		logger.debug("Execution Time of shortestPathMonacoTest3(): {}ms", sw.getTime());
+//		logger.debug("Path Cost: {}", shortestPath.getPathCost());
+//
+//		assertEquals(3610712.0, shortestPath.getPathCost(), 0);
+//	}
+//
+//	@Test
+//	public void shortestPathGraphExample4Test() {
+//		ShortestPathService shortestPath = new DijkstraConstantWeight(graphExample4);
+//		Path path = shortestPath.shortestPath(0, 6);
+//		assertEquals(12, path.getPathCost(), 0);
+//		List<Instruction> instructions = path.getPath();
+//		assertEquals("Rua A", instructions.get(0).getLabel());
+//		assertEquals("Rua C", instructions.get(1).getLabel());
+//		assertEquals("Rua D", instructions.get(2).getLabel());
+//		assertEquals("Rua F", instructions.get(3).getLabel());
+//		assertEquals("Rua H", instructions.get(4).getLabel());
+//		assertEquals(5, path.getEdges().size());
+//		assertEquals("[0, 2, 3, 5, 7]", path.getEdges().toString());
+//		assertEquals("Rua A", graphExample4.getEdge(path.getEdges().get(0)).getLabel());
+//		assertEquals("Rua C", graphExample4.getEdge(path.getEdges().get(1)).getLabel());
+//		assertEquals("Rua D", graphExample4.getEdge(path.getEdges().get(2)).getLabel());
+//		assertEquals("Rua F", graphExample4.getEdge(path.getEdges().get(3)).getLabel());
+//		assertEquals("Rua H", graphExample4.getEdge(path.getEdges().get(4)).getLabel());
+//	}
 	
 	
 	@AfterClass

@@ -2,7 +2,6 @@ package org.graphast.query.route.shortestpath.astar;
 
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 
@@ -10,13 +9,13 @@ import org.graphast.model.Edge;
 import org.graphast.model.Graph;
 import org.graphast.model.Node;
 import org.graphast.query.model.LowerBoundEntry;
-import org.graphast.query.route.shortestpath.model.Path;
 import org.graphast.query.route.shortestpath.model.RouteEntry;
 import org.graphast.query.route.shortestpath.model.TimeEntry;
 
 import com.graphhopper.util.DistanceCalcEarth;
 
 public class AStarConstantWeight extends AStar{
+	
 	private DistanceCalcEarth distance;
 	
 	public AStarConstantWeight(Graph graph) {
@@ -30,16 +29,19 @@ public class AStarConstantWeight extends AStar{
 		Long2IntMap neig = graph.accessNeighborhood(graph.getNode(removed.getId()));
 		
 		for (long vid : neig.keySet()) {
-			//int vid = convertToInt(v.getId());
-			//int at = graph.getArrival(removed.getArrivalTime(), neig.get(v));
-			int travelTime = removed.getTravelTime() + neig.get(vid);
-			int lowerBound = travelTime + (int)(distance.calcDist( (double)graph.getNode(vid).getLatitude(), (double) graph.getNode(vid).getLongitude(),
-					(double) target.getLatitude(), (double) target.getLongitude()));
-			LowerBoundEntry newEntry = new LowerBoundEntry(vid, travelTime, 0, removed.getId(), lowerBound);
 			
+			int arrivalTime = graph.getArrival(removed.getArrivalTime(), neig.get(vid));
+			int travelTime = removed.getTravelTime() + neig.get(vid);
+			//TODO Problem may be here
+			int lowerBound = travelTime + (int)(distance.calcDist( (double)graph.getNode(vid).getLatitude(), (double) graph.getNode(vid).getLongitude(),
+					(double) target.getLatitude(), (double) target.getLongitude()))*100;
+			LowerBoundEntry newEntry = new LowerBoundEntry(vid, travelTime, arrivalTime, removed.getId(), lowerBound);
+			
+			//TODO Double check this block
 			String label = null;
 			Edge edge = null;
 			long edgeId = -1;
+			int distance = -1;
 			
 			if(!wasTraversed.containsKey(vid)){					
 				queue.offer(newEntry);
@@ -50,9 +52,11 @@ public class AStarConstantWeight extends AStar{
 					if ((int) edge.getToNode() == vid) {
 						label = edge.getLabel();
 						edgeId = edge.getId();
+						distance = neig.get(vid);
 					}
 				}
 				parents.put(vid, new RouteEntry(removed.getId(), neig.get(vid), edgeId, label));
+				
 			} else {
 				
 				int cost = wasTraversed.get(vid);
@@ -65,33 +69,13 @@ public class AStarConstantWeight extends AStar{
 						queue.offer(newEntry);
 						wasTraversed.remove(newEntry.getId());
 						wasTraversed.put(newEntry.getId(), newEntry.getTravelTime());
+						
 						parents.remove(vid);
-						parents.put(vid, new RouteEntry(removed.getId(), neig.get(vid), edgeId, label));
+						distance = neig.get(vid);
+						parents.put(vid, new RouteEntry(removed.getId(), distance, edgeId, label));
 					}
 				}
 			}
 		}
 	}
-
-	@Override
-	public Path shortestPath(Node source, Node target) {
-		return shortestPath(source, target, null);
-	}
-
-	@Override
-	public Path shortestPath(long source, long target) {
-		return shortestPath(graph.getNode(source), graph.getNode(target));
-	}
-
-	@Override
-	public Path shortestPath(long source, long target, Date time) {
-		return shortestPath(graph.getNode(source), graph.getNode(target), time);
-	}
-//
-//	@Override
-//	public Int2ObjectMap<Path> shortestPath(Node source) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-
 }
