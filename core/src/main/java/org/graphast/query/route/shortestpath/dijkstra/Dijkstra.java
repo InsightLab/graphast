@@ -84,7 +84,6 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 		
 		queue.offer(new TimeEntry(sid, 0, t, -1));
 
-		//parents.put((Integer) graphAdapter.getVertex(sid).getProperty(Property.ORGINALID), new RouteEntry(-1, 0));
 	}
 	
 	

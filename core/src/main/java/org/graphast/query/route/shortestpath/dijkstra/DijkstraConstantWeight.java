@@ -54,8 +54,8 @@ public class DijkstraConstantWeight extends Dijkstra {
 						queue.offer(newEntry);
 						wasTraversed.remove(newEntry.getId());
 						wasTraversed.put(newEntry.getId(), newEntry.getTravelTime());
+						
 						parents.remove(vid);
-
 						distance = neig.get(vid);
 						edge = getEdge(removed.getId(), vid, distance);
 						parents.put(vid, new RouteEntry(removed.getId(), distance, edge.getId(), edge.getLabel()));
