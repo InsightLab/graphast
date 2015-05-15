@@ -32,12 +32,18 @@ public class AStarConstantWeight extends AStar{
 			
 			int arrivalTime = graph.getArrival(removed.getArrivalTime(), neig.get(vid));
 			int travelTime = removed.getTravelTime() + neig.get(vid);
-			//TODO Problem may be here
+
+			//TODO The problem is in this calculation of lower bound! When we add the distance between 
+			//     two points, the priority changes!
+			
+//			int lowerBound = travelTime + (int)Math.sqrt(Math.pow(((double) target.getLatitude() - (double)graph.getNode(vid).getLatitude()),2)+Math.pow(((double) target.getLongitude() - (double) graph.getNode(vid).getLongitude()),2));
+					
+			
+			
 			int lowerBound = travelTime + (int)(distance.calcDist( (double)graph.getNode(vid).getLatitude(), (double) graph.getNode(vid).getLongitude(),
 					(double) target.getLatitude(), (double) target.getLongitude()))*100;
 			LowerBoundEntry newEntry = new LowerBoundEntry(vid, travelTime, arrivalTime, removed.getId(), lowerBound);
 			
-			//TODO Double check this block
 			String label = null;
 			Edge edge = null;
 			long edgeId = -1;
