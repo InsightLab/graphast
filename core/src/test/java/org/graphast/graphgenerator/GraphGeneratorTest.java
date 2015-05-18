@@ -2,10 +2,14 @@ package org.graphast.graphgenerator;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Map;
+
 import org.graphast.config.Configuration;
 import org.graphast.model.Graph;
 import org.graphast.model.GraphBounds;
 import org.graphast.util.FileUtils;
+import org.graphast.util.MapUtils;
+import org.graphast.util.SimpleMap;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -69,25 +73,23 @@ public class GraphGeneratorTest {
 	@Test
 	public void upperAndLowerBoundsTest() {
 		
-//		graphExample2.getCosts();
+		graphExample2.createBounds();
+
+		Map<Long, Integer> realValueUpper = new SimpleMap<Long, Integer>(2l,2, 6l,11, 3l,11, 1l,10, 5l,13, 4l,10, 0l,4, 7l,15);
+		Map<Long, Integer> realValueLower = new SimpleMap<Long, Integer>(2l,1, 6l,3, 3l,4, 1l,2, 5l,2, 4l,1, 0l,2, 7l,2);
+
+		assertEquals(true, MapUtils.equalMaps(realValueUpper, graphExample2.getEdgesUpperBound()));
+		assertEquals(true, MapUtils.equalMaps(realValueLower, graphExample2.getEdgesLowerBound()));
 		
-//<<<<<<< HEAD
-//		Map<Long, Integer> realValueUpper = new SimpleMap<Long, Integer>(2l,2, 6l,11, 3l,11, 1l,10, 5l,13, 4l,10, 0l,4, 7l,15);
-//		Map<Long, Integer> realValueLower = new SimpleMap<Long, Integer>(2l,1, 6l,3, 3l,4, 1l,2, 5l,2, 4l,1, 0l,2, 7l,2);
-//
-//		assertEquals(true, MapUtils.equalMaps(realValueUpper, graphExample2.getEdgesUpperBound()));
-//		assertEquals(true, MapUtils.equalMaps(realValueLower, graphExample2.getEdgesLowerBound()));
-//=======
-//		// Upper cost test
-//		assertEquals(10, graphExample2.getEdgeUpperCost(1l));
-//		assertEquals(2, graphExample2.getEdgeUpperCost(2l));
-//		assertEquals(15, graphExample2.getEdgeUpperCost(7l));
-//		
-//		// Lower cost test
-//		assertEquals(2, graphExample2.getEdgeLowerCost(1l));
-//		assertEquals(1, graphExample2.getEdgeLowerCost(2l));
-//		assertEquals(2, graphExample2.getEdgeLowerCost(7l));
-//>>>>>>> b10e3396bc7f230d16e8c0b9286680cfecb04cce
+		// Upper cost test
+		assertEquals(10, graphExample2.getEdgeUpperCost(1l));
+		assertEquals(2, graphExample2.getEdgeUpperCost(2l));
+		assertEquals(15, graphExample2.getEdgeUpperCost(7l));
+		
+		// Lower cost test
+		assertEquals(2, graphExample2.getEdgeLowerCost(1l));
+		assertEquals(1, graphExample2.getEdgeLowerCost(2l));
+		assertEquals(2, graphExample2.getEdgeLowerCost(7l));
 
 	}
 	
