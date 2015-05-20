@@ -136,13 +136,13 @@ public class GraphGenerator {
 
 	}
 
-	public Graph generateMonaco() {
+	public GraphBounds generateMonaco() {
 		
 		String osmFile = DijkstraConstantWeight.class.getResource("/monaco-150112.osm.pbf").getPath();
 		String graphHopperMonacoDir = Configuration.USER_HOME + "/graphhopper/test/monaco";
 		String graphastMonacoDir = Configuration.USER_HOME + "/graphast/test/monaco";
 
-		Graph graph = new OSMImporterImpl(osmFile, graphHopperMonacoDir, graphastMonacoDir).execute();
+		GraphBounds graph = new OSMImporterImpl(osmFile, graphHopperMonacoDir, graphastMonacoDir).execute();
 
 		return graph;
 		

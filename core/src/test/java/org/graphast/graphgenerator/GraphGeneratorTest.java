@@ -16,7 +16,7 @@ import org.junit.Test;
 
 public class GraphGeneratorTest {
 	
-	private static Graph graphMonaco;
+	private static GraphBounds graphMonaco;
 	private static Graph graphExample;
 	private static GraphBounds graphExample2;
 	private static Graph graphExample3;
