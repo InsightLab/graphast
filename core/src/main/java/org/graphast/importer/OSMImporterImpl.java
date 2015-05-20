@@ -9,9 +9,9 @@ import java.util.Date;
 
 import org.graphast.config.Configuration;
 import org.graphast.model.Edge;
-import org.graphast.model.Graph;
 import org.graphast.model.EdgeImpl;
-import org.graphast.model.GraphImpl;
+import org.graphast.model.GraphBounds;
+import org.graphast.model.GraphBoundsImpl;
 import org.graphast.model.NodeImpl;
 import org.graphast.util.FileUtils;
 import org.graphast.util.NumberUtils;
@@ -48,12 +48,12 @@ public class OSMImporterImpl implements Importer {
 	 * @see org.graphast.importer.OSMImporter#execute()
 	 */
 	@Override
-	public Graph execute() {
+	public GraphBounds execute() {
 
 		logger.info("Initial date: {}", new Date());
 		double initialTime = System.currentTimeMillis();
 
-		Graph graph = new GraphImpl(graphastDir);
+		GraphBounds graph = new GraphBoundsImpl(graphastDir);
 
 		GraphHopper gh = OSMToGraphHopperReader.createGraph(osmFile, graphHopperDir, false, false);
 		GraphStorage gs = gh.getGraph();
