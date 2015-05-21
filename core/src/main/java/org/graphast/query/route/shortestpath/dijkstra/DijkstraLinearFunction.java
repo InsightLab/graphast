@@ -1,13 +1,11 @@
 package org.graphast.query.route.shortestpath.dijkstra;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 
 import org.graphast.model.Graph;
+import org.graphast.model.GraphBounds;
 import org.graphast.model.Node;
-import org.graphast.query.route.shortestpath.model.DistanceEntry;
-import org.graphast.query.route.shortestpath.model.Path;
 import org.graphast.query.route.shortestpath.model.RouteEntry;
 import org.graphast.query.route.shortestpath.model.TimeEntry;
 
@@ -17,8 +15,12 @@ public class DijkstraLinearFunction extends Dijkstra{
 		super(graph);
 	}
 	
+	public DijkstraLinearFunction(GraphBounds graphBounds) {
+		super(graphBounds);
+	}
+	
 	public void expandVertex(Node target, TimeEntry removed, HashMap<Long, Integer> wasTraversed, 
-			PriorityQueue<TimeEntry> queue, HashMap<Integer, RouteEntry> parents){
+			PriorityQueue<TimeEntry> queue, HashMap<Long, RouteEntry> parents){
 		
 		HashMap<Node, Integer> neig = graph.accessNeighborhood(graph.getNode(removed.getId()), removed.getArrivalTime());
 		
@@ -43,32 +45,4 @@ public class DijkstraLinearFunction extends Dijkstra{
 			}
 		}
 	}
-
-	@Override
-	public Path shortestPath(Node source, Node target) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Path shortestPath(long source, long target) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Path shortestPath(long source, long target, Date time) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void expandVertex(Node target, DistanceEntry removed,
-			HashMap<Long, Integer> wasTraversed,
-			PriorityQueue<DistanceEntry> queue,
-			HashMap<Long, RouteEntry> parents) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }
