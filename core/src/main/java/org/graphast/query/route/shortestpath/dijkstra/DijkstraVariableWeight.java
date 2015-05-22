@@ -24,6 +24,7 @@ import org.graphast.query.model.QueueEntry;
 import org.graphast.query.route.shortestpath.model.DistanceEntry;
 import org.graphast.query.route.shortestpath.model.Path;
 import org.graphast.query.route.shortestpath.model.RouteEntry;
+import org.graphast.query.route.shortestpath.model.TimeEntry;
 
 public class DijkstraVariableWeight extends Dijkstra {
 
@@ -286,13 +287,14 @@ public class DijkstraVariableWeight extends Dijkstra {
 	}
 
 	@Override
-	public void expandVertex(Node target, DistanceEntry removed,
+	public void expandVertex(Node target, TimeEntry removed,
 			HashMap<Long, Integer> wasTraversed,
-			PriorityQueue<DistanceEntry> queue,
-			HashMap<Long, RouteEntry> parents) {
+			PriorityQueue<TimeEntry> queue, HashMap<Long, RouteEntry> parents) {
 		// TODO Auto-generated method stub
 		
 	}
+
+
 	
 	
 }		

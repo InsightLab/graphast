@@ -3,6 +3,7 @@ package org.graphast.query.route.shortestpath.dijkstra;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 
+import org.graphast.model.Edge;
 import org.graphast.model.Graph;
 import org.graphast.model.GraphBounds;
 import org.graphast.model.Node;
@@ -29,9 +30,17 @@ public class DijkstraLinearFunction extends Dijkstra{
 			int at = graph.getArrival(removed.getArrivalTime(), neig.get(v));
 			int tt = removed.getTravelTime() + neig.get(v);
 			TimeEntry newEntry = new TimeEntry(	vid, tt, at, removed.getId());
+			
+			Edge edge = null;
+			int distance = -1;
+			
 			if(!wasTraversed.containsKey(vid)){					
 				queue.offer(newEntry);
 				wasTraversed.put(newEntry.getId(), newEntry.getTravelTime());
+				
+				distance = neig.get(v);
+				edge = getEdge(removed.getId(), vid, distance);
+				parents.put(vid, new RouteEntry(removed.getId(), distance, edge.getId(), edge.getLabel()));
 			}else{
 				int cost = wasTraversed.get(vid);
 				if(cost != wasRemoved){
@@ -44,5 +53,16 @@ public class DijkstraLinearFunction extends Dijkstra{
 				}
 			}
 		}
+	}
+	
+	private Edge getEdge(long fromNodeId, long toNodeId, int distance) {
+		Edge edge = null;
+		for(Long outEdge : graph.getOutEdges(fromNodeId)) {
+			edge = graph.getEdge(outEdge);
+			if ((int) edge.getToNode() == toNodeId && edge.getDistance() == distance) {
+				break;
+			}
+		}
+		return edge;
 	}
 }
