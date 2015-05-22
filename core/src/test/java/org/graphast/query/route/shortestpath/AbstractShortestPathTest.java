@@ -27,7 +27,7 @@ public abstract class AbstractShortestPathTest {
 	protected static AbstractShortestPathService serviceMonaco;
 	protected static AbstractShortestPathService serviceExample;
 	protected static AbstractShortestPathService serviceExample2;
-	protected static AbstractShortestPathService serviceExample3;
+	protected static AbstractShortestPathService serviceExample4;
 	
 	
 	@BeforeClass
@@ -159,6 +159,44 @@ public abstract class AbstractShortestPathTest {
 		logger.debug("Path Cost: {}", shortestPath.getPathCost());
 
 		assertEquals(3610712.0, shortestPath.getPathCost(), 0);
+	}
+	
+	@Test
+	public void shortestPathGraphExample4Day() {
+		Long source = 0L; 
+		Long target = 6L; 
+
+		StopWatch sw = new StopWatch();
+
+		sw.start();
+		Path shortestPath = serviceExample4.shortestPath(source, target);
+		sw.stop();
+
+		logger.debug(shortestPath.toString());
+		logger.debug("Execution Time of shortestPathExampleTest(): {}ms", sw.getTime());
+		logger.debug("Path Cost: {}", shortestPath.getPathCost());
+
+		assertEquals(14, shortestPath.getPathCost(), 0);
+
+	}
+	
+	@Test
+	public void shortestPathGraphExample4Night() {
+		Long source = 0L; 
+		Long target = 6L; 
+
+		StopWatch sw = new StopWatch();
+
+		sw.start();
+		Path shortestPath = serviceExample4.shortestPath(source, target);
+		sw.stop();
+
+		logger.debug(shortestPath.toString());
+		logger.debug("Execution Time of shortestPathExampleTest(): {}ms", sw.getTime());
+		logger.debug("Path Cost: {}", shortestPath.getPathCost());
+
+		assertEquals(12, shortestPath.getPathCost(), 0);
+
 	}
 
 	
