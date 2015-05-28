@@ -139,8 +139,8 @@ public class GraphImpl implements Graph {
 				blockSize, compressionType);
 		edgesCosts = FileUtils.loadIntList(directory + "/edgesCosts",
 				blockSize, compressionType);
-		points = FileUtils.loadIntList(directory + "/points", blockSize,
-				compressionType);
+		points = FileUtils.loadIntList(directory + "/points", 
+				blockSize, compressionType);
 		createNodeIndex();
 	}
 
@@ -194,28 +194,7 @@ public class GraphImpl implements Graph {
 		node.setId(id);
 	}
 
-	/**
-	 * This method will store the passed label in a ObjectBigList of Strings and
-	 * return the position of this insertion.
-	 * 
-	 * @param label
-	 *            String that will be added into the ObjectBigList.
-	 * @return the labelId (position where the label was inserted).
-	 */
-	private long storeLabel(String label, ObjectBigList<String> labelList) {
-		// Do not store a null label
-		if (label == null) {
-			return -1;
-		}
 
-		long labelId;
-
-		synchronized (labelList) {
-			labelId = labelList.size64();
-			labelList.add(label);
-		}
-		return labelId;
-	}
 
 	// TODO Why we only update the latitude, longitude and FirstEdge?
 	// Wouldn't be better if we had a method that updates everything?
@@ -257,11 +236,11 @@ public class GraphImpl implements Graph {
 				latLongToDouble(nodes.getInt(position + 4)), // longitude
 				BigArrays.index(nodes.getInt(position + 5),
 						nodes.getInt(position + 6)), // firstEdge
-				BigArrays.index(nodes.getInt(position + 7),
-						nodes.getInt(position + 8)), // labelIndex
-				BigArrays.index(nodes.getInt(position + 9),
-						nodes.getInt(position + 10)) // costIndex
-		);
+						BigArrays.index(nodes.getInt(position + 7),
+								nodes.getInt(position + 8)), // labelIndex
+								BigArrays.index(nodes.getInt(position + 9),
+										nodes.getInt(position + 10)) // costIndex
+				);
 
 		node.setId(id);
 		long labelIndex = node.getLabelIndex();
@@ -324,10 +303,10 @@ public class GraphImpl implements Graph {
 		EdgeImpl edge = (EdgeImpl) e;
 		long labelIndex = storeLabel(edge.getLabel(), edgesLabels);
 		long costsIndex = storeCosts(edge.getCosts(), edgesCosts);
-		long geometryIndex = storePoints(edge.getGeometry());
+		long geometryIndex = storePoints(edge.getGeometry(), points);
+		edge.setLabelIndex(labelIndex);
 		edge.setCostsIndex(costsIndex);
 		edge.setGeometryIndex(geometryIndex);
-		edge.setLabelIndex(labelIndex);
 
 		long id;
 
@@ -383,6 +362,29 @@ public class GraphImpl implements Graph {
 	}
 
 	/**
+	 * This method will store the passed label in a ObjectBigList of Strings and
+	 * return the position of this insertion.
+	 * 
+	 * @param label
+	 *            String that will be added into the ObjectBigList.
+	 * @return the labelId (position where the label was inserted).
+	 */
+	private long storeLabel(String label, ObjectBigList<String> labelList) {
+		// Do not store a null label
+		if (label == null) {
+			return -1;
+		}
+
+		long labelId;
+
+		synchronized (labelList) {
+			labelId = labelList.size64();
+			labelList.add(label);
+		}
+		return labelId;
+	}
+
+	/**
 	 * This method will store the passed list of points in a IntBigArrayBigList
 	 * and return the position of this insertion.
 	 * 
@@ -390,7 +392,7 @@ public class GraphImpl implements Graph {
 	 *            list of points that will be stored
 	 * @return the listId (position where the list was inserted).
 	 */
-	private long storePoints(List<Point> listPoints) {
+	private long storePoints(List<Point> listPoints, IntBigArrayBigList points) {
 		if (listPoints == null || listPoints.size() == 0) {
 			return -1l;
 		}
@@ -650,6 +652,12 @@ public class GraphImpl implements Graph {
 			edge.setCosts(getEdgeCostsByCostsIndex(costsIndex));
 		}
 
+		if (geometryIndex >= 0) {
+
+			edge.setGeometry(getGeometryByGeometryIndex(geometryIndex));
+
+		}
+
 		edge.validate();
 		return edge;
 
@@ -681,6 +689,8 @@ public class GraphImpl implements Graph {
 		}
 		return c;
 	}
+
+
 
 	public int[] getNodeCosts(long nodeId) {
 
@@ -738,7 +748,7 @@ public class GraphImpl implements Graph {
 	 * @see org.graphast.model.Graphast#getEdgePoints(long)
 	 */
 	@Override
-	public List<Point> getEdgePoints(long id) {
+	public List<Point> getGeometry(long id) {
 		EdgeImpl edge = (EdgeImpl) getEdge(id);
 		long geometryIndex = edge.getGeometryIndex();
 		int size = points.getInt(geometryIndex++);
@@ -746,7 +756,20 @@ public class GraphImpl implements Graph {
 		while (size > 0) {
 			listPoints.add(new Point(latLongToDouble(points
 					.getInt(geometryIndex++)), latLongToDouble(points
-					.getInt(geometryIndex++))));
+							.getInt(geometryIndex++))));
+			size--;
+		}
+		return listPoints;
+	}
+
+	public List<Point> getGeometryByGeometryIndex(long geometryIndex) {
+
+		int size = points.getInt(geometryIndex++);
+		List<Point> listPoints = new ArrayList<Point>(size);
+		while (size > 0) {
+			listPoints.add(new Point(latLongToDouble(points
+					.getInt(geometryIndex++)), latLongToDouble(points
+							.getInt(geometryIndex++))));
 			size--;
 		}
 		return listPoints;
@@ -779,7 +802,7 @@ public class GraphImpl implements Graph {
 		lat = latLongToInt(latitude);
 		lon = latLongToInt(longitude);
 		if (getNodeId(lat, lon) == null) {
-			return getAproximatedNode(latitude, longitude).getId();
+			return getNearestNode(latitude, longitude).getId();
 		}
 		else {
 			return getNodeId(lat, lon);
@@ -1229,7 +1252,7 @@ public class GraphImpl implements Graph {
 		return arrivalTime;
 	}
 
-	public Node getAproximatedNode (double latitude, double longitude) {
+	public Node getNearestNode (double latitude, double longitude) {
 		Node point = new NodeImpl();
 		point.setLatitude(latitude);
 		point.setLongitude(longitude);

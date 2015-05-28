@@ -20,12 +20,14 @@ public class GraphTest {
 	private static GraphImpl graphExample3;
 	private static Graph graphExample2;
 	private static GraphImpl graphExample;
+	private static GraphBounds graphMonaco;
 
 	@BeforeClass
 	public static void setup(){
 		graphExample = (GraphImpl) new GraphGenerator().generateExample();
 		graphExample2 = new GraphGenerator().generateExample2();
 		graphExample3 =  (GraphImpl) new GraphGenerator().generateExample3();
+		graphMonaco = new GraphGenerator().generateMonaco();
 	}
 
 	@Test
@@ -88,15 +90,21 @@ public class GraphTest {
 	}
 
 	@Test
-	public void getEdgePointsTest() {
-		List<Point> points = graphExample3.getEdgePoints(0);
+	public void getGeometryTest() {
+		List<Point> points = graphExample3.getGeometry(0);
 		assertEquals((Double) 10.0,  (Double)points.get(0).getLatitude());
 		assertEquals((Double) 10.0,  (Double)points.get(0).getLongitude());
+		assertEquals((Double) 10.0,  (Double)points.get(1).getLatitude());
+		assertEquals((Double) 20.0,  (Double)points.get(1).getLongitude());
 
-		points = graphExample3.getEdgePoints(1);
-		int size = points.size() - 1;
-		assertEquals((Double) 10.0,  (Double)points.get(size).getLatitude());
-		assertEquals((Double) 10.0,  (Double)points.get(size).getLongitude());
+		points=graphExample3.getEdge(0).getGeometry();
+		assertEquals((Double) 10.0,  (Double)points.get(0).getLatitude());
+		assertEquals((Double) 10.0,  (Double)points.get(0).getLongitude());
+		
+		
+		points = graphExample3.getGeometry(1);
+		assertEquals((Double) 10.0,  (Double)points.get(1).getLatitude());
+		assertEquals((Double) 15.0,  (Double)points.get(1).getLongitude());
 	}
 
 	@Test
@@ -280,6 +288,14 @@ public class GraphTest {
 		assertArrayEquals ( new int[]{-4, 9, 8, 7, 6, 2, 5, 4}, graphExample.getNodesCosts().toIntArray());
 	
 	}
+	
+	@Test
+	public void getNearestNodeTest() {
+		
+		assertEquals(2, (long) graphExample3.getNearestNode(10d, 31d).getId());
+		assertEquals(380, (long) graphMonaco.getNearestNode(43.738331, 7.421239).getId());
+	}
+	
 
 	@Test
 	public void getReverseGraph() {
