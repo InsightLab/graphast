@@ -2,13 +2,10 @@ package org.graphast.query.route.shortestpath;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.List;
-
 import org.graphast.config.Configuration;
 import org.graphast.graphgenerator.GraphGenerator;
 import org.graphast.model.Graph;
 import org.graphast.query.route.shortestpath.astar.AStarConstantWeight;
-import org.graphast.query.route.shortestpath.model.Instruction;
 import org.graphast.query.route.shortestpath.model.Path;
 import org.graphast.util.FileUtils;
 import org.junit.AfterClass;
