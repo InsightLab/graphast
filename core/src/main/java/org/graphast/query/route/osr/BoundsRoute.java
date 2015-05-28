@@ -6,7 +6,7 @@ import it.unimi.dsi.fastutil.objects.ObjectCollection;
 import org.graphast.model.GraphBounds;
 import org.graphast.query.model.AbstractBoundsSearchPoI;
 import org.graphast.query.model.Bound;
-import org.graphast.query.route.shortestpath.dijkstra.DijkstraVariableWeight;
+import org.graphast.query.route.shortestpath.dijkstra.DijkstraLinearFunction;
 
 public class BoundsRoute extends AbstractBoundsSearchPoI {
 
@@ -20,7 +20,7 @@ public class BoundsRoute extends AbstractBoundsSearchPoI {
 
 		super();
 
-		DijkstraVariableWeight d = new DijkstraVariableWeight(graph);
+		DijkstraLinearFunction d = new DijkstraLinearFunction(graph);
 		IntSet categoriesIds = graph.getCategories();
 
 //		System.out.println(categoriesIds);

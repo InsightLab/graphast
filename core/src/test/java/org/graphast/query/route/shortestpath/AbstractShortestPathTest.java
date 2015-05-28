@@ -2,11 +2,15 @@ package org.graphast.query.route.shortestpath;
 
 import static org.junit.Assert.*;
 
+import java.text.ParseException;
+import java.util.Date;
+
 import org.graphast.config.Configuration;
 import org.graphast.graphgenerator.GraphGenerator;
 import org.graphast.model.Graph;
 import org.graphast.query.route.shortestpath.astar.AStarConstantWeight;
 import org.graphast.query.route.shortestpath.model.Path;
+import org.graphast.util.DateUtils;
 import org.graphast.util.FileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -22,12 +26,12 @@ public abstract class AbstractShortestPathTest {
 	protected static Graph graphMonaco;
 	protected static Graph graphExample;
 	protected static Graph graphExample2;
-	protected static Graph graphExample4;
+	
 	
 	protected static AbstractShortestPathService serviceMonaco;
 	protected static AbstractShortestPathService serviceExample;
 	protected static AbstractShortestPathService serviceExample2;
-	protected static AbstractShortestPathService serviceExample4;
+	
 	
 	
 	@BeforeClass
@@ -35,7 +39,6 @@ public abstract class AbstractShortestPathTest {
 		graphMonaco = new GraphGenerator().generateMonaco();
 		graphExample = new GraphGenerator().generateExample();
 		graphExample2 = new GraphGenerator().generateExample2();
-		graphExample4 = new GraphGenerator().generateExample4();
 	}
 
 	@Test
@@ -161,43 +164,7 @@ public abstract class AbstractShortestPathTest {
 		assertEquals(3610712.0, shortestPath.getPathCost(), 0);
 	}
 	
-	@Test
-	public void shortestPathGraphExample4Day() {
-		Long source = 0L; 
-		Long target = 6L; 
-
-		StopWatch sw = new StopWatch();
-
-		sw.start();
-		Path shortestPath = serviceExample4.shortestPath(source, target);
-		sw.stop();
-
-		logger.debug(shortestPath.toString());
-		logger.debug("Execution Time of shortestPathExampleTest(): {}ms", sw.getTime());
-		logger.debug("Path Cost: {}", shortestPath.getPathCost());
-
-		assertEquals(14, shortestPath.getPathCost(), 0);
-
-	}
 	
-	@Test
-	public void shortestPathGraphExample4Night() {
-		Long source = 0L; 
-		Long target = 6L; 
-
-		StopWatch sw = new StopWatch();
-
-		sw.start();
-		Path shortestPath = serviceExample4.shortestPath(source, target);
-		sw.stop();
-
-		logger.debug(shortestPath.toString());
-		logger.debug("Execution Time of shortestPathExampleTest(): {}ms", sw.getTime());
-		logger.debug("Path Cost: {}", shortestPath.getPathCost());
-
-		assertEquals(12, shortestPath.getPathCost(), 0);
-
-	}
 
 	
 	@AfterClass
