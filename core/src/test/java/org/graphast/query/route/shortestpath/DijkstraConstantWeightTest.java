@@ -10,7 +10,6 @@ public class DijkstraConstantWeightTest extends AbstractShortestPathTest {
 		
 		serviceMonaco = new DijkstraConstantWeight(graphMonaco);
 		serviceExample = new DijkstraConstantWeight(graphExample);
-	
 	}
 
 }
