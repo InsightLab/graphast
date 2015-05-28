@@ -179,7 +179,7 @@ public interface Graph {
 	 * @param id Id of a edge
 	 * @return a list of points that are part of the edge in the map
 	 */
-	public List<Point> getEdgePoints(long id);
+	public List<Point> getGeometry(long id);
 	
 	/**
 	 * This method return a nodeId based on a given latitude and longitude.
@@ -296,6 +296,6 @@ public interface Graph {
 	
 	public void setEdgeCosts(long edgeId, int[] costs);
 	
-	public Node getAproximatedNode (double latitude, double longitude);
+	public Node getNearestNode (double latitude, double longitude);
 	
 }
