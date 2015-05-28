@@ -139,8 +139,8 @@ public class GraphImpl implements Graph {
 				blockSize, compressionType);
 		edgesCosts = FileUtils.loadIntList(directory + "/edgesCosts",
 				blockSize, compressionType);
-		points = FileUtils.loadIntList(directory + "/points", blockSize,
-				compressionType);
+		points = FileUtils.loadIntList(directory + "/points", 
+				blockSize, compressionType);
 		createNodeIndex();
 	}
 
@@ -649,6 +649,12 @@ public class GraphImpl implements Graph {
 		if (costsIndex >= 0) {
 			edge.setCosts(getEdgeCostsByCostsIndex(costsIndex));
 		}
+		
+		if (geometryIndex >= 0) {
+			
+			edge.setGeometry(getGeometryByGeometryIndex(geometryIndex));
+			
+		}
 
 		edge.validate();
 		return edge;
@@ -681,6 +687,8 @@ public class GraphImpl implements Graph {
 		}
 		return c;
 	}
+	
+	
 
 	public int[] getNodeCosts(long nodeId) {
 
@@ -751,7 +759,20 @@ public class GraphImpl implements Graph {
 		}
 		return listPoints;
 	}
+	
+	public List<Point> getGeometryByGeometryIndex(long geometryIndex) {
 
+		int size = points.getInt(geometryIndex++);
+		List<Point> listPoints = new ArrayList<Point>(size);
+		while (size > 0) {
+			listPoints.add(new Point(latLongToDouble(points
+					.getInt(geometryIndex++)), latLongToDouble(points
+					.getInt(geometryIndex++))));
+			size--;
+		}
+		return listPoints;
+	}
+	
 	Long getNodeId(int latitude, int longitude) {
 
 		Long result = nodeIndex.get(BigArrays.index(latitude, longitude));

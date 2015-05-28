@@ -97,6 +97,11 @@ public class GraphTest {
 		assertEquals((Double) 10.0,  (Double)points.get(1).getLatitude());
 		assertEquals((Double) 20.0,  (Double)points.get(1).getLongitude());
 
+		points=graphExample3.getEdge(0).getGeometry();
+		assertEquals((Double) 10.0,  (Double)points.get(0).getLatitude());
+		assertEquals((Double) 10.0,  (Double)points.get(0).getLongitude());
+		
+		
 		points = graphExample3.getGeometry(1);
 		assertEquals((Double) 10.0,  (Double)points.get(1).getLatitude());
 		assertEquals((Double) 15.0,  (Double)points.get(1).getLongitude());
