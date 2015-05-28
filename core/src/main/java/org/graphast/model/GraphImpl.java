@@ -738,7 +738,7 @@ public class GraphImpl implements Graph {
 	 * @see org.graphast.model.Graphast#getEdgePoints(long)
 	 */
 	@Override
-	public List<Point> getEdgePoints(long id) {
+	public List<Point> getGeometry(long id) {
 		EdgeImpl edge = (EdgeImpl) getEdge(id);
 		long geometryIndex = edge.getGeometryIndex();
 		int size = points.getInt(geometryIndex++);
@@ -779,7 +779,7 @@ public class GraphImpl implements Graph {
 		lat = latLongToInt(latitude);
 		lon = latLongToInt(longitude);
 		if (getNodeId(lat, lon) == null) {
-			return getAproximatedNode(latitude, longitude).getId();
+			return getNearestNode(latitude, longitude).getId();
 		}
 		else {
 			return getNodeId(lat, lon);
@@ -1229,7 +1229,7 @@ public class GraphImpl implements Graph {
 		return arrivalTime;
 	}
 
-	public Node getAproximatedNode (double latitude, double longitude) {
+	public Node getNearestNode (double latitude, double longitude) {
 		Node point = new NodeImpl();
 		point.setLatitude(latitude);
 		point.setLongitude(longitude);
