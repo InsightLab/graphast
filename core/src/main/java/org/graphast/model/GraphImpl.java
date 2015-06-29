@@ -735,7 +735,7 @@ public class GraphImpl implements Graph {
 			return null;
 		}
 		int size = edgesCosts.getInt(costsIndex++);
-		int intervalSize = secondsDay / size;
+		int intervalSize = maxTime / size;
 		long index = (long) (costsIndex + (time / intervalSize));
 
 		return edgesCosts.getInt(index);
