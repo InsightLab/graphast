@@ -1,11 +1,12 @@
 package org.graphast.query.route.shortestpath.dijkstra;
 
 import static org.graphast.util.NumberUtils.convertToInt;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.PriorityQueue;
 
 import org.graphast.exception.PathNotFoundException;
@@ -13,9 +14,10 @@ import org.graphast.model.Graph;
 import org.graphast.model.GraphBounds;
 import org.graphast.model.Node;
 import org.graphast.query.route.shortestpath.AbstractShortestPathService;
-import org.graphast.query.route.shortestpath.model.DistanceEntry;
 import org.graphast.query.route.shortestpath.model.Path;
 import org.graphast.query.route.shortestpath.model.RouteEntry;
+import org.graphast.query.route.shortestpath.model.TimeEntry;
+import org.graphast.util.DateUtils;
 
 public abstract class Dijkstra extends AbstractShortestPathService {
 
@@ -28,15 +30,36 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 	public Dijkstra(Graph graph) {
 		super(graph);
 	}
+	
+	//TODO Double check this method!!
+	//TODO Create tests!!
+	protected List<RouteEntry> reconstructPath(long id, HashMap<Long, RouteEntry> parents){
+		RouteEntry re = parents.get(id);
+		long parent = re.getId();
+		List<RouteEntry> path = new ArrayList<RouteEntry>();
+		path.add(re);
+		while(parent != -1){
+			re = parents.get(parent);
+			if (re != null) {
+				path.add(re);
+				parent = re.getId();
+			} else {
+				break;
+			}
+		}
+		Collections.reverse(path);
+		return path;
+	}
 
 	public Path shortestPath(Node source, Node target, Date time) {
-		PriorityQueue<DistanceEntry> queue = new PriorityQueue<DistanceEntry>();
+		PriorityQueue<TimeEntry> queue = new PriorityQueue<TimeEntry>();
 		HashMap<Long, Integer> wasTraversed = new HashMap<Long, Integer>();
 		HashMap<Long, RouteEntry> parents = new HashMap<Long, RouteEntry>();
-		DistanceEntry removed = null;
+		TimeEntry removed = null;
 		int targetId = convertToInt(target.getId());
+		int t = DateUtils.dateToMilli(time);
 
-		init(source, target, queue, parents);
+		init(source, target, queue, parents, t);
 
 		while(!queue.isEmpty()){
 			removed = queue.poll();
@@ -53,48 +76,36 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 		throw new PathNotFoundException();
 	}
 
-	//TODO Create appropriate tests for this method!
-	/**
-	 * This method is going to calculate the shortest path from a node v to all other nodes.
-	 * @param source source node where the shortest path is going to start
-	 * @return a map with nodesId's and their respective paths
-	 */
-	public Int2ObjectMap<Path> shortestPath(Node source) {
-		PriorityQueue<DistanceEntry> queue = new PriorityQueue<DistanceEntry>();
-		HashMap<Long, Integer> wasTraversed = new HashMap<Long, Integer>();
-		HashMap<Long, RouteEntry> parents = new HashMap<Long, RouteEntry>();
-		DistanceEntry removed = null;
-		Int2ObjectMap<Path> paths = new Int2ObjectOpenHashMap<Path>();
-
-		init(source, source, queue, parents);
-
-		while(!queue.isEmpty()) {
-			removed = queue.poll();
-			wasTraversed.put(removed.getId(), wasRemoved);		
-
-			if(removed.getId()!=0) {
-				Path path = new Path();
-				path.reconstructPath(removed.getId(), parents);
-				paths.put(convertToInt(removed.getId()), path);
-			}
-
-			expandVertex(graph.getNode(removed.getId()), removed, wasTraversed, queue, parents);
-		}
-
-		return paths;
+	
+	
+	public void init(Node source, Node target, PriorityQueue<TimeEntry> queue, 
+			HashMap<Long, RouteEntry> parents, int t){
+		int sid = convertToInt(source.getId());
+		
+		queue.offer(new TimeEntry(sid, 0, t, -1));
 
 	}
+	
+	
 
-	public void init(Node source, Node target, PriorityQueue<DistanceEntry> queue, 
-			HashMap<Long, RouteEntry> parents){
+	public abstract void expandVertex(Node target, TimeEntry removed, HashMap<Long, Integer> wasTraversed, 
+			PriorityQueue<TimeEntry> queue, HashMap<Long, RouteEntry> parents);
 
-		int sourceId = convertToInt(source.getId());
-
-		queue.offer(new DistanceEntry(sourceId, 0, -1));
-
+	
+	
+	@Override
+	public Path shortestPath(Node source, Node target) {
+		return shortestPath(source, target, null);
 	}
 
-	public abstract void expandVertex(Node target, DistanceEntry removed, HashMap<Long, Integer> wasTraversed, 
-			PriorityQueue<DistanceEntry> queue, HashMap<Long, RouteEntry> parents);
+	@Override
+	public Path shortestPath(long source, long target) {
+		return shortestPath(source, target, null);
+	}
 
+	@Override
+	public Path shortestPath(long source, long target, Date time) {
+		return shortestPath(graph.getNode(source), graph.getNode(target), time);
+	}
+	
 }

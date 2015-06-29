@@ -243,33 +243,33 @@ public class GraphGenerator {
 		v = new NodeImpl(6l, 60d, 0d);
 		graph.addNode(v);
 
-		int[] costs = {1, 3};
+		int[] costs = {3, 1};
 		e = new EdgeImpl(0l, 1l, 1, costs, null, "Rua A");
 		graph.addEdge(e);
 
 		costs = new int[]{5};
-		e = new EdgeImpl(0l, 2l, 5, costs, null, "Rua B");
+		e = new EdgeImpl(0l, 2l, 1, costs, null, "Rua B");
 		graph.addEdge(e);
 
 		costs = new int[]{3};
-		e = new EdgeImpl(1l, 2l, 3, costs, null, "Rua C");
+		e = new EdgeImpl(1l, 2l, 1, costs, null, "Rua C");
 		graph.addEdge(e);
 
 		costs = new int[]{3};
-		e = new EdgeImpl(2l, 3l, 3, costs, null, "Rua D");
+		e = new EdgeImpl(2l, 3l, 1, costs, null, "Rua D");
 
 		graph.addEdge(e);
 
 		costs = new int[]{3};
-		e = new EdgeImpl(3l, 4l, 3, costs, null, "Rua E");
+		e = new EdgeImpl(3l, 4l, 1, costs, null, "Rua E");
 		graph.addEdge(e);
 
-		costs = new int[]{4, 6};
-		e = new EdgeImpl(3l, 5l, 4, costs, null, "Rua F");
+		costs = new int[]{6, 4};
+		e = new EdgeImpl(3l, 5l, 1, costs, null, "Rua F");
 		graph.addEdge(e);
 
 		costs = new int[]{2};
-		e = new EdgeImpl(4l, 5l, 2, costs, null, "Rua G");
+		e = new EdgeImpl(4l, 5l, 1, costs, null, "Rua G");
 		graph.addEdge(e);
 
 		costs = new int[]{1};

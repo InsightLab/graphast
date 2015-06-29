@@ -1,5 +1,7 @@
 package org.graphast.query.route.shortestpath.astar;
 
+import static org.graphast.util.NumberUtils.convertToInt;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -49,7 +51,7 @@ public abstract class AStar extends AbstractShortestPathService{
 		HashMap<Long, Integer> wasTraversed = new HashMap<Long, Integer>();
 		HashMap<Long, RouteEntry> parents = new HashMap<Long, RouteEntry>();
 		LowerBoundEntry removed = null;
-		long targetId = target.getId();
+		int targetId = convertToInt(target.getId());
 		int t = DateUtils.dateToMilli(time);
 		
 		init(source, target, queue, parents, t);
@@ -59,34 +61,41 @@ public abstract class AStar extends AbstractShortestPathService{
 			wasTraversed.put(removed.getId(), wasRemoved);	
 			
 			if(removed.getId() == targetId){
-				
 				Path path = new Path();
 				path.reconstructPath(removed.getId(), parents);
-				
-//				List<RouteEntry> path = reconstructPath(removed.getId(), parents);
-//				logger.info("path: {}", path);
-//				return removed.getTravelTime();
-				
 				return path;
 			}
 			
 			expandVertex(target, removed, wasTraversed, queue, parents);
 		}
 		throw new PathNotFoundException();
-		//return Integer.MAX_VALUE;
 	}
 
 	public void init(Node source, Node target, PriorityQueue<LowerBoundEntry> queue,
 			HashMap<Long, RouteEntry> parents, int t) {
+		int sid = convertToInt(source.getId());
 		
-		long sourceId = source.getId();
-		
-		queue.offer(new LowerBoundEntry(sourceId, 0, t, -1,	(int) DistanceUtils.timeCost(source, target)));
+		queue.offer(new LowerBoundEntry(sid, 0, t, -1,	(int) DistanceUtils.timeCost(source, target)));
 
-		//parents.put(sourceId, null);		
+//		parents.put(sourceId, null);		
 	}
 	
 	public abstract void expandVertex(Node target, TimeEntry removed, HashMap<Long, Integer> wasTraversed, 
 			PriorityQueue<LowerBoundEntry> queue, HashMap<Long, RouteEntry> parents);
+	
+	@Override
+	public Path shortestPath(Node source, Node target) {
+		return shortestPath(source, target, null);
+	}
+
+	@Override
+	public Path shortestPath(long source, long target) {
+		return shortestPath(source, target, null);
+	}
+
+	@Override
+	public Path shortestPath(long source, long target, Date time) {
+		return shortestPath(graph.getNode(source), graph.getNode(target), time);
+	}
 
 }
