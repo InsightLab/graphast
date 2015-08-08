@@ -8,6 +8,7 @@ import java.util.Date;
 import org.graphast.config.Configuration;
 import org.graphast.graphgenerator.GraphGenerator;
 import org.graphast.model.Graph;
+import org.graphast.model.GraphBounds;
 import org.graphast.query.route.shortestpath.model.Path;
 import org.graphast.util.DateUtils;
 import org.graphast.util.FileUtils;
@@ -23,11 +24,14 @@ public abstract class AbstractShortestPathLinearFunctionTest {
 	
 	private static Logger logger = LoggerFactory.getLogger(DijkstraLinearFunctionTest.class);
 	protected static AbstractShortestPathService serviceExample4;
+	protected static AbstractShortestPathService serviceExample4Bounds;
 	protected static Graph graphExample4;
+	protected static GraphBounds graphBounds;
 
 	@BeforeClass
 	public static void setup2() {
 		graphExample4 = new GraphGenerator().generateExample4();
+		graphBounds = new GraphGenerator().generateExamplePoI();
 	}
 	
 	@Test
@@ -67,6 +71,26 @@ public abstract class AbstractShortestPathLinearFunctionTest {
 		logger.debug("Path Cost: {}", shortestPath.getPathCost());
 
 		assertEquals(12, shortestPath.getPathCost(), 0);
+
+	}
+	
+	@Test
+	public void shortestPathGraphExample4DayWithBounds() throws ParseException {
+		Long source = 4L; 
+		Long target = 8L; 
+		Date time = DateUtils.parseDate(0, 0, 0);
+
+		StopWatch sw = new StopWatch();
+
+		sw.start();
+		Path shortestPath = serviceExample4Bounds.shortestPath(source, target, time);
+		sw.stop();
+
+		logger.debug(shortestPath.toString());
+		logger.debug("Execution Time of shortestPathExampleTest(): {}ms", sw.getTime());
+		logger.debug("Path Cost: {}", shortestPath.getPathCost());
+
+		assertEquals(12, shortestPath.getPathCost()/1000/60, 0);
 
 	}
 	
