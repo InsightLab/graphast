@@ -15,16 +15,10 @@ public abstract class AbstractShortestPathService implements ShortestPathService
 	protected DistanceCalc distance;
 
 	public AbstractShortestPathService(GraphBounds graphBounds){
-
-		this.graphBounds = graphBounds;
-
+		this.graph = graphBounds;
 	}
 
 	public AbstractShortestPathService(Graph graph){
-
 		this.graph = graph;
-
 	}
-
-
 }
