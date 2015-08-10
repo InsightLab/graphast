@@ -16,6 +16,7 @@ public abstract class AbstractShortestPathService implements ShortestPathService
 
 	public AbstractShortestPathService(GraphBounds graphBounds){
 		this.graph = graphBounds;
+		this.graphBounds = graphBounds;
 	}
 
 	public AbstractShortestPathService(Graph graph){
