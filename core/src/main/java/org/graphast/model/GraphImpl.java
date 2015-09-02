@@ -59,7 +59,8 @@ public class GraphImpl implements Graph {
 
 	protected int delta;
 
-	protected int maxTime = 86400000;
+	protected int maxTime = 86400;
+	
 
 	/**
 	 * Creates a Graph for the given directory passed as parameter.
@@ -94,7 +95,7 @@ public class GraphImpl implements Graph {
 
 		nodeIndex.defaultReturnValue(-1);
 		// milliseconds
-		this.maxTime = 60 * 60 * 24 * 1000;
+		this.maxTime = 60 * 60 * 24;
 	}
 
 	/*
@@ -735,7 +736,7 @@ public class GraphImpl implements Graph {
 			return null;
 		}
 		int size = edgesCosts.getInt(costsIndex++);
-		int intervalSize = maxTime / size;
+		int intervalSize = (maxTime / size);
 		long index = (long) (costsIndex + (time / intervalSize));
 
 		return edgesCosts.getInt(index);
