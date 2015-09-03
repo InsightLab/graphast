@@ -57,7 +57,7 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 		HashMap<Long, RouteEntry> parents = new HashMap<Long, RouteEntry>();
 		TimeEntry removed = null;
 		int targetId = convertToInt(target.getId());
-		int t = (DateUtils.dateToMilli(time))/1000;
+		int t = DateUtils.dateToMilli(time);
 
 		init(source, target, queue, parents, t);
 

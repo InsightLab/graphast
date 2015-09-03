@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.graphast.enums.CompressionType;
+import org.graphast.enums.TimeType;
 import org.graphast.geometry.Point;
 import org.graphast.util.FileUtils;
 
@@ -276,19 +277,23 @@ public interface Graph {
 	
 	public LinearFunction[] convertToLinearFunction(int[] costs);
 	
-	public int getDelta();
+//	public int getDelta();
+//
+//	public void setDelta(int delta);
 
-	public void setDelta(int delta);
-
-	public int getMaxTime();
-
-	public void setMaxTime(int maxTime);
+//	public int getMaxTime();
+//
+//	public void setMaxTime(int maxTime);
 	
 	public int getArrival(int dt, int tt);
 
 	public CompressionType getCompressionType();
 
 	public void setCompressionType(CompressionType compressionType);
+	
+	public TimeType getTimeType();
+
+	public void setTimeType(TimeType timeType);
 	
 	public IntSet getCategories();
 
