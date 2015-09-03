@@ -6,6 +6,7 @@ import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 import java.io.IOException;
 
 import org.graphast.enums.CompressionType;
+import org.graphast.enums.TimeType;
 import org.graphast.util.FileUtils;
 
 public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
@@ -14,11 +15,11 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 	private Long2IntMap nodesUpperBound, nodesLowerBound;
 
 	public GraphBoundsImpl(String directory) {
-		this(directory, CompressionType.GZIP_COMPRESSION);
+		this(directory, CompressionType.GZIP_COMPRESSION, TimeType.MILLISECOND);
 	}
 
-	public GraphBoundsImpl(String directory, CompressionType compressionType) {
-		super(directory, compressionType);
+	public GraphBoundsImpl(String directory, CompressionType compressionType, TimeType timeType) {
+		super(directory, compressionType, timeType);
 		edgesUpperBound = new Long2IntOpenHashMap();
 		edgesLowerBound = new Long2IntOpenHashMap();
 		nodesUpperBound = new Long2IntOpenHashMap();
@@ -46,7 +47,7 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 	}
 
 	public void createEdgesLowerBounds() {
-		int numberOfEdges = getNumberOfEdges();
+		long numberOfEdges = getNumberOfEdges();
 		Edge edge; 
 
 		for(long i=0; i<numberOfEdges; i++) {
@@ -57,7 +58,7 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 
 	public void createEdgesUpperBounds() {
 
-		int numberOfEdges = getNumberOfEdges();
+		long numberOfEdges = getNumberOfEdges();
 		Edge edge; 
 
 		for(int i=0; i<numberOfEdges; i++) {
@@ -67,7 +68,7 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 	}
 
 	public void createNodesLowerBounds() {
-		int numberOfNodes = getNumberOfNodes();
+		long numberOfNodes = getNumberOfNodes();
 		Node node; 
 
 		for(long i=0; i<numberOfNodes; i++) {
@@ -81,7 +82,7 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 
 	public void createNodesUpperBounds() {
 
-		int numberOfNodes = getNumberOfNodes();
+		long numberOfNodes = getNumberOfNodes();
 		Node node; 
 
 		for(int i=0; i<numberOfNodes; i++) {
