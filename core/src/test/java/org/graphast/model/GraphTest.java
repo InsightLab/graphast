@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.graphast.config.Configuration;
+import org.graphast.enums.TimeType;
 import org.graphast.geometry.Point;
 import org.graphast.graphgenerator.GraphGenerator;
 import org.junit.BeforeClass;
@@ -17,6 +18,7 @@ import org.junit.Test;
 
 public class GraphTest {
 
+	private static GraphImpl graphExample4;
 	private static GraphImpl graphExample3;
 	private static Graph graphExample2;
 	private static GraphImpl graphExample;
@@ -27,6 +29,8 @@ public class GraphTest {
 		graphExample = (GraphImpl) new GraphGenerator().generateExample();
 		graphExample2 = new GraphGenerator().generateExample2();
 		graphExample3 =  (GraphImpl) new GraphGenerator().generateExample3();
+		graphExample4 =  (GraphImpl) new GraphGenerator().generateExample3();
+		graphExample4.setTimeType(TimeType.MINUTE);
 		graphMonaco = new GraphGenerator().generateMonaco();
 	}
 
@@ -79,7 +83,7 @@ public class GraphTest {
 		assertEquals((Integer)6, graphExample3.getEdgeCost(edge, 36000000));
 		assertEquals((Integer)8, graphExample3.getEdgeCost(edge, 61200000));
 		assertEquals((Integer)10, graphExample3.getEdgeCost(edge, 75600000));
-		
+
 		// No costs test
 		edge = graphExample3.getEdge(5);
 		assertNull(graphExample3.getEdgeCost(edge, 3600000));
@@ -100,8 +104,8 @@ public class GraphTest {
 		points=graphExample3.getEdge(0).getGeometry();
 		assertEquals((Double) 10.0,  (Double)points.get(0).getLatitude());
 		assertEquals((Double) 10.0,  (Double)points.get(0).getLongitude());
-		
-		
+
+
 		points = graphExample3.getGeometry(1);
 		assertEquals((Double) 10.0,  (Double)points.get(1).getLatitude());
 		assertEquals((Double) 15.0,  (Double)points.get(1).getLongitude());
@@ -146,6 +150,13 @@ public class GraphTest {
 		neig = graphExample3.getOutNeighbors(3);
 		pos = 0;
 		assertEquals(0,  (long) neig.get(pos++));
+
+		LongList neig4 = graphExample4.getOutNeighborsAndCosts(0, 600);
+		int pos4 = 0;
+
+		assertEquals(1, (long) neig4.get(pos4++));
+		assertEquals(2,  (long) neig4.get(pos4++));
+
 	}
 
 	@Test
@@ -176,11 +187,11 @@ public class GraphTest {
 
 	@Test
 	public void getNode2(){
-		
+
 		long n = graphExample3.getNodeId(10d, 40d);
 
 		assertEquals(3, n);
-	
+
 	}
 
 	@Test
@@ -227,7 +238,7 @@ public class GraphTest {
 		Edge e =  graphExample.getEdge(0);
 		assertEquals("Named Street 1", graphExample.getEdgeLabel(0));
 		assertEquals("Named Street 1", e.getLabel());
-		
+
 		// No label test
 		e = graphExample3.getEdge(5);
 		assertNull(graphExample3.getEdgeLabel(5));
@@ -253,49 +264,51 @@ public class GraphTest {
 		// No costs test
 		assertNull(graphExample3.getNodeCosts(0));
 		assertNull(graphExample3.getNodeCosts(1));
-		
+
 
 	}
 
 	@Test
 	public void getNodeCategory() {
 		assertArrayEquals ( new int[]{0, 2, 1, 4}, graphExample2.getCategories().toIntArray());
-		
+		assertEquals(4, graphExample2.getCategories().size());
+
 		// no category
 		assertEquals(0, graphExample.getCategories().size());
 	}
 
 	@Test
 	public void setEdgeCostsTest() {
-		
+
 		int[] costs = {3,2,3,4};
 		graphExample.setEdgeCosts(1, costs);
 		int[] costs2 = {3,2};
 		graphExample.setEdgeCosts(1, costs2);
 
 		assertArrayEquals ( new int[]{-4, 3, 2, 3, 4, 2, 3, 2}, graphExample.getCosts().toIntArray());
-	
+
 	}
-	
+
 	@Test
 	public void setNodeCostsTest() {
-		
+
 		int[] costs = {9,8,7,6};
 		graphExample.setNodeCosts(1, costs);
 		int[] costs2 = {5,4};
 		graphExample.setNodeCosts(1, costs2);
-		
+
 		assertArrayEquals ( new int[]{-4, 9, 8, 7, 6, 2, 5, 4}, graphExample.getNodesCosts().toIntArray());
-	
+
 	}
-	
+
 	@Test
 	public void getNearestNodeTest() {
-		
+
 		assertEquals(2, (long) graphExample3.getNearestNode(10d, 31d).getId());
 		assertEquals(380, (long) graphMonaco.getNearestNode(43.738331, 7.421239).getId());
+
 	}
-	
+
 
 	@Test
 	public void getReverseGraph() {

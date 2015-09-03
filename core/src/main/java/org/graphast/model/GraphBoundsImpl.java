@@ -47,7 +47,7 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 	}
 
 	public void createEdgesLowerBounds() {
-		int numberOfEdges = getNumberOfEdges();
+		long numberOfEdges = getNumberOfEdges();
 		Edge edge; 
 
 		for(long i=0; i<numberOfEdges; i++) {
@@ -58,7 +58,7 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 
 	public void createEdgesUpperBounds() {
 
-		int numberOfEdges = getNumberOfEdges();
+		long numberOfEdges = getNumberOfEdges();
 		Edge edge; 
 
 		for(int i=0; i<numberOfEdges; i++) {
@@ -68,7 +68,7 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 	}
 
 	public void createNodesLowerBounds() {
-		int numberOfNodes = getNumberOfNodes();
+		long numberOfNodes = getNumberOfNodes();
 		Node node; 
 
 		for(long i=0; i<numberOfNodes; i++) {
@@ -82,7 +82,7 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 
 	public void createNodesUpperBounds() {
 
-		int numberOfNodes = getNumberOfNodes();
+		long numberOfNodes = getNumberOfNodes();
 		Node node; 
 
 		for(int i=0; i<numberOfNodes; i++) {
