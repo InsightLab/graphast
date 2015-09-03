@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.graphast.enums.CompressionType;
+import org.graphast.enums.TimeType;
 import org.graphast.geometry.Point;
 import org.graphast.util.DistanceUtils;
 import org.graphast.util.FileUtils;
@@ -51,15 +52,17 @@ public class GraphImpl implements Graph {
 
 	protected int blockSize = 4096;
 
-	private static int secondsDay = 86400;
+//	private static int secondsDay = 86400;
 
 	private int[] intCosts;
 
 	protected CompressionType compressionType;
+	
+	protected TimeType timeType;
 
-	protected int delta;
+//	protected int delta;
 
-	protected int maxTime = 86400;
+//	protected int maxTime = 86400;
 	
 
 	/**
@@ -72,18 +75,19 @@ public class GraphImpl implements Graph {
 	 *            Directory in which the graph is (or will be) persisted.
 	 */
 	public GraphImpl(String directory) {
-		this(directory, CompressionType.GZIP_COMPRESSION);
+		this(directory, CompressionType.GZIP_COMPRESSION, TimeType.MILLISECOND);
 	}
 
-	public GraphImpl(String directory, int delta, int maxTime) {
-		this(directory);
-		this.delta = delta;
-		this.maxTime = maxTime;
-	}
+//	public GraphImpl(String directory, int delta, int maxTime) {
+//		this(directory);
+//		this.delta = delta;
+//		this.maxTime = maxTime;
+//	}
 
-	public GraphImpl(String directory, CompressionType compressionType) {
+	public GraphImpl(String directory, CompressionType compressionType, TimeType timeType) {
 		this.directory = directory;
 		this.compressionType = compressionType;
+		this.timeType = timeType;
 
 		nodes = new IntBigArrayBigList();
 		edges = new IntBigArrayBigList();
@@ -95,7 +99,7 @@ public class GraphImpl implements Graph {
 
 		nodeIndex.defaultReturnValue(-1);
 		// milliseconds
-		this.maxTime = 60 * 60 * 24;
+//		this.maxTime = 60 * 60 * 24;
 	}
 
 	/*
@@ -736,7 +740,21 @@ public class GraphImpl implements Graph {
 			return null;
 		}
 		int size = edgesCosts.getInt(costsIndex++);
-		int intervalSize = (maxTime / size);
+		
+		int intervalSize;
+		
+		if(timeType == TimeType.MILLISECOND) {
+			intervalSize = 86400000/size;
+		} else if(timeType == TimeType.SECOND){
+			intervalSize = 86400/size;
+		} else if(timeType == TimeType.MINUTE) {
+			intervalSize = 1440/size;
+		} else {
+			intervalSize = 24/size;
+		}
+		
+		
+//		int intervalSize = (maxTime / size);
 		long index = (long) (costsIndex + (time / intervalSize));
 
 		return edgesCosts.getInt(index);
@@ -1167,20 +1185,30 @@ public class GraphImpl implements Graph {
 		}
 	}
 
-	public int getDelta() {
-		return delta;
+//	public int getDelta() {
+//		return delta;
+//	}
+//
+//	public void setDelta(int delta) {
+//		this.delta = delta;
+//	}
+//
+//	public int getMaxTime() {
+//		return maxTime;
+//	}
+//
+//	public void setMaxTime(int maxTime) {
+//		this.maxTime = maxTime;
+//	}
+	
+	@Override
+	public TimeType getTimeType() {
+		return timeType;
 	}
 
-	public void setDelta(int delta) {
-		this.delta = delta;
-	}
-
-	public int getMaxTime() {
-		return maxTime;
-	}
-
-	public void setMaxTime(int maxTime) {
-		this.maxTime = maxTime;
+	@Override
+	public void setTimeType(TimeType timeType) {
+		this.timeType = timeType;
 	}
 
 	public void setEdgeCosts(long edgeId, int[] costs) {
@@ -1249,7 +1277,18 @@ public class GraphImpl implements Graph {
 
 	public int getArrival(int dt, int tt) {
 		int arrivalTime = dt + tt;
-		arrivalTime = arrivalTime % maxTime;
+		
+		if(timeType == TimeType.MILLISECOND) {
+			arrivalTime = arrivalTime%86400000;
+		} else if(timeType == TimeType.SECOND){
+			arrivalTime = arrivalTime%86400;
+		} else if(timeType == TimeType.MINUTE) {
+			arrivalTime = arrivalTime%1440;
+		} else {
+			arrivalTime = arrivalTime%24;
+		}
+		
+//		arrivalTime = arrivalTime % maxTime;
 		return arrivalTime;
 	}
 

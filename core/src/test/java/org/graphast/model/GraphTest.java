@@ -67,26 +67,26 @@ public class GraphTest {
 	@Test
 	public void getEdgeCostTest() {
 		Edge edge = graphExample3.getEdge(0);
-		assertEquals((Integer)1, graphExample3.getEdgeCost(edge, 3600));
-		assertEquals((Integer)1, graphExample3.getEdgeCost(edge, 7200));
-		assertEquals((Integer)2, graphExample3.getEdgeCost(edge, 36000));
-		assertEquals((Integer)3, graphExample3.getEdgeCost(edge, 61200));
-		assertEquals((Integer)4, graphExample3.getEdgeCost(edge, 75600));
+		assertEquals((Integer)1, graphExample3.getEdgeCost(edge, 3600000));
+		assertEquals((Integer)1, graphExample3.getEdgeCost(edge, 7200000));
+		assertEquals((Integer)2, graphExample3.getEdgeCost(edge, 36000000));
+		assertEquals((Integer)3, graphExample3.getEdgeCost(edge, 61200000));
+		assertEquals((Integer)4, graphExample3.getEdgeCost(edge, 75600000));
 
 		edge = graphExample3.getEdge(1);
-		assertEquals((Integer)2, graphExample3.getEdgeCost(edge, 3600));
-		assertEquals((Integer)2, graphExample3.getEdgeCost(edge, 7200));
-		assertEquals((Integer)6, graphExample3.getEdgeCost(edge, 36000));
-		assertEquals((Integer)8, graphExample3.getEdgeCost(edge, 61200));
-		assertEquals((Integer)10, graphExample3.getEdgeCost(edge, 75600));
+		assertEquals((Integer)2, graphExample3.getEdgeCost(edge, 3600000));
+		assertEquals((Integer)2, graphExample3.getEdgeCost(edge, 7200000));
+		assertEquals((Integer)6, graphExample3.getEdgeCost(edge, 36000000));
+		assertEquals((Integer)8, graphExample3.getEdgeCost(edge, 61200000));
+		assertEquals((Integer)10, graphExample3.getEdgeCost(edge, 75600000));
 		
 		// No costs test
 		edge = graphExample3.getEdge(5);
-		assertNull(graphExample3.getEdgeCost(edge, 3600));
-		assertNull(graphExample3.getEdgeCost(edge, 7200));
-		assertNull(graphExample3.getEdgeCost(edge, 36000));
-		assertNull(graphExample3.getEdgeCost(edge, 61200));
-		assertNull(graphExample3.getEdgeCost(edge, 75600));
+		assertNull(graphExample3.getEdgeCost(edge, 3600000));
+		assertNull(graphExample3.getEdgeCost(edge, 7200000));
+		assertNull(graphExample3.getEdgeCost(edge, 36000000));
+		assertNull(graphExample3.getEdgeCost(edge, 61200000));
+		assertNull(graphExample3.getEdgeCost(edge, 75600000));
 	}
 
 	@Test
@@ -125,7 +125,7 @@ public class GraphTest {
 
 	@Test
 	public void getOutNeighborsAndCostsTest() {
-		LongList neig = graphExample3.getOutNeighborsAndCosts(0, 36000);
+		LongList neig = graphExample3.getOutNeighborsAndCosts(0, 36000000);
 		int pos = 0;
 
 		assertEquals(1, (long) neig.get(pos++));
