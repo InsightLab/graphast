@@ -1273,4 +1273,9 @@ public class GraphImpl implements Graph {
 		}
 		return aproximated;
 	}
+	
+	public void setNodeCategory(long nodeId, int category) {
+		long position = nodeId * Node.NODE_BLOCKSIZE;
+		getNodes().set(position+2, category);
+	}
 }
