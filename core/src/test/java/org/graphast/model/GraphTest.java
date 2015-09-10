@@ -1,10 +1,10 @@
 package org.graphast.model;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertArrayEquals;
-import it.unimi.dsi.fastutil.longs.Long2IntMap;
-import it.unimi.dsi.fastutil.longs.LongList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.List;
@@ -15,6 +15,9 @@ import org.graphast.geometry.Point;
 import org.graphast.graphgenerator.GraphGenerator;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import it.unimi.dsi.fastutil.longs.Long2IntMap;
+import it.unimi.dsi.fastutil.longs.LongList;
 
 public class GraphTest {
 
@@ -29,7 +32,7 @@ public class GraphTest {
 		graphExample = (GraphImpl) new GraphGenerator().generateExample();
 		graphExample2 = new GraphGenerator().generateExample2();
 		graphExample3 =  (GraphImpl) new GraphGenerator().generateExample3();
-		graphExample4 =  (GraphImpl) new GraphGenerator().generateExample3();
+		graphExample4 =  (GraphImpl) new GraphGenerator().generateExample4();
 		graphExample4.setTimeType(TimeType.MINUTE);
 		graphMonaco = new GraphGenerator().generateMonaco();
 	}
@@ -155,7 +158,7 @@ public class GraphTest {
 		int pos4 = 0;
 
 		assertEquals(1, (long) neig4.get(pos4++));
-		assertEquals(2,  (long) neig4.get(pos4++));
+		assertEquals(3,  (long) neig4.get(pos4++));
 
 	}
 
@@ -365,6 +368,23 @@ public class GraphTest {
 		assertEquals(-1, graphExample.getEdge(9).getFromNodeNextEdge());
 		assertEquals(-1, graphExample.getEdge(9).getToNodeNextEdge());
 
+	}
+	
+	@Test
+	public void equalsTest() {
+		// case "true"
+		assertTrue(graphExample.equals(graphExample));
+		assertTrue(graphExample2.equals(graphExample2));
+		assertTrue(graphExample3.equals(graphExample3));
+		assertTrue(graphExample4.equals(graphExample4));
+		assertTrue(graphMonaco.equals(graphMonaco));
+		
+		//case "false"
+		assertFalse(graphExample.equals(graphExample2));
+		assertFalse(graphExample2.equals(graphExample3));
+		assertFalse(graphExample3.equals(graphExample4));
+		assertFalse(graphExample4.equals(graphMonaco));
+		assertFalse(graphMonaco.equals(graphExample));
 	}
 
 
