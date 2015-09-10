@@ -59,6 +59,7 @@ public class OSRTest {
     	
     	Sequence seq = osr.search(graph.getNode(1), graph.getNode(7), date, categories);
     	
+    	
     	assertEquals(7980000, seq.getDistance());
     	assertEquals(37679450, seq.getTimeToService());
     	assertEquals(29699450, seq.getWaitingTime());

@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.graphast.enums.CompressionType;
+import org.graphast.enums.TimeType;
 import org.graphast.geometry.Point;
 import org.graphast.util.DistanceUtils;
 import org.graphast.util.FileUtils;
@@ -51,15 +52,14 @@ public class GraphImpl implements Graph {
 
 	protected int blockSize = 4096;
 
-	private static int secondsDay = 86400;
-
 	private int[] intCosts;
 
 	protected CompressionType compressionType;
 
-	protected int delta;
+	protected TimeType timeType;
 
 	protected int maxTime = 86400000;
+
 
 	/**
 	 * Creates a Graph for the given directory passed as parameter.
@@ -71,18 +71,13 @@ public class GraphImpl implements Graph {
 	 *            Directory in which the graph is (or will be) persisted.
 	 */
 	public GraphImpl(String directory) {
-		this(directory, CompressionType.GZIP_COMPRESSION);
+		this(directory, CompressionType.GZIP_COMPRESSION, TimeType.MILLISECOND);
 	}
 
-	public GraphImpl(String directory, int delta, int maxTime) {
-		this(directory);
-		this.delta = delta;
-		this.maxTime = maxTime;
-	}
-
-	public GraphImpl(String directory, CompressionType compressionType) {
+	public GraphImpl(String directory, CompressionType compressionType, TimeType timeType) {
 		this.directory = directory;
 		this.compressionType = compressionType;
+		setTimeType(timeType);
 
 		nodes = new IntBigArrayBigList();
 		edges = new IntBigArrayBigList();
@@ -93,8 +88,7 @@ public class GraphImpl implements Graph {
 		points = new IntBigArrayBigList();
 
 		nodeIndex.defaultReturnValue(-1);
-		// milliseconds
-		this.maxTime = 60 * 60 * 24 * 1000;
+
 	}
 
 	/*
@@ -145,7 +139,7 @@ public class GraphImpl implements Graph {
 	}
 
 	private void createNodeIndex() {
-		int numberOfNodes = getNumberOfNodes();
+		long numberOfNodes = getNumberOfNodes();
 		NodeImpl node;
 		for (int i = 0; i < numberOfNodes; i++) {
 			node = (NodeImpl) getNode(i);
@@ -236,10 +230,10 @@ public class GraphImpl implements Graph {
 				latLongToDouble(nodes.getInt(position + 4)), // longitude
 				BigArrays.index(nodes.getInt(position + 5),
 						nodes.getInt(position + 6)), // firstEdge
-						BigArrays.index(nodes.getInt(position + 7),
-								nodes.getInt(position + 8)), // labelIndex
-								BigArrays.index(nodes.getInt(position + 9),
-										nodes.getInt(position + 10)) // costIndex
+				BigArrays.index(nodes.getInt(position + 7),
+						nodes.getInt(position + 8)), // labelIndex
+				BigArrays.index(nodes.getInt(position + 9),
+						nodes.getInt(position + 10)) // costIndex
 				);
 
 		node.setId(id);
@@ -690,8 +684,6 @@ public class GraphImpl implements Graph {
 		return c;
 	}
 
-
-
 	public int[] getNodeCosts(long nodeId) {
 
 		NodeImpl node = (NodeImpl) getNode(nodeId);
@@ -735,7 +727,8 @@ public class GraphImpl implements Graph {
 			return null;
 		}
 		int size = edgesCosts.getInt(costsIndex++);
-		int intervalSize = maxTime / size;
+
+		int intervalSize = (maxTime / size);
 		long index = (long) (costsIndex + (time / intervalSize));
 
 		return edgesCosts.getInt(index);
@@ -898,8 +891,8 @@ public class GraphImpl implements Graph {
 	 * @see org.graphast.model.Graphast#getNumberOfNodes()
 	 */
 	@Override
-	public int getNumberOfNodes() {
-		return (int) getNodes().size64() / Node.NODE_BLOCKSIZE;
+	public long getNumberOfNodes() {
+		return getNodes().size64() / Node.NODE_BLOCKSIZE;
 	}
 
 	/*
@@ -908,8 +901,8 @@ public class GraphImpl implements Graph {
 	 * @see org.graphast.model.Graphast#getNumberOfEdges()
 	 */
 	@Override
-	public int getNumberOfEdges() {
-		return (int) getEdges().size64() / Edge.EDGE_BLOCKSIZE;
+	public long getNumberOfEdges() {
+		return getEdges().size64() / Edge.EDGE_BLOCKSIZE;
 	}
 
 	public Long2IntMap accessNeighborhood(Node v) {
@@ -1166,20 +1159,33 @@ public class GraphImpl implements Graph {
 		}
 	}
 
-	public int getDelta() {
-		return delta;
-	}
-
-	public void setDelta(int delta) {
-		this.delta = delta;
-	}
-
 	public int getMaxTime() {
 		return maxTime;
 	}
 
 	public void setMaxTime(int maxTime) {
 		this.maxTime = maxTime;
+	}
+
+	@Override
+	public TimeType getTimeType() {
+		return timeType;
+	}
+
+	@Override
+	public void setTimeType(TimeType timeType) {
+		this.timeType = timeType;
+
+		if(timeType == TimeType.MILLISECOND) {
+			maxTime = 86400000;
+		} else if(timeType == TimeType.SECOND){
+			maxTime = 86400;
+		} else if(timeType == TimeType.MINUTE) {
+			maxTime = 1440;
+		} else {
+			maxTime = 24;
+		}
+
 	}
 
 	public void setEdgeCosts(long edgeId, int[] costs) {
@@ -1248,6 +1254,7 @@ public class GraphImpl implements Graph {
 
 	public int getArrival(int dt, int tt) {
 		int arrivalTime = dt + tt;
+
 		arrivalTime = arrivalTime % maxTime;
 		return arrivalTime;
 	}

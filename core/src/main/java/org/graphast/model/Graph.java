@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.graphast.enums.CompressionType;
+import org.graphast.enums.TimeType;
 import org.graphast.geometry.Point;
 import org.graphast.util.FileUtils;
 
@@ -229,13 +230,13 @@ public interface Graph {
 	 * This method will return the total number of nodes
 	 * @return	total number of nodes
 	 */
-	public int getNumberOfNodes();
+	public long getNumberOfNodes();
 
 	/**
 	 * This method will return the total number of edges
 	 * @return	total number of edges
 	 */
-	public int getNumberOfEdges();
+	public long getNumberOfEdges();
 
 	/**
 	 * This method returns a map containing the distances of neighbors, of a given node, being the key their id's
@@ -276,9 +277,9 @@ public interface Graph {
 	
 	public LinearFunction[] convertToLinearFunction(int[] costs);
 	
-	public int getDelta();
-
-	public void setDelta(int delta);
+//	public int getDelta();
+//
+//	public void setDelta(int delta);
 
 	public int getMaxTime();
 
@@ -289,6 +290,10 @@ public interface Graph {
 	public CompressionType getCompressionType();
 
 	public void setCompressionType(CompressionType compressionType);
+	
+	public TimeType getTimeType();
+
+	public void setTimeType(TimeType timeType);
 	
 	public IntSet getCategories();
 
