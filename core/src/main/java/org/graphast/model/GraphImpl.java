@@ -1273,4 +1273,21 @@ public class GraphImpl implements Graph {
 		}
 		return aproximated;
 	}
+	
+	public boolean equals(Graph obj) {
+		if((obj.getNumberOfNodes() == this.getNumberOfNodes()) && (obj.getNumberOfEdges() == this.getNumberOfEdges())) {
+			for(int i = 0; i < this.getNumberOfNodes(); i++) {
+				if(!obj.getNode(i).equals(this.getNode(i))) {
+					return false;
+				}
+			}
+			for(int i = 0; i < this.getNumberOfEdges(); i++) {
+				if(!obj.getEdge(i).equals(this.getEdge(i))) {
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
+	}
 }
