@@ -265,6 +265,8 @@ public interface Graph {
 	
 	public abstract Node addPoi(long id, double lat, double lon, int category, LinearFunction[] costs);
 	
+	public Node addPoi(long id, double lat, double lon, int category);
+	
 	public abstract boolean isPoi(long vid);
 
 	public abstract Node getPoi(long vid);
