@@ -80,4 +80,6 @@ public interface Edge {
 	 */
 	public abstract String toString();
 	
+	public boolean equals(Edge e);
+	
 }
