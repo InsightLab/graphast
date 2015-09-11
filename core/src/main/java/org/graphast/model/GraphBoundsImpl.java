@@ -92,8 +92,10 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 	}
 
 	/**
+	 * This method return a list of nodes that are neighbors of a given node. 
+	 * This list contains node id and cost to reach it.
 	 * 
-	 * @param v
+	 * @param v Node which method is applied.
 	 * @param graphType The type of graph the will be used to retrieve costs needed. 0 = Regular Costs; 1 = Lower Bound Costs;
 	 * 					3 = Upper Bound Costs.
 	 * @param time	The time that will be used to get the time-dependent cost

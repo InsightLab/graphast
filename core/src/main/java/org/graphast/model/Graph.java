@@ -169,7 +169,7 @@ public interface Graph {
 	
 	/**
 	 * This method returns a cost value of a given edge based on a given time
-	 * @param edge
+	 * @param edge edge at which the method is applied
 	 * @param time Time used to get edge costs.
 	 * @return return the cost of an edge in a give time
 	 */
@@ -184,8 +184,8 @@ public interface Graph {
 	
 	/**
 	 * This method return a nodeId based on a given latitude and longitude.
-	 * @param latitude
-	 * @param longitude
+	 * @param latitude latitude that is given
+	 * @param longitude longitude that is given
 	 * @return Id of a node
 	 */
 	public Long getNodeId(double latitude, double longitude);
