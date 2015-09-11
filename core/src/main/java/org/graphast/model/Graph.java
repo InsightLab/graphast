@@ -265,6 +265,8 @@ public interface Graph {
 	
 	public abstract Node addPoi(long id, double lat, double lon, int category, LinearFunction[] costs);
 	
+	public Node addPoi(long id, double lat, double lon, int category);
+	
 	public abstract boolean isPoi(long vid);
 
 	public abstract Node getPoi(long vid);
@@ -304,5 +306,7 @@ public interface Graph {
 	public Node getNearestNode (double latitude, double longitude);
 	
 	public boolean equals(Graph graph);
+
+	public void setNodeCategory(long nodeId, int category);
 	
 }
