@@ -100,6 +100,8 @@ public interface Node {
 	public abstract int[] getCosts();
 	
 	public abstract void setCosts(int[] costs);
+	
+	public boolean equals(Node n);
 
 
 }
