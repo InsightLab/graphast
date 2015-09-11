@@ -303,4 +303,6 @@ public interface Graph {
 	
 	public Node getNearestNode (double latitude, double longitude);
 	
+	public void setNodeCategory(long nodeId, int category);
+	
 }
