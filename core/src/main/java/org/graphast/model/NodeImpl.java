@@ -298,5 +298,13 @@ public class NodeImpl implements Node {
 		return "FastGraphNode [id=" + id + ", externalId=" + externalId + ", latitude=" + latitude
 				+ ", longitude=" + longitude + ", firstEdge=" + firstEdge + ", label="+ label + "]";
 	}
+	
+	public boolean equals(Node n) {
+		if((n.getLatitude() == this.getLatitude() && (n.getLongitude() == this.getLongitude())
+				&& n.getCategory() == this.getCategory())) {
+			return true;
+		}
+		return false;
+	}
 
 }
