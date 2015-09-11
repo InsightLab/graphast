@@ -1003,6 +1003,12 @@ public class GraphImpl implements Graph {
 		this.addNode(poi);
 		return poi;
 	}
+	
+	public Node addPoi(long id, double lat, double lon, int category) {
+		Node poi = new NodeImpl(id, lat, lon, category);
+		this.addNode(poi);
+		return poi;
+	}
 
 	public int poiGetCost(long vid, int time) {
 		int i = 0;
