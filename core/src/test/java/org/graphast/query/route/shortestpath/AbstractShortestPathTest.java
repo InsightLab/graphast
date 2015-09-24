@@ -74,7 +74,7 @@ public abstract class AbstractShortestPathTest {
 		sw.stop();
 
 		logger.debug(shortestPath.toString());
-		logger.debug("Execution Time of shortestPathMonacoTest(): {}ms", sw.getTime());
+		logger.debug("Execution Time of shortestPathMonacoTest2(): {}ms", sw.getTime());
 		logger.debug("Path Cost: {}", shortestPath.getPathCost());
 
 		assertEquals(1136643.0, shortestPath.getPathCost(), 0);
