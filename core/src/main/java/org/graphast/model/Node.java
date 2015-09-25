@@ -33,7 +33,7 @@ public interface Node {
 
 	/**
 	 * this method set the externalId from a node.
-	 * @param externalId
+	 * @param externalId externalId
 	 */
 	public void setExternalId(long externalId);
 	
@@ -45,7 +45,7 @@ public interface Node {
 
 	/**
 	 * this method set the latitude from a node.
-	 * @param latitude
+	 * @param latitude latitude
 	 */
 	public void setLatitude(double latitude);
 	
@@ -57,7 +57,7 @@ public interface Node {
 
 	/**
 	 * this method set the longitude from a node.
-	 * @param longitude
+	 * @param longitude longitude
 	 */
 	public void setLongitude(double longitude);
 	
@@ -69,7 +69,7 @@ public interface Node {
 	
 	/**
 	 * this method set the id from a node.
-	 * @param id
+	 * @param id id
 	 */
 	public void setId(Long id);
 	
@@ -81,7 +81,7 @@ public interface Node {
 	
 	/**
 	 * this method set the label from a node.
-	 * @param label
+	 * @param label label
 	 */
 	public void setLabel(String label);
 	
