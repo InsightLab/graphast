@@ -15,6 +15,8 @@ public class BoundsRoute extends AbstractBoundsSearchPoI {
 	 * passing by one PoI of each category.
 	 * @param	graph	graph that will be used to find all paths according 
 	 * 					to the above description
+	 * @param graphType description of the graph type, 0 = normal graph, 1 = lower bound graph
+	 * 					2 = upper bound graph.
 	 */
 	public BoundsRoute(GraphBounds graph, short graphType){
 

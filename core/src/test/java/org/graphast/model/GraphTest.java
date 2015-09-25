@@ -387,5 +387,14 @@ public class GraphTest {
 		assertFalse(graphMonaco.equals(graphExample));
 	}
 
+	@Test 
+	public void addPoiTest() {
+		Graph graph = new GraphImpl(Configuration.USER_HOME + "/graphhopper/test/poiTest");
+		graph.addPoi(0, 1, 2, 1);
+		assertEquals(0, graph.getPoi(0).getExternalId());
+		assertEquals(1, (int)graph.getPoi(0).getLatitude());
+		assertEquals(2, (int)graph.getPoi(0).getLongitude());
+		assertEquals(1, graph.getPoi(0).getCategory());
+	}
 
 }
