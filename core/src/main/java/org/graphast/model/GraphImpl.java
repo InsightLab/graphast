@@ -1300,4 +1300,12 @@ public class GraphImpl implements Graph {
 		long position = nodeId * Node.NODE_BLOCKSIZE;
 		getNodes().set(position+2, category);
 	}
+	
+	public void setEdgeGeometry(long edgeId, List<Point> geometry) {
+		EdgeImpl e = (EdgeImpl) this.getEdge(edgeId);
+		e.setGeometry(geometry);
+		long geometryIndex = storePoints(e.getGeometry(), points);
+		e.setGeometryIndex(geometryIndex);
+		this.updateEdgeInfo(e);
+	}
 }
