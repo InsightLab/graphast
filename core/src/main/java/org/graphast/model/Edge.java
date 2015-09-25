@@ -82,4 +82,6 @@ public interface Edge {
 	
 	public boolean equals(Edge e);
 	
+	public void setGeometry(List<Point> geometry);
+	
 }
