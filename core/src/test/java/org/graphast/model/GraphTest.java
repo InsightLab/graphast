@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.graphast.config.Configuration;
@@ -395,6 +396,19 @@ public class GraphTest {
 		assertEquals(1, (int)graph.getPoi(0).getLatitude());
 		assertEquals(2, (int)graph.getPoi(0).getLongitude());
 		assertEquals(1, graph.getPoi(0).getCategory());
+	}
+	
+		
+	@Test
+	public void setGeometryTest() {
+		Graph graphTest = graphExample;
+		List<Point> geometry = new ArrayList<Point>();
+		Point p = new Point(1,2);
+		geometry.add(p);
+		graphTest.setEdgeGeometry(0, geometry);
+		
+		assertEquals(1, (int)graphTest.getEdge(0).getGeometry().get(0).getLatitude());
+		assertEquals(2, (int)graphTest.getEdge(0).getGeometry().get(0).getLongitude());
 	}
 
 }
