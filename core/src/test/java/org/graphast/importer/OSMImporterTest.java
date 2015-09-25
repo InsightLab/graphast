@@ -48,5 +48,20 @@ public class OSMImporterTest {
 		assertTrue(dir.isDirectory());
 		
 	}
+	
+	@Test
+	public void geometryTest() {
+		assertEquals(monaco.getNode(monaco.getEdge(0).getFromNode()).getLatitude(),
+				monaco.getEdge(0).getGeometry().get(0).getLatitude(), 0);
+		assertEquals(43.739037, monaco.getEdge(0).getGeometry().get(1).getLatitude(), 0);
+		assertEquals(monaco.getNode(monaco.getEdge(0).getToNode()).getLatitude(),
+				monaco.getEdge(0).getGeometry().get(2).getLatitude(), 0);
+		
+		assertEquals(monaco.getNode(monaco.getEdge(0).getFromNode()).getLongitude(),
+				monaco.getEdge(0).getGeometry().get(0).getLongitude(), 0);
+		assertEquals(7.425796, monaco.getEdge(0).getGeometry().get(1).getLongitude(), 0);
+		assertEquals(monaco.getNode(monaco.getEdge(0).getToNode()).getLongitude(),
+				monaco.getEdge(0).getGeometry().get(2).getLongitude(), 0);
+	}
 
 }
