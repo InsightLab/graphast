@@ -2,12 +2,14 @@ package org.graphast.importer;
 
 import static org.graphast.util.GeoUtils.latLongToDouble;
 import static org.graphast.util.GeoUtils.latLongToInt;
-import it.unimi.dsi.fastutil.ints.Int2LongOpenHashMap;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.graphast.config.Configuration;
+import org.graphast.geometry.Point;
 import org.graphast.model.Edge;
 import org.graphast.model.EdgeImpl;
 import org.graphast.model.GraphBounds;
@@ -21,6 +23,9 @@ import org.slf4j.LoggerFactory;
 import com.graphhopper.GraphHopper;
 import com.graphhopper.storage.GraphStorage;
 import com.graphhopper.util.EdgeIterator;
+import com.graphhopper.util.PointList;
+
+import it.unimi.dsi.fastutil.ints.Int2LongOpenHashMap;
 
 public class OSMImporterImpl implements Importer {
 
@@ -115,19 +120,27 @@ public class OSMImporterImpl implements Importer {
 				continue;
 			}
 			
+			//geometry
+			PointList pl = edgeIterator.fetchWayGeometry(3); //3 gets all point including from node and to node
+			List<Point> geometry = new ArrayList<Point>();
+			for(int i =0; i < pl.size(); i++) {
+				Point p = new Point(pl.getLatitude(i),pl.getLongitude(i));
+				geometry.add(p);
+			}
+			
 			if(direction == 0) {          // Bidirectional
-				Edge edge = new EdgeImpl(externalEdgeId, fromNodeId, toNodeId, distance, label);
+				Edge edge = new EdgeImpl(externalEdgeId, fromNodeId, toNodeId, distance, label, geometry);
 				graph.addEdge(edge);
-				edge = new EdgeImpl(externalEdgeId, toNodeId, fromNodeId, distance, label);
+				edge = new EdgeImpl(externalEdgeId, toNodeId, fromNodeId, distance, label, geometry);
 				graph.addEdge(edge);
 				countBidirectional++;
 				
 			} else if(direction == 1) {   // One direction: base -> adj
-				Edge edge = new EdgeImpl(externalEdgeId, fromNodeId, toNodeId, distance, label);
+				Edge edge = new EdgeImpl(externalEdgeId, fromNodeId, toNodeId, distance, label, geometry);
 				graph.addEdge(edge);
 				countOneWay++;
 			} else if(direction == -1) {  // One direction: adj -> base
-				Edge edge = new EdgeImpl(externalEdgeId, toNodeId, fromNodeId, distance, label);
+				Edge edge = new EdgeImpl(externalEdgeId, toNodeId, fromNodeId, distance, label, geometry);
 				graph.addEdge(edge);
 				countOneWayInverse++;
 			} else {
