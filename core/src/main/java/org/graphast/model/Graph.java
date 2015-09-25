@@ -309,4 +309,6 @@ public interface Graph {
 
 	public void setNodeCategory(long nodeId, int category);
 	
+	public void setEdgeGeometry(long edgeId, List<Point> geometry);
+	
 }
