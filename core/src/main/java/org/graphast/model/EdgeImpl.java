@@ -299,5 +299,9 @@ public class EdgeImpl implements Edge {
 		}
 		return false;
 	}
+	
+	public void addGeometryPoint(Point p) {
+		this.geometry.add(p);
+	}
 
 }
