@@ -68,6 +68,11 @@ public class EdgeImpl implements Edge {
 	public EdgeImpl(long externalId, long fromNode, long toNode, int distance, String label) {
 		this(externalId, fromNode, toNode, -1, -1, distance, -1, -1, -1, label);
 	}
+	
+	public EdgeImpl(long externalId, long fromNode, long toNode, int distance, String label, List<Point> geometry) {
+		this(externalId, fromNode, toNode, -1, -1, distance, -1, -1, -1, label);
+		this.geometry = geometry;
+	}
 
 	EdgeImpl(long externalId, long fromNode, long toNode,
 			long fromNodeNextEdge, long toNodeNextEdge, int distance,
