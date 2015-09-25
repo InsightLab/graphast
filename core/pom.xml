@@ -2,8 +2,34 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.graphast</groupId>
-	<artifactId>graphast</artifactId>
+	<artifactId>graphast-core</artifactId>
 	<version>0.1.5</version>
+	<packaging>jar</packaging>
+	<name>graphast-core</name>
+	<description>Graphast Core API</description>
+	<url>https://github.com/ARiDa/graphast</url>
+	
+	
+	<licenses>
+    		<license>
+      			<name>GNU Lesser General Public License (LGPL), Version 2.1</name>
+      			<url>http://www.fsf.org/licensing/licenses/lgpl.txt</url>
+      			<distribution>repo</distribution>
+    		</license>
+  	</licenses>
+
+	<scm>
+    		<connection>scm:git:git://github.com/ARiDa/graphast.git</connection>
+    		<url>https://github.com/ARiDa/graphast.git</url>
+    		<developerConnection>https://github.com/ARiDa/graphast.git</developerConnection>
+	</scm>
+
+	<developers>
+		<developer>
+			<id>graphast</id>
+			<name>Graphast</name>
+		</developer>	
+	</developers>
 	
 	<properties> 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -81,6 +107,20 @@
 					</execution>
 				</executions>
 			</plugin>
+			
+			<plugin>
+	        	<artifactId>maven-gpg-plugin</artifactId>
+	        	<version>1.6</version>
+	        	<executions>
+	          		<execution>
+	            		<phase>package</phase>
+	            		<goals>
+	              			<goal>sign</goal>
+	            		</goals>
+	          		</execution>
+	        	</executions>
+	      	</plugin>
+			
 		</plugins>
 	</build>
 </project>
