@@ -397,6 +397,7 @@ public class GraphTest {
 		assertEquals(2, (int)graph.getPoi(0).getLongitude());
 		assertEquals(1, graph.getPoi(0).getCategory());
 	}
+	
 		
 	@Test
 	public void setGeometryTest() {
