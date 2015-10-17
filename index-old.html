@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8'>
+        <meta http-equiv="X-UA-Compatible" content="chrome=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+        <!--[if lt IE 9]>
+        <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+        <title>Graphast by ARiDa</title>
+    </head>
+    <body>
+        <header>
+            <div class="inner">
+                <h1>Graphast</h1>
+                <h2>Graphast - An Extensible Framework for Building Applications on Time-dependent Networks</h2>
+                <a href="https://github.com/ARiDa/graphast" class="button"><small>View project on</small> GitHub</a>
+            </div>
+        </header>
+        <div id="content-wrapper">
+            <div class="inner clearfix">
+                <section id="main-content">
+                    <h3>
+                        <a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction
+                    </h3>
+                    <p align="justify">Graphast is a framework tool that allows users to compose a number of user-generated network models, data importing/exporting services as well as query services, in order to quickly build applications on time-dependent road networks. The main goal is to allow users to implement solutions to different types of problems on time-dependent road networks using spatial queries, such as nearest neighbor queries, optimal sequenced routes, etc. With Graphast users can choose to combine facilities provided by the framework via a public API and/or build their own facilities, e.g., a new query processing algorithm, and incorporate those into Graphast for others to use them as well.</p>
+                    <h3>
+                        <a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span class="octicon octicon-link"></span></a>Graphast Video
+                    </h3>
+                    <p align="justify">Watch a short <a href="http://tiny.cc/busrio-video">Graphast Demo Video</a>.</p>
+                    <h3>
+                        <a id="designer-templates" class="anchor" href="#designer-templates" aria-hidden="true"><span class="octicon octicon-link"></span></a>Time Dependent Graphs
+                    </h3>
+                    <p align="justify">We assume that the structure of a time-dependent road network is modeled by a graph where the vertices represent starting and ending points of road segments or intersections. Those are connected by edges and the cost to traverse these edges vary with time. More formally, the network is modeled by a time-dependent graph (TDG) <i>G = (V,E,C)</i>, where <i>V</i> is a set of vertices, <i>E</i> is a set of edges and the cost (time in our domain of interest), represented by <i>C</i>, to traverse an edge is a function of the departure time.</p>
+                    <p align="justify">We assume that <i>C</i> is a set of piecewise-linear functions that are defined in the interval [0, <i>T</i>] where <i>T</i> is a domain-dependent time length. For each edge <i>(u, v)</i>, a function <i>c_{(u,v)}(t)</i> gives the cost of traversing <i>(u, v)</i> at the departure time <i>t &#8712 [0, T]</i>. We also assume that the travel times of the edges in the network follow the FIFO property, i.e., an object that starts traversing an edge first has to finish traversing this edge first as well. The general time-dependent shortest path problem is NP-hard, but it has a polynomial time solution in FIFO networks.</p>
+                    <div align="center">
+                        <div align="center">
+                            <figure>
+                                <img src="images/tdg.png" alt="Time Dependent Graph" align="middle" width="20%" height="20%">
+                                <figcaption>Fig1. - A graph representing a road network.</figcaption>
+                            </figure>
+                        </div>
+                        <div align="center">
+                            <figure>
+                                <figure>
+                                    <img src="images/A-BTDG.png" alt="Time Dependent Graph" align="middle" width="28%" height="28%"> 
+                                    <img src="images/B-A.png" alt="Time Dependent Graph" align="middle" width="28%" height="28%">
+                                </figure>
+                                <figure>
+                                    <img src="images/A-C.png" alt="Time Dependent Graph" align="middle" width="28%" height="28%"> 
+                                    <img src="images/B-CTDG.png" alt="Time Dependent Graph" align="middle" width="28%" height="28%">
+                                </figure>
+                                <figcaption>Fig2. - A graph representing a road network and the costs of its edges for different 
+                                times of a day.</figcaption>
+                            </figure>
+                        </div>
+                    </div>
+                    <p align="justify">As an example, consider the graph shown in Figure 1 which is a representation of a time-dependent road network. The travel times of its edges for each instant of a day are shown in the graphics in Figure 2. To illustrate how travel times are calculated in such graphs, consider the path <i>< B,A,C ></i>. At a departure time <i>t</i> = 10:00 am, the cost of traversing this path is equal to 25 minutes, since the cost to go from <i>B</i> to <i>A</i> at 10 am is 10 minutes and the arrival time at <i>A</i> is 10:10 am and the cost to go from <i>A</i> to <i>C</i> at 10:10 am is 15 minutes.</p>
+                    <h3>
+                        <a id="rather-drive-stick" class="anchor" href="#rather-drive-stick" aria-hidden="true"><span class="octicon octicon-link"></span></a>System Overview
+                    </h3>
+                    <p>Under Construction.</p>
+                    <h3>
+                        <a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Publications
+                    </h3>
+                    <h4><a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>2015</h4>
+                    <p>Igo Ramalho Brilhante, José Antônio Fernandes de Macêdo, Franco Maria Nardini, Raffaele Perego, Chiara Renso: <b>On planning sightseeing tours with TripBuilder.</b> Inf. Process. Manage. 51(2): 1-15 (2015)</p>
+                    <h4><a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>2014</h4>
+                    <p>Camila F. Costa, Mario A. Nascimento, José Antônio Fernandes de Macêdo, Javam C. Machado: <b>A*-based Solutions for KNN Queries with Operating Time Constraints in Time-Dependent Road Networks.</b> MDM (1) 2014: 23-32</p>
+                    <p>Igo Ramalho Brilhante, José Antônio Fernandes de Macêdo, Franco Maria Nardini, Raffaele Perego, Chiara Renso: <b>TripBuilder: A Tool for Recommending Sightseeing Tours.</b> ECIR 2014: 771-774</p>
+                    <h4><a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>2013</h4>
+                    <p>Camila F. Costa, Mario A. Nascimento, José Antônio Fernandes de Macêdo, Javam C. Machado: <b>Nearest neighbor queries with service time constraints in time-dependent road networks.</b> MobiGIS 2013: 22-29</p>
+                    <p>Igo Ramalho Brilhante, José Antônio Fernandes de Macêdo, Franco Maria Nardini, Raffaele Perego, Chiara Renso: <b>Where shall we go today?: planning touristic tours with tripbuilder.</b> CIKM 2013: 757-762</p>
+                    <p>Paolo Cintia, Roberto Trasarti, José Antônio Fernandes de Macêdo, Livia Almada, Camila Fereira: <b>A Gravity Model for Speed Estimation over Road Network.</b> MDM (2) 2013: 136-141</p>
+                    <h4><a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>2012</h4>
+                    <p>Lívia A. Cruz, Mario A. Nascimento, José Antônio Fernandes de Macêdo: <b>k-Nearest Neighbors Queries in Time-Dependent Road Networks.</b> JIDM 3(3): 211-226 (2012)</p>
+                    <h3>
+                        <a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span class="octicon octicon-link"></span></a>Support or Contact
+                    </h3>
+                    <p>Under Construction.</p>
+                </section>
+                <aside id="sidebar">
+                    <p class="repo-owner"><a href="https://github.com/ARiDa/graphast">Graphast</a> is maintained by <a href="https://github.com/ARiDa">ARiDa</a>.</p>
+                    <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+                </aside>
+            </div>
+        </div>
+    </body>
+</html>

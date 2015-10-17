@@ -1,0 +1,278 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Graphast</title>
+  <link rel="stylesheet" href="css/foundation.css" />
+  <script src="js/vendor/modernizr.js"></script>
+  <style type="text/css">
+  .tg  {border-collapse:collapse;border-spacing:0;border-color:#ccc;}
+  .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#ccc;color:#333;background-color:#fff;}
+  .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#ccc;color:#333;background-color:#f0f0f0;}
+  .tg .tg-s6z2{text-align:center}
+  .tg .tg-e3zv{font-weight:bold}
+  .tg .tg-spn1{background-color:#f9f9f9;text-align:center}
+  .tg .tg-hgcj{font-weight:bold;text-align:center}
+  .tg .tg-rc10{background-color:#f9f9f9;font-weight:bold}
+  </style>
+
+</head>
+<body>
+  <div class="row">
+    <p/>
+    <div class="small-2 columns">
+      <img src="img/graphast-small.png"/>      
+    </div>
+    <div class="small-10 columns">
+      <h1>Graphast</h1>
+      <h5>An Extensible Framework for Building Applications on Time-dependent Networks</h5>
+    </div>
+  </div>
+  <p/>
+
+  <div class="row">
+    <div class="small-12 columns">
+      <ul class="tabs" data-tab>
+        <li class="tab-title active"><a href="#panel1">Home</a></li>
+        <li class="tab-title"><a href="#panel2">Experiments</a></li>
+        <li class="tab-title"><a href="#panel3">People</a></li>
+        <li class="tab-title"><a href="#panel4">Videos</a></li>
+        <li class="tab-title"><a href="#panel5">Publications</a></li>
+        <li class="tab-title"><a href="#panel6">Datasets</a></li> 
+      </ul>
+      <div class="tabs-content">
+        <div class="content active" id="panel1">
+          <p/>
+          <div class="panel">
+            <h3>Introduction</h3>
+            <p>Graphast is a framework tool that allows users to compose a number of user-generated network models, data importing/exporting services as well as query services, in order to quickly build applications on time-dependent road networks. The main goal is to allow users to implement solutions to different types of problems on time-dependent road networks using spatial queries, such as nearest neighbor queries, optimal sequenced routes, etc. With Graphast users can choose to combine facilities provided by the framework via a public API and/or build their own facilities, e.g., a new query processing algorithm, and incorporate those into Graphast for others to use them as well.</p>
+
+            <h3>Time Dependent Graphs (TDG)</h3>
+            <p>We assume that the structure of a time-dependent road network is modeled by a graph where the vertices represent starting and ending points of road segments or intersections. Those are connected by edges and the cost to traverse these edges vary with time. More formally, the network is modeled by a time-dependent graph (TDG) <i>G = (V,E,C)</i>, where <i>V</i> is a set of vertices, <i>E</i> is a set of edges and the cost (time in our domain of interest), represented by <i>C</i>, to traverse an edge is a function of the departure time.</p>
+            
+            <p>We assume that <i>C</i> is a set of piecewise-linear functions that are defined in the interval [0, <i>T</i>] where <i>T</i> is a domain-dependent time length. For each edge <i>(u, v)</i>, a function <i>c_{(u,v)}(t)</i> gives the cost of traversing <i>(u, v)</i> at the departure time <i>t &#8712 [0, T]</i>. We also assume that the travel times of the edges in the network follow the FIFO property, i.e., an object that starts traversing an edge first has to finish traversing this edge first as well. The general time-dependent shortest path problem is NP-hard, but it has a polynomial time solution in FIFO networks.</p>
+            <div align="center">
+              <div align="center">
+                <figure>
+                  <img src="images/tdg.png" alt="Time Dependent Graph" align="middle" width="20%" height="20%">
+                  <figcaption>Fig1. - A graph representing a road network.</figcaption>
+                </figure>
+              </div>
+              <div align="center">
+                <figure>
+                  <figure>
+                    <img src="img/A-BTDG.png" alt="Time Dependent Graph" align="middle" width="28%" height="28%"> 
+                    <img src="img/B-A.png" alt="Time Dependent Graph" align="middle" width="28%" height="28%">
+                  </figure>
+                  <figure>
+                    <img src="img/A-C.png" alt="Time Dependent Graph" align="middle" width="28%" height="28%"> 
+                    <img src="img/B-CTDG.png" alt="Time Dependent Graph" align="middle" width="28%" height="28%">
+                  </figure>
+                  <figcaption>Fig2. - A graph representing a road network and the costs of its edges for different 
+                    times of a day.</figcaption>
+                  </figure>
+                </div>
+              </div>
+              <p>As an example, consider the graph shown in Figure 1 which is a representation of a time-dependent road network. The travel times of its edges for each instant of a day are shown in the graphics in Figure 2. To illustrate how travel times are calculated in such graphs, consider the path <i>< B,A,C ></i>. At a departure time <i>t</i> = 10:00 am, the cost of traversing this path is equal to 25 minutes, since the cost to go from <i>B</i> to <i>A</i> at 10 am is 10 minutes and the arrival time at <i>A</i> is 10:10 am and the cost to go from <i>A</i> to <i>C</i> at 10:10 am is 15 minutes.</p>
+            </div>
+          </div>
+          <div class="content" id="panel2">
+            <p/>
+            <div class="panel">
+              <h3>Experiments</h3>
+              <h5>Non time-dependent shortest path using dijsktra algorithm</h5>
+              <table class="tg">
+                <tr>
+                  <th class="tg-e3zv">Shortest Path (Dijsktra)</th>
+                  <th class="tg-hgcj">North / South São Paulo (ms)</th>
+                  <th class="tg-hgcj">West / East Brazil (ms)</th>
+                  <th class="tg-hgcj">Porto Alegre / São Paulo (ms)</th>
+                  <th class="tg-hgcj">Berlin (ms)</th>
+                </tr>
+                <tr>
+                  <td class="tg-rc10">Titan</td>
+                  <td class="tg-spn1">11895</td>
+                  <td class="tg-spn1">12012</td>
+                  <td class="tg-spn1">869293</td>
+                  <td class="tg-spn1"></td>
+                </tr>
+                <tr>
+                  <td class="tg-e3zv">Neo4J (native)</td>
+                  <td class="tg-s6z2">4515</td>
+                  <td class="tg-s6z2">5934</td>
+                  <td class="tg-s6z2">20539</td>
+                  <td class="tg-s6z2"></td>
+                </tr>
+                <tr>
+                  <td class="tg-rc10">Graphast</td>
+                  <td class="tg-spn1">372</td>
+                  <td class="tg-spn1">404</td>
+                  <td class="tg-spn1">2033</td>
+                  <td class="tg-spn1">566,4</td>
+                </tr>
+                <tr>
+                  <td class="tg-e3zv">GraphHopper</td>
+                  <td class="tg-s6z2">152</td>
+                  <td class="tg-s6z2">165</td>
+                  <td class="tg-s6z2">830</td>
+                  <td class="tg-s6z2">231,2</td>
+                </tr>
+              </table>
+			  <div class="row">
+				<div class="small-12 columns">
+					<img src="img/grafico_barras_1.png">
+					<p></p>	
+				</div>
+              <h5>Non time-dependent shortest path using A* algorithm</h5>
+              <table class="tg">
+                <tr>
+                  <th class="tg-e3zv">Shortest Path (A*)</th>
+                  <th class="tg-hgcj">North / South São Paulo (ms)</th>
+                  <th class="tg-hgcj">West / East Brazil (ms)</th>
+                  <th class="tg-hgcj">Porto Alegre / São Paulo (ms)</th>
+                  <th class="tg-hgcj">Berlin (ms)</th>
+                </tr>
+                <tr>
+                  <td class="tg-rc10">Titan</td>
+                  <td class="tg-spn1">4570</td>
+                  <td class="tg-spn1">6616</td>
+                  <td class="tg-spn1">49351</td>
+                  <td class="tg-spn1"></td>
+                </tr>
+                <tr>
+                  <td class="tg-e3zv">Neo4J (native)</td>
+                  <td class="tg-s6z2">1520</td>
+                  <td class="tg-s6z2">6176</td>
+                  <td class="tg-s6z2">11759</td>
+                  <td class="tg-s6z2"></td>
+                </tr>
+                <tr>
+                  <td class="tg-rc10">Graphast</td>
+                  <td class="tg-spn1">359</td>
+                  <td class="tg-spn1">399</td>
+                  <td class="tg-spn1">954</td>
+                  <td class="tg-spn1">512,4</td>
+                </tr>
+                <tr>
+                  <td class="tg-e3zv">GraphHopper</td>
+                  <td class="tg-s6z2">132</td>
+                  <td class="tg-s6z2">147</td>
+                  <td class="tg-s6z2">351</td>
+                  <td class="tg-s6z2">188,4</td>
+                </tr>
+              </table>
+			   <div class="row">
+				<div class="small-12 columns">
+					<img src="img/grafico_barras_2.png">
+				</div>
+            </div>
+          </div>
+		  </div>
+		  </div>
+          <div class="content" id="panel3">
+            <p/>
+            <div class="panel">
+              <h3>People</h3>
+			  <div class="row">
+				<div class="small-3 columns">
+					<img src="img/Macedo.png">     
+				</div>
+				<div class="small-9 columns">
+					<p></p>
+					<h5>Prof. José Antonio Macedo</p></h5>
+					<p>PhD</p>
+					<a href="http://lattes.cnpq.br/5801731850423324">Curriculum Lattes</a>
+				</div>
+			  </div>
+			  <p></p>
+			  <p></p>
+			  <div class="row">
+				<div class="small-3 columns">
+					<img src="img/Regis.png">    
+				</div>
+				<div class="small-9 columns">
+					<p></p>
+					<h5>Regis Pires Magalhães</p></h5>
+					<p>PhD Student</p>
+					<a href="http://lattes.cnpq.br/7195981513707548">Curriculum Lattes</a>
+				</div>
+			  </div>
+			  <p></p>
+			  <p></p>
+			  <div class="row">
+				<div class="small-3 columns">
+					<img src="img/Gustavo.png">    
+				</div>
+				<div class="small-9 columns">
+					<p></p>
+					<h5>Gustavo Coutinho</p></h5>
+					<p>Master Student</p>
+					<a href="http://lattes.cnpq.br/4359553644291293">Curriculum Lattes</a>
+				</div>
+			  </div>
+			  <p></p>
+			  <p></p>
+			  <div class="row">
+				<div class="small-3 columns">
+					<img src="img/Matheus.png">
+				</div>
+				<div class="small-9 columns">
+					<p></p>
+					<h5>Matheus Gunyics Paranagua Barrio</p></h5>
+					<p>Undergraduated</p>
+					<a href="http://lattes.cnpq.br/1683610869348775">Curriculum Lattes</a>
+			  </div>
+			  <p></p>
+			  <p></p> 
+			</div>
+          </div>
+		  </div>
+          <div class="content" id="panel4">
+            <p/>
+            <div class="panel">
+              <h3>Videos</h3>
+              <p>Watch a short Graphast Demo Video</p>
+              <iframe width="560" height="315" src="https://www.youtube.com/embed/jSeYsseodw0" frameborder="0" allowfullscreen></iframe>
+            </div>
+          </div>
+          <div class="content" id="panel5">
+            <p/>
+            <div class="panel">
+              <h3>Publications</h3>
+              <h4><a id="authors-and-contributors" class="anchor" href="#authors-and-contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>2015</h4>
+              <p>Igo Ramalho Brilhante, José Antônio Fernandes de Macêdo, Franco Maria Nardini, Raffaele Perego, Chiara Renso: <b>On planning sightseeing tours with TripBuilder.</b> Inf. Process. Manage. 51(2): 1-15 (2015)</p>
+              <h4>2014</h4>
+              <p>Camila F. Costa, Mario A. Nascimento, José Antônio Fernandes de Macêdo, Javam C. Machado: <b>A*-based Solutions for KNN Queries with Operating Time Constraints in Time-Dependent Road Networks.</b> MDM (1) 2014: 23-32</p>
+              <p>Igo Ramalho Brilhante, José Antônio Fernandes de Macêdo, Franco Maria Nardini, Raffaele Perego, Chiara Renso: <b>TripBuilder: A Tool for Recommending Sightseeing Tours.</b> ECIR 2014: 771-774</p>
+              <h4>2013</h4>
+              <p>Camila F. Costa, Mario A. Nascimento, José Antônio Fernandes de Macêdo, Javam C. Machado: <b>Nearest neighbor queries with service time constraints in time-dependent road networks.</b> MobiGIS 2013: 22-29</p>
+              <p>Igo Ramalho Brilhante, José Antônio Fernandes de Macêdo, Franco Maria Nardini, Raffaele Perego, Chiara Renso: <b>Where shall we go today?: planning touristic tours with tripbuilder.</b> CIKM 2013: 757-762</p>
+              <p>Paolo Cintia, Roberto Trasarti, José Antônio Fernandes de Macêdo, Livia Almada, Camila Fereira: <b>A Gravity Model for Speed Estimation over Road Network.</b> MDM (2) 2013: 136-141</p>
+              <h4>2012</h4>
+              <p>Lívia A. Cruz, Mario A. Nascimento, José Antônio Fernandes de Macêdo: <b>k-Nearest Neighbors Queries in Time-Dependent Road Networks.</b> JIDM 3(3): 211-226 (2012)</p>
+            </div>
+          </div>
+          <div class="content" id="panel6">
+            <p/>
+            <div class="panel">
+              <h3>Datasets</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>  
+    <div class="row">
+      <div class="small-12 columns">
+        <div class="panel">
+          <p class="text-center"><a href="https://github.com/ARiDa/graphast" target="_top">Graphast</a> is maintained by <a href="https://github.com/ARiDa" target="_top">ARiDa</a></p>
+        </div>
+      </div>
+    </div>
+    <script src="js/vendor/jquery.js"></script>
+    <script src="js/foundation.min.js"></script>
+    <script>
+    $(document).foundation();
+    </script>
+  </body>
+  </html>
