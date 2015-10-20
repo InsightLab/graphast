@@ -1,16 +1,11 @@
 package org.graphast.query.route.shortestpath;
 
-import static org.junit.Assert.*;
-
-import java.text.ParseException;
-import java.util.Date;
+import static org.junit.Assert.assertEquals;
 
 import org.graphast.config.Configuration;
 import org.graphast.graphgenerator.GraphGenerator;
 import org.graphast.model.Graph;
-import org.graphast.query.route.shortestpath.astar.AStarConstantWeight;
 import org.graphast.query.route.shortestpath.model.Path;
-import org.graphast.util.DateUtils;
 import org.graphast.util.FileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

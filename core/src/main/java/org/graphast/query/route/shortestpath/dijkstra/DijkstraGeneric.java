@@ -181,7 +181,6 @@ public class DijkstraGeneric {
                 	waitingTime = graph.poiGetCost(e.getId());
             		timeToService = e.getTravelTime() + waitingTime;
                 	if(bounds.keySet().contains(cat)){
-                		int cost = bounds.get(cat).getCost();
                 		upper = updateUpper(bounds);
                 	}else{
                 		bounds.put((long)cat, new Bound(e.getId(), timeToService));
