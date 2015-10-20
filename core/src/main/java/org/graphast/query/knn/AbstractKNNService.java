@@ -1,17 +1,16 @@
 package org.graphast.query.knn;
 
-import it.unimi.dsi.fastutil.longs.Long2IntMap;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 
 import org.graphast.model.Graph;
-import org.graphast.query.model.AbstractBoundsSearch;
 import org.graphast.query.model.AbstractBoundsSearchPoI;
 import org.graphast.query.model.Bound;
 import org.graphast.query.model.LowerBoundEntry;
+
+import it.unimi.dsi.fastutil.longs.Long2IntMap;
 
 public abstract class AbstractKNNService implements KNNService{
 	protected Graph network;

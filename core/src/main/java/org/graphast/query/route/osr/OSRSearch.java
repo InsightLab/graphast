@@ -1,10 +1,6 @@
 package org.graphast.query.route.osr;
 
 import static org.graphast.util.NumberUtils.convertToInt;
-import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
-import it.unimi.dsi.fastutil.longs.Long2DoubleMap;
-import it.unimi.dsi.fastutil.longs.Long2DoubleOpenHashMap;
-import it.unimi.dsi.fastutil.longs.Long2IntMap;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,6 +13,10 @@ import org.graphast.model.GraphBounds;
 import org.graphast.model.Node;
 import org.graphast.query.route.shortestpath.dijkstra.DijkstraLinearFunction;
 import org.graphast.util.DateUtils;
+
+import it.unimi.dsi.fastutil.longs.Long2DoubleMap;
+import it.unimi.dsi.fastutil.longs.Long2DoubleOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2IntMap;
 
 public class OSRSearch {
 
