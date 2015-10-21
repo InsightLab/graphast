@@ -48,9 +48,8 @@ public abstract class AbstractShortestPathLinearFunctionTest {
 
 		logger.debug(shortestPath.toString());
 		logger.debug("Execution Time of shortestPathExampleTest(): {}ms", sw.getTime());
-		logger.debug("Path Cost: {}", shortestPath.getPathCost());
 
-		assertEquals(14, shortestPath.getPathCost(), 0);
+		assertEquals(14, shortestPath.getTotalCost(), 0);
 
 	}
 	
@@ -68,9 +67,8 @@ public abstract class AbstractShortestPathLinearFunctionTest {
 
 		logger.debug(shortestPath.toString());
 		logger.debug("Execution Time of shortestPathExampleTest(): {}ms", sw.getTime());
-		logger.debug("Path Cost: {}", shortestPath.getPathCost());
 
-		assertEquals(12, shortestPath.getPathCost(), 0);
+		assertEquals(12, shortestPath.getTotalCost(), 0);
 
 	}
 	
@@ -88,9 +86,8 @@ public abstract class AbstractShortestPathLinearFunctionTest {
 
 		logger.debug(shortestPath.toString());
 		logger.debug("Execution Time of shortestPathExampleTest(): {}ms", sw.getTime());
-		logger.debug("Path Cost: {}", shortestPath.getPathCost());
 
-		assertEquals(12, shortestPath.getPathCost()/1000/60, 0);
+		assertEquals(12, shortestPath.getTotalCost()/1000/60, 0);
 
 	}
 	
