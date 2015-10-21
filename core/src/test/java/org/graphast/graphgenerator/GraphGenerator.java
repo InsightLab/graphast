@@ -216,6 +216,18 @@ public class GraphGenerator {
 		return graph;
 		
 	}
+	
+	public GraphBounds generateWashington() {
+		
+		String osmFile = DijkstraConstantWeight.class.getResource("/washington-latest.osm.pbf").getPath();
+		String graphHopperWashingtonDir = Configuration.USER_HOME + "/graphhopper/test/washington";
+		String graphastWashingtonDir = Configuration.USER_HOME + "/graphast/test/washington";
+
+		GraphBounds graph = new OSMImporterImpl(osmFile, graphHopperWashingtonDir, graphastWashingtonDir).execute();
+
+		return graph;
+		
+	}
 
 	public Graph generateExample3() {
 		

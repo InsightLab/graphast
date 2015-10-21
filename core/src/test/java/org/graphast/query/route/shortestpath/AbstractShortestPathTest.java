@@ -19,11 +19,13 @@ public abstract class AbstractShortestPathTest {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	protected static Graph graphMonaco;
+	protected static Graph graphWashington;
 	protected static Graph graphExample;
 	protected static Graph graphExample2;
 	
 	
 	protected static AbstractShortestPathService serviceMonaco;
+	protected static AbstractShortestPathService serviceWashington;
 	protected static AbstractShortestPathService serviceExample;
 	protected static AbstractShortestPathService serviceExample2;
 	
@@ -32,6 +34,7 @@ public abstract class AbstractShortestPathTest {
 	@BeforeClass
 	public static void setup() {
 		graphMonaco = new GraphGenerator().generateMonaco();
+		graphWashington = new GraphGenerator().generateWashington();
 		graphExample = new GraphGenerator().generateExample();
 		graphExample2 = new GraphGenerator().generateExample2();
 	}
@@ -74,6 +77,26 @@ public abstract class AbstractShortestPathTest {
 
 		assertEquals(1136643.0, shortestPath.getPathCost(), 0);
 
+	}
+	
+	@Test
+	public void shortestPathWashingtonTest() {
+		
+		Long source = graphWashington.getNodeId(47.715529934664,-122.28728992389046);
+		Long target = graphWashington.getNodeId(47.528278027361885,-122.36992412887344);
+
+		StopWatch sw = new StopWatch();
+
+		sw.start();
+		Path shortestPath = serviceWashington.shortestPath(source, target);
+		sw.stop();
+
+		logger.debug(shortestPath.toString());
+		logger.debug("Execution Time of shortestPathWashintonTest(): {}ms", sw.getTime());
+		logger.debug("Path Cost: {}", shortestPath.getPathCost());
+
+//		assertEquals(228910, shortestPath.getPathCost(), 0);
+		
 	}
 
 	@Test
