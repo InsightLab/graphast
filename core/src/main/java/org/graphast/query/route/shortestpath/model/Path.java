@@ -9,8 +9,6 @@ import java.util.List;
 
 public class Path {
 
-	private long removedId;
-	private HashMap<Long, RouteEntry> parents;
 	private List<Instruction> path;
 	private List<Long> edges;
 
@@ -101,22 +99,6 @@ public class Path {
 
 		return sb.toString();
 
-	}
-
-	public long getRemovedId() {
-		return removedId;
-	}
-
-	public void setRemovedId(long removedId) {
-		this.removedId = removedId;
-	}
-
-	public HashMap<Long, RouteEntry> getParents() {
-		return parents;
-	}
-
-	public void setParents(HashMap<Long, RouteEntry> parents) {
-		this.parents = parents;
 	}
 
 	public List<Instruction> getPath() {
