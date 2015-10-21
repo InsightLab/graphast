@@ -7,10 +7,15 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.graphast.geometry.Point;
+
 public class Path {
 
-	private List<Instruction> path;
 	private List<Long> edges;
+	private List<Instruction> path;
+	private List<Point> geometry;
+	private double totalDistance;
+	private double totalCost;
 
 	public Path() {
 
@@ -117,6 +122,28 @@ public class Path {
 		this.edges = edges;
 	}
 	
-	
+	public List<Point> getGeometry() {
+		return geometry;
+	}
+
+	public void setGeometry(List<Point> geometry) {
+		this.geometry = geometry;
+	}
+
+	public double getTotalDistance() {
+		return totalDistance;
+	}
+
+	public void setTotalDistance(double totalDistance) {
+		this.totalDistance = totalDistance;
+	}
+
+	public double getTotalCost() {
+		return totalCost;
+	}
+
+	public void setTotalCost(double totalCost) {
+		this.totalCost = totalCost;
+	}
 
 }
