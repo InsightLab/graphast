@@ -17,6 +17,7 @@ public class OSMImporterTest {
 	private static String graphastDir;
 	private static Graph monaco;
 	private static Graph andorra;
+	private static Graph washington;
 
 	@BeforeClass
 	public static void setup() {
@@ -29,6 +30,11 @@ public class OSMImporterTest {
 		graphastDir = Configuration.USER_HOME + "/graphast/test/andorra";
 		FileUtils.deleteDir(graphastDir);
 		andorra = new OSMImporterImpl(osmFile, graphastDir).execute();
+		
+		osmFile = OSMImporterTest.class.getResource("/washington-latest.osm.pbf").getPath();
+		graphastDir = Configuration.USER_HOME + "/graphast/test/washington";
+		FileUtils.deleteDir(graphastDir);
+		washington = new OSMImporterImpl(osmFile, graphastDir).execute();
 	}
 
 	@Test
@@ -44,6 +50,15 @@ public class OSMImporterTest {
 	public void executeAndorraTest() {
 		assertEquals(2621, andorra.getNumberOfNodes());
 		assertEquals(5326, andorra.getNumberOfEdges());
+		File dir = new File(graphastDir);
+		assertTrue(dir.isDirectory());
+		
+	}
+	
+	@Test
+	public void executeWashingtonTest() {
+		assertEquals(636016, washington.getNumberOfNodes());
+		assertEquals(1548054, washington.getNumberOfEdges());
 		File dir = new File(graphastDir);
 		assertTrue(dir.isDirectory());
 		
