@@ -67,7 +67,7 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 
 			if(removed.getId() == targetId) {
 				Path path = new Path();
-				path.reconstructPath(removed.getId(), parents);
+				path.constructPath(removed.getId(), parents, graph);
 				return path;
 			}
 

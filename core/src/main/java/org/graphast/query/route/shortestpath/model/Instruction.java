@@ -6,12 +6,14 @@ public class Instruction {
 	protected int direction;
     protected String label;
     private double cost;
+    private int distance;
 	
-    public Instruction(int direction, String label, double cost) {
+    public Instruction(int direction, String label, double cost, int distance) {
     	
     	this.direction = direction;
     	this.label = label;
     	this.cost = cost;
+    	this.distance = distance;
     
     }
     
@@ -37,6 +39,14 @@ public class Instruction {
 
 	public void setCost(double cost) {
 		this.cost = cost;
+	}
+	
+	public int getDistance() {
+		return distance;
+	}
+
+	public void setDistance(int distance) {
+		this.distance = distance;
 	}
 
 	@Override
