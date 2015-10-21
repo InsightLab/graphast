@@ -17,6 +17,7 @@ import org.junit.Test;
 public class GraphGeneratorTest {
 	
 	private static GraphBounds graphMonaco;
+	private static GraphBounds graphWashington;
 	private static Graph graphExample;
 	private static GraphBounds graphExample2;
 	private static Graph graphExample3;
@@ -26,6 +27,7 @@ public class GraphGeneratorTest {
 	@BeforeClass
 	public static void setup() {
 		graphMonaco = new GraphGenerator().generateMonaco();
+		graphWashington = new GraphGenerator().generateWashington();
 		graphExample = new GraphGenerator().generateExample();
 		graphExample2 = new GraphGenerator().generateExample2();
 		graphExample3 = new GraphGenerator().generateExample3();
@@ -37,6 +39,12 @@ public class GraphGeneratorTest {
 	public void generateMonacoTest() {
 		assertEquals(751, graphMonaco.getNumberOfNodes());
 		assertEquals(1306, graphMonaco.getNumberOfEdges());
+	}
+	
+	@Test
+	public void generateWashingtonTest() {
+		assertEquals(636016, graphWashington.getNumberOfNodes());
+		assertEquals(1548054, graphWashington.getNumberOfEdges());
 	}
 	
 	@Test
