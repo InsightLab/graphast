@@ -14,6 +14,7 @@ import org.graphast.config.Configuration;
 import org.graphast.enums.TimeType;
 import org.graphast.geometry.Point;
 import org.graphast.graphgenerator.GraphGenerator;
+import org.graphast.importer.CostGenerator;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -22,15 +23,17 @@ import it.unimi.dsi.fastutil.longs.LongList;
 
 public class GraphTest {
 
-	private static GraphImpl graphExample4;
-	private static GraphImpl graphExample3;
+	private static GraphImpl graphExample1;
 	private static Graph graphExample2;
+	private static GraphImpl graphExample3;
+	private static GraphImpl graphExample4;	
 	private static GraphImpl graphExample;
 	private static GraphBounds graphMonaco;
 
 	@BeforeClass
 	public static void setup(){
 		graphExample = (GraphImpl) new GraphGenerator().generateExample();
+		graphExample1 = (GraphImpl) new GraphGenerator().generateExample1();
 		graphExample2 = new GraphGenerator().generateExample2();
 		graphExample3 =  (GraphImpl) new GraphGenerator().generateExample3();
 		graphExample4 =  (GraphImpl) new GraphGenerator().generateExample4();
@@ -71,6 +74,16 @@ public class GraphTest {
 		assertEquals(5, (long) e.getCostsIndex());
 		assertEquals(5, (long) e.getGeometryIndex());
 	}
+	
+	@Test
+	public void getEdgeSyntheticCost() {
+		Edge edge = graphExample1.getEdge(0);
+		System.out.println(graphExample1.getEdgeCost(edge, 3600000));
+		System.out.println(graphExample1.getEdgeCost(edge, 7200000));
+		System.out.println(graphExample1.getEdgeCost(edge, 36000000));
+		System.out.println(graphExample1.getEdgeCost(edge, 61200000));
+		System.out.println(graphExample1.getEdgeCost(edge, 75600000));
+	}
 
 	@Test
 	public void getEdgeCostTest() {
@@ -95,6 +108,8 @@ public class GraphTest {
 		assertNull(graphExample3.getEdgeCost(edge, 36000000));
 		assertNull(graphExample3.getEdgeCost(edge, 61200000));
 		assertNull(graphExample3.getEdgeCost(edge, 75600000));
+		
+		CostGenerator.generateSyntheticEdgesCosts();
 	}
 
 	@Test

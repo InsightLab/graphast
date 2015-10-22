@@ -16,4 +16,4 @@ null
 .DS_Store
 *.aux
 *.synctex*
-
+bin
