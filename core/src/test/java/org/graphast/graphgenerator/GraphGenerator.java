@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.graphast.config.Configuration;
 import org.graphast.geometry.Point;
+import org.graphast.importer.CostGenerator;
 import org.graphast.importer.OSMImporterImpl;
 import org.graphast.model.Edge;
 import org.graphast.model.EdgeImpl;
@@ -67,6 +68,74 @@ public class GraphGenerator {
 
 		return graph;
 
+	}
+	
+	public Graph generateExample1() {
+		
+		Graph graph = new GraphImpl(Configuration.USER_HOME + "/graphast/test/example1");
+
+		NodeImpl v = new NodeImpl(3l, 10d, 10d, "label node 0");
+		graph.addNode(v);
+
+		v = new NodeImpl(4l, 43.7294668047756,7.413772473047058);
+		graph.addNode(v);
+
+		int[] nodeCosts = new int[]{1,2,3,4};
+		v = new NodeImpl(2l, 10d, 30d, nodeCosts);
+		graph.addNode(v);
+
+		v = new NodeImpl(6l, 10d, 40d);
+		graph.addNode(v);
+
+		v = new NodeImpl(7l, 11d, 32d);
+		graph.addNode(v);
+
+		v = new NodeImpl(7, 11, 32, "Banco");
+		graph.addNode(v);
+
+		int[] costs = CostGenerator.generateSyntheticEdgesCosts();
+		List<Point> points = new ArrayList<Point>();
+		points.add(new Point(10,10));
+		points.add(new Point(10,20));
+		Edge e = new EdgeImpl(0l, 1l, 10, costs, points, "rua1");
+		graph.addEdge(e);
+
+		costs = CostGenerator.generateSyntheticEdgesCosts();
+		points = new ArrayList<Point>();
+		points.add(new Point(10,20));
+		points.add(new Point(10,15));
+		points.add(new Point(10,10));
+		e = new EdgeImpl(1l, 0l, 20, costs, points, "rua2");
+		graph.addEdge(e);
+
+		costs = CostGenerator.generateSyntheticEdgesCosts();
+		points = new ArrayList<Point>();
+		points.add(new Point(10,10));
+		points.add(new Point(10,30));
+		e = new EdgeImpl(0l, 2l, 30, costs, points, "rua3");
+		graph.addEdge(e);
+
+		costs = CostGenerator.generateSyntheticEdgesCosts();
+		points = new ArrayList<Point>();
+		points.add(new Point(10,30));
+		points.add(new Point(10,10));
+		e = new EdgeImpl(2l, 0l, 40, costs, points, "rua4");
+		graph.addEdge(e);
+
+		costs = CostGenerator.generateSyntheticEdgesCosts();
+		points = new ArrayList<Point>();
+		points.add(new Point(10,10));
+		points.add(new Point(10,40));
+		e = new EdgeImpl(0l, 3l, 50, costs, points, "");
+		graph.addEdge(e);
+
+		e = new EdgeImpl(2l, 4l, 60);
+		graph.addEdge(e);
+
+		e = new EdgeImpl(3l, 0l, 70);
+		graph.addEdge(e);
+
+		return graph;
 	}
 
 	public GraphBounds generateExample2() {
@@ -143,6 +212,18 @@ public class GraphGenerator {
 		String graphastMonacoDir = Configuration.USER_HOME + "/graphast/test/monaco";
 
 		GraphBounds graph = new OSMImporterImpl(osmFile, graphHopperMonacoDir, graphastMonacoDir).execute();
+
+		return graph;
+		
+	}
+	
+	public GraphBounds generateWashington() {
+		
+		String osmFile = DijkstraConstantWeight.class.getResource("/washington-latest.osm.pbf").getPath();
+		String graphHopperWashingtonDir = Configuration.USER_HOME + "/graphhopper/test/washington";
+		String graphastWashingtonDir = Configuration.USER_HOME + "/graphast/test/washington";
+
+		GraphBounds graph = new OSMImporterImpl(osmFile, graphHopperWashingtonDir, graphastWashingtonDir).execute();
 
 		return graph;
 		

@@ -6,12 +6,18 @@ public class Instruction {
 	protected int direction;
     protected String label;
     private double cost;
+    private int distance;
+    private int startGeometry;
+    private int endGeometry;
 	
-    public Instruction(int direction, String label, double cost) {
+  
+
+	public Instruction(int direction, String label, double cost, int distance) {
     	
     	this.direction = direction;
     	this.label = label;
     	this.cost = cost;
+    	this.distance = distance;
     
     }
     
@@ -38,6 +44,30 @@ public class Instruction {
 	public void setCost(double cost) {
 		this.cost = cost;
 	}
+	
+	public int getDistance() {
+		return distance;
+	}
+
+	public void setDistance(int distance) {
+		this.distance = distance;
+	}
+	
+	  public int getStartGeometry() {
+			return startGeometry;
+		}
+
+		public void setStartGeometry(int startGeometry) {
+			this.startGeometry = startGeometry;
+		}
+
+		public int getEndGeometry() {
+			return endGeometry;
+		}
+
+		public void setEndGeometry(int endGeometry) {
+			this.endGeometry = endGeometry;
+		}
 
 	@Override
     public String toString()

@@ -8,12 +8,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.graphast.geometry.Point;
+import org.graphast.model.Edge;
+import org.graphast.model.Graph;
 
 public class Path {
-
-	private List<Long> edges;
-	private List<Instruction> path;
+	
 	private List<Point> geometry;
+	private List<Long> edges;
+	private List<Instruction> instructions;
 	private double totalDistance;
 	private double totalCost;
 
@@ -21,66 +23,94 @@ public class Path {
 
 	}
 
-	//TODO Rename to constructPath
-	public void reconstructPath(long id, HashMap<Long, RouteEntry> parents) {
+	// TODO Rename to constructPath
+	public void constructPath(long id, HashMap<Long, RouteEntry> parents, Graph graph) {
 		Instruction oldInstruction, newInstruction;
 		LinkedList<Instruction> verificationQueue = new LinkedList<Instruction>();
-		if(parents.get(id) == null) {
-			path = new ArrayList<Instruction>();
-			newInstruction = new Instruction(0, "On Start", 0);
-			path.add(newInstruction);
+		if (parents.get(id) == null) {
+			instructions = new ArrayList<Instruction>();
+			newInstruction = new Instruction(0, "On Start", 0, 0);
+			instructions.add(newInstruction);
 			return;
 		}
 		RouteEntry re = parents.get(id);
 
 		long parent = re.getId();
 
-		path = new ArrayList<Instruction>();
+		instructions = new ArrayList<Instruction>();
 		edges = new ArrayList<Long>();
+		geometry = new ArrayList<Point>();
+
+
+//		newEdge = graph.getEdge(re.getEdgeId());
+
+		if(re.getEdgeId()!=-1) {
+			newInstruction = new Instruction(0, re.getLabel(), re.getCost(), graph.getEdge(re.getEdgeId()).getDistance());
+			edges.add(re.getEdgeId());
+			
+			if (graph.getEdge(re.getEdgeId()).getGeometry() != null) {
+				for (Point point : graph.getEdge(re.getEdgeId()).getGeometry()) {
+					geometry.add(point);
+				}
+			}
+		} else {
+			newInstruction = new Instruction(0, re.getLabel(), re.getCost(), 0);
+			edges.add(re.getEdgeId());
+		}
+
 		
-		newInstruction = new Instruction(0, re.getLabel(), re.getCost());
-		edges.add(re.getEdgeId());
+
 		verificationQueue.add(newInstruction);
 
-		while(parent!=-1) {
+		while (parent != -1) {
 			re = parents.get(parent);
-			if(re != null) {
-				String predecessorLabel = verificationQueue.peek().getLabel();
 
-				if((predecessorLabel == null && re.getLabel() == null) || (predecessorLabel!=null  && predecessorLabel.equals(re.getLabel())) || (predecessorLabel!=null && (predecessorLabel.isEmpty() && re.getLabel()==null))) {
+			if (re != null) {
+				String predecessorLabel = verificationQueue.peek().getLabel();
+//				newEdge = graph.getEdge(re.getEdgeId());
+				
+				if ((predecessorLabel == null && re.getLabel() == null)
+						|| (predecessorLabel != null && predecessorLabel.equals(re.getLabel()))
+						|| (predecessorLabel != null && (predecessorLabel.isEmpty() && re.getLabel() == null))) {
 					oldInstruction = verificationQueue.poll();
-					newInstruction = new Instruction(0, oldInstruction.getLabel(), oldInstruction.getCost() + re.getCost());
+					if(re.getEdgeId()!=-1) {
+						newInstruction = new Instruction(0, oldInstruction.getLabel(),
+							oldInstruction.getCost() + re.getCost(), graph.getEdge(re.getEdgeId()).getDistance());
+					} else {
+						newInstruction = new Instruction(0, oldInstruction.getLabel(),
+								oldInstruction.getCost() + re.getCost(), 0);
+					}
+					newInstruction.setStartGeometry(oldInstruction.getStartGeometry());	
 				} else {
-					newInstruction = new Instruction(0, re.getLabel(), re.getCost());
+					if(re.getEdgeId()!=-1) {
+						newInstruction = new Instruction(0, re.getLabel(), re.getCost(), graph.getEdge(re.getEdgeId()).getDistance());
+					} else {
+						newInstruction = new Instruction(0, re.getLabel(), re.getCost(), 0);
+					}
+					newInstruction.setStartGeometry(geometry.size()-1);
 				}
 				edges.add(re.getEdgeId());
+
+				if(re.getEdgeId()!=-1) {
+					if (graph.getEdge(re.getEdgeId()).getGeometry() != null) {
+						for (Point point : graph.getEdge(re.getEdgeId()).getGeometry()) {
+							geometry.add(point);
+						}
+					}
+					newInstruction.setEndGeometry(geometry.size()-1);
+				}
+
 				verificationQueue.addFirst(newInstruction);
 				parent = re.getId();
 			} else {
 				break;
 			}
 		}
-		
+
 		Collections.reverse(edges);
-		while(!verificationQueue.isEmpty()) {
-			path.add(verificationQueue.poll());
+		while (!verificationQueue.isEmpty()) {
+			instructions.add(verificationQueue.poll());
 		}
-	}
-
-	public double getPathCost() {
-
-		double pathCost = 0d;
-
-		Iterator<Instruction> instructionIterator = path.iterator();
-
-		while(instructionIterator.hasNext()) {
-
-			Instruction instruction = instructionIterator.next();
-			pathCost = pathCost + instruction.getCost();
-		}
-
-		return pathCost;
-
 	}
 
 	@Override
@@ -88,9 +118,9 @@ public class Path {
 
 		StringBuilder sb = new StringBuilder();
 
-		Iterator<Instruction> instructionIterator = path.iterator();
+		Iterator<Instruction> instructionIterator = instructions.iterator();
 
-		while(instructionIterator.hasNext()) {
+		while (instructionIterator.hasNext()) {
 
 			Instruction instruction = instructionIterator.next();
 			sb.append("( ");
@@ -107,11 +137,11 @@ public class Path {
 	}
 
 	public List<Instruction> getPath() {
-		return path;
+		return instructions;
 	}
 
 	public void setPath(List<Instruction> path) {
-		this.path = path;
+		this.instructions = path;
 	}
 
 	public List<Long> getEdges() {
@@ -121,7 +151,7 @@ public class Path {
 	public void setEdges(List<Long> edges) {
 		this.edges = edges;
 	}
-	
+
 	public List<Point> getGeometry() {
 		return geometry;
 	}
@@ -131,19 +161,24 @@ public class Path {
 	}
 
 	public double getTotalDistance() {
+
+		totalDistance = 0;
+
+		for (Instruction instruction : instructions) {
+			totalDistance = totalDistance + instruction.getDistance();
+		}
+
 		return totalDistance;
 	}
 
-	public void setTotalDistance(double totalDistance) {
-		this.totalDistance = totalDistance;
-	}
-
 	public double getTotalCost() {
-		return totalCost;
-	}
 
-	public void setTotalCost(double totalCost) {
-		this.totalCost = totalCost;
+		totalCost = 0;
+
+		for (Instruction instruction : instructions) {
+			totalCost = totalCost + instruction.getCost();
+		}
+		return totalCost;
 	}
 
 }
