@@ -12,10 +12,10 @@ import org.graphast.model.Edge;
 import org.graphast.model.Graph;
 
 public class Path {
-
+	
+	private List<Point> geometry;
 	private List<Long> edges;
 	private List<Instruction> instructions;
-	private List<Point> geometry;
 	private double totalDistance;
 	private double totalCost;
 
@@ -80,13 +80,14 @@ public class Path {
 						newInstruction = new Instruction(0, oldInstruction.getLabel(),
 								oldInstruction.getCost() + re.getCost(), 0);
 					}
-						
+					newInstruction.setStartGeometry(oldInstruction.getStartGeometry());	
 				} else {
 					if(re.getEdgeId()!=-1) {
 						newInstruction = new Instruction(0, re.getLabel(), re.getCost(), graph.getEdge(re.getEdgeId()).getDistance());
 					} else {
 						newInstruction = new Instruction(0, re.getLabel(), re.getCost(), 0);
 					}
+					newInstruction.setStartGeometry(geometry.size()-1);
 				}
 				edges.add(re.getEdgeId());
 
@@ -96,6 +97,7 @@ public class Path {
 							geometry.add(point);
 						}
 					}
+					newInstruction.setEndGeometry(geometry.size()-1);
 				}
 
 				verificationQueue.addFirst(newInstruction);
