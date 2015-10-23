@@ -39,13 +39,13 @@ public class OSRSearch {
 		ArrayList<Long> path = new ArrayList<Long>();
 		//ArrayList<Integer> path = new ArrayList<Integer>();
 		int qId = convertToInt(origin.getId());
-		int size = route.getR().size();
+		int size = route.getRoute().size();
 		for(int id = 0; id < size; id++){
-			path.addAll(pathToPoi(id, qId, convertToInt(route.getR().get(id).getId()), parents));
-			qId = convertToInt(route.getR().get(id).getId());
+			path.addAll(pathToPoi(id, qId, convertToInt(route.getRoute().get(id).getId()), parents));
+			qId = convertToInt(route.getRoute().get(id).getId());
 		}
 
-		path.addAll(pathToDestination(destination, size, convertToInt(route.getR().get(size - 1).getId()), parents));
+		path.addAll(pathToDestination(destination, size, convertToInt(route.getRoute().get(size - 1).getId()), parents));
 		path.add(destination.getId());
 		return path;
 	}
@@ -102,17 +102,17 @@ public class OSRSearch {
 		while(!queue.isEmpty()){
 			removed = queue.poll();
 //			System.out.println(removed);
-			addWasTraversed(removed.getR().size(), convertToInt(removed.getId()), wasRemoved, wasTraversed);
-			addParent(removed.getR().size(), convertToInt(removed.getId()), convertToInt(removed.getParent()), parents);
+			addWasTraversed(removed.getRoute().size(), convertToInt(removed.getId()), wasRemoved, wasTraversed);
+			addParent(removed.getRoute().size(), convertToInt(removed.getId()), convertToInt(removed.getParent()), parents);
 
 //			System.out.println("Removed: " + removed.getId());
 //			System.out.println("Parents: " + parents + "\n");
 			
 			
 			if(removed.getId() == convertToInt(destination.getId())){
-				if(removed.getR().size() >= categories.size()){
+				if(removed.getRoute().size() >= categories.size()){
 				//	System.out.println("Parents: " + parents + "\n");
-					return new Sequence(removed.getId(), removed.getTravelTime(), reconstructPath(origin, destination, removed, parents), removed.getR());
+					return new Sequence(removed.getId(), removed.getTravelTime(), reconstructPath(origin, destination, removed, parents), removed.getRoute());
 				}
 			}
 
@@ -122,10 +122,10 @@ public class OSRSearch {
 
 			for (long v : neig.keySet()) {
 				int vid = convertToInt(v);
-				nextId = removed.getR().size();
+				nextId = removed.getRoute().size();
 				int tt = removed.getTravelTime() + neig.get(v);
 				wt = 0;
-				reachedNN = new ArrayList<NearestNeighborTC>(removed.getR());
+				reachedNN = new ArrayList<NearestNeighborTC>(removed.getRoute());
 
 				if(nextId < categories.size()){
 					nextCat = categories.get(nextId);
@@ -144,7 +144,7 @@ public class OSRSearch {
 				int lb = (int) lowerBound(vid, nextId, categories, destinationPaths);
 				RouteQueueEntry newEntry = new RouteQueueEntry(	vid, tt, at, convertToInt(removed.getId()), tt + lb, reachedNN);
 
-				int pos = newEntry.getR().size();
+				int pos = newEntry.getRoute().size();
 				if(!wasRemoved(vid, pos, categories, wasTraversed)){
 					if(!isInQ(vid, pos, tt, wasTraversed, categories)){
 						if(isInQ(vid, pos, wasTraversed)){
