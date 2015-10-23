@@ -43,7 +43,7 @@ public class Path {
 		
 		double previousLatitude=0;
 		double previousLongitude=0;
-
+//TODO arrumar isso
 //		newEdge = graph.getEdge(re.getEdgeId());
 
 		if(re.getEdgeId()!=-1) {
