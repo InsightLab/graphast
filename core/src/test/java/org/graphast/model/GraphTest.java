@@ -327,6 +327,13 @@ public class GraphTest {
 		assertEquals(380, (long) graphMonaco.getNearestNode(43.738331, 7.421239).getId());
 
 	}
+	
+	@Test
+	public void importPoIs() throws NumberFormatException, IOException {
+		System.out.println(graphMonaco.getNearestNode(43.7307036,7.4170275).getLabel());
+		graphMonaco.importPoIList();
+		System.out.println(graphMonaco.getNearestNode(43.7307036,7.4170275).getLabel());
+	}
 
 
 	@Test

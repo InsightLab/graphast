@@ -311,4 +311,6 @@ public interface Graph {
 	
 	public void setEdgeGeometry(long edgeId, List<Point> geometry);
 	
+	public void importPoIList() throws NumberFormatException, IOException;
+	
 }

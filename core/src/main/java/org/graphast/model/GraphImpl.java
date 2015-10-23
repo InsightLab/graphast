@@ -2,6 +2,24 @@ package org.graphast.model;
 
 import static org.graphast.util.GeoUtils.latLongToDouble;
 import static org.graphast.util.GeoUtils.latLongToInt;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import org.graphast.enums.CompressionType;
+import org.graphast.enums.TimeType;
+import org.graphast.geometry.Point;
+import org.graphast.util.DistanceUtils;
+import org.graphast.util.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import it.unimi.dsi.fastutil.BigArrays;
 import it.unimi.dsi.fastutil.ints.IntBigArrayBigList;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
@@ -14,19 +32,6 @@ import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongList;
 import it.unimi.dsi.fastutil.objects.ObjectBigArrayBigList;
 import it.unimi.dsi.fastutil.objects.ObjectBigList;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.graphast.enums.CompressionType;
-import org.graphast.enums.TimeType;
-import org.graphast.geometry.Point;
-import org.graphast.util.DistanceUtils;
-import org.graphast.util.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class GraphImpl implements Graph {
 
@@ -204,9 +209,10 @@ public class GraphImpl implements Graph {
 		NodeImpl node = (NodeImpl) n;
 
 		long position = node.getId() * Node.NODE_BLOCKSIZE;
-		position = position + 3;
+		position = position + 2;
 
 		synchronized (nodes) {
+			nodes.set(position++, node.getCategory());
 			nodes.set(position++, node.getLatitudeConvertedToInt());
 			nodes.set(position++, node.getLongitudeConvertedToInt());
 			nodes.set(position++, node.getFirstEdgeSegment());
@@ -1307,5 +1313,31 @@ public class GraphImpl implements Graph {
 		long geometryIndex = storePoints(e.getGeometry(), points);
 		e.setGeometryIndex(geometryIndex);
 		this.updateEdgeInfo(e);
+	}
+	
+	public void importPoIList() throws NumberFormatException, IOException {
+		
+		InputStream is = new FileInputStream("src/test/resources/monaco-latest.csv");
+		InputStreamReader isr = new InputStreamReader(is);
+		BufferedReader br = new BufferedReader(isr);
+		
+		String row;
+		String[] splittedRow;
+		
+		while((row = br.readLine()) != null ) {
+
+			splittedRow = row.split(";");
+			
+			Node n = this.getNearestNode(Double.parseDouble(splittedRow[2]), Double.parseDouble(splittedRow[3]));
+			
+			n.setCategory(Integer.parseInt(splittedRow[0]));
+			n.setLabel(splittedRow[4]);
+
+			this.updateNodeInfo(n);
+			System.out.println(this.getNearestNode(Double.parseDouble(splittedRow[2]), Double.parseDouble(splittedRow[3])).getCategory());
+		}
+		
+		br.close();
+		
 	}
 }
