@@ -16,14 +16,14 @@ public class RouteQueueEntry extends LowerBoundEntry {
 	@Override
 	public boolean equals(Object o){
 		return super.getId() == ((RouteQueueEntry) o).getId() 
-				&& routes.size() == ((RouteQueueEntry) o).getR().size();
+				&& routes.size() == ((RouteQueueEntry) o).getRoute().size();
 	}
 
-	public ArrayList<NearestNeighborTC> getR() {
+	public ArrayList<NearestNeighborTC> getRoute() {
 		return routes;
 	}
 
-	public void setR(ArrayList<NearestNeighborTC> r) {
+	public void setRoute(ArrayList<NearestNeighborTC> r) {
 		this.routes = r;
 	}
 
