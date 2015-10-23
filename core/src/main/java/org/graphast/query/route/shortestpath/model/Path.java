@@ -40,6 +40,9 @@ public class Path {
 		edges = new ArrayList<Long>();
 		geometry = new ArrayList<Point>();
 
+		
+		double previousLatitude=0;
+		double previousLongitude=0;
 
 //		newEdge = graph.getEdge(re.getEdgeId());
 
@@ -49,7 +52,13 @@ public class Path {
 			
 			if (graph.getEdge(re.getEdgeId()).getGeometry() != null) {
 				for (Point point : graph.getEdge(re.getEdgeId()).getGeometry()) {
-					geometry.add(point);
+					if(previousLatitude==point.getLatitude() && previousLongitude==point.getLongitude()) {
+						continue;
+					} else {
+						geometry.add(point);
+						previousLatitude = point.getLatitude();
+						previousLongitude = point.getLongitude();
+					}
 				}
 			}
 		} else {
@@ -93,7 +102,13 @@ public class Path {
 				if(re.getEdgeId()!=-1) {
 					if (graph.getEdge(re.getEdgeId()).getGeometry() != null) {
 						for (Point point : graph.getEdge(re.getEdgeId()).getGeometry()) {
-							geometry.add(point);
+							if(previousLatitude==point.getLatitude() && previousLongitude==point.getLongitude()) {
+								continue;
+							} else {
+								geometry.add(point);
+								previousLatitude = point.getLatitude();
+								previousLongitude = point.getLongitude();
+							}
 						}
 					}
 					newInstruction.setEndGeometry(geometry.size()-1);
@@ -107,6 +122,7 @@ public class Path {
 		}
 
 		Collections.reverse(edges);
+		Collections.reverse(geometry);
 		while (!verificationQueue.isEmpty()) {
 			instructions.add(verificationQueue.poll());
 		}
