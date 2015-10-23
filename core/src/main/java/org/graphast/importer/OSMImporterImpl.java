@@ -174,6 +174,13 @@ public class OSMImporterImpl implements Importer {
 		return graph;
 	}
 
+	public static void main(String[] args) {
+		String osmFile = args[0];
+		String baseOsmFileName = osmFile.substring(0, osmFile.indexOf('.'));
+		String graphastDir = args[1] != null ? args[1] : System.getProperty("user.dir") + "/" + baseOsmFileName;
+		new OSMImporterImpl(osmFile, graphastDir).execute();
+	}
+	
 	public int getDirection(long flags) {
 		long direction = (flags & 3);
 

@@ -1,16 +1,10 @@
 package org.graphast.geometry;
 
 
-public class Point extends Geometry{
+public class Point {
 
 	private double latitude;
 	private double longitude;
-
-	public Point(Integer id, double latitude, double longitude){
-		super(id);
-		this.latitude = latitude;
-		this.longitude = longitude;
-	}
 
 	public Point(double latitude, double longitude){
 		this.latitude = latitude;
