@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.graphast.geometry.Point;
-import org.graphast.model.Edge;
 import org.graphast.model.Graph;
 
 public class Path {
