@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.graphast.geometry.Point;
+import org.graphast.model.Edge;
 import org.graphast.model.Graph;
 import org.graphast.query.route.osr.Sequence;
 import org.graphast.query.route.shortestpath.AbstractShortestPathService;
@@ -47,14 +48,15 @@ public class Path {
 		double previousLatitude=0;
 		double previousLongitude=0;
 
-//		newEdge = graph.getEdge(re.getEdgeId());
+		Edge newEdge; 
 
 		if(re.getEdgeId()!=-1) {
-			newInstruction = new Instruction(0, re.getLabel(), re.getCost(), graph.getEdge(re.getEdgeId()).getDistance());
+			newEdge = graph.getEdge(re.getEdgeId());
+			newInstruction = new Instruction(0, re.getLabel(), re.getCost(), newEdge.getDistance());
 			edges.add(re.getEdgeId());
 			
-			if (graph.getEdge(re.getEdgeId()).getGeometry() != null) {
-				for (Point point : graph.getEdge(re.getEdgeId()).getGeometry()) {
+			if (newEdge.getGeometry() != null) {
+				for (Point point : newEdge.getGeometry()) {
 					if(previousLatitude==point.getLatitude() && previousLongitude==point.getLongitude()) {
 						continue;
 					} else {
@@ -78,7 +80,11 @@ public class Path {
 
 			if (re != null) {
 				String predecessorLabel = verificationQueue.peek().getLabel();
-//				newEdge = graph.getEdge(re.getEdgeId());
+				if(re.getEdgeId()!=-1) {
+					newEdge = graph.getEdge(re.getEdgeId());
+				} else {
+					newEdge = null;
+				}
 				
 				if ((predecessorLabel == null && re.getLabel() == null)
 						|| (predecessorLabel != null && predecessorLabel.equals(re.getLabel()))
@@ -86,7 +92,7 @@ public class Path {
 					oldInstruction = verificationQueue.poll();
 					if(re.getEdgeId()!=-1) {
 						newInstruction = new Instruction(0, oldInstruction.getLabel(),
-							oldInstruction.getCost() + re.getCost(), graph.getEdge(re.getEdgeId()).getDistance());
+							oldInstruction.getCost() + re.getCost(), newEdge.getDistance());
 					} else {
 						newInstruction = new Instruction(0, oldInstruction.getLabel(),
 								oldInstruction.getCost() + re.getCost(), 0);
@@ -94,7 +100,7 @@ public class Path {
 					newInstruction.setStartGeometry(oldInstruction.getStartGeometry());	
 				} else {
 					if(re.getEdgeId()!=-1) {
-						newInstruction = new Instruction(0, re.getLabel(), re.getCost(), graph.getEdge(re.getEdgeId()).getDistance());
+						newInstruction = new Instruction(0, re.getLabel(), re.getCost(), newEdge.getDistance());
 					} else {
 						newInstruction = new Instruction(0, re.getLabel(), re.getCost(), 0);
 					}
@@ -103,8 +109,8 @@ public class Path {
 				edges.add(re.getEdgeId());
 
 				if(re.getEdgeId()!=-1) {
-					if (graph.getEdge(re.getEdgeId()).getGeometry() != null) {
-						for (Point point : graph.getEdge(re.getEdgeId()).getGeometry()) {
+					if (newEdge.getGeometry() != null) {
+						for (Point point : newEdge.getGeometry()) {
 							if(previousLatitude==point.getLatitude() && previousLongitude==point.getLongitude()) {
 								continue;
 							} else {
