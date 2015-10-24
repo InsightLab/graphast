@@ -79,6 +79,7 @@ public class GraphTest {
 	@Test
 	public void getEdgeSyntheticCost() {
 //		Edge edge = graphExample1.getEdge(0);
+		
 //		assertEquals(147508, (int)graphExample1.getEdgeCost(edge, 3600000));
 //		assertEquals(0, (int)graphExample1.getEdgeCost(edge, 7200000));
 //		assertEquals(0, (int)graphExample1.getEdgeCost(edge, 36000000));
@@ -326,12 +327,12 @@ public class GraphTest {
 		assertEquals(252, (long) graphMonaco.getNearestNode(43.73079058671274, 7.415815422292399).getId());
 	}
 	
-	@Test
-	public void importPoIs() throws NumberFormatException, IOException {
-		System.out.println(graphMonaco.getNearestNode(43.7307036,7.4170275).getLabel());
-		graphMonaco.importPoIList();
-		System.out.println(graphMonaco.getNearestNode(43.7307036,7.4170275).getLabel());
-	}
+//	@Test
+//	public void importPoIs() throws NumberFormatException, IOException {
+//		System.out.println(graphMonaco.getNearestNode(43.7307036,7.4170275).getLabel());
+//		graphMonaco.importPoIList();
+//		System.out.println(graphMonaco.getNearestNode(43.7307036,7.4170275).getLabel());
+//	}
 
 	@Test
 	public void getReverseGraph() {

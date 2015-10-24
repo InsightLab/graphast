@@ -93,7 +93,6 @@ public class Path {
 				} else {
 					newEdge = null;
 				}
-
 				if ((predecessorLabel == null && re.getLabel() == null)
 						|| (predecessorLabel != null && predecessorLabel.equals(re.getLabel()))
 						|| (predecessorLabel != null && (predecessorLabel.isEmpty() && re.getLabel() == null))) {
