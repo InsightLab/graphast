@@ -75,9 +75,6 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 			node = super.getNode(i);
 			nodesLowerBound.put((long)node.getId(), getMinimunCostValue(node.getCosts()));
 		}
-
-		//		System.out.println(nodesLowerBound);
-
 	}
 
 	public void createNodesUpperBounds() {

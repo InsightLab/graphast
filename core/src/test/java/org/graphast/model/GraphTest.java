@@ -78,11 +78,11 @@ public class GraphTest {
 	@Test
 	public void getEdgeSyntheticCost() {
 		Edge edge = graphExample1.getEdge(0);
-		System.out.println(graphExample1.getEdgeCost(edge, 3600000));
-		System.out.println(graphExample1.getEdgeCost(edge, 7200000));
-		System.out.println(graphExample1.getEdgeCost(edge, 36000000));
-		System.out.println(graphExample1.getEdgeCost(edge, 61200000));
-		System.out.println(graphExample1.getEdgeCost(edge, 75600000));
+//		assertEquals(147508, (int)graphExample1.getEdgeCost(edge, 3600000));
+//		assertEquals(0, (int)graphExample1.getEdgeCost(edge, 7200000));
+//		assertEquals(0, (int)graphExample1.getEdgeCost(edge, 36000000));
+//		assertEquals(0, (int)graphExample1.getEdgeCost(edge, 61200000));
+//		assertEquals(0, (int)graphExample1.getEdgeCost(edge, 75600000));
 	}
 
 	@Test
