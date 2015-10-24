@@ -25,8 +25,6 @@ public class BoundsRoute extends AbstractBoundsSearchPoI {
 		DijkstraLinearFunction d = new DijkstraLinearFunction(graph);
 		IntSet categoriesIds = graph.getCategories();
 
-//		System.out.println(categoriesIds);
-		
 		for(int i = 0; i < graph.getNumberOfNodes(); i++){
 
 			long nodeId = graph.getNode(i).getId();
@@ -37,7 +35,6 @@ public class BoundsRoute extends AbstractBoundsSearchPoI {
 			 */
 			ObjectCollection<Bound> bound = d.shortestPathCategories(nodeId, categoriesIds, graphType);
 
-			//System.out.println("nodeId: " + graph.getNode(i).getId() + " Bound: " + bound);
 			//The next line is going to associate the current vid to the bounds of the previous line.
 			bounds.put(nodeId,  bound);
 
