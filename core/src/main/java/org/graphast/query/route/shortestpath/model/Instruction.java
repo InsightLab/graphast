@@ -10,7 +10,7 @@ public class Instruction {
     private int startGeometry;
     private int endGeometry;
 	
-  
+    public Instruction() {}
 
 	public Instruction(int direction, String label, double cost, int distance) {
     	
