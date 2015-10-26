@@ -208,6 +208,9 @@ public class GraphImpl implements Graph {
 
 		NodeImpl node = (NodeImpl) n;
 
+		long labelIndex = storeLabel(node.getLabel(), nodesLabels);
+		node.setLabelIndex(labelIndex);
+		
 		long position = node.getId() * Node.NODE_BLOCKSIZE;
 		position = position + 2;
 
@@ -217,6 +220,9 @@ public class GraphImpl implements Graph {
 			nodes.set(position++, node.getLongitudeConvertedToInt());
 			nodes.set(position++, node.getFirstEdgeSegment());
 			nodes.set(position++, node.getFirstEdgeOffset());
+			nodes.set(position++, node.getLabelIndexSegment());
+			nodes.set(position++, node.getLabelIndexOffset());
+			
 		}
 	}
 
