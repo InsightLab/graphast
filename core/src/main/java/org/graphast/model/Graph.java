@@ -1,11 +1,5 @@
 package org.graphast.model;
 
-import it.unimi.dsi.fastutil.ints.IntBigArrayBigList;
-import it.unimi.dsi.fastutil.ints.IntSet;
-import it.unimi.dsi.fastutil.longs.Long2IntMap;
-import it.unimi.dsi.fastutil.longs.LongList;
-
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -14,6 +8,11 @@ import org.graphast.enums.TimeType;
 import org.graphast.geometry.Point;
 import org.graphast.util.FileUtils;
 
+import it.unimi.dsi.fastutil.ints.IntBigArrayBigList;
+import it.unimi.dsi.fastutil.ints.IntSet;
+import it.unimi.dsi.fastutil.longs.Long2IntMap;
+import it.unimi.dsi.fastutil.longs.LongList;
+
 
 public interface Graph {
 
@@ -21,19 +20,15 @@ public interface Graph {
 	 * Saves all the information in the graph.
 	 * 
 	 * @see FileUtils for more information about how each list is saved.
-	 * @throws IOException 
-	 *         If the graph can not be saved for some reason related to IO.
 	 */
-	public void save() throws IOException;
+	public void save();
 
 	/**
 	 * Loads all the information in the graph.
 	 * 
 	 * @see FileUtils for more information about how each list is saved.
-	 * @throws IOException
-	 *         If the graph can not be loaded for some reason related to IO.
 	 */
-	public void load() throws IOException;
+	public void load();
 
 	/**
 	 * For a given Node, this method will 

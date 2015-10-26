@@ -2,6 +2,19 @@ package org.graphast.model;
 
 import static org.graphast.util.GeoUtils.latLongToDouble;
 import static org.graphast.util.GeoUtils.latLongToInt;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import org.graphast.enums.CompressionType;
+import org.graphast.enums.TimeType;
+import org.graphast.geometry.Point;
+import org.graphast.util.DistanceUtils;
+import org.graphast.util.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import it.unimi.dsi.fastutil.BigArrays;
 import it.unimi.dsi.fastutil.ints.IntBigArrayBigList;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
@@ -14,19 +27,6 @@ import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongList;
 import it.unimi.dsi.fastutil.objects.ObjectBigArrayBigList;
 import it.unimi.dsi.fastutil.objects.ObjectBigList;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.graphast.enums.CompressionType;
-import org.graphast.enums.TimeType;
-import org.graphast.geometry.Point;
-import org.graphast.util.DistanceUtils;
-import org.graphast.util.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class GraphImpl implements Graph {
 
@@ -97,7 +97,7 @@ public class GraphImpl implements Graph {
 	 * @see org.graphast.model.Graphast#save()
 	 */
 	@Override
-	public void save() throws IOException {
+	public void save() {
 		FileUtils.saveIntList(directory + "/nodes", nodes, blockSize,
 				compressionType);
 		FileUtils.saveIntList(directory + "/edges", edges, blockSize,
@@ -120,7 +120,7 @@ public class GraphImpl implements Graph {
 	 * @see org.graphast.model.Graphast#load()
 	 */
 	@Override
-	public void load() throws IOException {
+	public void load() {
 		nodes = FileUtils.loadIntList(directory + "/nodes", blockSize,
 				compressionType);
 		edges = FileUtils.loadIntList(directory + "/edges", blockSize,

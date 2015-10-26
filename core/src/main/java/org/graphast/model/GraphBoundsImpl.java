@@ -1,13 +1,11 @@
 package org.graphast.model;
 
-import it.unimi.dsi.fastutil.longs.Long2IntMap;
-import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
-
-import java.io.IOException;
-
 import org.graphast.enums.CompressionType;
 import org.graphast.enums.TimeType;
 import org.graphast.util.FileUtils;
+
+import it.unimi.dsi.fastutil.longs.Long2IntMap;
+import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 
 public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 
@@ -27,7 +25,7 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 
 	}
 
-	public void save() throws IOException {
+	public void save() {
 		super.save();
 		FileUtils.saveLong2IntMap(directory + "/edgesUpperBound", edgesUpperBound, blockSize, compressionType);
 		FileUtils.saveLong2IntMap(directory + "/edgesLowerBound", edgesLowerBound, blockSize, compressionType);
@@ -37,7 +35,7 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 	}
 
 
-	public void load() throws IOException {
+	public void load() {
 		super.load();
 		FileUtils.loadLong2IntMap(directory + "/edgesUpperBound", blockSize, compressionType);
 		FileUtils.loadLong2IntMap(directory + "/edgesLowerBound", blockSize, compressionType);

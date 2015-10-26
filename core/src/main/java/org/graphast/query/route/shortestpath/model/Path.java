@@ -9,6 +9,9 @@ import java.util.List;
 
 import org.graphast.geometry.Point;
 import org.graphast.model.Graph;
+import org.graphast.query.route.osr.Sequence;
+import org.graphast.query.route.shortestpath.AbstractShortestPathService;
+import org.graphast.query.route.shortestpath.dijkstra.DijkstraLinearFunction;
 import org.graphast.util.DistanceUtils;
 
 public class Path {
@@ -42,8 +45,6 @@ public class Path {
 
 		List<Point> listOfGeometries;
 		
-		double previousLatitude=0;
-		double previousLongitude=0;
 		//TODO Refactor
 //		newEdge = graph.getEdge(re.getEdgeId());
 
@@ -67,8 +68,6 @@ public class Path {
 						continue;
 					} else {
 						geometry.add(point);
-						previousLatitude = point.getLatitude();
-						previousLongitude = point.getLongitude();
 					}
 				}
 			}
@@ -128,8 +127,6 @@ public class Path {
 								continue;
 							} else {
 								geometry.add(point);
-								previousLatitude = point.getLatitude();
-								previousLongitude = point.getLongitude();
 							}
 						}
 					}
@@ -150,6 +147,34 @@ public class Path {
 		}
 	}
 
+	public Path generatePath(double lat1, double lon1, double lat2, double lon2, Sequence sequence, Graph graph) {
+		List<Point> geometry = new ArrayList<Point>();
+		List<Long> edges = new ArrayList<Long>();
+		List<Instruction> instructions = new ArrayList<Instruction>();
+		long inicioId = graph.getNodeId(lat1, lon1);
+		AbstractShortestPathService sp = new DijkstraLinearFunction(graph);
+		for(int i = 0; i < sequence.getPois().size(); i++) {
+			Path partialPath = sp.shortestPath(inicioId, sequence.getPois().get(i).getId());
+			if(inicioId != sequence.getPois().get(i).getId()) {
+				geometry.addAll(partialPath.getGeometry());
+				edges.addAll(partialPath.getEdges());
+				instructions.addAll(partialPath.getPath());
+			}
+			inicioId = sequence.getPois().get(i).getId();
+		}
+		Path partialPath = sp.shortestPath(inicioId, graph.getNodeId(lat2, lon2));
+		if(inicioId != graph.getNodeId(lat2, lon2)) {
+			geometry.addAll(partialPath.getGeometry());
+			edges.addAll(partialPath.getEdges());
+			instructions.addAll(partialPath.getPath());
+		}
+		Path path = new Path();
+		path.setEdges(edges);
+		path.setGeometry(geometry);
+		path.setPath(instructions);
+		return path;
+	}
+	
 	@Override
 	public String toString() {
 
