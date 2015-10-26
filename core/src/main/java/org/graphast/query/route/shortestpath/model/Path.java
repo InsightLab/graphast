@@ -99,7 +99,7 @@ public class Path {
 					oldInstruction = verificationQueue.poll();
 					if(re.getEdgeId()!=-1) {
 						newInstruction = new Instruction(0, oldInstruction.getLabel(),
-								oldInstruction.getCost() + re.getCost(), newEdge.getDistance());
+								oldInstruction.getCost() + re.getCost(), oldInstruction.getDistance() + newEdge.getDistance());
 					} else {
 						newInstruction = new Instruction(0, oldInstruction.getLabel(),
 								oldInstruction.getCost() + re.getCost(), 0);
@@ -184,7 +184,8 @@ public class Path {
 	public String toString() {
 
 		StringBuilder sb = new StringBuilder();
-
+		sb.append("\n");
+		
 		Iterator<Instruction> instructionIterator = instructions.iterator();
 
 		while (instructionIterator.hasNext()) {
