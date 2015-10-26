@@ -3,7 +3,6 @@ package org.graphast.importer;
 import static org.graphast.util.GeoUtils.latLongToDouble;
 import static org.graphast.util.GeoUtils.latLongToInt;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -156,11 +155,7 @@ public class OSMImporterImpl implements Importer {
 		logger.info("Number of OneWay edges: {}", countOneWay);
 		logger.info("Number of OneWayInverse edges: {}", countOneWayInverse);
 
-		try {
-			graph.save();
-		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
-		}
+		graph.save();
 
 		double finalTime = System.currentTimeMillis();
 		double total = finalTime - initialTime;

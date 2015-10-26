@@ -102,7 +102,7 @@ public class GraphImpl implements Graph {
 	 * @see org.graphast.model.Graphast#save()
 	 */
 	@Override
-	public void save() throws IOException {
+	public void save() {
 		FileUtils.saveIntList(directory + "/nodes", nodes, blockSize,
 				compressionType);
 		FileUtils.saveIntList(directory + "/edges", edges, blockSize,
@@ -125,7 +125,7 @@ public class GraphImpl implements Graph {
 	 * @see org.graphast.model.Graphast#load()
 	 */
 	@Override
-	public void load() throws IOException {
+	public void load() {
 		nodes = FileUtils.loadIntList(directory + "/nodes", blockSize,
 				compressionType);
 		edges = FileUtils.loadIntList(directory + "/edges", blockSize,
