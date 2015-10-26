@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.graphast.geometry.Point;
+import org.graphast.model.Edge;
 import org.graphast.model.Graph;
 import org.graphast.query.route.osr.Sequence;
 import org.graphast.query.route.shortestpath.AbstractShortestPathService;
@@ -15,7 +16,7 @@ import org.graphast.query.route.shortestpath.dijkstra.DijkstraLinearFunction;
 import org.graphast.util.DistanceUtils;
 
 public class Path {
-	
+
 	private List<Point> geometry;
 	private List<Long> edges;
 	private List<Instruction> instructions;
@@ -26,6 +27,8 @@ public class Path {
 
 	}
 
+	
+	//TODO MAJOR REFACTOR NEEDED IN THIS METHOD!
 	public void constructPath(long id, HashMap<Long, RouteEntry> parents, Graph graph) {
 		Instruction oldInstruction, newInstruction;
 		LinkedList<Instruction> verificationQueue = new LinkedList<Instruction>();
@@ -44,25 +47,25 @@ public class Path {
 		geometry = new ArrayList<Point>();
 
 		List<Point> listOfGeometries;
-		
-		//TODO Refactor
-//		newEdge = graph.getEdge(re.getEdgeId());
+
+		Edge newEdge;
 
 		if(re.getEdgeId()!=-1) {
-			newInstruction = new Instruction(0, re.getLabel(), re.getCost(), graph.getEdge(re.getEdgeId()).getDistance());
+			newEdge = graph.getEdge(re.getEdgeId());
+			newInstruction = new Instruction(0, re.getLabel(), re.getCost(), newEdge.getDistance());
 			edges.add(re.getEdgeId());
-			
-			if (graph.getEdge(re.getEdgeId()).getGeometry() != null) {
-				
+
+			if (newEdge.getGeometry() != null) {
+
 				listOfGeometries = graph.getEdge(re.getEdgeId()).getGeometry();
-				
+
 				if(DistanceUtils.distanceLatLong(listOfGeometries.get(0).getLatitude(), listOfGeometries.get(0).getLongitude(), graph.getNode(graph.getEdge(re.getEdgeId()).getFromNode()).getLatitude(), graph.getNode(graph.getEdge(re.getEdgeId()).getFromNode()).getLongitude()) > 0) {
 					Collections.reverse(listOfGeometries);
 				}
 
-				
+
 				Collections.reverse(listOfGeometries);
-				
+
 				for (Point point : listOfGeometries) {
 					if(geometry.contains(point)) {
 						continue;
@@ -76,7 +79,7 @@ public class Path {
 			edges.add(re.getEdgeId());
 		}
 
-		
+
 
 		verificationQueue.add(newInstruction);
 
@@ -85,15 +88,19 @@ public class Path {
 
 			if (re != null) {
 				String predecessorLabel = verificationQueue.peek().getLabel();
-//				newEdge = graph.getEdge(re.getEdgeId());
-				
+				if(re.getEdgeId()!=-1) {
+					newEdge = graph.getEdge(re.getEdgeId());
+				} else {
+					newEdge = null;
+				}
+
 				if ((predecessorLabel == null && re.getLabel() == null)
 						|| (predecessorLabel != null && predecessorLabel.equals(re.getLabel()))
 						|| (predecessorLabel != null && (predecessorLabel.isEmpty() && re.getLabel() == null))) {
 					oldInstruction = verificationQueue.poll();
 					if(re.getEdgeId()!=-1) {
 						newInstruction = new Instruction(0, oldInstruction.getLabel(),
-							oldInstruction.getCost() + re.getCost(), graph.getEdge(re.getEdgeId()).getDistance());
+								oldInstruction.getCost() + re.getCost(), newEdge.getDistance());
 					} else {
 						newInstruction = new Instruction(0, oldInstruction.getLabel(),
 								oldInstruction.getCost() + re.getCost(), 0);
@@ -101,7 +108,7 @@ public class Path {
 					newInstruction.setStartGeometry(oldInstruction.getStartGeometry());	
 				} else {
 					if(re.getEdgeId()!=-1) {
-						newInstruction = new Instruction(0, re.getLabel(), re.getCost(), graph.getEdge(re.getEdgeId()).getDistance());
+						newInstruction = new Instruction(0, re.getLabel(), re.getCost(), newEdge.getDistance());
 					} else {
 						newInstruction = new Instruction(0, re.getLabel(), re.getCost(), 0);
 					}
@@ -110,20 +117,20 @@ public class Path {
 				edges.add(re.getEdgeId());
 
 				if(re.getEdgeId()!=-1) {
-					if (graph.getEdge(re.getEdgeId()).getGeometry() != null) {
-						
+					if (newEdge.getGeometry() != null) {
+
 						listOfGeometries = graph.getEdge(re.getEdgeId()).getGeometry();
-						
+
 						if(geometry.size()!=0) {
-						if(DistanceUtils.distanceLatLong(listOfGeometries.get(0).getLatitude(), listOfGeometries.get(0).getLongitude(), geometry.get(geometry.size()-1).getLatitude(), geometry.get(geometry.size()-1).getLongitude()) > 
-						DistanceUtils.distanceLatLong(listOfGeometries.get(listOfGeometries.size()-1).getLatitude(), listOfGeometries.get(listOfGeometries.size()-1).getLongitude(), geometry.get(geometry.size()-1).getLatitude(), geometry.get(geometry.size()-1).getLongitude()) ) {
-							Collections.reverse(listOfGeometries);
+							if(DistanceUtils.distanceLatLong(listOfGeometries.get(0).getLatitude(), listOfGeometries.get(0).getLongitude(), geometry.get(geometry.size()-1).getLatitude(), geometry.get(geometry.size()-1).getLongitude()) > 
+							DistanceUtils.distanceLatLong(listOfGeometries.get(listOfGeometries.size()-1).getLatitude(), listOfGeometries.get(listOfGeometries.size()-1).getLongitude(), geometry.get(geometry.size()-1).getLatitude(), geometry.get(geometry.size()-1).getLongitude()) ) {
+								Collections.reverse(listOfGeometries);
+							}
 						}
-						}
-						
+
 						for (Point point : listOfGeometries) {
 							if(geometry.contains(point)) {
-//							if(previousLatitude==point.getLatitude() && previousLongitude==point.getLongitude()) {
+								//							if(previousLatitude==point.getLatitude() && previousLongitude==point.getLongitude()) {
 								continue;
 							} else {
 								geometry.add(point);
@@ -174,7 +181,7 @@ public class Path {
 		path.setPath(instructions);
 		return path;
 	}
-	
+
 	@Override
 	public String toString() {
 
