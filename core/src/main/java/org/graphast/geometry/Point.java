@@ -30,5 +30,24 @@ public class Point {
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (obj == null) {
+	        return false;
+	    }
+	    if (getClass() != obj.getClass()) {
+	        return false;
+	    }
+	    final Point newPoint = (Point) obj;
+	    
+	    if ((this.getLatitude() == newPoint.getLatitude()) &&(this.getLongitude()==newPoint.getLongitude())) {
+	    	return true;
+	    }
+	    
+	    return false;
+		
+	}
 
 }
