@@ -180,7 +180,6 @@ public class Path {
 		path.setPath(instructions);
 		return path;
 	}
-
 	@Override
 	public String toString() {
 
