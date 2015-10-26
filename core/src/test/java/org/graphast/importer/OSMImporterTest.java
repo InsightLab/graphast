@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.graphast.config.Configuration;
 import org.graphast.model.Graph;
@@ -20,7 +21,7 @@ public class OSMImporterTest {
 //	private static Graph washington;
 
 	@BeforeClass
-	public static void setup() {
+	public static void setup() throws NumberFormatException, IOException {
 		osmFile = OSMImporterTest.class.getResource("/monaco-150112.osm.pbf").getPath();
 		graphastDir = Configuration.USER_HOME + "/graphast/test/monaco";
 		FileUtils.deleteDir(graphastDir);
@@ -30,6 +31,8 @@ public class OSMImporterTest {
 		graphastDir = Configuration.USER_HOME + "/graphast/test/andorra";
 		FileUtils.deleteDir(graphastDir);
 		andorra = new OSMImporterImpl(osmFile, graphastDir).execute();
+		
+		POIImporter.importPoIList(monaco, "src/test/resources/monaco-latest.csv");
 		
 //		osmFile = OSMImporterTest.class.getResource("/washington-latest.osm.pbf").getPath();
 //		graphastDir = Configuration.USER_HOME + "/graphast/test/washington";
@@ -43,6 +46,16 @@ public class OSMImporterTest {
 		assertEquals(1306, monaco.getNumberOfEdges());
 		File dir = new File(graphastDir);
 		assertTrue(dir.isDirectory());
+		
+	}
+	
+	@Test
+	public void monacoPoIImporterTest() {
+		
+		assertEquals(161, monaco.getNode(140).getCategory());
+		assertEquals("Crémaillère", monaco.getNode(140).getLabel());
+		
+//		assertEquals(751, monaco.getNumberOfNodes());
 		
 	}
 	
