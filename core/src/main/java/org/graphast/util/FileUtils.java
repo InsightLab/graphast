@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channel;
 import java.nio.channels.Channels;
@@ -16,8 +17,12 @@ import java.nio.channels.WritableByteChannel;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import org.graphast.config.Configuration;
 import org.graphast.enums.CompressionType;
 import org.graphast.exception.GraphastException;
+import org.graphast.importer.OSMImporterImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import it.unimi.dsi.fastutil.ints.IntBigArrayBigList;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
@@ -29,6 +34,8 @@ import it.unimi.dsi.fastutil.shorts.ShortBigArrayBigList;
 
 public class FileUtils {
 
+	private static Logger log = LoggerFactory.getLogger(FileUtils.class); 
+	
 	public static String read(String file) {
 		try {
 			InputStream is = new FileInputStream(file);
@@ -421,4 +428,37 @@ public class FileUtils {
             }
         }
     }
+    
+    public static String download(String url, String path) {
+    	String result = null;
+    	FileOutputStream fos = null;
+		try {
+			URL website = new URL(url);
+	    	ReadableByteChannel rbc = Channels.newChannel(website.openStream());
+	    	String file = website.getPath();
+	    	file = file.substring(file.lastIndexOf('/') + 1);
+	    	result = path + "/" + file;
+	    	fos = new FileOutputStream(result);
+	    	fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+	    	log.info("Successful download of file {}", result);
+		} catch (IOException e) {
+			throw new GraphastException(e.getMessage(), e);
+		} finally {
+			if (fos != null) {
+				try {
+					fos.close();
+				} catch (IOException e) {
+					throw new GraphastException(e.getMessage(), e);
+				}
+			}
+		}
+		return result;
+    }
+
+    
+    public static void main(String[] args) {
+		String file = download("http://download.geofabrik.de/europe/monaco-latest.osm.pbf", Configuration.GRAPHAST_DIR);
+		new OSMImporterImpl(file, Configuration.GRAPHAST_DIR).execute();
+	}
+    
 }

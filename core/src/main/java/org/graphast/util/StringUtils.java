@@ -1,10 +1,23 @@
 package org.graphast.util;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.StringTokenizer;
 
 public class StringUtils {
 
+	
+	public static String append(List<String> list) {
+		StringBuilder sb = new StringBuilder();
+		for (int i=1; i < list.size(); i++) {
+			sb.append(list.get(i));
+			if (i < list.size() - 1) {
+				sb.append(",");
+			}
+		}
+		return sb.toString();
+	}
+	
 	public static String append(Object ... objects) {
 		return append(null, objects);
 	}

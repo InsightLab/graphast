@@ -28,12 +28,12 @@ import it.unimi.dsi.fastutil.ints.Int2LongOpenHashMap;
 
 public class OSMImporterImpl implements Importer {
 
-	public Logger logger = LoggerFactory.getLogger(this.getClass());
+	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	private String osmFile, graphHopperDir, graphastDir, graphastTmpDir;
 	
 	public OSMImporterImpl(String osmFile, String graphHopperDir, String graphastDir) {
-		graphastTmpDir = Configuration.USER_HOME + "/graphast/tmp/osmimporter";
+		graphastTmpDir = Configuration.GRAPHAST_DIR + "/tmp/osmimporter";
 		this.osmFile = osmFile;
 		if (graphHopperDir == null) {
 			this.graphHopperDir = graphastTmpDir;
@@ -41,7 +41,8 @@ public class OSMImporterImpl implements Importer {
 		} else {
 			this.graphHopperDir = graphHopperDir;
 		}
-		this.graphastDir = graphastDir;
+		
+		log.debug("graph dir: " + this.graphastDir);
 	}
 	
 	public OSMImporterImpl(String osmFile, String graphastDir) {
@@ -54,7 +55,7 @@ public class OSMImporterImpl implements Importer {
 	@Override
 	public GraphBounds execute() {
 
-		logger.info("Initial date: {}", new Date());
+		log.info("Initial date: {}", new Date());
 		double initialTime = System.currentTimeMillis();
 
 		GraphBounds graph = new GraphBoundsImpl(graphastDir);
@@ -115,7 +116,7 @@ public class OSMImporterImpl implements Importer {
 			}
 			
 			if(fromNodeId == toNodeId) {
-				logger.info("Edge not created, because fromNodeId({}) == toNodeId({})", fromNodeId, toNodeId);
+				log.info("Edge not created, because fromNodeId({}) == toNodeId({})", fromNodeId, toNodeId);
 				continue;
 			}
 			
@@ -143,24 +144,24 @@ public class OSMImporterImpl implements Importer {
 				graph.addEdge(edge);
 				countOneWayInverse++;
 			} else {
-				logger.info("Edge not created. Invalid direction: {}", direction);
+				log.info("Edge not created. Invalid direction: {}", direction);
 			}
 		}
 
-		logger.info("Number of Nodes: {}", graph.getNumberOfNodes());
-		logger.info("Number of Edges: {}", graph.getNumberOfEdges());
-		logger.info("Count: {}", count);
-		logger.info("Number of invalid direction in original edges: {}", countInvalidDirection);
-		logger.info("Number of Bidirectional edges: {}", countBidirectional);
-		logger.info("Number of OneWay edges: {}", countOneWay);
-		logger.info("Number of OneWayInverse edges: {}", countOneWayInverse);
+		log.info("Number of Nodes: {}", graph.getNumberOfNodes());
+		log.info("Number of Edges: {}", graph.getNumberOfEdges());
+		log.info("Count: {}", count);
+		log.info("Number of invalid direction in original edges: {}", countInvalidDirection);
+		log.info("Number of Bidirectional edges: {}", countBidirectional);
+		log.info("Number of OneWay edges: {}", countOneWay);
+		log.info("Number of OneWayInverse edges: {}", countOneWayInverse);
 
 		graph.save();
 
 		double finalTime = System.currentTimeMillis();
 		double total = finalTime - initialTime;
-		logger.info("Final date: {}", new Date());
-		logger.info("Total time: {}", total);
+		log.info("Final date: {}", new Date());
+		log.info("Total time: {}", total);
 		
 		if (graphHopperDir.equals(graphastTmpDir)) {
 			FileUtils.deleteDir(graphastTmpDir);

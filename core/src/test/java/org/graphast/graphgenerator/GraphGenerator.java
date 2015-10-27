@@ -28,7 +28,7 @@ public class GraphGenerator {
 
 	public Graph generateExample() {
 		
-		String graphastExampleDir = Configuration.USER_HOME + "/graphast/test/example";
+		String graphastExampleDir = Configuration.GRAPHAST_DIR + "/test/example";
 		String graphHopperExampleDir = Configuration.USER_HOME + "/graphhopper/test/example";
 		Graph graph = new GraphImpl(graphHopperExampleDir);
 
