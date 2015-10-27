@@ -209,14 +209,14 @@ public class GraphGenerator {
 
 	public GraphBounds generateMonaco() {
 
-		String osmFile = DijkstraConstantWeight.class.getResource("/monaco-150112.osm.pbf").getPath();
+		String osmFile = this.getClass().getResource("/monaco-150112.osm.pbf").getPath();
 		String graphHopperMonacoDir = Configuration.USER_HOME + "/graphhopper/test/monaco";
 		String graphastMonacoDir = Configuration.USER_HOME + "/graphast/test/monaco";
 
 		GraphBounds graph = new OSMImporterImpl(osmFile, graphHopperMonacoDir, graphastMonacoDir).execute();
 
 		try{
-			POIImporter.importPoIList(graph, "src/test/resources/monaco-latest.csv");
+			POIImporter.importPoIList(graph, this.getClass().getResource("/monaco-latest.csv").toString());
 		} catch(IOException i) {
 			System.out.println("Error in the PoI importation.");
 			i.printStackTrace();
@@ -232,7 +232,7 @@ public class GraphGenerator {
 
 	public GraphBounds generateSeattle() throws NumberFormatException, IOException {
 
-		String osmFile = DijkstraConstantWeight.class.getResource("/seattle.osm.pbf").getPath();
+		String osmFile = this.getClass().getResource("/seattle.osm.pbf").getPath();
 		String graphHopperSeattleDir = Configuration.USER_HOME + "/graphhopper/test/seattle";
 		String graphastSeattleDir = Configuration.USER_HOME + "/graphast/test/seattle";
 
