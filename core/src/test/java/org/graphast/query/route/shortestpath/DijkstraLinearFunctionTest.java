@@ -10,8 +10,7 @@ public class DijkstraLinearFunctionTest extends AbstractShortestPathLinearFuncti
 	public static void setupService(){
 		serviceExample4 = new DijkstraLinearFunction(graphExample4);
 		serviceExample4Bounds = new DijkstraLinearFunction(graphBounds);
-		
-	}
-	
-	
+//		serviceMonaco = new DijkstraLinearFunction(graphMonaco);
+//		serviceSeattle = new DijkstraLinearFunction(graphSeattle);
+	}	
 }

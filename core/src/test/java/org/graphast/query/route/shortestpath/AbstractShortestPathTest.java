@@ -2,6 +2,8 @@ package org.graphast.query.route.shortestpath;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
+
 import org.graphast.config.Configuration;
 import org.graphast.graphgenerator.GraphGenerator;
 import org.graphast.model.Graph;
@@ -19,22 +21,22 @@ public abstract class AbstractShortestPathTest {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	protected static Graph graphMonaco;
-//	protected static Graph graphWashington;
+//	protected static Graph graphSeattle;
 	protected static Graph graphExample;
 	protected static Graph graphExample2;
 	
 	
 	protected static AbstractShortestPathService serviceMonaco;
-//	protected static AbstractShortestPathService serviceWashington;
+//	protected static AbstractShortestPathService serviceSeattle;
 	protected static AbstractShortestPathService serviceExample;
 	protected static AbstractShortestPathService serviceExample2;
 	
 	
 	
 	@BeforeClass
-	public static void setup() {
+	public static void setup() throws NumberFormatException, IOException {
 		graphMonaco = new GraphGenerator().generateMonaco();
-//		graphWashington = new GraphGenerator().generateWashington();
+//		graphSeattle = new GraphGenerator().generateSeattle();
 		graphExample = new GraphGenerator().generateExample();
 		graphExample2 = new GraphGenerator().generateExample2();
 	}
@@ -61,7 +63,11 @@ public abstract class AbstractShortestPathTest {
 //		}
 		
 //		assertEquals(228910, shortestPath.getTotalCost(), 0);
+		// TODO fix this assertion
+		// assertEquals(76, shortestPath.getGeometry().size()); // Works with A*, but not with Dijkstra
+		//assertEquals(78, shortestPath.getGeometry().size()); // Works with Dijsktra, but not with A*
 		
+		assertEquals(1073837, shortestPath.getTotalCost(), 0);
 	}
 
 	@Test
@@ -85,20 +91,22 @@ public abstract class AbstractShortestPathTest {
 //			System.out.println("(" + point.getLatitude() + "," + point.getLongitude()+")");
 //		}
 		
+//		assertEquals(75, shortestPath.getGeometry().size());
+
 		assertEquals(1136643.0, shortestPath.getTotalCost(), 0);
 
 	}
 	
 //	@Test
-//	public void shortestPathWashingtonTest() {
+//	public void shortestPathSeattleTest() {
 //		
-//		Long source = graphWashington.getNodeId(47.715529934664,-122.28728992389046);
-//		Long target = graphWashington.getNodeId(47.528278027361885,-122.36992412887344);
+//		Long source = graphSeattle.getNodeId(47.650698,-122.393716);
+//		Long target = graphSeattle.getNodeId(47.555501,-122.283506);
 //
 //		StopWatch sw = new StopWatch();
 //
 //		sw.start();
-//		Path shortestPath = serviceWashington.shortestPath(source, target);
+//		Path shortestPath = serviceSeattle.shortestPath(source, target);
 //		sw.stop();
 //
 //		logger.debug(shortestPath.toString());
@@ -107,7 +115,7 @@ public abstract class AbstractShortestPathTest {
 //		logger.debug("Path Total Cost: {}", shortestPath.getTotalCost());
 //
 //		for(Point point : shortestPath.getGeometry()) {
-//			System.out.println("(" + point.getLatitude() + "," + point.getLongitude()+")");
+//			System.out.println(point.getLatitude() + "," + point.getLongitude());
 //		}
 //
 ////		assertEquals(228910, shortestPath.getPathCost(), 0);
@@ -135,6 +143,7 @@ public abstract class AbstractShortestPathTest {
 //			System.out.println("(" + point.getLatitude() + "," + point.getLongitude()+")");
 //		}
 
+//		assertEquals(6, shortestPath.getGeometry().size());
 		assertEquals(8100, shortestPath.getTotalCost(), 0);
 
 	}
@@ -182,6 +191,9 @@ public abstract class AbstractShortestPathTest {
 //			System.out.println("(" + point.getLatitude() + "," + point.getLongitude()+")");
 //		}
 
+		// TODO fix this assertion
+		// assertEquals(239, shortestPath.getGeometry().size()); // Works with A*, but not with Dijkstra
+		//assertEquals(246, shortestPath.getGeometry().size());
 		assertEquals(3610712.0, shortestPath.getTotalCost(), 0);
 
 	}
@@ -208,6 +220,9 @@ public abstract class AbstractShortestPathTest {
 //		for(Point point : shortestPath.getGeometry()) {
 //			System.out.println("(" + point.getLatitude() + "," + point.getLongitude()+")");
 //		}
+		// TODO fix this assertion
+		//assertEquals(236, shortestPath.getGeometry().size()); // Works with A*, but not with Dijkstra
+		// assertEquals(240, shortestPath.getGeometry().size());
 
 		assertEquals(3610712.0, shortestPath.getTotalCost(), 0);
 	}

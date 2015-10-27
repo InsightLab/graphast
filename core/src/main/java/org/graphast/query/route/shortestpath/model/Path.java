@@ -93,14 +93,13 @@ public class Path {
 				} else {
 					newEdge = null;
 				}
-
 				if ((predecessorLabel == null && re.getLabel() == null)
 						|| (predecessorLabel != null && predecessorLabel.equals(re.getLabel()))
 						|| (predecessorLabel != null && (predecessorLabel.isEmpty() && re.getLabel() == null))) {
 					oldInstruction = verificationQueue.poll();
 					if(re.getEdgeId()!=-1) {
 						newInstruction = new Instruction(0, oldInstruction.getLabel(),
-								oldInstruction.getCost() + re.getCost(), newEdge.getDistance());
+								oldInstruction.getCost() + re.getCost(), oldInstruction.getDistance() + newEdge.getDistance());
 					} else {
 						newInstruction = new Instruction(0, oldInstruction.getLabel(),
 								oldInstruction.getCost() + re.getCost(), 0);
@@ -181,23 +180,25 @@ public class Path {
 		path.setPath(instructions);
 		return path;
 	}
-
 	@Override
 	public String toString() {
 
 		StringBuilder sb = new StringBuilder();
-
+		sb.append("\n");
+		
 		Iterator<Instruction> instructionIterator = instructions.iterator();
 
 		while (instructionIterator.hasNext()) {
 
 			Instruction instruction = instructionIterator.next();
-			sb.append("( ");
+			sb.append("(");
 
-			sb.append(instruction.getDirection()).append(", ");
-			sb.append(instruction.getLabel()).append(", ");
-			sb.append(instruction.getCost());
-			sb.append(" )");
+			sb.append(instruction.getDirection()).append(",");
+			sb.append(instruction.getLabel()).append(",");
+			sb.append(instruction.getCost()).append(",");
+			sb.append(instruction.getDistance());
+			sb.append(")");
+			sb.append("\n");
 
 		}
 

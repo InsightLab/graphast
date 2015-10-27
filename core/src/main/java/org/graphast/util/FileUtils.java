@@ -23,6 +23,8 @@ import org.graphast.exception.GraphastException;
 import org.graphast.importer.OSMImporterImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.graphast.enums.CompressionType;
+import org.graphast.exception.GraphastException;
 
 import it.unimi.dsi.fastutil.ints.IntBigArrayBigList;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;

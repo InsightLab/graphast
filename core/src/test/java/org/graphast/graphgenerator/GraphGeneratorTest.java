@@ -2,6 +2,7 @@ package org.graphast.graphgenerator;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.util.Map;
 
 import org.graphast.config.Configuration;
@@ -25,7 +26,7 @@ public class GraphGeneratorTest {
 	private static Graph graphAndorra;
 
 	@BeforeClass
-	public static void setup() {
+	public static void setup() throws NumberFormatException, IOException {
 		graphMonaco = new GraphGenerator().generateMonaco();
 //		graphWashington = new GraphGenerator().generateWashington();
 		graphExample = new GraphGenerator().generateExample();

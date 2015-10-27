@@ -208,17 +208,24 @@ public class GraphImpl implements Graph {
 
 		NodeImpl node = (NodeImpl) n;
 
+		long labelIndex = storeLabel(node.getLabel(), nodesLabels);
+		node.setLabelIndex(labelIndex);
+		
 		long position = node.getId() * Node.NODE_BLOCKSIZE;
-		position = position + 3;
+		position = position + 2;
 
 		synchronized (nodes) {
+			nodes.set(position++, node.getCategory());
 			nodes.set(position++, node.getLatitudeConvertedToInt());
 			nodes.set(position++, node.getLongitudeConvertedToInt());
 			nodes.set(position++, node.getFirstEdgeSegment());
 			nodes.set(position++, node.getFirstEdgeOffset());
+			nodes.set(position++, node.getLabelIndexSegment());
+			nodes.set(position++, node.getLabelIndexOffset());
+			
 		}
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
