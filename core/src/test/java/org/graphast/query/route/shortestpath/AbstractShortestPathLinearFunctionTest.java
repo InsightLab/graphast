@@ -27,20 +27,20 @@ public abstract class AbstractShortestPathLinearFunctionTest {
 	private static Logger logger = LoggerFactory.getLogger(DijkstraLinearFunctionTest.class);
 	protected static AbstractShortestPathService serviceExample4;
 	protected static AbstractShortestPathService serviceExample4Bounds;
-	protected static AbstractShortestPathService serviceMonaco;
-	protected static AbstractShortestPathService serviceSeattle;
+//	protected static AbstractShortestPathService serviceMonaco;
+//	protected static AbstractShortestPathService serviceSeattle;
 
 	protected static Graph graphExample4;
 	protected static GraphBounds graphBounds;
 	protected static GraphBounds graphMonaco;
-	protected static GraphBounds graphSeattle;
+//	protected static GraphBounds graphSeattle;
 	
 	@BeforeClass
 	public static void setup2() throws NumberFormatException, IOException {
 		graphExample4 = new GraphGenerator().generateExample4();
 		graphBounds = new GraphGenerator().generateExamplePoI();
 //		graphMonaco = new GraphGenerator().generateMonaco();
-		graphSeattle = new GraphGenerator().generateSeattle();
+//		graphSeattle = new GraphGenerator().generateSeattle();
 	}
 	
 	@Test
@@ -83,29 +83,29 @@ public abstract class AbstractShortestPathLinearFunctionTest {
 //
 //	}
 	
-	@Test
-	public void shortestPathSeattle() throws ParseException {
-		System.out.println("shortestPathSeattle");
-		Long source = graphSeattle.getNodeId(47.650698,-122.393716);
-		Long target = graphSeattle.getNodeId(47.555501,-122.283506);
-		Date time = DateUtils.parseDate(12, 0, 0);
-
-		StopWatch sw = new StopWatch();
-
-		sw.start();
-		Path shortestPath = serviceSeattle.shortestPath(source, target, time);
-		sw.stop();
-
-		logger.debug(shortestPath.toString());
-		logger.debug("Execution Time of shortestPathExampleTest(): {}ms", sw.getTime());
-		
-		for(Point point : shortestPath.getGeometry()) {
-			System.out.println(point.getLatitude() + "," + point.getLongitude());
-		}
-
-//		assertEquals(14, shortestPath.getTotalCost(), 0);
-
-	}
+//	@Test
+//	public void shortestPathSeattle() throws ParseException {
+//		System.out.println("shortestPathSeattle");
+//		Long source = graphSeattle.getNodeId(47.650698,-122.393716);
+//		Long target = graphSeattle.getNodeId(47.555501,-122.283506);
+//		Date time = DateUtils.parseDate(12, 0, 0);
+//
+//		StopWatch sw = new StopWatch();
+//
+//		sw.start();
+//		Path shortestPath = serviceSeattle.shortestPath(source, target, time);
+//		sw.stop();
+//
+//		logger.debug(shortestPath.toString());
+//		logger.debug("Execution Time of shortestPathExampleTest(): {}ms", sw.getTime());
+//		
+//		for(Point point : shortestPath.getGeometry()) {
+//			System.out.println(point.getLatitude() + "," + point.getLongitude());
+//		}
+//
+////		assertEquals(14, shortestPath.getTotalCost(), 0);
+//
+//	}
 	
 	@Test
 	public void shortestPathGraphExample4Night() throws ParseException {
