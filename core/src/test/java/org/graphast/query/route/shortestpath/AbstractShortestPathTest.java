@@ -57,9 +57,9 @@ public abstract class AbstractShortestPathTest {
 		logger.debug("Path Total Distance: {}", shortestPath.getTotalDistance());
 		logger.debug("Path Total Cost: {}", shortestPath.getTotalCost());
 		
-		for(Point point : shortestPath.getGeometry()) {
-			System.out.println("(" + point.getLatitude() + "," + point.getLongitude()+")");
-		}
+//		for(Point point : shortestPath.getGeometry()) {
+//			System.out.println("(" + point.getLatitude() + "," + point.getLongitude()+")");
+//		}
 		
 //		assertEquals(228910, shortestPath.getTotalCost(), 0);
 		
@@ -82,9 +82,9 @@ public abstract class AbstractShortestPathTest {
 		logger.debug("Path Total Distance: {}", shortestPath.getTotalDistance());
 		logger.debug("Path Total Cost: {}", shortestPath.getTotalCost());
 
-		for(Point point : shortestPath.getGeometry()) {
-			System.out.println("(" + point.getLatitude() + "," + point.getLongitude()+")");
-		}
+//		for(Point point : shortestPath.getGeometry()) {
+//			System.out.println("(" + point.getLatitude() + "," + point.getLongitude()+")");
+//		}
 		
 		assertEquals(1136643.0, shortestPath.getTotalCost(), 0);
 
@@ -132,9 +132,9 @@ public abstract class AbstractShortestPathTest {
 		logger.debug("Path Total Distance: {}", shortestPath.getTotalDistance());
 		logger.debug("Path Total Cost: {}", shortestPath.getTotalCost());
 
-		for(Point point : shortestPath.getGeometry()) {
-			System.out.println("(" + point.getLatitude() + "," + point.getLongitude()+")");
-		}
+//		for(Point point : shortestPath.getGeometry()) {
+//			System.out.println("(" + point.getLatitude() + "," + point.getLongitude()+")");
+//		}
 
 		assertEquals(8100, shortestPath.getTotalCost(), 0);
 
@@ -179,9 +179,9 @@ public abstract class AbstractShortestPathTest {
 		logger.debug("Path Total Distance: {}", shortestPath.getTotalDistance());
 		logger.debug("Path Total Cost: {}", shortestPath.getTotalCost());
 
-		for(Point point : shortestPath.getGeometry()) {
-			System.out.println("(" + point.getLatitude() + "," + point.getLongitude()+")");
-		}
+//		for(Point point : shortestPath.getGeometry()) {
+//			System.out.println("(" + point.getLatitude() + "," + point.getLongitude()+")");
+//		}
 
 		assertEquals(3610712.0, shortestPath.getTotalCost(), 0);
 
@@ -206,9 +206,9 @@ public abstract class AbstractShortestPathTest {
 		logger.debug("Path Total Distance: {}", shortestPath.getTotalDistance());
 		logger.debug("Path Total Cost: {}", shortestPath.getTotalCost());
 
-		for(Point point : shortestPath.getGeometry()) {
-			System.out.println("(" + point.getLatitude() + "," + point.getLongitude()+")");
-		}
+//		for(Point point : shortestPath.getGeometry()) {
+//			System.out.println("(" + point.getLatitude() + "," + point.getLongitude()+")");
+//		}
 
 		assertEquals(3610712.0, shortestPath.getTotalCost(), 0);
 	}

@@ -15,6 +15,8 @@ import org.graphast.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.graphhopper.util.StopWatch;
+
 import it.unimi.dsi.fastutil.BigArrays;
 import it.unimi.dsi.fastutil.ints.IntBigArrayBigList;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
@@ -1265,19 +1267,32 @@ public class GraphImpl implements Graph {
 		return arrivalTime;
 	}
 
+	// TODO This method must be improved. It should use a spatial index to 
+	// be much more efficient.
 	public Node getNearestNode (double latitude, double longitude) {
+		StopWatch sw = new StopWatch();
+		sw.start();
+
 		Node point = new NodeImpl();
 		point.setLatitude(latitude);
 		point.setLongitude(longitude);
-		Node aproximated = getNode(nodes.get(0));
-		Node aux = new NodeImpl();
-		for (long i = 0; i<getNumberOfNodes(); i++) {
-			aux = getNode(i);
-			if (DistanceUtils.distanceLatLong(point, aux) < DistanceUtils.distanceLatLong(point, aproximated)) {
-				aproximated = aux;
+		Node nearestNode = getNode(nodes.get(0));
+		Node currentNode;
+		double currentDistance;
+		double nearestDistance = DistanceUtils.distanceLatLong(point, nearestNode);
+		for (long i = 1; i<getNumberOfNodes(); i++) {
+			currentNode = getNode(i);
+			currentDistance = DistanceUtils.distanceLatLong(point, currentNode);
+			if (currentDistance < nearestDistance) {
+				nearestNode = currentNode;
+				nearestDistance = currentDistance;
 			}
 		}
-		return aproximated;
+
+		sw.stop();
+		logger.debug("Execution Time of getNearestNode(): {}ms", sw.getTime());
+		
+		return nearestNode;
 	}
 	
 	public boolean equals(Graph obj) {
