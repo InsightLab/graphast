@@ -9,6 +9,7 @@ public class AStarConstantWeightTest extends AbstractShortestPathTest{
 	public static void setupService(){
 		
 		serviceMonaco = new AStarConstantWeight(graphMonaco);
+//		serviceSeattle = new AStarConstantWeight(graphSeattle);
 		serviceExample = new AStarConstantWeight(graphExample);
 	
 	}
