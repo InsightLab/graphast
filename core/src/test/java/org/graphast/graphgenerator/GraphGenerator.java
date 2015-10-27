@@ -29,7 +29,7 @@ import com.graphhopper.util.Helper;
 public class GraphGenerator {
 
 	public Graph generateExample() {
-		
+
 		String graphastExampleDir = Configuration.USER_HOME + "/graphast/test/example";
 		String graphHopperExampleDir = Configuration.USER_HOME + "/graphhopper/test/example";
 		Graph graph = new GraphImpl(graphHopperExampleDir);
@@ -71,9 +71,9 @@ public class GraphGenerator {
 		return graph;
 
 	}
-	
+
 	public Graph generateExample1() {
-		
+
 		Graph graph = new GraphImpl(Configuration.USER_HOME + "/graphast/test/example1");
 
 		NodeImpl v = new NodeImpl(3l, 10d, 10d, "label node 0");
@@ -95,14 +95,14 @@ public class GraphGenerator {
 		v = new NodeImpl(7, 11, 32, "Banco");
 		graph.addNode(v);
 
-		int[] costs = CostGenerator.generateSyntheticEdgesCosts();
+		int[] costs = CostGenerator.generateSyntheticEdgesCosts(10);
 		List<Point> points = new ArrayList<Point>();
 		points.add(new Point(10,10));
 		points.add(new Point(10,20));
 		Edge e = new EdgeImpl(0l, 1l, 10, costs, points, "rua1");
 		graph.addEdge(e);
 
-		costs = CostGenerator.generateSyntheticEdgesCosts();
+		costs = CostGenerator.generateSyntheticEdgesCosts(20);
 		points = new ArrayList<Point>();
 		points.add(new Point(10,20));
 		points.add(new Point(10,15));
@@ -110,21 +110,21 @@ public class GraphGenerator {
 		e = new EdgeImpl(1l, 0l, 20, costs, points, "rua2");
 		graph.addEdge(e);
 
-		costs = CostGenerator.generateSyntheticEdgesCosts();
+		costs = CostGenerator.generateSyntheticEdgesCosts(30);
 		points = new ArrayList<Point>();
 		points.add(new Point(10,10));
 		points.add(new Point(10,30));
 		e = new EdgeImpl(0l, 2l, 30, costs, points, "rua3");
 		graph.addEdge(e);
 
-		costs = CostGenerator.generateSyntheticEdgesCosts();
+		costs = CostGenerator.generateSyntheticEdgesCosts(40);
 		points = new ArrayList<Point>();
 		points.add(new Point(10,30));
 		points.add(new Point(10,10));
 		e = new EdgeImpl(2l, 0l, 40, costs, points, "rua4");
 		graph.addEdge(e);
 
-		costs = CostGenerator.generateSyntheticEdgesCosts();
+		costs = CostGenerator.generateSyntheticEdgesCosts(50);
 		points = new ArrayList<Point>();
 		points.add(new Point(10,10));
 		points.add(new Point(10,40));
@@ -207,36 +207,49 @@ public class GraphGenerator {
 
 	}
 
-	public GraphBounds generateMonaco() throws NumberFormatException, IOException {
-		
+	public GraphBounds generateMonaco() {
+
 		String osmFile = DijkstraConstantWeight.class.getResource("/monaco-150112.osm.pbf").getPath();
 		String graphHopperMonacoDir = Configuration.USER_HOME + "/graphhopper/test/monaco";
 		String graphastMonacoDir = Configuration.USER_HOME + "/graphast/test/monaco";
 
 		GraphBounds graph = new OSMImporterImpl(osmFile, graphHopperMonacoDir, graphastMonacoDir).execute();
 
-		POIImporter.importPoIList(graph, "src/test/resources/monaco-latest.csv");
+		try{
+			POIImporter.importPoIList(graph, "src/test/resources/monaco-latest.csv");
+		} catch(IOException i) {
+			System.out.println("Error in the PoI importation.");
+			i.printStackTrace();
+		} catch(NumberFormatException n) {
+			n.printStackTrace();
+		}
 		
 		CostGenerator.generateAllSyntheticEdgesCosts(graph);
-		
+
 		return graph;
-		
+
 	}
 
-	public GraphBounds generateWashington() {
-		
-		String osmFile = DijkstraConstantWeight.class.getResource("/washington-latest.osm.pbf").getPath();
-		String graphHopperWashingtonDir = Configuration.USER_HOME + "/graphhopper/test/washington";
-		String graphastWashingtonDir = Configuration.USER_HOME + "/graphast/test/washington";
+	public GraphBounds generateSeattle() throws NumberFormatException, IOException {
 
-		GraphBounds graph = new OSMImporterImpl(osmFile, graphHopperWashingtonDir, graphastWashingtonDir).execute();
+		String osmFile = DijkstraConstantWeight.class.getResource("/seattle.osm.pbf").getPath();
+		String graphHopperSeattleDir = Configuration.USER_HOME + "/graphhopper/test/seattle";
+		String graphastSeattleDir = Configuration.USER_HOME + "/graphast/test/seattle";
 
+		GraphBounds graph = new OSMImporterImpl(osmFile, graphHopperSeattleDir, graphastSeattleDir).execute();
+		//		System.out.println("Importação de POIS iniciada!");
+		//		POIImporter.importPoIList(graph, "src/test/resources/seattlepois.csv");
+		//		System.out.println("Importação de POIS finalizada!");
+		System.out.println("Geração de custos aleatórios iniciada!");
+
+		CostGenerator.generateAllSyntheticEdgesCosts(graph);
+		System.out.println("Geração de custos aleatórios finalizada!");
 		return graph;
-		
+
 	}
 
 	public Graph generateExample3() {
-		
+
 		Graph graph = new GraphImpl(Configuration.USER_HOME + "/graphast/test/example3");
 
 		NodeImpl v = new NodeImpl(3l, 10d, 10d, "label node 0");
@@ -366,7 +379,7 @@ public class GraphGenerator {
 		return graph;
 	}
 
-	
+
 	public GraphBounds generateExamplePoI() {
 
 		GraphBounds graph = new GraphBoundsImpl(Configuration.USER_HOME + "/graphast/test/examplePoI");
@@ -516,11 +529,11 @@ public class GraphGenerator {
 		graph.createBounds();
 
 		return graph;
-		
+
 	}
 
 	public Graph generateAndorra() {
-		
+
 		String osmFile = DijkstraConstantWeight.class.getResource("/andorra-150305.osm.pbf").getPath();
 		String graphHopperAndorraDir = Configuration.USER_HOME + "/graphhopper/test/andorra";
 		String graphastAndorraDir = Configuration.USER_HOME + "/graphast/test/andorra";
@@ -528,7 +541,7 @@ public class GraphGenerator {
 		Graph graph = new OSMImporterImpl(osmFile, graphHopperAndorraDir, graphastAndorraDir).execute();
 
 		return graph;
-		
+
 	}
 
 }

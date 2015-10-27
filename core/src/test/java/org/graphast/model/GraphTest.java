@@ -15,7 +15,6 @@ import org.graphast.enums.TimeType;
 import org.graphast.geometry.BBox;
 import org.graphast.geometry.Point;
 import org.graphast.graphgenerator.GraphGenerator;
-import org.graphast.importer.CostGenerator;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -32,7 +31,7 @@ public class GraphTest {
 	private static GraphBounds graphMonaco;
 
 	@BeforeClass
-	public static void setup() throws NumberFormatException, IOException{
+	public static void setup(){
 		graphExample = (GraphImpl) new GraphGenerator().generateExample();
 		//graphExample1 = (GraphImpl) new GraphGenerator().generateExample1();
 		graphExample2 = new GraphGenerator().generateExample2();
@@ -111,7 +110,6 @@ public class GraphTest {
 		assertNull(graphExample3.getEdgeCost(edge, 61200000));
 		assertNull(graphExample3.getEdgeCost(edge, 75600000));
 		
-		CostGenerator.generateSyntheticEdgesCosts();
 	}
 
 	@Test

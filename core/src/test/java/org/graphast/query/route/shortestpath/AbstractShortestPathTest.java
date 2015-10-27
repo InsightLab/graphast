@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.IOException;
 
 import org.graphast.config.Configuration;
+import org.graphast.geometry.Point;
 import org.graphast.graphgenerator.GraphGenerator;
 import org.graphast.model.Graph;
 import org.graphast.query.route.shortestpath.model.Path;
@@ -21,13 +22,13 @@ public abstract class AbstractShortestPathTest {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	protected static Graph graphMonaco;
-//	protected static Graph graphWashington;
+	protected static Graph graphSeattle;
 	protected static Graph graphExample;
 	protected static Graph graphExample2;
 	
 	
 	protected static AbstractShortestPathService serviceMonaco;
-//	protected static AbstractShortestPathService serviceWashington;
+	protected static AbstractShortestPathService serviceSeattle;
 	protected static AbstractShortestPathService serviceExample;
 	protected static AbstractShortestPathService serviceExample2;
 	
@@ -36,7 +37,7 @@ public abstract class AbstractShortestPathTest {
 	@BeforeClass
 	public static void setup() throws NumberFormatException, IOException {
 		graphMonaco = new GraphGenerator().generateMonaco();
-//		graphWashington = new GraphGenerator().generateWashington();
+		graphSeattle = new GraphGenerator().generateSeattle();
 		graphExample = new GraphGenerator().generateExample();
 		graphExample2 = new GraphGenerator().generateExample2();
 	}
@@ -97,30 +98,30 @@ public abstract class AbstractShortestPathTest {
 
 	}
 	
-//	@Test
-//	public void shortestPathWashingtonTest() {
-//		
-//		Long source = graphWashington.getNodeId(47.715529934664,-122.28728992389046);
-//		Long target = graphWashington.getNodeId(47.528278027361885,-122.36992412887344);
-//
-//		StopWatch sw = new StopWatch();
-//
-//		sw.start();
-//		Path shortestPath = serviceWashington.shortestPath(source, target);
-//		sw.stop();
-//
-//		logger.debug(shortestPath.toString());
-//		logger.debug("Execution Time of shortestPathWashintonTest(): {}ms", sw.getTime());
-//		logger.debug("Path Total Distance: {}", shortestPath.getTotalDistance());
-//		logger.debug("Path Total Cost: {}", shortestPath.getTotalCost());
-//
-//		for(Point point : shortestPath.getGeometry()) {
-//			System.out.println("(" + point.getLatitude() + "," + point.getLongitude()+")");
-//		}
-//
-////		assertEquals(228910, shortestPath.getPathCost(), 0);
-//		
-//	}
+	@Test
+	public void shortestPathSeattleTest() {
+		
+		Long source = graphSeattle.getNodeId(47.650698,-122.393716);
+		Long target = graphSeattle.getNodeId(47.555501,-122.283506);
+
+		StopWatch sw = new StopWatch();
+
+		sw.start();
+		Path shortestPath = serviceSeattle.shortestPath(source, target);
+		sw.stop();
+
+		logger.debug(shortestPath.toString());
+		logger.debug("Execution Time of shortestPathWashintonTest(): {}ms", sw.getTime());
+		logger.debug("Path Total Distance: {}", shortestPath.getTotalDistance());
+		logger.debug("Path Total Cost: {}", shortestPath.getTotalCost());
+
+		for(Point point : shortestPath.getGeometry()) {
+			System.out.println(point.getLatitude() + "," + point.getLongitude());
+		}
+
+//		assertEquals(228910, shortestPath.getPathCost(), 0);
+		
+	}
 
 	@Test
 	public void shortestPathExampleTest() {
