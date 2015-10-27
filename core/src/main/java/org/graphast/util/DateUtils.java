@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.graphast.exception.GraphastException;
+
 public class DateUtils {
 
 	@SuppressWarnings("deprecation")
@@ -31,9 +33,13 @@ public class DateUtils {
 		return min * 60 * 1000;
 	}
 
-	public static Date parseDate(int hour, int minutes, int seconds) throws ParseException{
-		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss");
-		String dateInString = hour + ":" + minutes + ":" + seconds;
-		return sdf.parse(dateInString);
+	public static Date parseDate(int hour, int minutes, int seconds) {
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss");
+			String dateInString = hour + ":" + minutes + ":" + seconds;
+			return sdf.parse(dateInString);
+		} catch (ParseException e) {
+			throw new GraphastException(e.getMessage(), e);
+		}
 	}
 }
