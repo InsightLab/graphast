@@ -2,6 +2,8 @@ package org.graphast.query.route.shortestpath;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
+
 import org.graphast.config.Configuration;
 import org.graphast.graphgenerator.GraphGenerator;
 import org.graphast.model.Graph;
@@ -32,7 +34,7 @@ public abstract class AbstractShortestPathTest {
 	
 	
 	@BeforeClass
-	public static void setup() {
+	public static void setup() throws NumberFormatException, IOException {
 		graphMonaco = new GraphGenerator().generateMonaco();
 //		graphWashington = new GraphGenerator().generateWashington();
 		graphExample = new GraphGenerator().generateExample();
