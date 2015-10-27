@@ -216,7 +216,7 @@ public class GraphGenerator {
 		GraphBounds graph = new OSMImporterImpl(osmFile, graphHopperMonacoDir, graphastMonacoDir).execute();
 
 		try{
-			POIImporter.importPoIList(graph, this.getClass().getResource("/monaco-latest.csv").toString());
+			POIImporter.importPoIList(graph, "src/test/resources/monaco-latest.csv");
 		} catch(IOException i) {
 			System.out.println("Error in the PoI importation.");
 			i.printStackTrace();
