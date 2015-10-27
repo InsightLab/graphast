@@ -7,7 +7,9 @@ import java.io.File;
 import java.io.IOException;
 
 import org.graphast.config.Configuration;
+import org.graphast.model.Edge;
 import org.graphast.model.Graph;
+import org.graphast.model.Node;
 import org.graphast.util.FileUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -56,6 +58,20 @@ public class OSMImporterTest {
 		assertEquals("Crémaillère", monaco.getNode(140).getLabel());
 		
 //		assertEquals(751, monaco.getNumberOfNodes());
+		
+	}
+	
+	@Test
+	public void monacoCostGeneratorTest() {
+		
+		
+		for (int i = 0; i < monaco.getNumberOfEdges(); i++) {
+		
+			monaco.setEdgeCosts(i, CostGenerator.generateSyntheticEdgesCosts());
+			
+		}
+		
+		System.out.println(monaco.getEdge(0).getCosts());
 		
 	}
 	

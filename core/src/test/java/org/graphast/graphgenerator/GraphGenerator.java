@@ -1,5 +1,6 @@
 package org.graphast.graphgenerator;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +8,7 @@ import org.graphast.config.Configuration;
 import org.graphast.geometry.Point;
 import org.graphast.importer.CostGenerator;
 import org.graphast.importer.OSMImporterImpl;
+import org.graphast.importer.POIImporter;
 import org.graphast.model.Edge;
 import org.graphast.model.EdgeImpl;
 import org.graphast.model.Graph;
@@ -205,7 +207,7 @@ public class GraphGenerator {
 
 	}
 
-	public GraphBounds generateMonaco() {
+	public GraphBounds generateMonaco() throws NumberFormatException, IOException {
 		
 		String osmFile = DijkstraConstantWeight.class.getResource("/monaco-150112.osm.pbf").getPath();
 		String graphHopperMonacoDir = Configuration.USER_HOME + "/graphhopper/test/monaco";
@@ -213,6 +215,10 @@ public class GraphGenerator {
 
 		GraphBounds graph = new OSMImporterImpl(osmFile, graphHopperMonacoDir, graphastMonacoDir).execute();
 
+		POIImporter.importPoIList(graph, "src/test/resources/monaco-latest.csv");
+		
+		CostGenerator.generateAllSyntheticEdgesCosts(graph);
+		
 		return graph;
 		
 	}

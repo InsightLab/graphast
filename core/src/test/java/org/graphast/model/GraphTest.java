@@ -31,7 +31,7 @@ public class GraphTest {
 	private static GraphBounds graphMonaco;
 
 	@BeforeClass
-	public static void setup(){
+	public static void setup() throws NumberFormatException, IOException{
 		graphExample = (GraphImpl) new GraphGenerator().generateExample();
 		graphExample1 = (GraphImpl) new GraphGenerator().generateExample1();
 		graphExample2 = new GraphGenerator().generateExample2();
