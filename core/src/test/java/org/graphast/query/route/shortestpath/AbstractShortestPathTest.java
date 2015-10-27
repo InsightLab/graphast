@@ -3,7 +3,6 @@ package org.graphast.query.route.shortestpath;
 import static org.junit.Assert.assertEquals;
 
 import org.graphast.config.Configuration;
-import org.graphast.geometry.Point;
 import org.graphast.graphgenerator.GraphGenerator;
 import org.graphast.model.Graph;
 import org.graphast.query.route.shortestpath.model.Path;
