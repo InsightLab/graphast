@@ -112,7 +112,11 @@ public class Configuration {
 	}
 	
 	public static List<String> getApps() {
-		return Arrays.asList(config.getProperty("graphast.apps").split(","));
+		String apps = config.getProperty("graphast.apps");
+		if (apps != null) {
+			return Arrays.asList(config.getProperty("graphast.apps").split(","));
+		}
+		return null;
 	}
 	
 	public static String getSelectedApp() {
