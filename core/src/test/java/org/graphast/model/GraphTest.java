@@ -23,7 +23,7 @@ import it.unimi.dsi.fastutil.longs.LongList;
 
 public class GraphTest {
 
-	private static GraphImpl graphExample1;
+	//private static GraphImpl graphExample1;
 	private static Graph graphExample2;
 	private static GraphImpl graphExample3;
 	private static GraphImpl graphExample4;	
@@ -33,7 +33,7 @@ public class GraphTest {
 	@BeforeClass
 	public static void setup(){
 		graphExample = (GraphImpl) new GraphGenerator().generateExample();
-		graphExample1 = (GraphImpl) new GraphGenerator().generateExample1();
+		//graphExample1 = (GraphImpl) new GraphGenerator().generateExample1();
 		graphExample2 = new GraphGenerator().generateExample2();
 		graphExample3 =  (GraphImpl) new GraphGenerator().generateExample3();
 		graphExample4 =  (GraphImpl) new GraphGenerator().generateExample4();
@@ -77,7 +77,7 @@ public class GraphTest {
 	
 	@Test
 	public void getEdgeSyntheticCost() {
-		Edge edge = graphExample1.getEdge(0);
+//		Edge edge = graphExample1.getEdge(0);
 //		assertEquals(147508, (int)graphExample1.getEdgeCost(edge, 3600000));
 //		assertEquals(0, (int)graphExample1.getEdgeCost(edge, 7200000));
 //		assertEquals(0, (int)graphExample1.getEdgeCost(edge, 36000000));
@@ -206,11 +206,8 @@ public class GraphTest {
 
 	@Test
 	public void getNode2(){
-
 		long n = graphExample3.getNodeId(10d, 40d);
-
 		assertEquals(3, n);
-
 	}
 
 	@Test
@@ -322,12 +319,11 @@ public class GraphTest {
 
 	@Test
 	public void getNearestNodeTest() {
-
 		assertEquals(2, (long) graphExample3.getNearestNode(10d, 31d).getId());
 		assertEquals(380, (long) graphMonaco.getNearestNode(43.738331, 7.421239).getId());
-
+		assertEquals(253, (long) graphMonaco.getNearestNode(43.7294668047756, 7.413772473047058).getId());
+		assertEquals(252, (long) graphMonaco.getNearestNode(43.73079058671274, 7.415815422292399).getId());
 	}
-
 
 	@Test
 	public void getReverseGraph() {

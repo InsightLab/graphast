@@ -216,7 +216,7 @@ public class GraphGenerator {
 		return graph;
 		
 	}
-	
+
 	public GraphBounds generateWashington() {
 		
 		String osmFile = DijkstraConstantWeight.class.getResource("/washington-latest.osm.pbf").getPath();
