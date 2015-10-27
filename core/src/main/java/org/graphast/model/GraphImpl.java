@@ -3,11 +3,6 @@ package org.graphast.model;
 import static org.graphast.util.GeoUtils.latLongToDouble;
 import static org.graphast.util.GeoUtils.latLongToInt;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -1321,29 +1316,4 @@ public class GraphImpl implements Graph {
 		this.updateEdgeInfo(e);
 	}
 	
-	public void importPoIList() throws NumberFormatException, IOException {
-		
-		InputStream is = new FileInputStream("src/test/resources/monaco-latest.csv");
-		InputStreamReader isr = new InputStreamReader(is);
-		BufferedReader br = new BufferedReader(isr);
-		
-		String row;
-		String[] splittedRow;
-		
-		while((row = br.readLine()) != null ) {
-
-			splittedRow = row.split(";");
-			
-			Node n = this.getNearestNode(Double.parseDouble(splittedRow[2]), Double.parseDouble(splittedRow[3]));
-			
-			n.setCategory(Integer.parseInt(splittedRow[0]));
-			n.setLabel(splittedRow[4]);
-
-			this.updateNodeInfo(n);
-			System.out.println(this.getNearestNode(Double.parseDouble(splittedRow[2]), Double.parseDouble(splittedRow[3])).getCategory());
-		}
-		
-		br.close();
-		
-	}
 }

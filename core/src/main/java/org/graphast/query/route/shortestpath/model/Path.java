@@ -192,12 +192,14 @@ public class Path {
 		while (instructionIterator.hasNext()) {
 
 			Instruction instruction = instructionIterator.next();
-			sb.append("( ");
+			sb.append("(");
 
-			sb.append(instruction.getDirection()).append(", ");
-			sb.append(instruction.getLabel()).append(", ");
-			sb.append(instruction.getCost());
-			sb.append(" )");
+			sb.append(instruction.getDirection()).append(",");
+			sb.append(instruction.getLabel()).append(",");
+			sb.append(instruction.getCost()).append(",");
+			sb.append(instruction.getDistance());
+			sb.append(")");
+			sb.append("\n");
 
 		}
 

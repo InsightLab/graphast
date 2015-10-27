@@ -7,9 +7,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.graphast.config.Configuration;
-import org.graphast.model.Edge;
 import org.graphast.model.Graph;
-import org.graphast.model.Node;
 import org.graphast.util.FileUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -23,7 +21,7 @@ public class OSMImporterTest {
 //	private static Graph washington;
 
 	@BeforeClass
-	public static void setup() throws NumberFormatException, IOException {
+	public static void setup() {
 		osmFile = OSMImporterTest.class.getResource("/monaco-150112.osm.pbf").getPath();
 		graphastDir = Configuration.USER_HOME + "/graphast/test/monaco";
 		FileUtils.deleteDir(graphastDir);
@@ -34,7 +32,14 @@ public class OSMImporterTest {
 		FileUtils.deleteDir(graphastDir);
 		andorra = new OSMImporterImpl(osmFile, graphastDir).execute();
 		
-		POIImporter.importPoIList(monaco, "src/test/resources/monaco-latest.csv");
+		try{
+			POIImporter.importPoIList(monaco, "src/test/resources/monaco-latest.csv");
+		} catch(IOException i) {
+			System.out.println("Error in the PoI importation.");
+			i.printStackTrace();
+		} catch(NumberFormatException n) {
+			n.printStackTrace();
+		}
 		
 //		osmFile = OSMImporterTest.class.getResource("/washington-latest.osm.pbf").getPath();
 //		graphastDir = Configuration.USER_HOME + "/graphast/test/washington";
@@ -66,8 +71,8 @@ public class OSMImporterTest {
 		
 		
 		for (int i = 0; i < monaco.getNumberOfEdges(); i++) {
-		
-			monaco.setEdgeCosts(i, CostGenerator.generateSyntheticEdgesCosts());
+			
+			monaco.setEdgeCosts(i, CostGenerator.generateSyntheticEdgesCosts(monaco.getEdge(i).getDistance()));
 			
 		}
 		
