@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.graphast.config.Configuration;
 import org.graphast.enums.TimeType;
+import org.graphast.geometry.BBox;
 import org.graphast.geometry.Point;
 import org.graphast.graphgenerator.GraphGenerator;
 import org.graphast.importer.CostGenerator;
@@ -420,6 +421,15 @@ public class GraphTest {
 		
 		assertEquals(1, (int)graphTest.getEdge(0).getGeometry().get(0).getLatitude());
 		assertEquals(2, (int)graphTest.getEdge(0).getGeometry().get(0).getLongitude());
+	}
+	
+	@Test
+	public void getBBoxTest() {
+		BBox bBox = graphMonaco.getBBox();
+		assertEquals(43.723389, bBox.getMinLatitude(), 0);
+		assertEquals(7.407121, bBox.getMinLongitude(), 0);
+		assertEquals(43.751963, bBox.getMaxLatitude(), 0);
+		assertEquals(7.439278, bBox.getMaxLongitude(), 0);
 	}
 
 }

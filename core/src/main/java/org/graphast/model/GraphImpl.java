@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.graphast.enums.CompressionType;
 import org.graphast.enums.TimeType;
+import org.graphast.geometry.BBox;
 import org.graphast.geometry.Point;
 import org.graphast.util.DistanceUtils;
 import org.graphast.util.FileUtils;
@@ -32,7 +33,7 @@ import it.unimi.dsi.fastutil.objects.ObjectBigList;
 
 public class GraphImpl implements Graph {
 
-	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	private Logger log = LoggerFactory.getLogger(this.getClass());
 
 	private Long2LongMap nodeIndex = new Long2LongOpenHashMap();
 
@@ -62,6 +63,7 @@ public class GraphImpl implements Graph {
 
 	protected int maxTime = 86400000;
 
+	protected BBox bBox;
 
 	/**
 	 * Creates a Graph for the given directory passed as parameter.
@@ -138,6 +140,7 @@ public class GraphImpl implements Graph {
 		points = FileUtils.loadIntList(directory + "/points", 
 				blockSize, compressionType);
 		createNodeIndex();
+		findBBox();
 	}
 
 	private void createNodeIndex() {
@@ -870,7 +873,7 @@ public class GraphImpl implements Graph {
 	@Override
 	public void logNodes() {
 		for (int i = 0; i < nodes.size64() / Node.NODE_BLOCKSIZE; i++) {
-			logger.info(getNode(i).toString());
+			log.info(getNode(i).toString());
 		}
 	}
 
@@ -883,7 +886,7 @@ public class GraphImpl implements Graph {
 	public void logEdges() {
 
 		for (long i = 0; i < (edges.size64() / Edge.EDGE_BLOCKSIZE); i++) {
-			logger.info(getEdge(i).toString());
+			log.info(getEdge(i).toString());
 		}
 	}
 
@@ -1290,7 +1293,7 @@ public class GraphImpl implements Graph {
 		}
 
 		sw.stop();
-		logger.debug("Execution Time of getNearestNode(): {}ms", sw.getTime());
+		log.debug("Execution Time of getNearestNode(): {}ms", sw.getTime());
 		
 		return nearestNode;
 	}
@@ -1323,4 +1326,51 @@ public class GraphImpl implements Graph {
 		e.setGeometryIndex(geometryIndex);
 		this.updateEdgeInfo(e);
 	}
+
+	@Override
+	public BBox getBBox() {
+		if (bBox == null) {
+			findBBox();
+		}
+		return bBox;
+	}
+
+	@Override
+	public void setBBox(BBox bBox) {
+		this.bBox = bBox;
+	}
+	
+	private void findBBox() {
+		Node node = this.getNode(0);
+		Node minLatNode = null, minLongNode = null, maxLatNode = null, maxLongNode = null;
+		BBox bBox = new BBox(node.getLatitude(), node.getLongitude(), node.getLatitude(), node.getLongitude());
+		
+		for (long i = 1; i < this.getNumberOfNodes(); i++) {
+			node = this.getNode(i);
+			if (node.getLatitude() < bBox.getMinLatitude()) {
+				minLatNode = node;
+				bBox.setMinLatitude(node.getLatitude());
+			}
+			if (node.getLatitude() > bBox.getMaxLatitude()) {
+				minLongNode = node;
+				bBox.setMaxLatitude(node.getLatitude());
+			}
+			if (node.getLongitude() < bBox.getMinLongitude()) {
+				maxLatNode = node;
+				bBox.setMinLongitude(node.getLongitude());
+			}
+			if (node.getLongitude() > bBox.getMaxLongitude()) {
+				maxLongNode = node;
+				bBox.setMaxLongitude(node.getLongitude());
+			}
+		}
+		if (minLatNode != null && maxLatNode != null && minLongNode != null && maxLongNode != null) {
+			log.debug("minLatitude: {},{}", minLatNode.getLatitude(), minLatNode.getLongitude());
+			log.debug("maxLatitude: {},{}", maxLatNode.getLatitude(), maxLatNode.getLongitude());
+			log.debug("minLongitude: {},{}", minLongNode.getLatitude(), minLongNode.getLongitude());
+			log.debug("maxLongitude: {},{}", maxLongNode.getLatitude(), maxLongNode.getLongitude());
+		}
+		setBBox(bBox);
+	}
+
 }
