@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -13,8 +14,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.TreeSet;
 
+import org.graphast.app.GraphInfo;
 import org.graphast.exception.GraphastException;
-import org.graphast.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,31 +101,75 @@ public class Configuration {
 		} catch (IOException e) {
 			throw new GraphastException(e.getMessage(), e);
 		}
-	}	
+	}
 	
-	public static void addApp(String app) {
-		getApps().add(app);
-		config.setProperty("graphast.apps", StringUtils.append(getApps()) + "," + app);
+	public static void save(GraphInfo graphInfo) {
+		String appName = graphInfo.getAppName();
+		config.setProperty("graphast." + appName + ".dir", graphInfo.getGraphDir());
+		config.setProperty("graphast." + appName + ".edges", String.valueOf(graphInfo.getNumberOfEdges()));
+		config.setProperty("graphast." + appName + ".nodes", String.valueOf(graphInfo.getNumberOfNodes()));
+		config.setProperty("graphast." + appName + ".size", String.valueOf(graphInfo.getSize()));
+		save();
+	}
+	
+	public static void addApp(GraphInfo graphInfo) {
+		getApps().add(graphInfo);
+		config.setProperty("graphast.apps", getAppsNames(getApps()));
 	}
 	
 	public static Properties getConfig() {
 		return config;
 	}
 	
-	public static List<String> getApps() {
+	public static List<GraphInfo> getApps() {
 		String apps = config.getProperty("graphast.apps");
 		if (apps != null) {
-			return Arrays.asList(config.getProperty("graphast.apps").split(","));
+			List<GraphInfo> result = new ArrayList<GraphInfo>();
+			List<String> appsList = Arrays.asList(apps.split(","));
+			for (String app : appsList) {
+				GraphInfo graphInfo = new GraphInfo();
+				graphInfo.setAppName(app);
+				graphInfo.setGraphDir(config.getProperty("graphast." + app + ".dir"));
+				
+				String propertyName = "graphast." + app + ".edges";
+				if (config.getProperty(propertyName) != null) {
+					graphInfo.setNumberOfEdges(Long.valueOf(config.getProperty(propertyName)));
+				}
+				
+				propertyName = "graphast." + app + ".nodes";
+				if (config.getProperty(propertyName) != null) {
+					graphInfo.setNumberOfNodes(Long.valueOf(config.getProperty(propertyName)));
+				}
+				
+				propertyName = "graphast." + app + ".size";
+				if (config.getProperty(propertyName) != null) {
+					graphInfo.setSize(Long.valueOf(config.getProperty(propertyName)));
+				}
+				result.add(graphInfo);
+			}
+			return result;
 		}
 		return null;
 	}
+
 	
 	public static String getSelectedApp() {
 		return config.getProperty("graphast.selected.app");
 	}
-	
+
 	public static void setSelectedApp(String app) {
 		config.setProperty("graphast.selected.app", app);
+	}
+	
+	private static String getAppsNames(List<GraphInfo> list) {
+		StringBuilder sb = new StringBuilder();
+		for (int i=1; i < list.size(); i++) {
+			sb.append(list.get(i).getAppName());
+			if (i < list.size() - 1) {
+				sb.append(",");
+			}
+		}
+		return sb.toString();
 	}
 	
 }

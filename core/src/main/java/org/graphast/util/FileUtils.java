@@ -17,14 +17,10 @@ import java.nio.channels.WritableByteChannel;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import org.graphast.config.Configuration;
 import org.graphast.enums.CompressionType;
 import org.graphast.exception.GraphastException;
-import org.graphast.importer.OSMImporterImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.graphast.enums.CompressionType;
-import org.graphast.exception.GraphastException;
 
 import it.unimi.dsi.fastutil.ints.IntBigArrayBigList;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
@@ -457,10 +453,19 @@ public class FileUtils {
 		return result;
     }
 
+    public static long folderSize(String directory) {
+    	return folderSize(new File(directory));
+    }
     
-    public static void main(String[] args) {
-		String file = download("http://download.geofabrik.de/europe/monaco-latest.osm.pbf", Configuration.GRAPHAST_DIR);
-		new OSMImporterImpl(file, Configuration.GRAPHAST_DIR).execute();
-	}
+    public static long folderSize(File directory) {
+        long length = 0;
+        for (File file : directory.listFiles()) {
+            if (file.isFile())
+                length += file.length();
+            else
+                length += folderSize(file);
+        }
+        return length;
+    }
     
 }

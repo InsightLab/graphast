@@ -141,6 +141,8 @@ public class GraphImpl implements Graph {
 				blockSize, compressionType);
 		createNodeIndex();
 		findBBox();
+		log.info("nodes: {}", this.getNumberOfNodes());
+		log.info("edges: {}", this.getNumberOfEdges());
 	}
 
 	private void createNodeIndex() {

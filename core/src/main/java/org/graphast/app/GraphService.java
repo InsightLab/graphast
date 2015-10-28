@@ -12,7 +12,7 @@ public class GraphService {
 
 	Logger log = LoggerFactory.getLogger(this.getClass());
 	
-	public void create(String appName, String url) {
+	public GraphInfo create(String appName, String url) {
 		String osmFile = FileUtils.download(url, Configuration.GRAPHAST_DIR);
 
 		// Guess a good appName
@@ -24,16 +24,19 @@ public class GraphService {
 			}
 		}
 		
-		String graphastDir = Configuration.GRAPHAST_DIR + "/" + appName;
-		Graph graph = new OSMImporterImpl(osmFile, graphastDir).execute();
+		String graphDir = Configuration.GRAPHAST_DIR + "/" + appName;
+		Graph graph = new OSMImporterImpl(osmFile, graphDir).execute();
 		AppGraph.setGraph(graph);
-		Configuration.addApp(appName);
-		Configuration.setProperty("graphast." + appName + ".dir", graphastDir);
+		Configuration.setProperty("graphast." + appName + ".dir", graphDir);
 		Configuration.setProperty("graphast." + appName + ".importer", "osm");
+		Configuration.setSelectedApp(appName);
+		GraphInfo graphInfo = getGraphInfo(graph, graphDir);
+		Configuration.addApp(graphInfo);
 		Configuration.save();
+		return graphInfo;
 	}
 
-	public void load(String app) {
+	public GraphInfo load(String app) {
 		Configuration.reload();
 		if (app != null) {
 			Configuration.setSelectedApp(app);
@@ -45,11 +48,19 @@ public class GraphService {
 		Graph graph = new GraphBoundsImpl(graphDir);
 		graph.load();
 		AppGraph.setGraph(graph);
+		GraphInfo graphInfo = getGraphInfo(graph, graphDir);
+		Configuration.save(graphInfo);
+		return graphInfo;
 	}
-	
-	public static void main(String[] args) {
-		GraphService gs = new GraphService();
-		gs.create(null, "http://download.geofabrik.de/europe/monaco-latest.osm.pbf");	
+
+	private GraphInfo getGraphInfo(Graph graph, String graphDir) {
+		GraphInfo graphInfo = new GraphInfo();
+		graphInfo.setAppName(Configuration.getSelectedApp());
+		graphInfo.setGraphDir(graphDir);
+		graphInfo.setNumberOfEdges(graph.getNumberOfEdges());
+		graphInfo.setNumberOfNodes(graph.getNumberOfNodes());
+		graphInfo.setSize(FileUtils.folderSize(graphDir));
+		return graphInfo;
 	}
 	
 }
