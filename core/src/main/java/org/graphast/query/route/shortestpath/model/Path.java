@@ -20,7 +20,7 @@ public class Path {
 	private List<Point> geometry;
 	private List<Long> edges;
 	private List<Instruction> instructions;
-	private double totalDistance;
+	private long totalDistance;
 	private double totalCost;
 
 	public Path() {
@@ -65,6 +65,7 @@ public class Path {
 
 
 				Collections.reverse(listOfGeometries);
+				newInstruction.setStartGeometry(geometry.size());
 
 				for (Point point : listOfGeometries) {
 					if(geometry.contains(point)) {
@@ -73,6 +74,7 @@ public class Path {
 						geometry.add(point);
 					}
 				}
+				newInstruction.setEndGeometry(geometry.size()-1);
 			}
 		} else {
 			newInstruction = new Instruction(0, re.getLabel(), re.getCost(), 0);
@@ -199,7 +201,7 @@ public class Path {
 			sb.append(instruction.getDistance());
 			sb.append(")");
 			sb.append("\n");
-
+			
 		}
 
 		return sb.toString();
@@ -230,7 +232,7 @@ public class Path {
 		this.geometry = geometry;
 	}
 
-	public double getTotalDistance() {
+	public long getTotalDistance() {
 
 		totalDistance = 0;
 

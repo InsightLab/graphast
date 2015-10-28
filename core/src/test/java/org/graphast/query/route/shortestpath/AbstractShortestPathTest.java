@@ -67,7 +67,7 @@ public abstract class AbstractShortestPathTest {
 		// assertEquals(76, shortestPath.getGeometry().size()); // Works with A*, but not with Dijkstra
 		//assertEquals(78, shortestPath.getGeometry().size()); // Works with Dijsktra, but not with A*
 		
-		assertEquals(1073837, shortestPath.getTotalCost(), 0);
+		assertEquals(63155, shortestPath.getTotalCost(), 0);
 	}
 
 	@Test
@@ -93,7 +93,7 @@ public abstract class AbstractShortestPathTest {
 		
 //		assertEquals(75, shortestPath.getGeometry().size());
 
-		assertEquals(1136643.0, shortestPath.getTotalCost(), 0);
+		assertEquals(66851.0, shortestPath.getTotalCost(), 0);
 
 	}
 	
@@ -144,7 +144,7 @@ public abstract class AbstractShortestPathTest {
 //		}
 
 //		assertEquals(6, shortestPath.getGeometry().size());
-		assertEquals(8100, shortestPath.getTotalCost(), 0);
+		assertEquals(475, shortestPath.getTotalCost(), 0);
 
 	}
 	
@@ -194,7 +194,7 @@ public abstract class AbstractShortestPathTest {
 		// TODO fix this assertion
 		// assertEquals(239, shortestPath.getGeometry().size()); // Works with A*, but not with Dijkstra
 		//assertEquals(246, shortestPath.getGeometry().size());
-		assertEquals(3610712.0, shortestPath.getTotalCost(), 0);
+		assertEquals(212364.0, shortestPath.getTotalCost(), 0);
 
 	}
 	
@@ -224,7 +224,7 @@ public abstract class AbstractShortestPathTest {
 		//assertEquals(236, shortestPath.getGeometry().size()); // Works with A*, but not with Dijkstra
 		// assertEquals(240, shortestPath.getGeometry().size());
 
-		assertEquals(3610712.0, shortestPath.getTotalCost(), 0);
+		assertEquals(212364.0, shortestPath.getTotalCost(), 0);
 	}
 	
 	@AfterClass
