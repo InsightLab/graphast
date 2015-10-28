@@ -61,7 +61,7 @@ public class AStarConstantWeight extends AStar{
 						distance = neig.get(vid);
 					}
 				}
-				parents.put(vid, new RouteEntry(removed.getId(), neig.get(vid), edgeId, label));
+				parents.put(vid, new RouteEntry(removed.getId(), neig.get(vid)/17, edgeId, label));
 				
 			} else {
 				
@@ -78,7 +78,7 @@ public class AStarConstantWeight extends AStar{
 						
 						parents.remove(vid);
 						distance = neig.get(vid);
-						parents.put(vid, new RouteEntry(removed.getId(), distance, edgeId, label));
+						parents.put(vid, new RouteEntry(removed.getId(), distance/17, edgeId, label));
 					}
 				}
 			}
