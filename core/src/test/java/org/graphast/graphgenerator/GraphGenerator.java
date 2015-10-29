@@ -343,7 +343,7 @@ public class GraphGenerator {
 		v = new NodeImpl(6l, 60d, 0d);
 		graph.addNode(v);
 
-		int[] costs = {3, 1};
+		int[] costs = {3,1};
 		e = new EdgeImpl(0l, 1l, 1, costs, null, "Rua A");
 		graph.addEdge(e);
 
@@ -364,7 +364,7 @@ public class GraphGenerator {
 		e = new EdgeImpl(3l, 4l, 1, costs, null, "Rua E");
 		graph.addEdge(e);
 
-		costs = new int[]{6, 4};
+		costs = new int[]{6,4};
 		e = new EdgeImpl(3l, 5l, 1, costs, null, "Rua F");
 		graph.addEdge(e);
 
@@ -376,6 +376,7 @@ public class GraphGenerator {
 		e = new EdgeImpl(5l, 6l, 1, costs, null, "Rua H");
 		graph.addEdge(e);
 
+		graph.createBounds();
 		return graph;
 	}
 

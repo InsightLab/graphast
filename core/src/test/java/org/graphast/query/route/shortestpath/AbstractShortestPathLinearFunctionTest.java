@@ -29,7 +29,7 @@ public abstract class AbstractShortestPathLinearFunctionTest {
 //	protected static AbstractShortestPathService serviceMonaco;
 //	protected static AbstractShortestPathService serviceSeattle;
 
-	protected static Graph graphExample4;
+	protected static GraphBounds graphExample4;
 	protected static GraphBounds graphBounds;
 	protected static GraphBounds graphMonaco;
 //	protected static GraphBounds graphSeattle;

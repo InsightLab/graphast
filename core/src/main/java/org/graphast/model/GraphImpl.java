@@ -1096,12 +1096,11 @@ public class GraphImpl implements Graph {
 		return result;
 	}
 
-
-	private int[] linearFunctionArrayToCostIntArray(
+	 int[] linearFunctionArrayToCostIntArray(
 			LinearFunction[] linearFunction) {
-		intCosts = null;
+		intCosts = new int[linearFunction.length];
 		for (int i = 0; i < linearFunction.length; i++) {
-			intCosts[i] = linearFunction[i].getStartCost();
+			intCosts[i] = (linearFunction[i].getEndCost() + linearFunction[i].getStartCost())/2;
 		}
 		return intCosts;
 
