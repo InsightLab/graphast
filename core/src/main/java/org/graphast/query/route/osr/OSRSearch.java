@@ -107,7 +107,11 @@ public class OSRSearch {
 				}
 			}
 
-			if(removed.getLowerBound() > upper)	return seq;
+			if(removed.getLowerBound() > upper) {
+				
+				return seq;
+			
+			}
 
 			Long2IntMap neig = graphBounds.accessNeighborhood(graphBounds.getNode(removed.getId()),(short)0, removed.getArrivalTime());
 

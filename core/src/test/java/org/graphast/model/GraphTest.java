@@ -416,6 +416,12 @@ public class GraphTest {
 		assertEquals(1, graph.getPoi(0).getCategory());
 	}
 	
+	@Test 
+	public void getEdgeTest() {
+		
+		assertEquals(Long.valueOf(1), graphExample2.getEdge(0, 2).getId());
+		
+	}
 		
 	@Test
 	public void setGeometryTest() {

@@ -307,4 +307,6 @@ public interface Graph {
 	
 	public void setBBox(BBox bBox);
 	
+	public Edge getEdge(long originNodeId, long destinationNodeId);
+	
 }

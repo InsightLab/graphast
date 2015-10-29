@@ -2,6 +2,7 @@ package org.graphast.query.route.shortestpath.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -13,6 +14,7 @@ import org.graphast.model.Graph;
 import org.graphast.query.route.osr.Sequence;
 import org.graphast.query.route.shortestpath.AbstractShortestPathService;
 import org.graphast.query.route.shortestpath.dijkstra.DijkstraLinearFunction;
+import org.graphast.util.DateUtils;
 import org.graphast.util.DistanceUtils;
 
 public class Path {
@@ -155,6 +157,60 @@ public class Path {
 		}
 	}
 
+	
+	
+//	public static Path genericPathGenerator(List<Edge> listOfEdges, Date date) {
+//		List<Point> geometry = new ArrayList<Point>();	//OK
+//		List<Long> edges = new ArrayList<Long>(); //OK
+//		List<Instruction> instructions = new ArrayList<Instruction>(); //OK
+//		
+//		long totalDistance=0;
+//		double totalCost=0;
+//		
+//		int startTime = DateUtils.dateToMinutes(date);
+//		
+//		int timeAuxiliar, instructionCost;
+//		
+//		timeAuxiliar = startTime;
+//		
+//		Path path = new Path();
+//		
+//		for(Edge currentEdge : listOfEdges) {
+//			
+//			edges.add(currentEdge.getId());
+//			
+//			instructionCost = currentEdge.getCosts()[ timeAuxiliar/15 ];
+//			
+//			//Putting distance on the cost variable! Not correct!
+//			Instruction instruction = new Instruction(0, currentEdge.getLabel(), instructionCost, currentEdge.getDistance());
+//			
+//			totalDistance = totalDistance + currentEdge.getDistance();
+//			totalCost = totalCost + instructionCost;
+//			
+//			instruction.setStartGeometry(geometry.size());
+//			
+//			for(Point geometryPoint : currentEdge.getGeometry()) {
+//				
+//				geometry.add(geometryPoint);
+//				
+//				
+//			}
+//			
+//			instruction.setEndGeometry(geometry.size());
+//			
+//			
+//			timeAuxiliar = timeAuxiliar +  instructionCost/60000; 
+//			
+//			instructions.add(instruction);
+//		}
+//		
+//		return path;
+//	}
+	
+	
+	
+	
+	
 	public Path generatePath(double lat1, double lon1, double lat2, double lon2, Sequence sequence, Graph graph) {
 		List<Point> geometry = new ArrayList<Point>();
 		List<Long> edges = new ArrayList<Long>();
