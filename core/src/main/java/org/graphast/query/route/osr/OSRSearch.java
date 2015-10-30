@@ -6,13 +6,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.PriorityQueue;
 
+import org.graphast.geometry.PoI;
 import org.graphast.model.Graph;
 import org.graphast.model.GraphBounds;
 import org.graphast.model.Node;
+import org.graphast.query.route.shortestpath.AbstractShortestPathService;
+import org.graphast.query.route.shortestpath.dijkstra.DijkstraConstantWeight;
 import org.graphast.query.route.shortestpath.dijkstra.DijkstraLinearFunction;
+import org.graphast.query.route.shortestpath.model.Path;
 import org.graphast.util.DateUtils;
+
+import com.graphhopper.util.StopWatch;
 
 import it.unimi.dsi.fastutil.longs.Long2DoubleMap;
 import it.unimi.dsi.fastutil.longs.Long2DoubleOpenHashMap;
@@ -20,6 +27,8 @@ import it.unimi.dsi.fastutil.longs.Long2IntMap;
 
 public class OSRSearch {
 
+	protected static AbstractShortestPathService serviceGraph;
+	
 	private GraphBounds graphBounds;
 	private BoundsRoute bounds;
 	private DijkstraLinearFunction dijkstra;
@@ -51,10 +60,10 @@ public class OSRSearch {
 	}
 
 	private ArrayList<Long> pathToPoi(int pos, int id, int poiId, HashMap<Integer, HashMap<Integer, Integer>> parents){
-		
+
 		ArrayList<Long> path = new ArrayList<Long>();
 		long parent = parents.get(pos + 1).get(poiId);
-		
+
 		while(parent != id && parent != -1){
 			path.add(parent);
 			parent = parents.get(pos).get((int)parent);
@@ -108,9 +117,9 @@ public class OSRSearch {
 			}
 
 			if(removed.getLowerBound() > upper) {
-				
+
 				return seq;
-			
+
 			}
 
 			Long2IntMap neig = graphBounds.accessNeighborhood(graphBounds.getNode(removed.getId()),(short)0, removed.getArrivalTime());
@@ -253,6 +262,61 @@ public class OSRSearch {
 
 	public void setGraphAdapter(GraphBounds graphAdapter) {
 		this.graphBounds = graphAdapter;
+	}
+
+	//TODO URGENT REFACTOR IN THIS METHOD
+	public Path getFullPath(Node origin, Node destination, Date time, ArrayList<Integer> categories) {
+		
+		List<Long> result = this.search(origin, destination, time, categories).getPath();
+
+		List<Path> allPaths = new ArrayList<Path>();
+
+		serviceGraph = new DijkstraConstantWeight(graphBounds);
+
+		for(int i=0; i<result.size(); i++) {
+			if(i==result.size()-2) {
+				break;
+			}
+
+			Long source = graphBounds.getNodeId(graphBounds.getNode(result.get(i)).getLatitude(),graphBounds.getNode(result.get(i)).getLongitude());
+			Long target = graphBounds.getNodeId(graphBounds.getNode(result.get(i+1)).getLatitude(),graphBounds.getNode(result.get(i+1)).getLongitude());
+
+			StopWatch sw = new StopWatch();
+
+			sw.start();
+			Path shortestPath = serviceGraph.shortestPath(source, target);
+			sw.stop();
+
+			Node possiblePoI = graphBounds.getNode(source);
+			List<PoI> temporaryListOfPoIs = new ArrayList<PoI>();
+			
+			List<Integer> listOfPois = categories;
+			
+			if(possiblePoI.getCategory()>0) {
+
+				
+				
+				if(listOfPois.contains(possiblePoI.getCategory())) {
+					PoI temporaryPoI = new PoI(possiblePoI.getCategory(), possiblePoI.getLabel(), 
+							possiblePoI.getLatitude(), possiblePoI.getLongitude());
+					temporaryListOfPoIs.add(temporaryPoI);
+					
+					listOfPois.remove((Integer)possiblePoI.getCategory());
+				}
+				
+				
+
+			}
+
+			shortestPath.setListOfPoIs(temporaryListOfPoIs);
+
+			allPaths.add(shortestPath);
+
+		}
+
+		Path resultPath = Path.pathsConcatanation(allPaths);
+		
+		return resultPath;
 	}
 
 }

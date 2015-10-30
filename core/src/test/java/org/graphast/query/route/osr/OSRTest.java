@@ -31,7 +31,7 @@ public class OSRTest {
 		 * 		1 = Lower Bound Costs;
 		 * 		3 = Upper Bound Costs.
 		 */
-		short graphType = 1;
+		short graphType = 0;
 //		short monacoGraphType = 0;
 		
 		//Loads into graphBoundsPoI the graph related to the generateExamplePoI method (including upperBounds and 
@@ -74,9 +74,9 @@ public class OSRTest {
     	Sequence seq = osr.search(graph.getNode(1), graph.getNode(7), date, categories);
     	
     	
-    	assertEquals(7980000, seq.getDistance());
-    	assertEquals(37679450, seq.getTimeToService());
-    	assertEquals(29699450, seq.getWaitingTime());
+    	assertEquals(10140000, seq.getDistance());
+    	assertEquals(41340000, seq.getTimeToService());
+    	assertEquals(31200000, seq.getWaitingTime());
     	
 	}
 	

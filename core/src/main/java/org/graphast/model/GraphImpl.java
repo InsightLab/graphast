@@ -1081,19 +1081,21 @@ public class GraphImpl implements Graph {
 	}
 
 	public LinearFunction[] convertToLinearFunction(int[] costs) {
-		LinearFunction[] result = new LinearFunction[costs.length / 2];
-		int interval = 86400000 / (costs.length / 2);
-		int startInterval = 0;
+		int tetoCosts = (int)Math.ceil(costs.length / 2.0);
+		LinearFunction[] result = new LinearFunction[tetoCosts];
+		int interval = maxTime / (tetoCosts);
+		int startInterval = 0; 
 		int endInterval = interval;
-		for (int i = 0; i < costs.length / 2; i++) {
-			result[i] = new LinearFunction(startInterval, costs[(i * 2)],
-					endInterval, costs[(i * 2) + 1]);
+		for (int i = 0; i < tetoCosts; i++) {
+			result[i] = new LinearFunction(startInterval, costs[i],
+					endInterval, costs[i]);
 			startInterval = endInterval;
 			endInterval = endInterval + interval;
 		}
 
 		return result;
 	}
+
 
 	private int[] linearFunctionArrayToCostIntArray(
 			LinearFunction[] linearFunction) {

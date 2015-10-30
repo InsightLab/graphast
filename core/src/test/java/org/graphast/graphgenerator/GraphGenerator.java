@@ -316,8 +316,8 @@ public class GraphGenerator {
 		return graph;
 	}
 
-	public Graph generateExample4() {
-		Graph graph = new GraphImpl(Configuration.USER_HOME + "/graphast/example");
+	public GraphBounds generateExample4() {
+		GraphBounds graph = new GraphBoundsImpl(Configuration.USER_HOME + "/graphast/example");
 
 		Edge e;
 		NodeImpl v;
