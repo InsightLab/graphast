@@ -127,27 +127,27 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
 
 	}
 
-	//TODO Refactor this method
-	public Integer getEdgeCost(Edge e, int t){
-
-		LinearFunction[] lf = convertToLinearFunction(getEdgeCosts(e.getId()));
-
-		int x = lf.length;
-		int minutesInADay = 86400000;
-		int position = t/(minutesInADay/x);
-		return lf[position].calculateCost(t);
-
-		//		int[] costs = getEdgeCosts(e.getId());
-		//		int t1 = t;
-		//		t = t - (t % 2);
-		//		int pos = t/2;
-		//		int s = costs[pos];
-		//		//LinearFunction f = new LinearFunction(s);
-		//		//return f.calculateCost(t1);
-		//		return 0;
-
-
-	}
+//	//TODO Refactor this method
+//	public Integer getEdgeCost(Edge e, int t){
+//
+//		LinearFunction[] lf = convertToLinearFunction(getEdgeCosts(e.getId()));
+//
+//		int x = lf.length;
+//		int minutesInADay = 86400000;
+//		int position = t/(minutesInADay/x);
+//		return lf[position].calculateCost(t);
+//
+//		//		int[] costs = getEdgeCosts(e.getId());
+//		//		int t1 = t;
+//		//		t = t - (t % 2);
+//		//		int pos = t/2;
+//		//		int s = costs[pos];
+//		//		//LinearFunction f = new LinearFunction(s);
+//		//		//return f.calculateCost(t1);
+//		//		return 0;
+//
+//
+//	}
 
 
 	public int poiGetCost(long vid, short graphType){

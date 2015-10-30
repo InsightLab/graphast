@@ -212,7 +212,9 @@ public class GraphImpl implements Graph {
 
 		long labelIndex = storeLabel(node.getLabel(), nodesLabels);
 		node.setLabelIndex(labelIndex);
-		
+		long costsIndex = storeCosts(node.getCosts(), nodesCosts);
+		node.setCostsIndex(costsIndex);
+
 		long position = node.getId() * Node.NODE_BLOCKSIZE;
 		position = position + 2;
 
@@ -224,10 +226,12 @@ public class GraphImpl implements Graph {
 			nodes.set(position++, node.getFirstEdgeOffset());
 			nodes.set(position++, node.getLabelIndexSegment());
 			nodes.set(position++, node.getLabelIndexOffset());
-			
+			nodes.set(position++, node.getCostsIndexSegment());
+			nodes.set(position++, node.getCostsIndexOffset());
+
 		}
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -265,6 +269,40 @@ public class GraphImpl implements Graph {
 
 		return node;
 	}
+
+	public Edge getEdge(long originNodeId, long destinationNodeId) {
+
+		List<Edge> listOfPossibleEdges = new ArrayList<Edge>();
+
+		for(Long edgeId : this.getOutEdges(originNodeId)) {
+			Edge candidateEdge = this.getEdge(edgeId);
+
+			if(candidateEdge.getToNode()==destinationNodeId) {
+				listOfPossibleEdges.add(candidateEdge);
+			}
+		}
+
+		Edge resultEdge = null;
+
+		if(listOfPossibleEdges.size() != 0) {
+
+			resultEdge = listOfPossibleEdges.get(0); 
+
+		} else {
+			return null;
+		}
+
+		for(Edge possibleResult : listOfPossibleEdges) {
+
+			if(resultEdge.getDistance()>possibleResult.getDistance()) {
+				resultEdge = possibleResult;
+			}
+
+		}
+
+		return resultEdge;
+	}
+
 
 	// TODO Suggestion: delete this method and keep all these operations in
 	// updateEdgeInfo
@@ -1017,7 +1055,7 @@ public class GraphImpl implements Graph {
 		this.addNode(poi);
 		return poi;
 	}
-	
+
 	public Node addPoi(long id, double lat, double lon, int category) {
 		Node poi = new NodeImpl(id, lat, lon, category);
 		this.addNode(poi);
@@ -1043,19 +1081,21 @@ public class GraphImpl implements Graph {
 	}
 
 	public LinearFunction[] convertToLinearFunction(int[] costs) {
-		LinearFunction[] result = new LinearFunction[costs.length / 2];
-		int interval = 86400000 / (costs.length / 2);
-		int startInterval = 0;
+		int tetoCosts = (int)Math.ceil(costs.length / 2.0);
+		LinearFunction[] result = new LinearFunction[tetoCosts];
+		int interval = maxTime / (tetoCosts);
+		int startInterval = 0; 
 		int endInterval = interval;
-		for (int i = 0; i < costs.length / 2; i++) {
-			result[i] = new LinearFunction(startInterval, costs[(i * 2)],
-					endInterval, costs[(i * 2) + 1]);
+		for (int i = 0; i < tetoCosts; i++) {
+			result[i] = new LinearFunction(startInterval, costs[i],
+					endInterval, costs[i]);
 			startInterval = endInterval;
 			endInterval = endInterval + interval;
 		}
 
 		return result;
 	}
+
 
 	private int[] linearFunctionArrayToCostIntArray(
 			LinearFunction[] linearFunction) {
@@ -1303,10 +1343,10 @@ public class GraphImpl implements Graph {
 
 		sw.stop();
 		log.debug("Execution Time of getNearestNode(): {}ms", sw.getTime());
-		
+
 		return nearestNode;
 	}
-	
+
 	public boolean equals(Graph obj) {
 		if((obj.getNumberOfNodes() == this.getNumberOfNodes()) && (obj.getNumberOfEdges() == this.getNumberOfEdges())) {
 			for(int i = 0; i < this.getNumberOfNodes(); i++) {
@@ -1327,7 +1367,7 @@ public class GraphImpl implements Graph {
 		long position = nodeId * Node.NODE_BLOCKSIZE;
 		getNodes().set(position+2, category);
 	}
-	
+
 	public void setEdgeGeometry(long edgeId, List<Point> geometry) {
 		EdgeImpl e = (EdgeImpl) this.getEdge(edgeId);
 		e.setGeometry(geometry);
@@ -1348,12 +1388,12 @@ public class GraphImpl implements Graph {
 	public void setBBox(BBox bBox) {
 		this.bBox = bBox;
 	}
-	
+
 	private void findBBox() {
 		Node node = this.getNode(0);
 		Node minLatNode = null, minLongNode = null, maxLatNode = null, maxLongNode = null;
 		BBox bBox = new BBox(node.getLatitude(), node.getLongitude(), node.getLatitude(), node.getLongitude());
-		
+
 		for (long i = 1; i < this.getNumberOfNodes(); i++) {
 			node = this.getNode(i);
 			if (node.getLatitude() < bBox.getMinLatitude()) {
