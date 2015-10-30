@@ -322,25 +322,25 @@ public class GraphGenerator {
 		Edge e;
 		NodeImpl v;
 
-		v = new NodeImpl(0l, 0d, 10d, 0);
+		v = new NodeImpl(0l, -3.74077, -38.55735, 0);
 		graph.addNode(v);
 
-		v = new NodeImpl(1l, 10d, 0d, 1);
+		v = new NodeImpl(1l, -3.74003, -38.55693, 1);
 		graph.addNode(v);
 
-		v = new NodeImpl(2l, 30d, 20d, 2);
+		v = new NodeImpl(2l, -3.74049, -38.5563, 2);
 		graph.addNode(v);
 
-		v = new NodeImpl(3l, 40d, 20d, 4);
+		v = new NodeImpl(3l, -3.74035, -38.55526, 4);
 		graph.addNode(v);
 
-		v = new NodeImpl(4l, 50d, 30d, 0);
+		v = new NodeImpl(4l, -3.73958, -38.55479, 0);
 		graph.addNode(v);
 
-		v = new NodeImpl(5l, 60d, 20d);
+		v = new NodeImpl(5l, -3.74001, -38.55415);
 		graph.addNode(v);
 
-		v = new NodeImpl(6l, 60d, 0d);
+		v = new NodeImpl(6l, -3.7412, -38.55388);
 		graph.addNode(v);
 
 		int[] costs = {3,1};

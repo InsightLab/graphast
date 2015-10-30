@@ -10,6 +10,8 @@ import java.util.Date;
 import org.graphast.graphgenerator.GraphGenerator;
 import org.graphast.model.Graph;
 import org.graphast.model.GraphBounds;
+import org.graphast.query.route.shortestpath.dijkstra.DijkstraLinearFunction;
+import org.graphast.query.route.shortestpath.model.Path;
 import org.graphast.util.DateUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -73,10 +75,19 @@ public class OSRTest {
     	
     	Sequence seq = osr.search(graph.getNode(1), graph.getNode(7), date, categories);
     	
+    	DijkstraLinearFunction d = new DijkstraLinearFunction(graphBoundsPoI);
+    	Path p1 = d.shortestPath(1, 4, date);
+    	Path p2 = d.shortestPath(4, 7, date);
+    	System.out.println(p1.getTotalDistance());
+    	System.out.println(p2.getTotalDistance());
+    	System.out.println(p1.getTotalCost());
+    	System.out.println(p2.getTotalCost());
+    	System.out.println(p1.getTotalCost() + p2.getTotalCost());
     	
     	assertEquals(10140000, seq.getDistance());
     	assertEquals(41340000, seq.getTimeToService());
     	assertEquals(31200000, seq.getWaitingTime());
+    	
     	
 	}
 	
