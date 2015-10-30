@@ -76,5 +76,36 @@ public class LinearFunction {
 	public void setEndCost(int endCost) {
 		this.endCost = endCost;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + endCost;
+		result = prime * result + endInterval;
+		result = prime * result + startCost;
+		result = prime * result + startInterval;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		LinearFunction other = (LinearFunction) obj;
+		if (endCost != other.endCost)
+			return false;
+		if (endInterval != other.endInterval)
+			return false;
+		if (startCost != other.startCost)
+			return false;
+		if (startInterval != other.startInterval)
+			return false;
+		return true;
+	}
 	
 }
