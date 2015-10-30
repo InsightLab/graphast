@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.graphast.geometry.PoI;
 import org.graphast.geometry.Point;
 import org.graphast.model.Edge;
 import org.graphast.model.Graph;
@@ -22,6 +23,7 @@ public class Path {
 	private List<Point> geometry;
 	private List<Long> edges;
 	private List<Instruction> instructions;
+	private List<PoI> listOfPoIs;
 	private long totalDistance;
 	private double totalCost;
 
@@ -29,7 +31,7 @@ public class Path {
 
 	}
 
-	
+
 	//TODO MAJOR REFACTOR NEEDED IN THIS METHOD!
 	public void constructPath(long id, HashMap<Long, RouteEntry> parents, Graph graph) {
 		Instruction oldInstruction, newInstruction;
@@ -157,60 +159,63 @@ public class Path {
 		}
 	}
 
-	
-	
-//	public static Path genericPathGenerator(List<Edge> listOfEdges, Date date) {
-//		List<Point> geometry = new ArrayList<Point>();	//OK
-//		List<Long> edges = new ArrayList<Long>(); //OK
-//		List<Instruction> instructions = new ArrayList<Instruction>(); //OK
-//		
-//		long totalDistance=0;
-//		double totalCost=0;
-//		
-//		int startTime = DateUtils.dateToMinutes(date);
-//		
-//		int timeAuxiliar, instructionCost;
-//		
-//		timeAuxiliar = startTime;
-//		
-//		Path path = new Path();
-//		
-//		for(Edge currentEdge : listOfEdges) {
-//			
-//			edges.add(currentEdge.getId());
-//			
-//			instructionCost = currentEdge.getCosts()[ timeAuxiliar/15 ];
-//			
-//			//Putting distance on the cost variable! Not correct!
-//			Instruction instruction = new Instruction(0, currentEdge.getLabel(), instructionCost, currentEdge.getDistance());
-//			
-//			totalDistance = totalDistance + currentEdge.getDistance();
-//			totalCost = totalCost + instructionCost;
-//			
-//			instruction.setStartGeometry(geometry.size());
-//			
-//			for(Point geometryPoint : currentEdge.getGeometry()) {
-//				
-//				geometry.add(geometryPoint);
-//				
-//				
-//			}
-//			
-//			instruction.setEndGeometry(geometry.size());
-//			
-//			
-//			timeAuxiliar = timeAuxiliar +  instructionCost/60000; 
-//			
-//			instructions.add(instruction);
-//		}
-//		
-//		return path;
-//	}
-	
-	
-	
-	
-	
+
+
+	public static Path pathsConcatanation(List<Path> paths) {
+
+		Path path = new Path();
+		
+		List<Point> temporaryGeometry = new ArrayList<Point>();
+		List<Long> temporaryEdges = new ArrayList<Long>();
+		List<Instruction> temporaryInstructions = new ArrayList<Instruction>();
+		List<PoI> temporaryListOfPoIs = new ArrayList<PoI>();
+		long temporaryTotalDistance = 0;
+		double temporaryTotalCost = 0;
+		
+		for(Path currentPath : paths) {
+			temporaryGeometry.addAll(currentPath.getGeometry());
+			temporaryEdges.addAll(currentPath.getEdges());
+			temporaryInstructions.addAll(currentPath.getInstructions());
+			temporaryListOfPoIs.addAll(currentPath.getListOfPoIs());
+			temporaryTotalDistance = temporaryTotalDistance + currentPath.getTotalDistance();
+			temporaryTotalCost = temporaryTotalCost + currentPath.getTotalCost();
+		}
+		
+
+		path.setGeometry(temporaryGeometry);
+		path.setEdges(temporaryEdges);
+		path.setInstructions(temporaryInstructions);
+		path.setListOfPoIs(temporaryListOfPoIs);
+		path.setTotalDistance(temporaryTotalDistance);
+		path.setTotalCost(temporaryTotalCost);
+		
+		return path;
+	}
+
+
+
+
+
+	public void setTotalDistance(long totalDistance) {
+		this.totalDistance = totalDistance;
+	}
+
+
+	public void setTotalCost(double totalCost) {
+		this.totalCost = totalCost;
+	}
+
+
+	public List<PoI> getListOfPoIs() {
+		return listOfPoIs;
+	}
+
+
+	public void setListOfPoIs(List<PoI> listOfPoIs) {
+		this.listOfPoIs = listOfPoIs;
+	}
+
+
 	public Path generatePath(double lat1, double lon1, double lat2, double lon2, Sequence sequence, Graph graph) {
 		List<Point> geometry = new ArrayList<Point>();
 		List<Long> edges = new ArrayList<Long>();
@@ -243,7 +248,7 @@ public class Path {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("\n");
-		
+
 		Iterator<Instruction> instructionIterator = instructions.iterator();
 
 		while (instructionIterator.hasNext()) {
@@ -257,7 +262,7 @@ public class Path {
 			sb.append(instruction.getDistance());
 			sb.append(")");
 			sb.append("\n");
-			
+
 		}
 
 		return sb.toString();
@@ -279,6 +284,16 @@ public class Path {
 	public void setEdges(List<Long> edges) {
 		this.edges = edges;
 	}
+
+	public List<Instruction> getInstructions() {
+		return instructions;
+	}
+
+
+	public void setInstructions(List<Instruction> instructions) {
+		this.instructions = instructions;
+	}
+
 
 	public List<Point> getGeometry() {
 		return geometry;
