@@ -1,14 +1,21 @@
 package org.graphast.query.route.osr;
 
-import it.unimi.dsi.fastutil.ints.IntSet;
-import it.unimi.dsi.fastutil.objects.ObjectCollection;
+import java.io.Serializable;
+import java.util.Collection;
 
 import org.graphast.model.GraphBounds;
 import org.graphast.query.model.AbstractBoundsSearchPoI;
 import org.graphast.query.model.Bound;
 import org.graphast.query.route.shortestpath.dijkstra.DijkstraLinearFunction;
 
-public class BoundsRoute extends AbstractBoundsSearchPoI {
+import it.unimi.dsi.fastutil.ints.IntSet;
+
+public class BoundsRoute extends AbstractBoundsSearchPoI implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3156968902457731581L;
 
 	/**
 	 * This constructor calculates the minimum path (we call this bound) from each vertex 
@@ -33,7 +40,7 @@ public class BoundsRoute extends AbstractBoundsSearchPoI {
 			 * The next line is going to return a collection of Bound containing the distance from this vid to 
 			 * the set of categories passed by argument on the variable 'categories'.
 			 */
-			ObjectCollection<Bound> bound = d.shortestPathCategories(nodeId, categoriesIds, graphType);
+			Collection<Bound> bound = d.shortestPathCategories(nodeId, categoriesIds, graphType);
 
 			//The next line is going to associate the current vid to the bounds of the previous line.
 			bounds.put(nodeId,  bound);
@@ -49,7 +56,7 @@ public class BoundsRoute extends AbstractBoundsSearchPoI {
 	public Bound getBound(int id, int category){
 		if(bounds.containsKey(id)){
 
-			ObjectCollection<Bound> bound = bounds.get(id);
+			Collection<Bound> bound = bounds.get(id);
 
 			for(Bound boundIterator : bound) {
 				if(boundIterator.getId() == category) {

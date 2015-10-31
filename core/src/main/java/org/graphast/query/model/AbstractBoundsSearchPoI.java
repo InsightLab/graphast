@@ -1,32 +1,31 @@
 package org.graphast.query.model;
 
-import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectCollection;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AbstractBoundsSearchPoI implements BoundsSearchPoI{
 	
-	protected Long2ObjectMap<ObjectCollection<Bound>> bounds;
+	protected Map<Long, Collection<Bound>> bounds;
 
 	public AbstractBoundsSearchPoI() {
-		
-		this.bounds = new Long2ObjectOpenHashMap<ObjectCollection<Bound>>();
-	
+		this.bounds = new HashMap<Long, Collection<Bound>>();
 	}
 
-	public Long2ObjectMap<ObjectCollection<Bound>> getBounds() {
+	public Map<Long, Collection<Bound>> getBounds() {
 		return bounds;
 	}
 
-	public void setBounds(Long2ObjectMap<ObjectCollection<Bound>> bounds) {
+	public void setBounds(Map<Long, Collection<Bound>> bounds) {
 		this.bounds = bounds;		
 	}
 	
 	public String toString(){
 		String str = "";
 		for(long s : bounds.keySet()){
-			str += s + ":" + bounds.get(s) + "\n";
+				str += s + ":" + bounds.get(s) + "\n";
 		}
 		return str;
 	}
+	
 }

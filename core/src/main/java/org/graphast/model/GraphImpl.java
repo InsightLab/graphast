@@ -10,6 +10,7 @@ import java.util.List;
 import org.graphast.enums.CompressionType;
 import org.graphast.enums.TimeType;
 import org.graphast.geometry.BBox;
+import org.graphast.geometry.PoI;
 import org.graphast.geometry.Point;
 import org.graphast.util.DistanceUtils;
 import org.graphast.util.FileUtils;
@@ -1096,14 +1097,12 @@ public class GraphImpl implements Graph {
 		return result;
 	}
 
-	 int[] linearFunctionArrayToCostIntArray(
-			LinearFunction[] linearFunction) {
+	int[] linearFunctionArrayToCostIntArray(LinearFunction[] linearFunction) {
 		intCosts = new int[linearFunction.length];
 		for (int i = 0; i < linearFunction.length; i++) {
 			intCosts[i] = (linearFunction[i].getEndCost() + linearFunction[i].getStartCost())/2;
 		}
 		return intCosts;
-
 	}
 
 	public int getMaximunCostValue(int[] costs) {
@@ -1421,4 +1420,15 @@ public class GraphImpl implements Graph {
 		setBBox(bBox);
 	}
 
+	public List<PoI> getPOIs() {
+		List<PoI> result = new ArrayList<>();
+		for (long i = 0; i < this.getNumberOfNodes(); i++) {
+			Node n = this.getNode(i);
+			if (n.getCategory() >= 0) {
+				result.add(new PoI(n.getCategory(), n.getLabel(), n.getLatitude(), n.getLongitude()));
+			}
+		}
+		return result;
+	}
+	
 }

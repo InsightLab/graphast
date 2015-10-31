@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.graphast.config.Configuration;
 import org.graphast.model.Graph;
@@ -32,14 +31,7 @@ public class OSMImporterTest {
 		FileUtils.deleteDir(graphastDir);
 		andorra = new OSMImporterImpl(osmFile, graphastDir).execute();
 		
-		try{
-			POIImporter.importPoIList(monaco, "src/test/resources/monaco-latest.csv");
-		} catch(IOException i) {
-			System.out.println("Error in the PoI importation.");
-			i.printStackTrace();
-		} catch(NumberFormatException n) {
-			n.printStackTrace();
-		}
+		POIImporter.importPoIList(monaco, "src/test/resources/monaco-latest.csv");
 		
 //		osmFile = OSMImporterTest.class.getResource("/washington-latest.osm.pbf").getPath();
 //		graphastDir = Configuration.USER_HOME + "/graphast/test/washington";

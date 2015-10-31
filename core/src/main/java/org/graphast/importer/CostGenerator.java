@@ -98,9 +98,7 @@ public class CostGenerator {
 
 	public static void generateAllSyntheticEdgesCosts(Graph graph) {
 		for (int i = 0; i < graph.getNumberOfEdges(); i++) {
-			
 			graph.setEdgeCosts(i, CostGenerator.generateSyntheticEdgesCosts(graph.getEdge(i).getDistance()));
-
 		}
 	}
 
