@@ -312,6 +312,10 @@ public interface Graph {
 
 	public List<PoI> getPOIs();
 	
+	public List<PoI> getPOIs(Integer categoryId);
+
+	public List<Integer> getPOICategories();
+	
 	public String getDirectory();
 
 }

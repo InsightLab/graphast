@@ -10,12 +10,10 @@ import java.util.Random;
 import org.graphast.exception.GraphastException;
 import org.graphast.model.Graph;
 import org.graphast.model.Node;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class POIImporter {
 
-	private static Logger log = LoggerFactory.getLogger(POIImporter.class);
+	//private static Logger log = LoggerFactory.getLogger(POIImporter.class);
 	
 	public static void importPoIList(Graph graph, String path) {
 		File f = new File(path);
