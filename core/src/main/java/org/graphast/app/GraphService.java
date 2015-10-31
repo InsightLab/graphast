@@ -3,6 +3,7 @@ package org.graphast.app;
 import org.graphast.config.Configuration;
 import org.graphast.importer.OSMImporterImpl;
 import org.graphast.model.Graph;
+import org.graphast.model.GraphBounds;
 import org.graphast.model.GraphBoundsImpl;
 import org.graphast.util.FileUtils;
 import org.slf4j.Logger;
@@ -12,7 +13,11 @@ public class GraphService {
 
 	Logger log = LoggerFactory.getLogger(this.getClass());
 	
-	public GraphInfo create(String appName, String url) {
+	public GraphInfo create(String url) {
+		return create(url, null);
+	}
+	
+	public GraphInfo create(String url, String appName) {
 		String osmFile = FileUtils.download(url, Configuration.GRAPHAST_DIR);
 
 		// Guess a good appName
@@ -25,7 +30,7 @@ public class GraphService {
 		}
 		
 		String graphDir = Configuration.GRAPHAST_DIR + "/" + appName;
-		Graph graph = new OSMImporterImpl(osmFile, graphDir).execute();
+		GraphBounds graph = new OSMImporterImpl(osmFile, graphDir).execute();
 		AppGraph.setGraph(graph);
 		Configuration.setProperty("graphast." + appName + ".dir", graphDir);
 		Configuration.setProperty("graphast." + appName + ".importer", "osm");
@@ -45,7 +50,7 @@ public class GraphService {
 		String graphDir = Configuration.getProperty("graphast." + Configuration.getSelectedApp() + ".dir");
 		AppGraph.setGraphDir(graphDir);
 		log.debug("graphDir: {}", graphDir);
-		Graph graph = new GraphBoundsImpl(graphDir);
+		GraphBounds graph = new GraphBoundsImpl(graphDir);
 		graph.load();
 		AppGraph.setGraph(graph);
 		GraphInfo graphInfo = getGraphInfo(graph, graphDir);
@@ -61,6 +66,11 @@ public class GraphService {
 		graphInfo.setNumberOfNodes(graph.getNumberOfNodes());
 		graphInfo.setSize(FileUtils.folderSize(graphDir));
 		return graphInfo;
+	}
+	
+	public static void main(String[] args) {
+		GraphService service = new GraphService();
+		service.create("http://localhost:8000/monaco-test.osm.pbf");
 	}
 	
 }

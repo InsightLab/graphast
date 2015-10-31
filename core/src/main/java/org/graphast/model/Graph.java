@@ -6,6 +6,7 @@ import java.util.List;
 import org.graphast.enums.CompressionType;
 import org.graphast.enums.TimeType;
 import org.graphast.geometry.BBox;
+import org.graphast.geometry.PoI;
 import org.graphast.geometry.Point;
 import org.graphast.util.FileUtils;
 
@@ -308,5 +309,7 @@ public interface Graph {
 	public void setBBox(BBox bBox);
 	
 	public Edge getEdge(long originNodeId, long destinationNodeId);
+
+	public List<PoI> getPOIs();
 	
 }

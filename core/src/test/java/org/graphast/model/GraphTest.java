@@ -286,7 +286,7 @@ public class GraphTest {
 
 	@Test
 	public void getNodeCategory() {
-		assertArrayEquals ( new int[]{0, 2, 1, 4}, graphExample2.getCategories().toIntArray());
+		assertArrayEquals ( new int[]{0, 2, 4, 1}, graphExample2.getCategories().toIntArray());
 		assertEquals(4, graphExample2.getCategories().size());
 
 		// no category

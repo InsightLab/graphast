@@ -1,10 +1,10 @@
 package org.graphast.app;
 
-import org.graphast.model.Graph;
+import org.graphast.model.GraphBounds;
 
 public class AppGraph {
 
-	private static Graph graph;
+	private static GraphBounds graph;
 	private static String graphDir;
 
 
@@ -12,11 +12,11 @@ public class AppGraph {
 		super();
 	}
 
-	public static Graph getGraph() {
+	public static GraphBounds getGraph() {
 		return graph;
 	}
 
-	public static void setGraph(Graph graph) {
+	public static void setGraph(GraphBounds graph) {
 		AppGraph.graph = graph;
 	}
 

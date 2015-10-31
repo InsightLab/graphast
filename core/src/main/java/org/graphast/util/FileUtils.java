@@ -428,6 +428,9 @@ public class FileUtils {
     }
     
     public static String download(String url, String path) {
+    	if (url == null) {
+    		throw new GraphastException("URL can not be null.");
+    	}
     	String result = null;
     	FileOutputStream fos = null;
 		try {

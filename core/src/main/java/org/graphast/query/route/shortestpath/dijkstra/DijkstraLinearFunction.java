@@ -1,6 +1,8 @@
 package org.graphast.query.route.shortestpath.dijkstra;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
 
@@ -13,15 +15,12 @@ import org.graphast.query.model.QueueEntry;
 import org.graphast.query.route.shortestpath.model.RouteEntry;
 import org.graphast.query.route.shortestpath.model.TimeEntry;
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2DoubleMap;
 import it.unimi.dsi.fastutil.longs.Long2DoubleOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
-import it.unimi.dsi.fastutil.objects.ObjectCollection;
 
 public class DijkstraLinearFunction extends Dijkstra{
 
@@ -84,7 +83,7 @@ public class DijkstraLinearFunction extends Dijkstra{
 		return edge;
 	}
 	
-	public ObjectCollection<Bound> shortestPathCategories(long nodeId, Set<Integer> categoriesIds, short graphType){
+	public Collection<Bound> shortestPathCategories(long nodeId, Set<Integer> categoriesIds, short graphType){
 
 		//TODO Change this PriorityQueue to some FastUtil structure
 		PriorityQueue<QueueEntry> unsettledNodes = new PriorityQueue<QueueEntry>();
@@ -92,7 +91,7 @@ public class DijkstraLinearFunction extends Dijkstra{
 		LongSet settledNodes = new LongOpenHashSet();
 		Long2IntMap shortestDistances = new Long2IntOpenHashMap();
 
-		Int2ObjectMap<Bound> bounds = new Int2ObjectOpenHashMap<Bound>();
+		Map<Integer, Bound> bounds = new HashMap<Integer, Bound>();
 		int upper = Integer.MIN_VALUE;
 		int waitingTime, timeToService;
 
@@ -147,11 +146,11 @@ public class DijkstraLinearFunction extends Dijkstra{
 			}
 		}        
 
-		return bounds.values();
+		return (Collection<Bound>)bounds.values();
 
 	}
 	
-	public int updateUpper(Int2ObjectMap<Bound> bounds){
+	public int updateUpper(Map<Integer, Bound> bounds){
 		int upper = Integer.MIN_VALUE;
 		for(Bound b: bounds.values()){
 			if(b.getCost() > upper)	upper = b.getCost();
