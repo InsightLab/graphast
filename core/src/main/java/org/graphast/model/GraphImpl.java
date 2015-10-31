@@ -4,6 +4,7 @@ import static org.graphast.util.GeoUtils.latLongToDouble;
 import static org.graphast.util.GeoUtils.latLongToInt;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -1421,16 +1422,33 @@ public class GraphImpl implements Graph {
 	}
 
 	public List<PoI> getPOIs() {
+		return getPOIs(null);
+	}
+	
+	public List<PoI> getPOIs(Integer categoryId) {
 		List<PoI> result = new ArrayList<>();
 		for (long i = 0; i < this.getNumberOfNodes(); i++) {
 			Node n = this.getNode(i);
-			if (n.getCategory() >= 0) {
+			if ((categoryId == null && n.getCategory() >= 0) || 
+					(categoryId != null && n.getCategory() == categoryId)) {
 				result.add(new PoI(n.getCategory(), n.getLabel(), n.getLatitude(), n.getLongitude()));
 			}
 		}
 		return result;
 	}
 
+	public List<Integer> getPOICategories() {
+		List<Integer> result = new ArrayList<Integer>();
+		for (long i = 0; i < this.getNumberOfNodes(); i++) {
+			Node n = this.getNode(i);
+			if ( n.getCategory() >= 0 && (! result.contains(n.getCategory())) ) {
+				result.add(n.getCategory());
+			}
+		}
+		Collections.sort(result);
+		return result;
+	}
+	
 	public String getDirectory() {
 		return directory;
 	}
