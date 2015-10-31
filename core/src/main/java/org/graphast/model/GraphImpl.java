@@ -1097,14 +1097,12 @@ public class GraphImpl implements Graph {
 		return result;
 	}
 
-	 int[] linearFunctionArrayToCostIntArray(
-			LinearFunction[] linearFunction) {
+	int[] linearFunctionArrayToCostIntArray(LinearFunction[] linearFunction) {
 		intCosts = new int[linearFunction.length];
 		for (int i = 0; i < linearFunction.length; i++) {
 			intCosts[i] = (linearFunction[i].getEndCost() + linearFunction[i].getStartCost())/2;
 		}
 		return intCosts;
-
 	}
 
 	public int getMaximunCostValue(int[] costs) {
