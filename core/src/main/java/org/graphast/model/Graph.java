@@ -312,4 +312,6 @@ public interface Graph {
 
 	public List<PoI> getPOIs();
 	
+	public String getDirectory();
+
 }

@@ -1,5 +1,7 @@
 package org.graphast.query.model;
 
+import java.io.Serializable;
+
 import org.graphast.util.StringUtils;
 
 /**
@@ -10,7 +12,9 @@ import org.graphast.util.StringUtils;
  *
  */
 
-public class Bound {
+public class Bound implements Serializable {
+
+	private static final long serialVersionUID = 3331624172624494538L;
 
 	private long id;
 
@@ -56,4 +60,31 @@ public class Bound {
 	public void setCost(int cost) {
 		this.cost = cost;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + cost;
+		result = prime * result + (int) (id ^ (id >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Bound other = (Bound) obj;
+		if (cost != other.cost)
+			return false;
+		if (id != other.id)
+			return false;
+		return true;
+	}
+	
+	
 }

@@ -1,5 +1,7 @@
 package org.graphast.model;
 
+import java.io.Serializable;
+
 import org.graphast.enums.CompressionType;
 import org.graphast.enums.TimeType;
 import org.graphast.util.FileUtils;
@@ -7,8 +9,9 @@ import org.graphast.util.FileUtils;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 
-public class GraphBoundsImpl extends GraphImpl implements GraphBounds {
+public class GraphBoundsImpl extends GraphImpl implements GraphBounds, Serializable {
 
+	private static final long serialVersionUID = -6041223700543613773L;
 	private Long2IntMap edgesUpperBound, edgesLowerBound;
 	private Long2IntMap nodesUpperBound, nodesLowerBound;
 
