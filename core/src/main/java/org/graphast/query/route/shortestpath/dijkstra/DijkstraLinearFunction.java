@@ -1,7 +1,8 @@
 package org.graphast.query.route.shortestpath.dijkstra;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
@@ -83,7 +84,7 @@ public class DijkstraLinearFunction extends Dijkstra{
 		return edge;
 	}
 	
-	public Collection<Bound> shortestPathCategories(long nodeId, Set<Integer> categoriesIds, short graphType){
+	public List<Bound> shortestPathCategories(long nodeId, Set<Integer> categoriesIds, short graphType){
 
 		//TODO Change this PriorityQueue to some FastUtil structure
 		PriorityQueue<QueueEntry> unsettledNodes = new PriorityQueue<QueueEntry>();
@@ -109,7 +110,8 @@ public class DijkstraLinearFunction extends Dijkstra{
 		while ((queryEntry = unsettledNodes.poll()) != null){
 
 			if(bounds.keySet().containsAll(categoriesIds) && queryEntry.getTravelTime() > upper){
-				return bounds.values();
+				// Use ArrayList because bounds.values() is not Serializable
+				return new ArrayList<Bound>(bounds.values());
 			}
 
 			if(!settledNodes.contains(queryEntry.getId())) {
@@ -146,8 +148,8 @@ public class DijkstraLinearFunction extends Dijkstra{
 			}
 		}        
 
-		return (Collection<Bound>)bounds.values();
-
+		// Use ArrayList because bounds.values() is not Serializable
+		return new ArrayList<Bound>(bounds.values());
 	}
 	
 	public int updateUpper(Map<Integer, Bound> bounds){

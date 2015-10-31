@@ -1430,5 +1430,9 @@ public class GraphImpl implements Graph {
 		}
 		return result;
 	}
+
+	public String getDirectory() {
+		return directory;
+	}
 	
 }
