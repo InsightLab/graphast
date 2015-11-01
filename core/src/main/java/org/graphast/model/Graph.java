@@ -318,4 +318,5 @@ public interface Graph {
 	
 	public String getDirectory();
 
+	public void setDirectory(String directory);
 }

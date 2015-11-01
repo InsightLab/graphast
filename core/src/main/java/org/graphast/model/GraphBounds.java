@@ -22,5 +22,7 @@ public interface GraphBounds extends Graph {
 	public abstract int getEdgeLowerCost(long id);
 	
 	public abstract int getEdgeUpperCost(long id);
+	
+	public GraphBounds getReverseGraph();
 
 }

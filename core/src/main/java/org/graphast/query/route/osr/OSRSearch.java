@@ -30,17 +30,18 @@ public class OSRSearch {
 	protected static AbstractShortestPathService serviceGraph;
 	
 	private GraphBounds graphBounds;
-	private BoundsRoute bounds;
 	private DijkstraLinearFunction dijkstra;
-
+	private BoundsRoute bounds;
+	private short graphType;
+	
 	protected static int wasRemoved = -1;
 
 
-	public OSRSearch(GraphBounds graphBounds, BoundsRoute bounds, GraphBounds reverseGraph){
+	public OSRSearch(GraphBounds graphBounds, short graphType){
 		this.graphBounds = graphBounds;
-		this.bounds = bounds;
+		this.graphType = graphType;
 		//Double check this instantiation
-		this.dijkstra = new DijkstraLinearFunction(reverseGraph);
+		this.dijkstra = new DijkstraLinearFunction(this.graphBounds.getReverseGraph());
 	}
 
 	public ArrayList<Long> reconstructPath(Node origin, Node destination, RouteQueueEntry route, 
@@ -86,7 +87,7 @@ public class OSRSearch {
 		return path;
 	}
 
-	public Sequence search(Node origin, Node destination, Date time, ArrayList<Integer> categories){
+	public Sequence search(Node origin, Node destination, Date time, List<Integer> categories){
 
 		PriorityQueue<RouteQueueEntry> queue = new PriorityQueue<RouteQueueEntry>();
 		HashMap<Integer, HashMap<Integer, Integer>> parents = new HashMap<Integer, HashMap<Integer, Integer>>();
@@ -169,7 +170,7 @@ public class OSRSearch {
 		return seq;
 	}
 
-	private boolean wasRemoved(int id, int pos, ArrayList<Integer> c, 
+	private boolean wasRemoved(int id, int pos, List<Integer> c, 
 			HashMap<Integer, HashMap<Integer, Integer>> wasTraversed){
 		for(int i = pos; i <= c.size(); i++){
 			if(wasTraversed.containsKey(i)){
@@ -189,7 +190,7 @@ public class OSRSearch {
 	}
 
 	private boolean isInQ(int id, int pos, int newCost, HashMap<Integer, HashMap<Integer, Integer>> wasTraversed,
-			ArrayList<Integer> c){
+			List<Integer> c){
 		for(int i = pos; i <= c.size(); i++){
 			if(wasTraversed.containsKey(i)){
 				if(wasTraversed.get(i).containsKey(id)){
@@ -203,12 +204,12 @@ public class OSRSearch {
 		return false;
 	}
 
-	private int lowerBound(int id, int pos, ArrayList<Integer> categories, Long2DoubleMap destination){
+	private int lowerBound(int id, int pos, List<Integer> categories, Long2DoubleMap destination){
 		int max = (int) destination.get(id);
 		if(pos < categories.size()){
 			int distance;
 			for(int i = pos; i < categories.size(); i++){
-				distance = bounds.getBound(id, (int)categories.get(i)).getCost();
+				distance = getBoundsRoute().getBound(id, (int)categories.get(i)).getCost();
 				if(distance > max)	max = distance;
 			}
 		}
@@ -229,7 +230,7 @@ public class OSRSearch {
 		parents.get(pos).put(id, parent);
 	}
 
-	private void init(Node origin, Node d, ArrayList<Integer> categories, int t, PriorityQueue<RouteQueueEntry> queue, 
+	private void init(Node origin, Node d, List<Integer> categories, int t, PriorityQueue<RouteQueueEntry> queue, 
 			Long2DoubleMap destinationPaths){
 
 		int pos = 0;
@@ -265,7 +266,7 @@ public class OSRSearch {
 	}
 
 	//TODO URGENT REFACTOR IN THIS METHOD
-	public Path getFullPath(Node origin, Node destination, Date time, ArrayList<Integer> categories) {
+	public Path getFullPath(Node origin, Node destination, Date time, List<Integer> categories) {
 		
 		List<Long> result = this.search(origin, destination, time, categories).getPath();
 
@@ -317,6 +318,19 @@ public class OSRSearch {
 		Path resultPath = Path.pathsConcatanation(allPaths);
 		
 		return resultPath;
+	}
+	
+	private BoundsRoute getBoundsRoute() {
+		if (this.bounds == null) {
+			this.bounds = new BoundsRoute(this.graphBounds, this.graphType);
+			try {
+				this.bounds.load();
+			} catch (Exception e) {
+				this.bounds.createBounds();
+				this.bounds.save();
+			}
+		}
+		return this.bounds;
 	}
 
 }

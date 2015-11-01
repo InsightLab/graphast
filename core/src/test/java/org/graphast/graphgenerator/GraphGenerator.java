@@ -521,7 +521,7 @@ public class GraphGenerator {
 		graph.addEdge(edge);
 
 		graph.createBounds();
-
+		graph.save();
 		return graph;
 
 	}

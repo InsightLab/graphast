@@ -20,7 +20,7 @@ import org.junit.Test;
 public class OSRTest {
 
 	private static OSRSearch osr;
-	private static GraphBounds graphBoundsPoI, graphBoundsPoIReverse;
+	private static GraphBounds graphBoundsPoI;
 //	private static GraphBounds monacoBoundsPoI, monacoBoundsPoIReverse;
 
 	
@@ -40,9 +40,9 @@ public class OSRTest {
 		//lowerBounds for both edges and PoI's
 		graphBoundsPoI = new GraphGenerator().generateExamplePoI();
 		
-		graphBoundsPoIReverse = new GraphGenerator().generateExamplePoI();
-		
-		graphBoundsPoIReverse.reverseGraph();
+//		graphBoundsPoIReverse = new GraphGenerator().generateExamplePoI();
+//		
+//		graphBoundsPoIReverse.reverseGraph();
 		
 //		monacoBoundsPoI = new GraphGenerator().generateMonaco();
 //		
@@ -52,9 +52,9 @@ public class OSRTest {
 		
 		//The variable 'bounds' represents a lowerBound shortestPath of starting in each vertex to all PoI.
 		//For a better understanding, try to print the variable 'bounds'
-		BoundsRoute bounds = new BoundsRoute(graphBoundsPoI, graphType);
+//		BoundsRoute bounds = new BoundsRoute(graphBoundsPoI, graphType);
 		
-		osr = new OSRSearch(graphBoundsPoI, bounds, graphBoundsPoIReverse);
+		osr = new OSRSearch(graphBoundsPoI, graphType);
 		
 //		BoundsRoute monacoBounds = new BoundsRoute(monacoBoundsPoI, monacoGraphType);
 		
