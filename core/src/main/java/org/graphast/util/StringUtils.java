@@ -1,5 +1,6 @@
 package org.graphast.util;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -42,6 +43,16 @@ public class StringUtils {
 		}
 		return d;
 	}
+
+	public static List<Integer> splitIntToList(String delimiter, String str) {
+		StringTokenizer st = new StringTokenizer(str, delimiter);
+		List<Integer> result = new ArrayList<>(st.countTokens());
+		while (st.hasMoreTokens()) {
+			result.add(Integer.valueOf(st.nextToken()));
+		}
+		return result;
+	}
+
 	
 	public static int[] splitInt(String delimiter, String str) {
 		StringTokenizer st = new StringTokenizer(str, delimiter);

@@ -16,6 +16,7 @@ import java.util.TreeSet;
 
 import org.graphast.app.GraphInfo;
 import org.graphast.exception.GraphastException;
+import org.graphast.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -172,4 +173,13 @@ public class Configuration {
 		return sb.toString();
 	}
 	
+	public static List<Integer> getPOICategoryFilter() {
+		String filter = config.getProperty("graphast.category.filter");
+		return StringUtils.splitIntToList(",", filter);
+	}
+
+	public static void setPOICategoryFilter(String categoryFilter) {
+		config.setProperty("graphast.category.filter", categoryFilter);
+	}
+
 }

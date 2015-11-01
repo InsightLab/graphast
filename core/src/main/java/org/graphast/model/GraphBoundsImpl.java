@@ -14,6 +14,7 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds, Serializa
 	private static final long serialVersionUID = -6041223700543613773L;
 	private Long2IntMap edgesUpperBound, edgesLowerBound;
 	private Long2IntMap nodesUpperBound, nodesLowerBound;
+	private GraphBounds reverseGraph;
 
 	public GraphBoundsImpl(String directory) {
 		this(directory, CompressionType.GZIP_COMPRESSION, TimeType.MILLISECOND);
@@ -220,5 +221,23 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds, Serializa
 	}
 	public int getEdgeUpperCost(long id){
 		return edgesUpperBound.get(id);
+	}
+	
+	public GraphBounds getReverseGraph() {
+		if (this.reverseGraph == null) {
+			try {
+				// load existent reverse graph
+				reverseGraph = new GraphBoundsImpl(this.directory + "/reverse");
+				reverseGraph.load();
+			} catch (Exception e) {
+				// creates a new reverse graph
+				reverseGraph = new GraphBoundsImpl(this.directory);
+				reverseGraph.load();
+				reverseGraph.reverseGraph();
+				reverseGraph.setDirectory(this.directory + "/reverse");
+				reverseGraph.save();
+			}
+		}
+		return this.reverseGraph;
 	}
 }
