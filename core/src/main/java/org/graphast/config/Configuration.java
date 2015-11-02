@@ -51,7 +51,21 @@ public class Configuration {
 	 */
 	public static String getProperty(String key) {
 		return config.getProperty(key);
-	}	
+	}
+
+	public static String getProperty(String app, String key) {
+		return config.getProperty("graphast." + app + "." + key);
+	}
+
+	public static String getAppAbsoluteDir(String app) {
+		return config.getProperty("graphast." + app + ".dir").replace("${user.home}", USER_HOME);
+	}
+	
+	public static void setProperty(String app, String key, String value) {
+		if (value != null) {
+			config.setProperty("graphast." + app + "." + key, value);
+		}
+	}
 
 	public static void setProperty(String key, String value) {
 		config.setProperty(key, value);
@@ -60,7 +74,7 @@ public class Configuration {
 	/** Carrega ou recarrega as configurações da aplicação a partir do 
 	 * arquivo de propriedades config.properties.
 	 */
-	@SuppressWarnings({ "unchecked", "serial" })
+	@SuppressWarnings("serial")
 	public static void reload() {
 		try {
 			log.info("user.dir: {}", System.getProperty("user.dir"));
@@ -86,11 +100,6 @@ public class Configuration {
 			log.info("graphast.apps: {}", getApps());
 			log.info("graphast.selected.app: {}", getSelectedApp());
 
-			Enumeration<String> props = (Enumeration<String>) config.propertyNames();
-            while(props.hasMoreElements()){
-                    String s = props.nextElement();
-                    config.setProperty(s, config.getProperty(s).replace("${user.home}", USER_HOME));
-            }
 		} catch (Exception e) {
 			throw new GraphastException(e.getMessage(), e);
 		}
@@ -103,23 +112,66 @@ public class Configuration {
 			throw new GraphastException(e.getMessage(), e);
 		}
 	}
+
+	public static GraphInfo load(String app) {
+		GraphInfo result = new GraphInfo();
+		if (app != null) 
+			result.setAppName(app);
+		if (getProperty(app, "costs") != null) 
+			result.setCosts(getProperty(app, "costs"));
+		if (getProperty(app, "dir") != null) 
+			result.setGraphDir(getProperty(app, "dir"));
+		if (getProperty(app, "importer") != null) 
+			result.setImporter(getProperty(app, "importer"));
+		if (getProperty(app, "network") != null) 
+			result.setNetwork(getProperty(app, "network"));
+		if (getProperty(app, "edges") != null) 
+			result.setNumberOfEdges(Long.parseLong(getProperty(app, "edges")));
+		if (getProperty(app, "nodes") != null) 
+			result.setNumberOfNodes(Long.parseLong(getProperty(app, "nodes")));
+		if (getProperty(app, "pois") != null) 
+			result.setPois(getProperty(app, "pois"));
+		if (getProperty(app, "size") != null) 
+			result.setSize(Long.parseLong(getProperty(app, "size")));
+		if (getProperty(app, "number-pois") != null) 
+			result.setSize(Integer.parseInt(getProperty(app, "number-pois")));
+		if (getProperty(app, "number-poi-categories") != null) 
+			result.setSize(Integer.parseInt(getProperty(app, "number-poi-categories")));
+		
+		String filter = getProperty(app, "poi.category.filter");
+		if (filter != null) {
+			result.setPoiCategoryFilter(StringUtils.splitIntToList(",", filter));
+		}
+		return result;
+	}
 	
 	public static void save(GraphInfo graphInfo) {
-		String appName = graphInfo.getAppName();
-		config.setProperty("graphast." + appName + ".dir", graphInfo.getGraphDir());
-		config.setProperty("graphast." + appName + ".edges", String.valueOf(graphInfo.getNumberOfEdges()));
-		config.setProperty("graphast." + appName + ".nodes", String.valueOf(graphInfo.getNumberOfNodes()));
-		config.setProperty("graphast." + appName + ".size", String.valueOf(graphInfo.getSize()));
+		String app = graphInfo.getAppName();
+		setProperty(app, "costs", graphInfo.getCosts());
+		setProperty(app, "dir", graphInfo.getGraphDir());
+		setProperty(app, "importer", graphInfo.getImporter());
+		setProperty(app, "network", graphInfo.getNetwork());
+		setProperty(app, "edges", String.valueOf(graphInfo.getNumberOfEdges()));
+		setProperty(app, "nodes", String.valueOf(graphInfo.getNumberOfNodes()));
+		setProperty(app, "pois", graphInfo.getPois());
+		setProperty(app, "size", String.valueOf(graphInfo.getSize()));
+		setProperty(app, "number-pois", String.valueOf(graphInfo.getNumberOfPoIs()));
+		setProperty(app, "number-poi-categories", String.valueOf(graphInfo.getNumberOfPoICategories()));
+
+		if (graphInfo.getPoiCategoryFilter() != null) {
+			String filter = StringUtils.append(graphInfo.getPoiCategoryFilter());
+			setProperty(app, "poi.category.filter", filter);
+		}
 		save();
+	}
+
+	public static Properties getConfig() {
+		return config;
 	}
 	
 	public static void addApp(GraphInfo graphInfo) {
 		getApps().add(graphInfo);
 		config.setProperty("graphast.apps", getAppsNames(getApps()));
-	}
-	
-	public static Properties getConfig() {
-		return config;
 	}
 	
 	public static List<GraphInfo> getApps() {
@@ -128,32 +180,13 @@ public class Configuration {
 			List<GraphInfo> result = new ArrayList<GraphInfo>();
 			List<String> appsList = Arrays.asList(apps.split(","));
 			for (String app : appsList) {
-				GraphInfo graphInfo = new GraphInfo();
-				graphInfo.setAppName(app);
-				graphInfo.setGraphDir(config.getProperty("graphast." + app + ".dir"));
-				
-				String propertyName = "graphast." + app + ".edges";
-				if (config.getProperty(propertyName) != null) {
-					graphInfo.setNumberOfEdges(Long.valueOf(config.getProperty(propertyName)));
-				}
-				
-				propertyName = "graphast." + app + ".nodes";
-				if (config.getProperty(propertyName) != null) {
-					graphInfo.setNumberOfNodes(Long.valueOf(config.getProperty(propertyName)));
-				}
-				
-				propertyName = "graphast." + app + ".size";
-				if (config.getProperty(propertyName) != null) {
-					graphInfo.setSize(Long.valueOf(config.getProperty(propertyName)));
-				}
-				result.add(graphInfo);
+				result.add(load(app));
 			}
 			return result;
 		}
 		return null;
 	}
 
-	
 	public static String getSelectedApp() {
 		return config.getProperty("graphast.selected.app");
 	}
@@ -171,15 +204,6 @@ public class Configuration {
 			}
 		}
 		return sb.toString();
-	}
-	
-	public static List<Integer> getPOICategoryFilter() {
-		String filter = config.getProperty("graphast.category.filter");
-		return StringUtils.splitIntToList(",", filter);
-	}
-
-	public static void setPOICategoryFilter(String categoryFilter) {
-		config.setProperty("graphast.category.filter", categoryFilter);
 	}
 
 }

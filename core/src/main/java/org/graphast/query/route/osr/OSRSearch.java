@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 
 import org.graphast.geometry.PoI;
+import org.graphast.geometry.PoICategory;
 import org.graphast.model.Graph;
 import org.graphast.model.GraphBounds;
 import org.graphast.model.Node;
@@ -294,29 +295,19 @@ public class OSRSearch {
 			List<Integer> listOfPois = categories;
 			
 			if(possiblePoI.getCategory()>0) {
-
-				
-				
 				if(listOfPois.contains(possiblePoI.getCategory())) {
-					PoI temporaryPoI = new PoI(possiblePoI.getCategory(), possiblePoI.getLabel(), 
-							possiblePoI.getLatitude(), possiblePoI.getLongitude());
+					PoICategory poiCategory = new PoICategory(possiblePoI.getCategory());
+					PoI temporaryPoI = new PoI(possiblePoI.getLabel(), 
+							possiblePoI.getLatitude(), possiblePoI.getLongitude(), poiCategory);
 					temporaryListOfPoIs.add(temporaryPoI);
 					
 					listOfPois.remove((Integer)possiblePoI.getCategory());
 				}
-				
-				
-
 			}
-
 			shortestPath.setListOfPoIs(temporaryListOfPoIs);
-
 			allPaths.add(shortestPath);
-
 		}
-
 		Path resultPath = Path.pathsConcatanation(allPaths);
-		
 		return resultPath;
 	}
 	

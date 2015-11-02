@@ -2,7 +2,6 @@ package org.graphast.query.route.shortestpath.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -15,7 +14,6 @@ import org.graphast.model.Graph;
 import org.graphast.query.route.osr.Sequence;
 import org.graphast.query.route.shortestpath.AbstractShortestPathService;
 import org.graphast.query.route.shortestpath.dijkstra.DijkstraLinearFunction;
-import org.graphast.util.DateUtils;
 import org.graphast.util.DistanceUtils;
 
 public class Path {

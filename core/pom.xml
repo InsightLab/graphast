@@ -8,7 +8,13 @@
 	<name>graphast-core</name>
 	<description>Graphast Core API</description>
 	<url>https://github.com/ARiDa/graphast</url>
-	
+
+	<repositories>
+	    <repository>
+	      <id>maven-repo</id>
+	      <url>http://arida.github.io/maven-repo/</url>
+	    </repository>
+	</repositories>
 	
 	<licenses>
     		<license>
@@ -60,6 +66,11 @@
 			<version>1.7.7</version>
 		</dependency>
 
+		<dependency>
+			<groupId>de.morbz</groupId>
+			<artifactId>osmpoispbf</artifactId>
+			<version>1.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>

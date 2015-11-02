@@ -73,25 +73,19 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 
 			expandVertex(target, removed, wasTraversed, queue, parents);
 		}
-		throw new PathNotFoundException();
+		throw new PathNotFoundException("Path not found between (" + source.getLatitude() + "," + source.getLongitude() + ") and (" 
+				+ target.getLatitude() + "," + target.getLongitude() + ")");
 	}
-
-	
 	
 	public void init(Node source, Node target, PriorityQueue<TimeEntry> queue, 
 			HashMap<Long, RouteEntry> parents, int t){
 		int sid = convertToInt(source.getId());
 		
 		queue.offer(new TimeEntry(sid, 0, t, -1));
-
 	}
-	
-	
 
 	public abstract void expandVertex(Node target, TimeEntry removed, HashMap<Long, Integer> wasTraversed, 
 			PriorityQueue<TimeEntry> queue, HashMap<Long, RouteEntry> parents);
-
-	
 	
 	@Override
 	public Path shortestPath(Node source, Node target) {

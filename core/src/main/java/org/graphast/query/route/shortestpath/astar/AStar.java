@@ -68,7 +68,8 @@ public abstract class AStar extends AbstractShortestPathService{
 			
 			expandVertex(target, removed, wasTraversed, queue, parents);
 		}
-		throw new PathNotFoundException();
+		throw new PathNotFoundException("Path not found between (" + source.getLatitude() + "," + source.getLongitude() + ") and (" 
+				+ target.getLatitude() + "," + target.getLongitude() + ")");
 	}
 
 	public void init(Node source, Node target, PriorityQueue<LowerBoundEntry> queue,

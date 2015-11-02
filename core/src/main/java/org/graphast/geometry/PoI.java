@@ -2,21 +2,15 @@ package org.graphast.geometry;
 
 public class PoI extends Point {
 
-	private Integer categoryId;
+	private PoICategory poiCategory;
 	private String label;
 	
-	public PoI(Integer categoryId, String label, double latitude, double longitude) {
+	public PoI() {}
+	
+	public PoI(String label, double latitude, double longitude, PoICategory poiCategory) {
 		super(latitude, longitude);
-		this.categoryId = categoryId;
 		this.label = label;
-	}
-	
-	public Integer getCategoryId() {
-		return categoryId;
-	}
-	
-	public void setCategoryId(Integer categoryId) {
-		this.categoryId = categoryId;
+		this.poiCategory = poiCategory;
 	}
 	
 	public String getLabel() {
@@ -27,9 +21,17 @@ public class PoI extends Point {
 		this.label = label;
 	}
 	
+	public PoICategory getPoiCategory() {
+		return poiCategory;
+	}
+
+	public void setPoiCategory(PoICategory poiCategory) {
+		this.poiCategory = poiCategory;
+	}
+	
 	@Override
 	public String toString() {
-		return super.toString() + " categoryId:" + categoryId + " label:" + label;
+		return super.toString() + " label:" + label + " poiCategory:" + poiCategory;
 	}
 	
 }
