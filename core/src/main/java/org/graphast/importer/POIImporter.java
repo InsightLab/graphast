@@ -16,7 +16,14 @@ public class POIImporter {
 
 	//private static Logger log = LoggerFactory.getLogger(POIImporter.class);
 
-	public static void importPoIList(Graph graph, String path, List<Integer> poisFilter) {
+	/**
+	 * 
+	 * @param graph The graph that will receive the POIs.
+	 * @param path The file path from the file containing the POIs.
+	 * @param poisFilter A list of POI category IDs that must be imported. 
+	 * @return the number of created PoIs. 
+	 */
+	public static int importPoIList(Graph graph, String path, List<Integer> poisFilter) {
 
 		File f = new File(path);
 
@@ -41,6 +48,7 @@ public class POIImporter {
 
 			minTime = 1;
 			maxTime = 300000;
+			int numberOfPoIs = 0;
 
 			for(int i=0; i<96; i++) {
 				poiCosts[i] = random.nextInt(maxTime-minTime)+minTime;
@@ -53,6 +61,7 @@ public class POIImporter {
 					splittedRow = row.split("\\|");
 
 					if(poisFilter.contains(Integer.parseInt(splittedRow[0]))) {
+						numberOfPoIs++;
 						Node n = graph.getNearestNode(Double.parseDouble(splittedRow[2]), Double.parseDouble(splittedRow[3]));
 
 						n.setCategory(Integer.parseInt(splittedRow[0]));
@@ -68,6 +77,7 @@ public class POIImporter {
 			} else {
 				
 				while((row = br.readLine()) != null ) {
+					numberOfPoIs++;
 					
 					splittedRow = row.split("\\|");
 					
@@ -83,19 +93,15 @@ public class POIImporter {
 				}
 			
 			}
-
 			br.close();
-
+			return numberOfPoIs;
 		} catch (Exception e) {
 			throw new GraphastException(e.getMessage(), e);
 		}
-	
 	}
 
 	public static void importPoIList(Graph graph, String path) {
-
 		POIImporter.importPoIList(graph, path, null);
-
 	}
 
 }

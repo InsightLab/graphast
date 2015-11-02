@@ -7,8 +7,7 @@ import java.util.StringTokenizer;
 
 public class StringUtils {
 
-	
-	public static String append(List<String> list) {
+	public static String append(List<?> list) {
 		StringBuilder sb = new StringBuilder();
 		for (int i=1; i < list.size(); i++) {
 			sb.append(list.get(i));
@@ -45,6 +44,9 @@ public class StringUtils {
 	}
 
 	public static List<Integer> splitIntToList(String delimiter, String str) {
+		if (str == null) {
+			return null;
+		}
 		StringTokenizer st = new StringTokenizer(str, delimiter);
 		List<Integer> result = new ArrayList<>(st.countTokens());
 		while (st.hasMoreTokens()) {

@@ -12,6 +12,7 @@ import org.graphast.enums.CompressionType;
 import org.graphast.enums.TimeType;
 import org.graphast.geometry.BBox;
 import org.graphast.geometry.PoI;
+import org.graphast.geometry.PoICategory;
 import org.graphast.geometry.Point;
 import org.graphast.util.DistanceUtils;
 import org.graphast.util.FileUtils;
@@ -1431,7 +1432,8 @@ public class GraphImpl implements Graph {
 			Node n = this.getNode(i);
 			if ((categoryId == null && n.getCategory() >= 0) || 
 					(categoryId != null && n.getCategory() == categoryId)) {
-				result.add(new PoI(n.getCategory(), n.getLabel(), n.getLatitude(), n.getLongitude()));
+				PoICategory poiCategory = new PoICategory(n.getCategory());
+				result.add(new PoI(n.getLabel(), n.getLatitude(), n.getLongitude(), poiCategory));
 			}
 		}
 		return result;
