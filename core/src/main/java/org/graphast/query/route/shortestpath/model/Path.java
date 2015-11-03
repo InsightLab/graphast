@@ -155,6 +155,7 @@ public class Path {
 		while (!verificationQueue.isEmpty()) {
 			instructions.add(verificationQueue.poll());
 		}
+		Collections.reverse(instructions);
 	}
 
 
