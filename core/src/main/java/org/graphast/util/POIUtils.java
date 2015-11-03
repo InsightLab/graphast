@@ -1,12 +1,17 @@
 package org.graphast.util;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
@@ -30,7 +35,7 @@ import net.morbz.osmonaut.osm.EntityType;
 import net.morbz.osmonaut.osm.Tags;
 import net.morbz.osmonaut.osm.Way;
 
-public class POIScanner extends Scanner {
+public class POIUtils extends Scanner {
 	// Const
 	private static final String VERSION = "v1.1";
 	
@@ -46,7 +51,7 @@ public class POIScanner extends Scanner {
 	private static int lastPrintLen = 0;
 	private static long lastMillis = 0;
 		
-	private static Logger log = LoggerFactory.getLogger(POIScanner.class);
+	private static Logger log = LoggerFactory.getLogger(POIUtils.class);
 	
 	public static void execute(String[] args) {
 		log.info("OsmPoisPbf " + VERSION + " started");
@@ -359,5 +364,35 @@ public class POIScanner extends Scanner {
 		}
 		return filter.getCategory();
 	}	
+	
+	public static Map<Integer, String> readPoICategories(InputStream inputStream) {
+		BufferedReader br = null;
+		Map<Integer, String> result = new HashMap<Integer, String>(); 
+		try {
+			br = new BufferedReader(new InputStreamReader(inputStream));
+			String line;
+			while((line = br.readLine()) != null){
+				try {
+					int pos = line.indexOf(',');
+					int id = Integer.parseInt(line.substring(pos + 1));
+					String label = line.substring(0, pos);
+					result.put(id, label);
+				} catch (Exception e) {
+					log.debug("Could not convert line to a PoI Category: {}", line);
+				}
+			}
+		} catch (IOException e) {
+			throw new GraphastException(e.getMessage(), e);
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					throw new GraphastException(e.getMessage(), e);
+				}
+			}
+		}
+		return result;
+	}
 	
 }

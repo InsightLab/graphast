@@ -79,7 +79,7 @@ public class BoundsRoute extends AbstractBoundsSearchPoI implements Serializable
 	public void load() {
 		ObjectInputStream in = null;
 		try {
-			String dir = graph.getDirectory();
+			String dir = graph.getAbsoluteDirectory();
 			in = new ObjectInputStream(new FileInputStream(dir + "/bounds" + graphType));
 			this.bounds = (Map<Long, List<Bound>>) in.readObject();
 			in.close();	
@@ -100,7 +100,7 @@ public class BoundsRoute extends AbstractBoundsSearchPoI implements Serializable
 	public void save() {
 		ObjectOutputStream out = null;
 		try {
-			String dir = graph.getDirectory();
+			String dir = graph.getAbsoluteDirectory();
 			out = new ObjectOutputStream(new FileOutputStream(dir + "/bounds" + graphType));
 			out.writeObject(bounds);
 			out.close();	

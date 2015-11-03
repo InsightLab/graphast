@@ -1,13 +1,19 @@
 package org.graphast.app;
 
+import java.net.URL;
+import java.util.Map;
+
 import org.graphast.config.Configuration;
+import org.graphast.exception.GraphastException;
 import org.graphast.model.GraphBounds;
+import org.graphast.util.POIUtils;
 
 public class AppGraph {
 
 	private static GraphBounds graph;
 	private static String graphDir;
 	private static GraphService service = new GraphService();
+	private static Map<Integer, String> poiCategories;
 
 	private AppGraph() {	
 		super();
@@ -30,6 +36,17 @@ public class AppGraph {
 
 	public static void setGraphDir(String graphDir) {
 		AppGraph.graphDir = graphDir;
+	}
+
+	public static Map<Integer, String> getAllPoiCategories() {
+		if (poiCategories == null) {
+			poiCategories = POIUtils.readPoICategories(AppGraph.class.getResourceAsStream("/poi_types.csv"));
+		}
+		return poiCategories;
+	}
+
+	public static void setPoiCategories(Map<Integer, String> poiCategories) {
+		AppGraph.poiCategories = poiCategories;
 	} 
 
 }

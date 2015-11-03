@@ -1,5 +1,7 @@
 package org.graphast.geometry;
 
+import org.graphast.app.AppGraph;
+
 public class PoICategory {
 	private Integer id;
 	private String label;
@@ -7,7 +9,7 @@ public class PoICategory {
 	public PoICategory() {}
 	
 	public PoICategory(Integer id) {
-		this(id, null);
+		this(id, AppGraph.getAllPoiCategories().get(id));
 	}
 	
 	public PoICategory(Integer id, String label) {

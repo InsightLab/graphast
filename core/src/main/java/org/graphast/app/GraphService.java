@@ -11,7 +11,7 @@ import org.graphast.model.Graph;
 import org.graphast.model.GraphBounds;
 import org.graphast.model.GraphBoundsImpl;
 import org.graphast.util.FileUtils;
-import org.graphast.util.POIScanner;
+import org.graphast.util.POIUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +63,7 @@ public class GraphService {
 		
 		// Generate the PoIs
 		String poisFile = Configuration.GRAPHAST_DIR + "/" + appName + "-pois.csv";
-		POIScanner.execute(new String[] { "-of", poisFile, pbfFile });
+		POIUtils.execute(new String[] { "-of", poisFile, pbfFile });
 		
 		// Import the PoIs
 		List<Integer> poiCategoryFilter = graphInfo.getPoiCategoryFilter();
