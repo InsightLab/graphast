@@ -163,32 +163,34 @@ public class Path {
 	public static Path pathsConcatanation(List<Path> paths) {
 
 		Path path = new Path();
-		
+
 		List<Point> temporaryGeometry = new ArrayList<Point>();
 		List<Long> temporaryEdges = new ArrayList<Long>();
 		List<Instruction> temporaryInstructions = new ArrayList<Instruction>();
 		List<PoI> temporaryListOfPoIs = new ArrayList<PoI>();
 		long temporaryTotalDistance = 0;
 		double temporaryTotalCost = 0;
-		
-		int temporaryEndGeometry = 0;
-		
+
 		for(Path currentPath : paths) {
-			temporaryGeometry.addAll(currentPath.getGeometry());
-			temporaryEdges.addAll(currentPath.getEdges());
 			
 			for(Instruction instruction : currentPath.getInstructions()) {
-				instruction.setStartGeometry(instruction.getStartGeometry() + temporaryEndGeometry);
-				instruction.setEndGeometry(instruction.getEndGeometry() + temporaryEndGeometry);
-				temporaryEndGeometry = instruction.getEndGeometry();
+
+				instruction.setStartGeometry(instruction.getStartGeometry() + temporaryGeometry.size());
+				instruction.setEndGeometry(instruction.getEndGeometry()  + temporaryGeometry.size());
+
 			}
-			
+
 			temporaryInstructions.addAll(currentPath.getInstructions());
+
+			temporaryGeometry.addAll(currentPath.getGeometry());
+			temporaryEdges.addAll(currentPath.getEdges());
+
 			temporaryListOfPoIs.addAll(currentPath.getListOfPoIs());
 			temporaryTotalDistance = temporaryTotalDistance + currentPath.getTotalDistance();
 			temporaryTotalCost = temporaryTotalCost + currentPath.getTotalCost();
+			
 		}
-		
+
 
 		path.setGeometry(temporaryGeometry);
 		path.setEdges(temporaryEdges);
@@ -196,9 +198,9 @@ public class Path {
 		path.setListOfPoIs(temporaryListOfPoIs);
 		path.setTotalDistance(temporaryTotalDistance);
 		path.setTotalCost(temporaryTotalCost);
-		
+
 		return path;
-	
+
 	}
 
 	public void setTotalDistance(long totalDistance) {
@@ -244,7 +246,7 @@ public class Path {
 		path.setPath(instructions);
 		return path;
 	}
-	
+
 	@Override
 	public String toString() {
 

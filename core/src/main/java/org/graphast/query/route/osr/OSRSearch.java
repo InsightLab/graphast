@@ -276,7 +276,7 @@ public class OSRSearch {
 		serviceGraph = new DijkstraConstantWeight(graphBounds);
 
 		for(int i=0; i<result.size(); i++) {
-			if(i==result.size()-2) {
+			if(i==result.size()-1) {
 				break;
 			}
 
