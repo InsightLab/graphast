@@ -130,11 +130,11 @@ public class Configuration {
 		if (getProperty(app, "size") != null) 
 			result.setSize(Long.parseLong(getProperty(app, "size")));
 		if (getProperty(app, "number-pois") != null) 
-			result.setSize(Integer.parseInt(getProperty(app, "number-pois")));
+			result.setNumberOfPoIs(Integer.parseInt(getProperty(app, "number-pois")));
 		if (getProperty(app, "number-poi-categories") != null) 
-			result.setSize(Integer.parseInt(getProperty(app, "number-poi-categories")));
+			result.setNumberOfPoICategories(Integer.parseInt(getProperty(app, "number-poi-categories")));
 		if (getProperty(app, "query-services") != null) 
-			result.setPois(getProperty(app, "query-services"));
+			result.setQueryServices(getProperty(app, "query-services"));
 		
 		String filter = getProperty(app, "poi.category.filter");
 		if (filter != null) {

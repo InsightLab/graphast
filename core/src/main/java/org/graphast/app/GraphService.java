@@ -115,17 +115,15 @@ public class GraphService {
 	
 	public static void main(String[] args) {
 		GraphService service = new GraphService();
-		//service.load("monaco");
 		GraphInfo gi = new GraphInfo();
-		gi.setAppName("monaco-test4");
-		//gi.setNetwork("http://localhost:8000/monaco-test.osm.pbf");
+		gi.setAppName("monaco");
 		gi.setNetwork("http://download.geofabrik.de/europe/monaco-latest.osm.pbf");
+		//gi.setNetwork("http://download.bbbike.org/osm/bbbike/Seattle/Seattle.osm.pbf");
 		gi.setPoiCategoryFilter(StringUtils.splitIntToList(",","6,46,34,33,29,25,23,22,162,13,105"));
 		service.create(gi);
 		service.load("monaco-test4");
 		GraphBounds gb =  AppGraph.getGraph();
 		System.out.println("graph poi categories: " + gb.getPOICategories());
-		//service.create("http://localhost:8000/monaco-test.osm.pbf");
 	}
 	
 }
