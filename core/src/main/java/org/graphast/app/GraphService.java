@@ -60,7 +60,6 @@ public class GraphService {
 		graphInfo.setNumberOfEdges(graph.getNumberOfEdges());
 		graphInfo.setSize(FileUtils.folderSize(graph.getDirectory()));
 		Configuration.setSelectedApp(appName);
-		Configuration.addApp(graphInfo);
 		
 		// Generate the PoIs
 		String poisFile = Configuration.GRAPHAST_DIR + "/" + appName + "-pois.csv";
@@ -90,9 +89,8 @@ public class GraphService {
 		Configuration.reload();
 		if (app != null) {
 			Configuration.setSelectedApp(app);
-			Configuration.save();
 		}
-		String graphDir = Configuration.getProperty("graphast." + Configuration.getSelectedApp() + ".dir");
+		String graphDir = Configuration.getProperty(app, "dir");
 		AppGraph.setGraphDir(graphDir);
 		log.debug("graphDir: {}", graphDir);
 		GraphBounds graph = new GraphBoundsImpl(graphDir);
@@ -108,7 +106,7 @@ public class GraphService {
 		graphInfo.setGraphDir(graph.getDirectory());
 		graphInfo.setNumberOfEdges(graph.getNumberOfEdges());
 		graphInfo.setNumberOfNodes(graph.getNumberOfNodes());
-		graphInfo.setSize(FileUtils.folderSize(graph.getDirectory()));
+		graphInfo.setSize(FileUtils.folderSize(graph.getAbsoluteDirectory()));
 		graphInfo.setNumberOfPoIs(graph.getPOIs().size());
 		graphInfo.setNumberOfPoICategories(graph.getCategories().size());
 		return graphInfo;

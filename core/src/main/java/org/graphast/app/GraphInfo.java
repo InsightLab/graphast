@@ -16,20 +16,12 @@ public class GraphInfo {
 	private String pois;
 	private String costs;
 	private List<Integer> poiCategoryFilter;
+	private String queryServices;
 	
 	public GraphInfo() {
 		super();
 	}
 
-	public GraphInfo(String appName, String graphDir, int numberOfNodes, int numberOfEdges, int size) {
-		super();
-		this.appName = appName;
-		this.graphDir = graphDir;
-		this.numberOfNodes = numberOfNodes;
-		this.numberOfEdges = numberOfEdges;
-		this.size = size;
-	}
-	
 	public String getAppName() {
 		return appName;
 	}
@@ -115,6 +107,14 @@ public class GraphInfo {
 
 	public void setNumberOfPoICategories(int numberOfPoICategories) {
 		this.numberOfPoICategories = numberOfPoICategories;
+	}
+
+	public String getQueryServices() {
+		return queryServices;
+	}
+
+	public void setQueryServices(String queryServices) {
+		this.queryServices = queryServices;
 	}
 	
 }

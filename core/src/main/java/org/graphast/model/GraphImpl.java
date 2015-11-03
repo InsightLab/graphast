@@ -42,6 +42,8 @@ public class GraphImpl implements Graph {
 
 	protected String directory;
 
+	protected String absoluteDirectory;
+
 	private IntBigArrayBigList nodes;
 
 	private IntBigArrayBigList edges;
@@ -82,7 +84,7 @@ public class GraphImpl implements Graph {
 	}
 
 	public GraphImpl(String directory, CompressionType compressionType, TimeType timeType) {
-		this.directory = directory;
+		setDirectory(directory);
 		this.compressionType = compressionType;
 		setTimeType(timeType);
 
@@ -105,19 +107,19 @@ public class GraphImpl implements Graph {
 	 */
 	@Override
 	public void save() {
-		FileUtils.saveIntList(directory + "/nodes", nodes, blockSize,
+		FileUtils.saveIntList(absoluteDirectory + "/nodes", nodes, blockSize,
 				compressionType);
-		FileUtils.saveIntList(directory + "/edges", edges, blockSize,
+		FileUtils.saveIntList(absoluteDirectory + "/edges", edges, blockSize,
 				compressionType);
-		FileUtils.saveStringList(directory + "/nodesLabels", nodesLabels,
+		FileUtils.saveStringList(absoluteDirectory + "/nodesLabels", nodesLabels,
 				blockSize, compressionType);
-		FileUtils.saveStringList(directory + "/edgesLabels", edgesLabels,
+		FileUtils.saveStringList(absoluteDirectory + "/edgesLabels", edgesLabels,
 				blockSize, compressionType);
-		FileUtils.saveIntList(directory + "/nodesCosts", nodesCosts, blockSize,
+		FileUtils.saveIntList(absoluteDirectory + "/nodesCosts", nodesCosts, blockSize,
 				compressionType);
-		FileUtils.saveIntList(directory + "/edgesCosts", edgesCosts, blockSize,
+		FileUtils.saveIntList(absoluteDirectory + "/edgesCosts", edgesCosts, blockSize,
 				compressionType);
-		FileUtils.saveIntList(directory + "/points", points, blockSize,
+		FileUtils.saveIntList(absoluteDirectory + "/points", points, blockSize,
 				compressionType);
 	}
 
@@ -128,19 +130,19 @@ public class GraphImpl implements Graph {
 	 */
 	@Override
 	public void load() {
-		nodes = FileUtils.loadIntList(directory + "/nodes", blockSize,
+		nodes = FileUtils.loadIntList(absoluteDirectory + "/nodes", blockSize,
 				compressionType);
-		edges = FileUtils.loadIntList(directory + "/edges", blockSize,
+		edges = FileUtils.loadIntList(absoluteDirectory + "/edges", blockSize,
 				compressionType);
-		nodesLabels = FileUtils.loadStringList(directory + "/nodesLabels",
+		nodesLabels = FileUtils.loadStringList(absoluteDirectory + "/nodesLabels",
 				blockSize, compressionType);
-		edgesLabels = FileUtils.loadStringList(directory + "/edgesLabels",
+		edgesLabels = FileUtils.loadStringList(absoluteDirectory + "/edgesLabels",
 				blockSize, compressionType);
-		nodesCosts = FileUtils.loadIntList(directory + "/nodesCosts",
+		nodesCosts = FileUtils.loadIntList(absoluteDirectory + "/nodesCosts",
 				blockSize, compressionType);
-		edgesCosts = FileUtils.loadIntList(directory + "/edgesCosts",
+		edgesCosts = FileUtils.loadIntList(absoluteDirectory + "/edgesCosts",
 				blockSize, compressionType);
-		points = FileUtils.loadIntList(directory + "/points", 
+		points = FileUtils.loadIntList(absoluteDirectory + "/points", 
 				blockSize, compressionType);
 		createNodeIndex();
 		findBBox();
@@ -1454,8 +1456,13 @@ public class GraphImpl implements Graph {
 	public String getDirectory() {
 		return directory;
 	}
+
+	public String getAbsoluteDirectory() {
+		return absoluteDirectory;
+	}
 	
 	public void setDirectory(String directory) {
+		this.absoluteDirectory = FileUtils.getAbsolutePath(directory);
 		this.directory = directory;
 	}
 	
