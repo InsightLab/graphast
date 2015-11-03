@@ -7,11 +7,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 import java.util.TreeSet;
 
 import org.graphast.app.GraphInfo;
@@ -54,16 +54,12 @@ public class Configuration {
 	}
 
 	public static String getProperty(String app, String key) {
-		return config.getProperty("graphast." + app + "." + key);
+		return config.getProperty("graphast.app." + app + "." + key);
 	}
 
-	public static String getAppAbsoluteDir(String app) {
-		return config.getProperty("graphast." + app + ".dir").replace("${user.home}", USER_HOME);
-	}
-	
 	public static void setProperty(String app, String key, String value) {
 		if (value != null) {
-			config.setProperty("graphast." + app + "." + key, value);
+			config.setProperty("graphast.app." + app + "." + key, value);
 		}
 	}
 
@@ -137,6 +133,8 @@ public class Configuration {
 			result.setSize(Integer.parseInt(getProperty(app, "number-pois")));
 		if (getProperty(app, "number-poi-categories") != null) 
 			result.setSize(Integer.parseInt(getProperty(app, "number-poi-categories")));
+		if (getProperty(app, "query-services") != null) 
+			result.setPois(getProperty(app, "query-services"));
 		
 		String filter = getProperty(app, "poi.category.filter");
 		if (filter != null) {
@@ -157,6 +155,7 @@ public class Configuration {
 		setProperty(app, "size", String.valueOf(graphInfo.getSize()));
 		setProperty(app, "number-pois", String.valueOf(graphInfo.getNumberOfPoIs()));
 		setProperty(app, "number-poi-categories", String.valueOf(graphInfo.getNumberOfPoICategories()));
+		setProperty(app, "query-services", String.valueOf(graphInfo.getQueryServices()));
 
 		if (graphInfo.getPoiCategoryFilter() != null) {
 			String filter = StringUtils.append(graphInfo.getPoiCategoryFilter());
@@ -169,22 +168,29 @@ public class Configuration {
 		return config;
 	}
 	
-	public static void addApp(GraphInfo graphInfo) {
-		getApps().add(graphInfo);
-		config.setProperty("graphast.apps", getAppsNames(getApps()));
+	public static List<String> getAppNames() {
+		List<String> appsList = new ArrayList<String>();
+		Set<Object> set = config.keySet();
+		for (Object o : set) {
+			String s = o.toString();
+			if (s.startsWith("graphast.app.")) {
+				String appName = s.substring(13,s.lastIndexOf("."));
+				if (! appsList.contains(appName)) {
+					appsList.add(appName);
+				}
+			}
+		}
+		Collections.sort(appsList);
+		return appsList;
 	}
 	
 	public static List<GraphInfo> getApps() {
-		String apps = config.getProperty("graphast.apps");
-		if (apps != null) {
-			List<GraphInfo> result = new ArrayList<GraphInfo>();
-			List<String> appsList = Arrays.asList(apps.split(","));
-			for (String app : appsList) {
-				result.add(load(app));
-			}
-			return result;
+		List<String> appsList = getAppNames();
+		List<GraphInfo> result = new ArrayList<GraphInfo>();
+		for (String app : appsList) {
+			result.add(load(app));
 		}
-		return null;
+		return result;
 	}
 
 	public static String getSelectedApp() {
@@ -195,15 +201,4 @@ public class Configuration {
 		config.setProperty("graphast.selected.app", app);
 	}
 	
-	private static String getAppsNames(List<GraphInfo> list) {
-		StringBuilder sb = new StringBuilder();
-		for (int i=1; i < list.size(); i++) {
-			sb.append(list.get(i).getAppName());
-			if (i < list.size() - 1) {
-				sb.append(",");
-			}
-		}
-		return sb.toString();
-	}
-
 }

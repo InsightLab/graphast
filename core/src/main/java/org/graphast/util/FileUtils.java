@@ -17,6 +17,7 @@ import java.nio.channels.WritableByteChannel;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import org.graphast.config.Configuration;
 import org.graphast.enums.CompressionType;
 import org.graphast.exception.GraphastException;
 import org.slf4j.Logger;
@@ -457,7 +458,10 @@ public class FileUtils {
     }
 
     public static long folderSize(String directory) {
-    	return folderSize(new File(directory));
+    		if (directory == null) {
+    			return 0;
+    		}
+    		return folderSize(new File(directory));
     }
     
     public static long folderSize(File directory) {
@@ -469,6 +473,10 @@ public class FileUtils {
                 length += folderSize(file);
         }
         return length;
+    }
+    
+    public static String getAbsolutePath(String path) {
+		return path.replace("${user.home}", Configuration.USER_HOME);
     }
     
 }

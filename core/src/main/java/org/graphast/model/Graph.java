@@ -317,6 +317,8 @@ public interface Graph {
 	public List<Integer> getPOICategories();
 	
 	public String getDirectory();
+	
+	public String getAbsoluteDirectory();
 
 	public void setDirectory(String directory);
 }

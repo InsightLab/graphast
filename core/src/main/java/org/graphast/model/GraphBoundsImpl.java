@@ -31,21 +31,21 @@ public class GraphBoundsImpl extends GraphImpl implements GraphBounds, Serializa
 
 	public void save() {
 		super.save();
-		FileUtils.saveLong2IntMap(directory + "/edgesUpperBound", edgesUpperBound, blockSize, compressionType);
-		FileUtils.saveLong2IntMap(directory + "/edgesLowerBound", edgesLowerBound, blockSize, compressionType);
+		FileUtils.saveLong2IntMap(absoluteDirectory + "/edgesUpperBound", edgesUpperBound, blockSize, compressionType);
+		FileUtils.saveLong2IntMap(absoluteDirectory + "/edgesLowerBound", edgesLowerBound, blockSize, compressionType);
 
-		FileUtils.saveLong2IntMap(directory + "/nodesUpperBound", nodesUpperBound, blockSize, compressionType);
-		FileUtils.saveLong2IntMap(directory + "/nodesLowerBound", nodesLowerBound, blockSize, compressionType);
+		FileUtils.saveLong2IntMap(absoluteDirectory + "/nodesUpperBound", nodesUpperBound, blockSize, compressionType);
+		FileUtils.saveLong2IntMap(absoluteDirectory + "/nodesLowerBound", nodesLowerBound, blockSize, compressionType);
 	}
 
 
 	public void load() {
 		super.load();
-		FileUtils.loadLong2IntMap(directory + "/edgesUpperBound", blockSize, compressionType);
-		FileUtils.loadLong2IntMap(directory + "/edgesLowerBound", blockSize, compressionType);
+		FileUtils.loadLong2IntMap(absoluteDirectory + "/edgesUpperBound", blockSize, compressionType);
+		FileUtils.loadLong2IntMap(absoluteDirectory + "/edgesLowerBound", blockSize, compressionType);
 
-		FileUtils.loadLong2IntMap(directory + "/nodesUpperBound", blockSize, compressionType);
-		FileUtils.loadLong2IntMap(directory + "/nodesLowerBound", blockSize, compressionType);
+		FileUtils.loadLong2IntMap(absoluteDirectory + "/nodesUpperBound", blockSize, compressionType);
+		FileUtils.loadLong2IntMap(absoluteDirectory + "/nodesLowerBound", blockSize, compressionType);
 	}
 
 	public void createEdgesLowerBounds() {
