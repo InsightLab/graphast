@@ -12,6 +12,7 @@ import org.graphast.model.GraphBounds;
 import org.graphast.model.GraphBoundsImpl;
 import org.graphast.util.FileUtils;
 import org.graphast.util.POIUtils;
+import org.graphast.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -117,8 +118,13 @@ public class GraphService {
 		//service.load("monaco");
 		GraphInfo gi = new GraphInfo();
 		gi.setAppName("monaco-test4");
-		gi.setNetwork("http://localhost:8000/monaco-test.osm.pbf");
+		//gi.setNetwork("http://localhost:8000/monaco-test.osm.pbf");
+		gi.setNetwork("http://download.geofabrik.de/europe/monaco-latest.osm.pbf");
+		gi.setPoiCategoryFilter(StringUtils.splitIntToList(",","6,46,34,33,29,25,23,22,162,13,105"));
 		service.create(gi);
+		service.load("monaco-test4");
+		GraphBounds gb =  AppGraph.getGraph();
+		System.out.println("graph poi categories: " + gb.getPOICategories());
 		//service.create("http://localhost:8000/monaco-test.osm.pbf");
 	}
 	
