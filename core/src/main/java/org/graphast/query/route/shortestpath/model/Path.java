@@ -170,9 +170,18 @@ public class Path {
 		long temporaryTotalDistance = 0;
 		double temporaryTotalCost = 0;
 		
+		int temporaryEndGeometry = 0;
+		
 		for(Path currentPath : paths) {
 			temporaryGeometry.addAll(currentPath.getGeometry());
 			temporaryEdges.addAll(currentPath.getEdges());
+			
+			for(Instruction instruction : currentPath.getInstructions()) {
+				instruction.setStartGeometry(instruction.getStartGeometry() + temporaryEndGeometry);
+				instruction.setEndGeometry(instruction.getEndGeometry() + temporaryEndGeometry);
+				temporaryEndGeometry = instruction.getEndGeometry();
+			}
+			
 			temporaryInstructions.addAll(currentPath.getInstructions());
 			temporaryListOfPoIs.addAll(currentPath.getListOfPoIs());
 			temporaryTotalDistance = temporaryTotalDistance + currentPath.getTotalDistance();
@@ -188,31 +197,24 @@ public class Path {
 		path.setTotalCost(temporaryTotalCost);
 		
 		return path;
+	
 	}
-
-
-
-
 
 	public void setTotalDistance(long totalDistance) {
 		this.totalDistance = totalDistance;
 	}
 
-
 	public void setTotalCost(double totalCost) {
 		this.totalCost = totalCost;
 	}
-
 
 	public List<PoI> getListOfPoIs() {
 		return listOfPoIs;
 	}
 
-
 	public void setListOfPoIs(List<PoI> listOfPoIs) {
 		this.listOfPoIs = listOfPoIs;
 	}
-
 
 	public Path generatePath(double lat1, double lon1, double lat2, double lon2, Sequence sequence, Graph graph) {
 		List<Point> geometry = new ArrayList<Point>();
@@ -241,6 +243,7 @@ public class Path {
 		path.setPath(instructions);
 		return path;
 	}
+	
 	@Override
 	public String toString() {
 
