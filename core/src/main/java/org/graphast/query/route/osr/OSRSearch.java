@@ -15,6 +15,7 @@ import org.graphast.model.Graph;
 import org.graphast.model.GraphBounds;
 import org.graphast.model.Node;
 import org.graphast.query.route.shortestpath.AbstractShortestPathService;
+import org.graphast.query.route.shortestpath.dijkstra.DijkstraConstantWeight;
 import org.graphast.query.route.shortestpath.dijkstra.DijkstraLinearFunction;
 import org.graphast.query.route.shortestpath.model.Path;
 import org.graphast.util.DateUtils;
@@ -272,7 +273,7 @@ public class OSRSearch {
 
 		List<Path> allPaths = new ArrayList<Path>();
 
-		serviceGraph = new DijkstraLinearFunction(graphBounds);
+		serviceGraph = new DijkstraConstantWeight(graphBounds);
 
 		for(int i=0; i<result.size(); i++) {
 			if(i==result.size()-1) {
@@ -285,7 +286,7 @@ public class OSRSearch {
 			StopWatch sw = new StopWatch();
 
 			sw.start();
-			Path shortestPath = serviceGraph.shortestPath(source, target, time);
+			Path shortestPath = serviceGraph.shortestPath(source, target);
 			sw.stop();
 
 			Node possiblePoI = graphBounds.getNode(source);
