@@ -1,6 +1,9 @@
 package org.graphast.app;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
+import java.util.Set;
 
 import org.graphast.config.Configuration;
 import org.graphast.exception.GraphastException;
@@ -10,9 +13,9 @@ import org.graphast.importer.POIImporter;
 import org.graphast.model.Graph;
 import org.graphast.model.GraphBounds;
 import org.graphast.model.GraphBoundsImpl;
+import org.graphast.query.route.osr.BoundsRoute;
 import org.graphast.util.FileUtils;
 import org.graphast.util.POIUtils;
-import org.graphast.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,6 +87,14 @@ public class GraphService {
 		
 		graph.save();
 		Configuration.save(graphInfo);
+		
+		// Create a reverse graph for use with OSR
+		graph.getReverseGraph();
+		
+		// Create Route Bounds
+		BoundsRoute br = new BoundsRoute(graph, (short)0);
+		br.createBounds();
+		br.save();
 	}
 
 	public GraphInfo load(String app) {
@@ -102,6 +113,31 @@ public class GraphService {
 		return graphInfo;
 	}
 
+	public void delete(String app) {
+		String dir = Configuration.getProperty(app, "dir");
+		Properties props = Configuration.getConfig();
+		Set<Object> set = props.keySet();
+		List<String> removeKeys = new ArrayList<String>();
+		for (Object o : set) {
+			String key = o.toString();
+			// The app key should start with graphast.app.<appName>
+			if (key.length() > 13) {
+				String appName = key.substring(13,key.indexOf(".", 13));
+				if (appName.equals(app)) {
+					removeKeys.add(key);
+				}
+			}
+		}
+		if (removeKeys.size() == 0) {
+			throw new GraphastException("Entries for application " + app + " not found in " + Configuration.CONFIG_FILE);
+		}
+		for (String s : removeKeys) {
+			props.remove(s);
+		}
+		Configuration.save();
+		FileUtils.deleteDir(dir);
+	}
+	
 	private GraphInfo getGraphInfo(Graph graph) {
 		GraphInfo graphInfo = Configuration.load(Configuration.getSelectedApp());
 		graphInfo.setGraphDir(graph.getDirectory());
@@ -111,19 +147,6 @@ public class GraphService {
 		graphInfo.setNumberOfPoIs(graph.getPOIs().size());
 		graphInfo.setNumberOfPoICategories(graph.getCategories().size());
 		return graphInfo;
-	}
-	
-	public static void main(String[] args) {
-		GraphService service = new GraphService();
-		GraphInfo gi = new GraphInfo();
-		gi.setAppName("monaco");
-		gi.setNetwork("http://download.geofabrik.de/europe/monaco-latest.osm.pbf");
-		//gi.setNetwork("http://download.bbbike.org/osm/bbbike/Seattle/Seattle.osm.pbf");
-		gi.setPoiCategoryFilter(StringUtils.splitIntToList(",","6,46,34,33,29,25,23,22,162,13,105"));
-		service.create(gi);
-		service.load("monaco-test4");
-		GraphBounds gb =  AppGraph.getGraph();
-		System.out.println("graph poi categories: " + gb.getPOICategories());
 	}
 	
 }

@@ -1323,6 +1323,7 @@ public class GraphImpl implements Graph {
 
 	// TODO This method must be improved. It should use a spatial index to 
 	// be much more efficient.
+	// See rtree implementation in: https://github.com/davidmoten/rtree 
 	public Node getNearestNode (double latitude, double longitude) {
 		StopWatch sw = new StopWatch();
 		sw.start();
@@ -1344,7 +1345,7 @@ public class GraphImpl implements Graph {
 		}
 
 		sw.stop();
-		log.debug("Execution Time of getNearestNode(): {}ms", sw.getTime());
+		//log.debug("Execution Time of getNearestNode(): {}ms", sw.getTime());
 
 		return nearestNode;
 	}

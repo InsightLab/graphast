@@ -357,6 +357,9 @@ public class FileUtils {
 	}
 
 	public static void deleteDir(String dir) {
+		if (dir == null) {
+			return;
+		}
 		File pathName = new File(dir);
 		deleteDir(pathName);
 	}
@@ -429,20 +432,21 @@ public class FileUtils {
     }
     
     public static String download(String url, String path) {
-    	if (url == null) {
-    		throw new GraphastException("URL can not be null.");
-    	}
-    	String result = null;
-    	FileOutputStream fos = null;
+	    	if (url == null) {
+	    		throw new GraphastException("URL can not be null.");
+	    	}
+	    	String result = null;
+	    	FileOutputStream fos = null;
 		try {
+			log.info("Downloading from {}", url);
 			URL website = new URL(url);
-	    	ReadableByteChannel rbc = Channels.newChannel(website.openStream());
-	    	String file = website.getPath();
-	    	file = file.substring(file.lastIndexOf('/') + 1);
-	    	result = path + "/" + file;
-	    	fos = new FileOutputStream(result);
-	    	fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-	    	log.info("Successful download of file {}", result);
+		    	ReadableByteChannel rbc = Channels.newChannel(website.openStream());
+		    	String file = website.getPath();
+		    	file = file.substring(file.lastIndexOf('/') + 1);
+		    	result = path + "/" + file;
+		    	fos = new FileOutputStream(result);
+		    	fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+		    	log.info("Successful download of file {}", result);
 		} catch (IOException e) {
 			throw new GraphastException(e.getMessage(), e);
 		} finally {

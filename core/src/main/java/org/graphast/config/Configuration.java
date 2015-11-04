@@ -64,7 +64,9 @@ public class Configuration {
 	}
 
 	public static void setProperty(String key, String value) {
-		config.setProperty(key, value);
+		if (value != null) {
+			config.setProperty(key, value);
+		}
 	}	
 	
 	/** Carrega ou recarrega as configurações da aplicação a partir do 
@@ -93,7 +95,7 @@ public class Configuration {
 			log.info("config file: {}", CONFIG_FILE);
 			config.load(new FileInputStream(CONFIG_FILE));
 
-			log.info("graphast.apps: {}", getApps());
+			log.info("graphast.apps: {}", getAppNames());
 			log.info("graphast.selected.app: {}", getSelectedApp());
 
 		} catch (Exception e) {
@@ -172,9 +174,10 @@ public class Configuration {
 		List<String> appsList = new ArrayList<String>();
 		Set<Object> set = config.keySet();
 		for (Object o : set) {
-			String s = o.toString();
-			if (s.startsWith("graphast.app.")) {
-				String appName = s.substring(13,s.lastIndexOf("."));
+			// The app key should start with graphast.app.<appName>
+			String key = o.toString();
+			if (key.startsWith("graphast.app.")) {
+				String appName = key.substring(13,key.indexOf(".", 13));
 				if (! appsList.contains(appName)) {
 					appsList.add(appName);
 				}

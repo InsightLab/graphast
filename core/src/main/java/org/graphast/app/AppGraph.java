@@ -1,10 +1,8 @@
 package org.graphast.app;
 
-import java.net.URL;
 import java.util.Map;
 
 import org.graphast.config.Configuration;
-import org.graphast.exception.GraphastException;
 import org.graphast.model.GraphBounds;
 import org.graphast.util.POIUtils;
 
