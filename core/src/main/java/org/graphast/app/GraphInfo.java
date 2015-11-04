@@ -6,11 +6,11 @@ public class GraphInfo {
 
 	private String appName;
 	private String graphDir;
-	private long numberOfNodes;
-	private long numberOfEdges;
-	private int numberOfPoIs;
-	private int numberOfPoICategories;
-	private long size;
+	private Long numberOfNodes;
+	private Long numberOfEdges;
+	private Integer numberOfPoIs;
+	private Integer numberOfPoICategories;
+	private Long size;
 	private String network;
 	private String importer;
 	private String pois;
@@ -34,22 +34,22 @@ public class GraphInfo {
 	public void setGraphDir(String graphDir) {
 		this.graphDir = graphDir;
 	}
-	public long getNumberOfNodes() {
+	public Long getNumberOfNodes() {
 		return numberOfNodes;
 	}
-	public void setNumberOfNodes(long numberOfNodes) {
+	public void setNumberOfNodes(Long numberOfNodes) {
 		this.numberOfNodes = numberOfNodes;
 	}
-	public long getNumberOfEdges() {
+	public Long getNumberOfEdges() {
 		return numberOfEdges;
 	}
-	public void setNumberOfEdges(long numberOfEdges) {
+	public void setNumberOfEdges(Long numberOfEdges) {
 		this.numberOfEdges = numberOfEdges;
 	}
-	public long getSize() {
+	public Long getSize() {
 		return size;
 	}
-	public void setSize(long size) {
+	public void setSize(Long size) {
 		this.size = size;
 	}
 
@@ -93,19 +93,19 @@ public class GraphInfo {
 		this.poiCategoryFilter = poiCategoryFilter;
 	}
 
-	public int getNumberOfPoIs() {
+	public Integer getNumberOfPoIs() {
 		return numberOfPoIs;
 	}
 
-	public void setNumberOfPoIs(int numberOfPoIs) {
+	public void setNumberOfPoIs(Integer numberOfPoIs) {
 		this.numberOfPoIs = numberOfPoIs;
 	}
 
-	public int getNumberOfPoICategories() {
+	public Integer getNumberOfPoICategories() {
 		return numberOfPoICategories;
 	}
 
-	public void setNumberOfPoICategories(int numberOfPoICategories) {
+	public void setNumberOfPoICategories(Integer numberOfPoICategories) {
 		this.numberOfPoICategories = numberOfPoICategories;
 	}
 

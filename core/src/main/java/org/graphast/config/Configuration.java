@@ -157,7 +157,7 @@ public class Configuration {
 		setProperty(app, "size", String.valueOf(graphInfo.getSize()));
 		setProperty(app, "number-pois", String.valueOf(graphInfo.getNumberOfPoIs()));
 		setProperty(app, "number-poi-categories", String.valueOf(graphInfo.getNumberOfPoICategories()));
-		setProperty(app, "query-services", String.valueOf(graphInfo.getQueryServices()));
+		setProperty(app, "query-services", graphInfo.getQueryServices());
 
 		if (graphInfo.getPoiCategoryFilter() != null) {
 			String filter = StringUtils.append(graphInfo.getPoiCategoryFilter());

@@ -101,6 +101,8 @@ public class GraphService {
 		Configuration.reload();
 		if (app != null) {
 			Configuration.setSelectedApp(app);
+		} else {
+			
 		}
 		String graphDir = Configuration.getProperty(app, "dir");
 		AppGraph.setGraphDir(graphDir);
