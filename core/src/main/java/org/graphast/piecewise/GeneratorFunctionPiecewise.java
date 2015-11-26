@@ -38,13 +38,38 @@ public class GeneratorFunctionPiecewise {
 		double[] pontosInflexao = caller.getParser().getAsDoubleArray("pontosInflexao");
 		
 		PontoGeometrico pontoInicialGeo = new PontoGeometrico(pontoInicial[0], pontoInicial[1]);
-		PontoGeometrico pontoFinalGeo = new PontoGeometrico(pontosInflexao[0], pontosInflexao[pontosInflexao.length/2]);
+		PontoGeometrico pontoFinalGeo0 = new PontoGeometrico(pontosInflexao[0], pontosInflexao[pontosInflexao.length/2]);
 		
-		double coeficienteAngular = getCoeficienteAngular(pontoInicialGeo, pontoFinalGeo);
-		double coeficienteLinear = getCoeficienteLinear(pontoInicialGeo, coeficienteAngular);
-		double y = coeficienteAngular *  timestamp + coeficienteLinear;
+		double coeficienteAngularAnterior = getCoeficienteAngular(pontoInicialGeo, pontoFinalGeo0);
+		double coeficienteLinearAnterior = getCoeficienteLinear(pontoInicialGeo, coeficienteAngularAnterior);
+					
 		
-		return y;
+		double yFinal = 0;
+		for (int i = 0; i < (pontosInflexao.length/2) - 1; i++) {
+			
+			PontoGeometrico pontoGeo1 = new PontoGeometrico(pontosInflexao[i], pontosInflexao[pontosInflexao.length/2+i]);
+			PontoGeometrico pontoGeo2 = new PontoGeometrico(pontosInflexao[i+1], pontosInflexao[pontosInflexao.length/2+(i+1)]);
+			double coeficienteAngularCurrent = getCoeficienteAngular(pontoGeo1, pontoGeo2);
+			double coeficienteLinearCurrent = getCoeficienteLinear(pontoGeo1, coeficienteAngularCurrent);
+			
+			yFinal = yFinal + (coeficienteAngularAnterior + pontoGeo1.getX() * (coeficienteLinearAnterior - coeficienteLinearCurrent));
+			
+			coeficienteAngularAnterior = coeficienteAngularCurrent;
+			coeficienteLinearAnterior = coeficienteLinearCurrent; 
+		}
+		
+		double[] pontoFinal = caller.getParser().getAsDoubleArray("pontoFinal");
+		
+		PontoGeometrico ponto1FinalGeo = new PontoGeometrico(pontosInflexao[(pontosInflexao.length/2)-1],
+				pontosInflexao[pontosInflexao.length - 1]);
+		PontoGeometrico ponto2FinalGeo = new PontoGeometrico(pontoFinal[0], pontoFinal[1]);
+		
+		double coeficienteAngularFinal = getCoeficienteAngular(ponto1FinalGeo, ponto2FinalGeo);
+		double coeficienteLinearFinal = getCoeficienteLinear(ponto1FinalGeo, coeficienteAngularFinal);
+		
+		yFinal = yFinal + (coeficienteAngularFinal * timestamp + coeficienteLinearFinal);
+				
+		return yFinal;
 	}
 	
 	private double getCoeficienteLinear(PontoGeometrico pontoInicialGeo, double coeficienteAngular) {
