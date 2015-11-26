@@ -110,37 +110,4 @@ public class RCallerEnvironmentsTest {
 		System.out.println(caller.getParser().getXMLFileAsString());
 		Assert.assertNotNull(caller.getParser().getXMLFileAsString());
 	}
-	
-	@Test
-	public void rcallerSetParameterTest() throws IOException, PiecewiseException {
-		
-		RCaller caller = new RCaller();
-		RCode code = caller.getRCode();
-		caller.setRscriptExecutable(RSCRIPT);
-
-		IGeneratorFunctionPiecewise generatorFunctionPiecewise = new GeneratorFunctionPiecewiseDatabase();
-		double[][] d = generatorFunctionPiecewise.getData();
-		
-		code.addDoubleMatrix("d", d);
-		code.addRCode("dados.frame <- data.frame(d)");
-		code.addRCode("dados.loess <- loess(dados.frame)");
-		code.addRCode("xl <- with(dados.loess, seq(min(x), max(x), (max(x) - min(x))/1000))");
-		code.addRCode("y.predict <- predict(dados.loess, xl)");
-		code.addRCode("infl <- c(FALSE, diff(diff(y.predict)>0)!=0)");
-		code.addRCode("objMin <- cbind(xl, y.predict)[xl == min(xl),]");
-		code.addRCode("obj <- cbind(xl, y.predict)[infl,]");
-		code.addRCode("objMax <- cbind(xl, y.predict)[xl == max(xl),]");
-		code.addRCode("allObjects<-list(resultMin=objMin, resultMax=objMax, resultObj=obj)");
-		
-		caller.setRCode(code);
-		caller.runAndReturnResult("dados.loess");
-
-		System.out.println(caller.getParser().getXMLFileAsString());
-		Assert.assertNotNull(caller.getParser().getXMLFileAsString());
-		
-	}
-	
-
-
-
 }
