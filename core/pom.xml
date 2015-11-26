@@ -14,6 +14,20 @@
 	      <id>maven-repo</id>
 	      <url>http://arida.github.io/maven-repo/</url>
 	    </repository>
+	    <!-- 
+	    <repository>
+		   <id>sonatype-nexus-snapshots</id>
+		    <name>Sonatype Nexus Snapshots</name>
+		     <url>
+		      https://oss.sonatype.org/service/local/staging/deploy/maven2/
+		     </url>
+		     <releases>
+		      <enabled>true</enabled>
+		     </releases>
+		     <snapshots>
+		      <enabled>true</enabled>
+		     </snapshots>
+		</repository> -->
 	</repositories>
 	
 	<licenses>
@@ -77,9 +91,20 @@
 		    <artifactId>rtree</artifactId>
 		    <version>0.7.1</version>
 		</dependency>
+		<!-- 
+		 <dependency>
+			  <groupId>org.expr.rcaller</groupId>
+			  <artifactId>RCaller</artifactId>
+			  <version>2.6.0.3</version>
+		 </dependency> -->
+		 
+		 <dependency>
+			<groupId>postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>9.1-901-1.jdbc4</version>
+		</dependency>
+		 
 	</dependencies>
-
-
 
 	<build>
 		<plugins>
