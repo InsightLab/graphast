@@ -12,7 +12,7 @@ public class NodeImpl implements Node {
 
 	private long externalId;
 
-	private int category;
+	private int category = -1;
 
 	private int latitude;
 
