@@ -2,11 +2,25 @@ package org.graphast.model;
 
 import static org.graphast.util.GeoUtils.latLongToDouble;
 import static org.graphast.util.GeoUtils.latLongToInt;
+import it.unimi.dsi.fastutil.BigArrays;
+import it.unimi.dsi.fastutil.ints.IntBigArrayBigList;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import it.unimi.dsi.fastutil.ints.IntSet;
+import it.unimi.dsi.fastutil.longs.Long2IntMap;
+import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2LongMap;
+import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
+import it.unimi.dsi.fastutil.longs.LongList;
+import it.unimi.dsi.fastutil.objects.ObjectBigArrayBigList;
+import it.unimi.dsi.fastutil.objects.ObjectBigList;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.graphast.enums.CompressionType;
 import org.graphast.enums.TimeType;
@@ -20,19 +34,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.graphhopper.util.StopWatch;
-
-import it.unimi.dsi.fastutil.BigArrays;
-import it.unimi.dsi.fastutil.ints.IntBigArrayBigList;
-import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
-import it.unimi.dsi.fastutil.ints.IntSet;
-import it.unimi.dsi.fastutil.longs.Long2IntMap;
-import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
-import it.unimi.dsi.fastutil.longs.Long2LongMap;
-import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap;
-import it.unimi.dsi.fastutil.longs.LongArrayList;
-import it.unimi.dsi.fastutil.longs.LongList;
-import it.unimi.dsi.fastutil.objects.ObjectBigArrayBigList;
-import it.unimi.dsi.fastutil.objects.ObjectBigList;
 
 public class GraphImpl implements Graph {
 
@@ -825,7 +826,8 @@ public class GraphImpl implements Graph {
 		return listPoints;
 	}
 
-	Long getNodeId(int latitude, int longitude) {
+	@Override
+	public Long getNodeId(int latitude, int longitude) {
 
 		Long result = nodeIndex.get(BigArrays.index(latitude, longitude));
 
@@ -846,7 +848,9 @@ public class GraphImpl implements Graph {
 	 */
 	@Override
 	public Long getNodeId(double latitude, double longitude) {
-
+		if(this.getNumberOfNodes()==0) {
+			return null;
+		}
 		int lat, lon;
 
 		lat = latLongToInt(latitude);
@@ -1467,4 +1471,17 @@ public class GraphImpl implements Graph {
 		this.directory = directory;
 	}
 	
+	@Override
+	public Set<Long> getPoiIds() {
+		Set<Long> ids = new HashSet<>();
+		long max = nodes.size64()/Node.NODE_BLOCKSIZE;
+		for (long id = 0; id<max; id++) {
+			long position = id*Node.NODE_BLOCKSIZE;
+			int category = nodes.getInt(position + 2);
+			if (category >= 0) {
+				ids.add(id);
+			}
+		}
+		return ids;
+	}
 }
