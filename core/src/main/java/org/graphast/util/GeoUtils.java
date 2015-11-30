@@ -1,5 +1,9 @@
 package org.graphast.util;
 
+import org.graphast.model.Edge;
+import org.graphast.model.GraphBounds;
+import org.graphast.model.Node;
+
 public class GeoUtils {
 	
 	final private static double R_MAJOR = 6378137.0;
@@ -88,6 +92,12 @@ public class GeoUtils {
         double ts = Math.tan(0.5 * ((Math.PI*0.5) - phi))/con;
         double y = 0 - R_MAJOR * Math.log(ts);
         return y;
-    }	
+    }
+
+	public static boolean isPointInEdgeLine(GraphBounds graph, Node point, Edge edge) {
+		Node start = graph.getNode(edge.getFromNode());
+		Node end = graph.getNode(edge.getToNode());
+		return DistanceUtils.distanceLatLong(start, point)+DistanceUtils.distanceLatLong(point, end)-DistanceUtils.distanceLatLong(start, end)<=0.1;
+	}	
 
 }
