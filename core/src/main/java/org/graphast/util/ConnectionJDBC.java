@@ -21,7 +21,7 @@ public class ConnectionJDBC {
 	public static Connection getConnection() throws ClassNotFoundException,
 			SQLException, IOException {
 
-		if (connection == null) {
+		if (connection == null || connection.isClosed()) {
 
 			Properties properties = new Properties();
 			properties.load(new FileInputStream(new File(FILE_NAME_PROPERTIES)));
