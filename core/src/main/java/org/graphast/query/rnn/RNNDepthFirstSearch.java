@@ -59,9 +59,10 @@ public class RNNDepthFirstSearch implements IRNNTimeDependent {
 
 	private NearestNeighbor createNN(Node root, long currentPoi, Path path) {
 
-		NearestNeighbor nearestNeighbor = new NearestNeighbor();
+		NearestNeighbor nearestNeighbor = null;
 		if (currentPoi > -1) {
 
+			nearestNeighbor = new NearestNeighbor();
 			nearestNeighbor.setDistance((int) path.getTotalCost());
 			nearestNeighbor.setId(currentPoi);
 
