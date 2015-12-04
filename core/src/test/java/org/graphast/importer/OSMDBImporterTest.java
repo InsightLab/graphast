@@ -1,6 +1,7 @@
 package org.graphast.importer;
 
 import org.graphast.config.Configuration;
+import org.graphast.model.Edge;
 import org.graphast.model.GraphBounds;
 import org.junit.Assert;
 import org.junit.Test;
@@ -14,9 +15,24 @@ public class OSMDBImporterTest {
 		OSMDBImporter importer = new OSMDBImporter("view_exp_1k", PATH_GRAPH);
 		GraphBounds graph = importer.execute();
 		Assert.assertNotNull(graph);
-		Assert.assertEquals(15, graph.getCategories().size());
-		Assert.assertEquals(809+15, graph.getNumberOfNodes());
-		Assert.assertEquals(844+15, graph.getNumberOfEdges());
+		//Assert.assertEquals(15, graph.getCategories().size());
+		//Assert.assertEquals(809+15, graph.getNumberOfNodes());
+		//Assert.assertEquals(844+15, graph.getNumberOfEdges());
+		
+		Assert.assertEquals(14, graph.getCategories().size());
+		Assert.assertEquals(809, graph.getNumberOfNodes());
+		Assert.assertEquals(844, graph.getNumberOfEdges());
+	}
+	
+	@Test
+	public void costEdgeTest() {
+		OSMDBImporter importer = new OSMDBImporter("view_exp_1k", PATH_GRAPH);
+		GraphBounds graphBounds = importer.execute();
+		
+		for (int i = 0; i < graphBounds.getNumberOfEdges() - 1; i++) {
+			Edge edge = graphBounds.getEdge(i);
+			Assert.assertEquals(96, edge.getCosts().length);
+		}
 	}
 	
 	@Test
