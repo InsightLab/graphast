@@ -39,7 +39,7 @@ public class CompareRNNSearchsMethodsAnalysis {
 		RNNDepthFirstSearch rnnDFS = new RNNDepthFirstSearch(graph);
 		RNNBreadthFirstSearch rnnBFS = new RNNBreadthFirstSearch(graphReverse);
 		
-		Date timeout = DateUtils.parseDate(00, 20, 00);
+		Date timeout = DateUtils.parseDate(00, 50, 00);
 		Date timestamp = DateUtils.parseDate(00, 00, 00);
 		
 		FileWriter rnnDFSFileCsv = new FileWriter(tableName+"_rnn_dfs.csv");
@@ -58,9 +58,9 @@ public class CompareRNNSearchsMethodsAnalysis {
 	private static void runSearchAndWrite(GraphBounds graph, IRNNTimeDependent rnn,
 			Node customer, Date timeout, Date timestamp, FileWriter fileCsv) throws IOException {
 		try {
-			long startTime = System.currentTimeMillis();
+			long startTime = System.nanoTime();
 			NearestNeighbor solution = rnn.search(customer, timeout, timestamp);
-			long endTime = System.currentTimeMillis();
+			long endTime = System.nanoTime();
 			
 			long time = endTime - startTime;
 			
@@ -74,7 +74,8 @@ public class CompareRNNSearchsMethodsAnalysis {
 				distance = solution.getDistance();
 				nodesSize = solution.getPath().size();
 				path = solution.getPath();
-				externalId = graph.getNode(solution.getId()).getExternalId();
+				//externalId = graph.getNode(solution.getId()).getExternalId();
+				externalId = Integer.valueOf(graph.getNode(solution.getId()).getCategory()).longValue();
 				
 				String coordinatesCustomer = customer.getLongitude() + "," + customer.getLatitude();
 				String gidCustomer = customer.getLabel();
@@ -92,11 +93,10 @@ public class CompareRNNSearchsMethodsAnalysis {
 					gidVisited = gidVisited + "-" + nodeVisited.getLabel();
 				}
 				
-				
-				
 				String currentLine = String.format("%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s", coordinatesCustomer, 
 						poiCoordinate, time, solutionId, externalId, distance, 
 						nodesSize, path, coordinateNodeVisited, gidCustomer, gidPoi, gidVisited) + "\n";
+				
 				
 				System.out.println(currentLine);
 				
