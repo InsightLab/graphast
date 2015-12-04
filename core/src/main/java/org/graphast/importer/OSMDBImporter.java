@@ -84,14 +84,14 @@ public class OSMDBImporter implements Importer {
 
 				if (previousNode != null && !previousNode.getId().equals(node.getId())) {
 					LOGGER.log(Level.INFO, String.format("Add edge from previous: %s to current: %s node", previousNode.getId(), node.getId()));
-					Edge edge = new EdgeImpl(idRoad, previousNode.getId() .longValue(), node.getId().longValue(), 0);
+					Edge edge = new EdgeImpl(idRoad, previousNode.getId().longValue(), node.getId().longValue(), 0, String.valueOf(idRoad));
 					addCost(edge);
 					graph.addEdge(edge);
 					if(mapTaxi.containsKey(idRoad)) {
 						for(int i=0; i<mapTaxi.get(idRoad).size(); i++) {
 							Node taxi = mapTaxi.get(idRoad).get(i);
 							if (GeoUtils.isPointInEdgeLine(graph, taxi, edge)) {
-								connectTaxiToEdge(taxi, node);
+								defineNodeWithTaxi(taxi, node);
 								mapTaxi.get(idRoad).remove(i);
 								i--;
 							}
@@ -118,6 +118,12 @@ public class OSMDBImporter implements Importer {
 		edge.setCosts(costs);
 	}
 
+	private void defineNodeWithTaxi(Node taxi, Node node) {
+		long externalId = taxi.getExternalId();
+		graph.setNodeCategory(node.getId(), Long.valueOf(externalId).intValue());
+	}
+	
+	@Deprecated
 	private void connectTaxiToEdge(Node taxi, Node end) {
 		graph.addNode(taxi);
 		LOGGER.log(Level.INFO, String.format("Taxi %s lies in edge and now taxi is node: %s", taxi.getCategory(), taxi.getId()));
@@ -137,10 +143,11 @@ public class OSMDBImporter implements Importer {
 		double distanceBetweenLatLongHaversine = DistanceUtils.distanceLatLong(nodeFrom.getLatitude(), nodeFrom.getLongitude(), 
 				nodeTo.getLatitude(), nodeTo.getLongitude());
 
-		for (int i : costs) {
+		for (int i = 0; i < costs.length; i++) {
 			costs[i] = Double.valueOf(distanceBetweenLatLongHaversine)
 					.intValue();
 		}
+		
 		edge.setCosts(costs);
 	}
 }
