@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class NearestNeighbor implements Comparable<NearestNeighbor> {
     private long id;
     private int distance;
+    private double travelTime;
     private ArrayList<Long> path;
     private int numberVisitedNodes;
      
@@ -26,6 +27,14 @@ public class NearestNeighbor implements Comparable<NearestNeighbor> {
         this(id, distance, path);
         this.numberVisitedNodes = numberVisitedNodes;
     }
+    
+    public NearestNeighbor(long id, double travelTime, ArrayList<Long> path, int numberVisitedNodes){
+    	this.id = id;
+        this.path = path;
+        this.travelTime = travelTime;
+        this.numberVisitedNodes = numberVisitedNodes;
+    }
+     
      
     public long getId() {
         return id;
@@ -74,5 +83,13 @@ public class NearestNeighbor implements Comparable<NearestNeighbor> {
 
 	public void setNumberVisitedNodes(int numberVisitedNodes) {
 		this.numberVisitedNodes = numberVisitedNodes;
+	}
+
+	public double getTravelTime() {
+		return travelTime;
+	}
+
+	public void setTravelTime(double travelTime) {
+		this.travelTime = travelTime;
 	}
 }
