@@ -24,6 +24,7 @@ public class Path {
 	private List<PoI> listOfPoIs;
 	private long totalDistance;
 	private double totalCost;
+	private int numberVisitedNodes;
 
 	public Path() {
 
@@ -328,4 +329,13 @@ public class Path {
 		return totalCost;
 	}
 
+
+	public int getNumberVisitedNodes() {
+		return numberVisitedNodes;
+	}
+
+
+	public void setNumberVisitedNodes(int numberVisitedNodes) {
+		this.numberVisitedNodes = numberVisitedNodes;
+	}
 }
