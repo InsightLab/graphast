@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-import org.graphast.config.Configuration;
+import org.graphast.importer.CostGenerator;
 import org.graphast.model.Edge;
 import org.graphast.model.EdgeImpl;
 import org.graphast.model.GraphBounds;
@@ -20,13 +20,18 @@ public class GraphGeneratorGrid {
 	private int length;
 	private GraphBounds graph;
 	private double percentagemPoi;
-	private String PATH_GRAPH = Configuration.USER_HOME + "/graphast/test/example";
+	private BigDecimal distance_largura;
+	private BigDecimal distance_altura;
 	
-	public GraphGeneratorGrid(int width, int length, double percentualPoi) {
+	public GraphGeneratorGrid(String pathGraph, int width, int length, double percentualPoi) {
 		this.width = width;
 		this.length = length;
 		this.percentagemPoi = percentualPoi;
-		this.graph = new GraphBoundsImpl(PATH_GRAPH);
+		this.graph = new GraphBoundsImpl(pathGraph);
+	}
+	
+	public GraphGeneratorGrid(String pathGraph, int size, double percentualPoi) {
+		this(pathGraph, size, size, percentualPoi);
 	}
 	
 	public void generateGraph() {
@@ -39,6 +44,8 @@ public class GraphGeneratorGrid {
 		
 		BigDecimal interador_largura = BigDecimal.valueOf(180).divide(BigDecimal.valueOf(width), 8, RoundingMode.HALF_UP);
 		BigDecimal interador_altura =  BigDecimal.valueOf(180).divide(BigDecimal.valueOf(length), 8, RoundingMode.HALF_UP);
+		this.distance_largura = interador_largura;
+		this.distance_altura = interador_altura;
 		
 		Set<Integer> listaIdsPoi = getListIdsPois();
 		
@@ -79,24 +86,26 @@ public class GraphGeneratorGrid {
 	private void plotEdges() {
 		for (int i = 0; i < width*length - 1; i++) {
 			
+			//altura
 			if(i < (width * length - width)) {
 				
-				Edge edgeOutTopDown = new EdgeImpl(Long.valueOf(i).longValue(), Long.valueOf(i+length).longValue(), 0);
+				Edge edgeOutTopDown = new EdgeImpl(Long.valueOf(i).longValue(), Long.valueOf(i+length).longValue(), distance_altura.intValue());
 				addCost(edgeOutTopDown);
 				graph.addEdge(edgeOutTopDown);
 				
-				Edge edgeInTopDown = new EdgeImpl(Long.valueOf(i+length).longValue(), Long.valueOf(i).longValue(), 0);
+				Edge edgeInTopDown = new EdgeImpl(Long.valueOf(i+length).longValue(), Long.valueOf(i).longValue(), distance_altura.intValue());
 				addCost(edgeInTopDown);
 				graph.addEdge(edgeInTopDown);
 			}
-
+			
+			//largura
 			if(i%width != width - 1) {
 			
-				Edge edgeOutLeftRight = new EdgeImpl(Long.valueOf(i).longValue(), Long.valueOf(i+1).longValue(), 0);
+				Edge edgeOutLeftRight = new EdgeImpl(Long.valueOf(i).longValue(), Long.valueOf(i+1).longValue(), distance_largura.intValue());
 				addCost(edgeOutLeftRight);
 				graph.addEdge(edgeOutLeftRight);
 				
-				Edge edgeInLeftRight = new EdgeImpl(Long.valueOf(i+1).longValue(), Long.valueOf(i).longValue(), 0);
+				Edge edgeInLeftRight = new EdgeImpl(Long.valueOf(i+1).longValue(), Long.valueOf(i).longValue(), distance_largura.intValue());
 				addCost(edgeInLeftRight);
 				graph.addEdge(edgeInLeftRight);
 			
@@ -111,12 +120,8 @@ public class GraphGeneratorGrid {
 	
 	private void addCost(Edge edge) {
 		
-		int[] costs = new int[96];
-		
-		for (int i : costs) {
-			costs[i] = Double.valueOf(generatePdseurandom(1, 1200)).intValue();
-		}
-		edge.setCosts(costs);
+		int[] edgesCosts = CostGenerator.generateSyntheticEdgesCosts(edge.getDistance());
+		edge.setCosts(edgesCosts);
 	}
 
 	public boolean isConnected() {
