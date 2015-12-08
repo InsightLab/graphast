@@ -54,25 +54,31 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 	public Path shortestPath(Node source, Node target, Date time) {
 		PriorityQueue<TimeEntry> queue = new PriorityQueue<TimeEntry>();
 		HashMap<Long, Integer> wasTraversed = new HashMap<Long, Integer>();
+		List<Long> allWasViseted = new ArrayList<Long>();
 		HashMap<Long, RouteEntry> parents = new HashMap<Long, RouteEntry>();
 		TimeEntry removed = null;
 		int targetId = convertToInt(target.getId());
-		int t = DateUtils.dateToMilli(time);
+		int timeInMilli = DateUtils.dateToMilli(time);
 
-		init(source, target, queue, parents, t);
+		init(source, target, queue, parents, timeInMilli);
 
-		while(!queue.isEmpty()){
+		while(!queue.isEmpty()) {
 			removed = queue.poll();
-			wasTraversed.put(removed.getId(), wasRemoved);		
+			long idRemoved = removed.getId();
+			wasTraversed.put(idRemoved, wasRemoved);	
+			allWasViseted.add(idRemoved);
+			//System.out.println(String.format("was viseted %s vertices", allWasViseted.size()));
 
 			if(removed.getId() == targetId) {
 				Path path = new Path();
 				path.constructPath(removed.getId(), parents, graph);
+				path.setNumberVisitedNodes(allWasViseted.size());
 				return path;
 			}
 
-			expandVertex(target, removed, wasTraversed, queue, parents);
+			expandVertex(target, removed, wasTraversed, allWasViseted, queue, parents);
 		}
+		
 		throw new PathNotFoundException("Path not found between (" + source.getLatitude() + "," + source.getLongitude() + ") and (" 
 				+ target.getLatitude() + "," + target.getLongitude() + ")");
 	}
@@ -85,7 +91,7 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 	}
 
 	public abstract void expandVertex(Node target, TimeEntry removed, HashMap<Long, Integer> wasTraversed, 
-			PriorityQueue<TimeEntry> queue, HashMap<Long, RouteEntry> parents);
+			List<Long> wasVisited, PriorityQueue<TimeEntry> queue, HashMap<Long, RouteEntry> parents);
 	
 	@Override
 	public Path shortestPath(Node source, Node target) {

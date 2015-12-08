@@ -3,6 +3,7 @@ package org.graphast.query.route.shortestpath.dijkstra;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.PriorityQueue;
 
 import org.graphast.model.Edge;
@@ -22,7 +23,7 @@ public class DijkstraConstantWeight extends Dijkstra {
 		super(graphBounds);
 	}
 	
-	public void expandVertex(Node target, TimeEntry removed, HashMap<Long, Integer> wasTraversed, 
+	public void expandVertex(Node target, TimeEntry removed, HashMap<Long, Integer> wasTraversed, List<Long> wasVisited,
 			PriorityQueue<TimeEntry> queue, HashMap<Long, RouteEntry> parents){
 		
 		Long2IntMap neig = graph.accessNeighborhood(graph.getNode(removed.getId()));
