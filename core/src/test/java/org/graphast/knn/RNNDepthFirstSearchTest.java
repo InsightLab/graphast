@@ -15,7 +15,7 @@ import org.graphast.importer.OSMDBImporter;
 import org.graphast.model.Edge;
 import org.graphast.model.GraphBounds;
 import org.graphast.query.knn.NearestNeighbor;
-import org.graphast.query.rnn.RNNDepthFirstSearch;
+import org.graphast.query.rnn.RNNBacktrackingSearch;
 import org.graphast.query.route.shortestpath.dijkstra.Dijkstra;
 import org.graphast.query.route.shortestpath.dijkstra.DijkstraLinearFunction;
 import org.graphast.query.route.shortestpath.model.Path;
@@ -25,6 +25,7 @@ import org.graphast.util.NumberUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class RNNDepthFirstSearchTest {
@@ -115,7 +116,7 @@ public class RNNDepthFirstSearchTest {
 		//Tempo para atendiemento - 39 minutos
 		maxTravelTime = DateUtils.parseDate(0, 39, 00);
 		
-		RNNDepthFirstSearch taxiSearch = new RNNDepthFirstSearch(graphBounds);
+		RNNBacktrackingSearch taxiSearch = new RNNBacktrackingSearch(graphBounds);
 		NearestNeighbor nearestNeighbor = taxiSearch.search(graphBounds.getNode(idCustomer), maxTravelTime, hourServiceTime);
 		
 		System.out.println(nearestNeighbor);
@@ -130,6 +131,7 @@ public class RNNDepthFirstSearchTest {
 		assertEquals("Deve retornar o vid esperado.", 1l, nearestNeighbor.getId());
 		assertEquals("Deve retornar o custo esperado.", 39, nearestNeighbor.getDistance()/1000/60);
 		assertEquals("Deve retornar o caminho esperado.", path_result , nearestNeighbor.getPath());
+		Assert.assertNotNull(nearestNeighbor.getNumberVisitedNodes());
 	}
 	
 	// Tem três taxista na malha, custumer = 5, cab 1 = 1, cab 2 = 4 e cab 3 = 9
@@ -140,7 +142,7 @@ public class RNNDepthFirstSearchTest {
 		//Tempo para atendiemento - 38 minutos
 		maxTravelTime = DateUtils.parseDate(0, 38, 00);
 		
-		RNNDepthFirstSearch taxiSearch = new RNNDepthFirstSearch(graphBounds);
+		RNNBacktrackingSearch taxiSearch = new RNNBacktrackingSearch(graphBounds);
 		NearestNeighbor nearestNeighbor = taxiSearch.search(graphBounds.getNode(idCustomer), maxTravelTime, hourServiceTime);
 		Assert.assertNull(nearestNeighbor);
 	}
@@ -157,7 +159,7 @@ public class RNNDepthFirstSearchTest {
 		//Hora que ele realiza a chamada do serviço - meia-noite
 		hourServiceTime = DateUtils.parseDate(00, 00, 00);
 		
-		RNNDepthFirstSearch taxiSearch = new RNNDepthFirstSearch(graphBounds);
+		RNNBacktrackingSearch taxiSearch = new RNNBacktrackingSearch(graphBounds);
 		NearestNeighbor nearestNeighbor = taxiSearch.search(graphBounds.getNode(idCustomer), maxTravelTime, hourServiceTime);
 		
 		System.out.println(nearestNeighbor);
@@ -172,6 +174,7 @@ public class RNNDepthFirstSearchTest {
 		assertEquals("Deve retornar o vid esperado.", 1l, nearestNeighbor.getId());
 		assertEquals("Deve retornar o custo esperado.", 40, nearestNeighbor.getDistance()/1000/60);
 		assertEquals("Deve retornar o caminho esperado.", path_result , nearestNeighbor.getPath());
+		Assert.assertNotNull(nearestNeighbor.getNumberVisitedNodes());
 	}
 	
 	// Tem três taxista na malha, customer = 5, cab 1 = 1, cab 2 = 4 e cab 3 = 9
@@ -186,7 +189,7 @@ public class RNNDepthFirstSearchTest {
 		//Hora que ele realiza a chamada do serviço - meia-noite e vinte segundo
 		hourServiceTime = DateUtils.parseDate(00, 15, 00);
 		
-		RNNDepthFirstSearch taxiSearch = new RNNDepthFirstSearch(graphBounds);
+		RNNBacktrackingSearch taxiSearch = new RNNBacktrackingSearch(graphBounds);
 		NearestNeighbor nearestNeighbor = taxiSearch.search(graphBounds.getNode(idCustomer), maxTravelTime, hourServiceTime);
 		
 		System.out.println(nearestNeighbor);
@@ -201,6 +204,7 @@ public class RNNDepthFirstSearchTest {
 		assertEquals("Deve retornar o vid esperado.", 1l, nearestNeighbor.getId());
 		assertEquals("Deve retornar o custo esperado.", 29, nearestNeighbor.getDistance()/1000/60);
 		assertEquals("Deve retornar o caminho esperado.", path_result , nearestNeighbor.getPath());
+		Assert.assertNotNull(nearestNeighbor.getNumberVisitedNodes());
 	}
 	
 	@Test
@@ -214,13 +218,14 @@ public class RNNDepthFirstSearchTest {
 		
 	}
 	
+	@Ignore
 	@Test
 	public void dbTest() {
 		
 		OSMDBImporter importer = new OSMDBImporter("view_exp_1k", PATH_GRAPH);
 		GraphBounds graphBounds = importer.execute();
 		
-		RNNDepthFirstSearch taxiSearch = new RNNDepthFirstSearch(graphBounds);
+		RNNBacktrackingSearch taxiSearch = new RNNBacktrackingSearch(graphBounds);
 //		NearestNeighbor nearestNeighbor = taxiSearch.search(graphBounds.getNode(idCustomer), maxTravelTime, hourServiceTime);
 		//Tempo para atendiemento - 39 minutos
 		maxTravelTime = DateUtils.parseDate(00, 59, 00);
