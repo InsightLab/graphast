@@ -36,23 +36,24 @@ public class CompareRNNSearchsMethodsAnalysis {
 		GraphBounds graphReverse = importerReverse.execute();
 		
 		
-		RNNDepthFirstSearch rnnDFS = new RNNDepthFirstSearch(graph);
+		RNNBacktrackingSearch rnnDFS = new RNNBacktrackingSearch(graph);
 		RNNBreadthFirstSearch rnnBFS = new RNNBreadthFirstSearch(graphReverse);
 		
 		Date timeout = DateUtils.parseDate(00, 50, 00);
 		Date timestamp = DateUtils.parseDate(00, 00, 00);
 		
-		FileWriter rnnDFSFileCsv = new FileWriter(tableName+"_rnn_dfs.csv");
-		FileWriter rnnBFSFileCsv = new FileWriter(tableName+"_rnn_bfs.csv");
+		FileWriter rnnBacktrackingFileCsv = new FileWriter(tableName+"_rnn_baseline.csv");
+		FileWriter rnnBFSFileCsv = new FileWriter(tableName+"_rnn_bfs_proposed_solution.csv");
 		
 		for (int i = 0; i < testTimes; i++) {
 			Node customer = getRandomCustomerInGraph(graph);
-			runSearchAndWrite(graph, rnnDFS, customer, timeout, timestamp, rnnDFSFileCsv);
+			runSearchAndWrite(graph, rnnDFS, customer, timeout, timestamp, rnnBacktrackingFileCsv);
 			runSearchAndWrite(graph, rnnBFS, customer, timeout, timestamp, rnnBFSFileCsv);
 		}
 		
+		rnnBacktrackingFileCsv.close();
 		rnnBFSFileCsv.close();
-		rnnDFSFileCsv.close();
+		
 	}
 
 	private static void runSearchAndWrite(GraphBounds graph, IRNNTimeDependent rnn,
@@ -74,7 +75,6 @@ public class CompareRNNSearchsMethodsAnalysis {
 				distance = solution.getDistance();
 				nodesSize = solution.getPath().size();
 				path = solution.getPath();
-				//externalId = graph.getNode(solution.getId()).getExternalId();
 				externalId = Integer.valueOf(graph.getNode(solution.getId()).getCategory()).longValue();
 				
 				String coordinatesCustomer = customer.getLongitude() + "," + customer.getLatitude();
