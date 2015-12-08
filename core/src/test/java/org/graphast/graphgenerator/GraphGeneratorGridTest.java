@@ -13,7 +13,7 @@ public class GraphGeneratorGridTest {
 	@Test
 	public void gererateGraphSynthetic2x2() {
 		
-		GraphGeneratorGrid graphSynthetic = new GraphGeneratorGrid(PATH_GRAPH, 2,2,0);
+		GraphGeneratorGridTester graphSynthetic = new GraphGeneratorGridTester(PATH_GRAPH, 2,2,0);
 		graphSynthetic.generateGraph();
 		GraphBounds graph = graphSynthetic.getGraph();
 		
@@ -25,7 +25,7 @@ public class GraphGeneratorGridTest {
 	@Test
 	public void gererateGraphSynthetic4x4() {
 		
-		GraphGeneratorGrid graphSynthetic = new GraphGeneratorGrid(PATH_GRAPH, 4,4, 0);
+		GraphGeneratorGridTester graphSynthetic = new GraphGeneratorGridTester(PATH_GRAPH, 4,4, 0);
 		graphSynthetic.generateGraph();
 		GraphBounds graph = graphSynthetic.getGraph();
 		
@@ -37,7 +37,7 @@ public class GraphGeneratorGridTest {
 	@Test
 	public void gererateGraphSynthetic5x5() {
 		
-		GraphGeneratorGrid graphSynthetic = new GraphGeneratorGrid(PATH_GRAPH, 5,5, 0);
+		GraphGeneratorGridTester graphSynthetic = new GraphGeneratorGridTester(PATH_GRAPH, 5,5, 0);
 		graphSynthetic.generateGraph();
 		GraphBounds graph = graphSynthetic.getGraph();
 		
@@ -48,7 +48,7 @@ public class GraphGeneratorGridTest {
 	@Test
 	public void gererateGraphSynthetic100x100() {
 		
-		GraphGeneratorGrid graphSynthetic = new GraphGeneratorGrid(PATH_GRAPH, 100,100, 0);
+		GraphGeneratorGridTester graphSynthetic = new GraphGeneratorGridTester(PATH_GRAPH, 100,100, 0);
 		graphSynthetic.generateGraph();
 		GraphBounds graph = graphSynthetic.getGraph();
 		
@@ -63,7 +63,7 @@ public class GraphGeneratorGridTest {
 		int comprimento = 992;
 		int altura = 992;
 		
-		GraphGeneratorGrid graphSynthetic = new GraphGeneratorGrid(PATH_GRAPH, comprimento,altura, 0);
+		GraphGeneratorGridTester graphSynthetic = new GraphGeneratorGridTester(PATH_GRAPH, comprimento,altura, 0);
 		graphSynthetic.generateGraph();
 		GraphBounds graph = graphSynthetic.getGraph();
 		
@@ -78,7 +78,7 @@ public class GraphGeneratorGridTest {
 		int comprimento = 992;
 		int altura = 992;
 		
-		GraphGeneratorGrid graphSynthetic = new GraphGeneratorGrid(PATH_GRAPH, comprimento,altura, 1);
+		GraphGeneratorGridTester graphSynthetic = new GraphGeneratorGridTester(PATH_GRAPH, comprimento,altura, 1);
 		graphSynthetic.generateGraph();
 		GraphBounds graph = graphSynthetic.getGraph();
 		
@@ -94,7 +94,7 @@ public class GraphGeneratorGridTest {
 		int comprimento = 3;
 		int altura = 2;
 		
-		GraphGeneratorGrid graphSynthetic = new GraphGeneratorGrid(PATH_GRAPH, comprimento,altura, 0);
+		GraphGeneratorGridTester graphSynthetic = new GraphGeneratorGridTester(PATH_GRAPH, comprimento,altura, 0);
 		graphSynthetic.generateGraph();
 		GraphBounds graph = graphSynthetic.getGraph();
 		
@@ -108,7 +108,7 @@ public class GraphGeneratorGridTest {
 		int comprimento = 4;
 		int altura = 4;
 		
-		GraphGeneratorGrid graphSynthetic = new GraphGeneratorGrid(PATH_GRAPH, comprimento, altura, 1);
+		GraphGeneratorGridTester graphSynthetic = new GraphGeneratorGridTester(PATH_GRAPH, comprimento, altura, 1);
 		graphSynthetic.generateGraph();
 		GraphBounds graph = graphSynthetic.getGraph();
 		
@@ -121,7 +121,7 @@ public class GraphGeneratorGridTest {
 		int comprimento = 10;
 		int altura = 10;
 		
-		GraphGeneratorGrid graphSynthetic = new GraphGeneratorGrid(PATH_GRAPH, comprimento, altura, 2);
+		GraphGeneratorGridTester graphSynthetic = new GraphGeneratorGridTester(PATH_GRAPH, comprimento, altura, 2);
 		graphSynthetic.generateGraph();
 		GraphBounds graph = graphSynthetic.getGraph();
 		
@@ -135,7 +135,7 @@ public class GraphGeneratorGridTest {
 		int altura = 1;
 		int percentagemPoi = 1;
 		
-		GraphGeneratorGrid graphSynthetic = new GraphGeneratorGrid(PATH_GRAPH, comprimento, altura, percentagemPoi);
+		GraphGeneratorGridTester graphSynthetic = new GraphGeneratorGridTester(PATH_GRAPH, comprimento, altura, percentagemPoi);
 		graphSynthetic.generateGraph();
 		GraphBounds graph = graphSynthetic.getGraph();
 		
@@ -152,7 +152,7 @@ public class GraphGeneratorGridTest {
 		int altura = 32;
 		int qtdPoi = 10;
 		
-		GraphGeneratorGrid graphSynthetic = new GraphGeneratorGrid(PATH_GRAPH, comprimento,altura, 1);
+		GraphGeneratorGridTester graphSynthetic = new GraphGeneratorGridTester(PATH_GRAPH, comprimento,altura, 1);
 		graphSynthetic.generateGraph();
 		GraphBounds graph = graphSynthetic.getGraph();
 		
@@ -170,7 +170,7 @@ public class GraphGeneratorGridTest {
 		int qtdPoi = 100;
 		int percentualPoi = 1;
 		
-		GraphGeneratorGrid graphSynthetic = new GraphGeneratorGrid(PATH_GRAPH, comprimento,altura, percentualPoi);
+		GraphGeneratorGridTester graphSynthetic = new GraphGeneratorGridTester(PATH_GRAPH, comprimento,altura, percentualPoi);
 		graphSynthetic.generateGraph();
 		GraphBounds graph = graphSynthetic.getGraph();
 		
@@ -187,7 +187,7 @@ public class GraphGeneratorGridTest {
 		int altura = 316;
 		int qtdPoi = 998;
 		
-		GraphGeneratorGrid graphSynthetic = new GraphGeneratorGrid(PATH_GRAPH, comprimento,altura, 1);
+		GraphGeneratorGridTester graphSynthetic = new GraphGeneratorGridTester(PATH_GRAPH, comprimento,altura, 1);
 		graphSynthetic.generateGraph();
 		GraphBounds graph = graphSynthetic.getGraph();
 		
@@ -204,7 +204,7 @@ public class GraphGeneratorGridTest {
 		int altura = 1000;
 		int qtdPoi = 10000;
 		
-		GraphGeneratorGrid graphSynthetic = new GraphGeneratorGrid(PATH_GRAPH, comprimento,altura, 1);
+		GraphGeneratorGridTester graphSynthetic = new GraphGeneratorGridTester(PATH_GRAPH, comprimento,altura, 1);
 		graphSynthetic.generateGraph();
 		GraphBounds graph = graphSynthetic.getGraph();
 		

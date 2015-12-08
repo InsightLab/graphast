@@ -22,9 +22,9 @@ public class CompareRNNSearchsMethodsAnalysis {
 	
 	public static void main(String[] args) throws IOException {
 		runAnalysis("view_exp_1k", Integer.parseInt(args[0]));
-		runAnalysis("view_exp_10k", Integer.parseInt(args[0]));
-		runAnalysis("view_exp_100k", Integer.parseInt(args[0]));
-		runAnalysis("view_exp_300mil", Integer.parseInt(args[0]));
+		/*runAnalysis("view_exp_10k", Integer.parseInt(args[0]));
+		runAnalysis("view_exp_50k", Integer.parseInt(args[0]));
+		runAnalysis("view_exp_100k", Integer.parseInt(args[0]));*/
 	}
 
 	public static void runAnalysis(String tableName, int testTimes) throws IOException {
@@ -66,16 +66,18 @@ public class CompareRNNSearchsMethodsAnalysis {
 			long time = endTime - startTime;
 			
 			Long solutionId = null;
-			Integer distance = null;
+			Double travelTime = null;
 			Integer nodesSize = null;
 			ArrayList<Long> path = null;
 			Long externalId = null;
+			int numberVisitedNodes = 0;
 			if(solution != null && solution.getPath()!=null) {
 				solutionId = solution.getId();
-				distance = solution.getDistance();
+				travelTime = solution.getTravelTime();
 				nodesSize = solution.getPath().size();
 				path = solution.getPath();
 				externalId = Integer.valueOf(graph.getNode(solution.getId()).getCategory()).longValue();
+				numberVisitedNodes = solution.getNumberVisitedNodes();
 				
 				String coordinatesCustomer = customer.getLongitude() + "," + customer.getLatitude();
 				String gidCustomer = customer.getLabel();
@@ -93,9 +95,9 @@ public class CompareRNNSearchsMethodsAnalysis {
 					gidVisited = gidVisited + "-" + nodeVisited.getLabel();
 				}
 				
-				String currentLine = String.format("%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s", coordinatesCustomer, 
-						poiCoordinate, time, solutionId, externalId, distance, 
-						nodesSize, path, coordinateNodeVisited, gidCustomer, gidPoi, gidVisited) + "\n";
+				String currentLine = String.format("%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s", coordinatesCustomer, 
+						poiCoordinate, time, solutionId, externalId, travelTime, 
+						nodesSize, path, coordinateNodeVisited, gidCustomer, gidPoi, gidVisited, numberVisitedNodes) + "\n";
 				
 				
 				System.out.println(currentLine);

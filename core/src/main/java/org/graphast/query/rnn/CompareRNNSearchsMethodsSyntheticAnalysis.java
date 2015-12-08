@@ -68,13 +68,13 @@ public class CompareRNNSearchsMethodsSyntheticAnalysis {
 			long time = endTime - startTime;
 			
 			Long solutionId = null;
-			Integer distance = null;
+			Double travelTime = null;
 			Integer nodesSize = null;
 			ArrayList<Long> path = null;
 			int numberVisitedNodes = 0;
 			if(solution != null && solution.getPath()!=null) {
 				solutionId = solution.getId();
-				distance = solution.getDistance();
+				travelTime = solution.getTravelTime();
 				nodesSize = solution.getPath().size();
 				path = solution.getPath();
 				numberVisitedNodes = solution.getNumberVisitedNodes();
@@ -92,7 +92,7 @@ public class CompareRNNSearchsMethodsSyntheticAnalysis {
 				}
 				
 				String currentLine = String.format("%s;%s;%s;%s;%s;%s;%s;%s;%s;%s", coordinatesCustomer, 
-						poiCoordinate, time, solutionId, distance, nodesSize, path, coordinateNodeVisited, gidPoi, numberVisitedNodes) + "\n";
+						poiCoordinate, time, solutionId, travelTime, nodesSize, path, coordinateNodeVisited, gidPoi, numberVisitedNodes) + "\n";
 				
 				
 				System.out.println(currentLine);

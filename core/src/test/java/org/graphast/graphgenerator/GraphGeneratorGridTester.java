@@ -14,7 +14,7 @@ import org.graphast.model.GraphBoundsImpl;
 import org.graphast.model.Node;
 import org.graphast.model.NodeImpl;
 
-public class GraphGeneratorGrid {
+public class GraphGeneratorGridTester {
 
 	private int width;
 	private int length;
@@ -23,14 +23,14 @@ public class GraphGeneratorGrid {
 	private BigDecimal distance_largura;
 	private BigDecimal distance_altura;
 	
-	public GraphGeneratorGrid(String pathGraph, int width, int length, double percentualPoi) {
+	public GraphGeneratorGridTester(String pathGraph, int width, int length, double percentualPoi) {
 		this.width = width;
 		this.length = length;
 		this.percentagemPoi = percentualPoi;
 		this.graph = new GraphBoundsImpl(pathGraph);
 	}
 	
-	public GraphGeneratorGrid(String pathGraph, int size, double percentualPoi) {
+	public GraphGeneratorGridTester(String pathGraph, int size, double percentualPoi) {
 		this(pathGraph, size, size, percentualPoi);
 	}
 	
