@@ -10,7 +10,7 @@ import java.util.Date;
 import org.graphast.config.Configuration;
 import org.graphast.exception.PathNotFoundException;
 import org.graphast.graphgenerator.GraphGenerator;
-import org.graphast.graphgenerator.GraphGeneratorGrid;
+import org.graphast.graphgenerator.GraphGeneratorGridTester;
 import org.graphast.model.GraphBounds;
 import org.graphast.query.knn.NearestNeighbor;
 import org.graphast.query.rnn.RNNBreadthFirstSearch;
@@ -51,7 +51,7 @@ public class RNNBreadthFirstSearchTest {
 		// Hora que ele realiza a chamada do serviço meia-noite e vinte minutos
 		hourServiceTime = DateUtils.parseDate(00, 00, 00);
 
-		GraphGeneratorGrid graphSynthetic = new GraphGeneratorGrid(PATH_GRAPH, qtdX, qtdY, percentPois);
+		GraphGeneratorGridTester graphSynthetic = new GraphGeneratorGridTester(PATH_GRAPH, qtdX, qtdY, percentPois);
 		graphSynthetic.generateGraph();
 		
 		graphBoundsReverse = graphSynthetic.getGraph();

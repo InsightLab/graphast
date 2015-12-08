@@ -1,13 +1,15 @@
-package org.graphast.query.rnn;
+package org.graphast.knn;
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 
 import org.graphast.config.Configuration;
-import org.graphast.graphgenerator.GraphGeneratorGrid;
+import org.graphast.graphgenerator.GraphGeneratorGridTester;
 import org.graphast.model.GraphBounds;
 import org.graphast.query.knn.NearestNeighbor;
+import org.graphast.query.rnn.RNNBacktrackingSearch;
+import org.graphast.query.rnn.RNNBreadthFirstSearch;
 import org.graphast.util.DateUtils;
 import org.graphast.util.FileUtils;
 import org.junit.AfterClass;
@@ -46,7 +48,7 @@ public class RNNComparatorTest {
 			int comprimento = 32;
 			int altura = 32;
 			
-			GraphGeneratorGrid graphSynthetic = new GraphGeneratorGrid(PATH_GRAPH, comprimento,altura, percentagemPoi);
+			GraphGeneratorGridTester graphSynthetic = new GraphGeneratorGridTester(PATH_GRAPH, comprimento,altura, percentagemPoi);
 			graphSynthetic.generateGraph();
 			GraphBounds graph = graphSynthetic.getGraph();
 			
@@ -80,7 +82,7 @@ public class RNNComparatorTest {
 			int comprimento = 100;
 			int altura = 100;
 			
-			GraphGeneratorGrid graphSynthetic = new GraphGeneratorGrid(PATH_GRAPH, comprimento,altura, percentagemPoi);
+			GraphGeneratorGridTester graphSynthetic = new GraphGeneratorGridTester(PATH_GRAPH, comprimento,altura, percentagemPoi);
 			graphSynthetic.generateGraph();
 			GraphBounds graph = graphSynthetic.getGraph();
 			
@@ -114,7 +116,7 @@ public class RNNComparatorTest {
 			int comprimento = 316;
 			int altura = 316;
 			
-			GraphGeneratorGrid graphSynthetic = new GraphGeneratorGrid(PATH_GRAPH, comprimento,altura, percentagemPoi);
+			GraphGeneratorGridTester graphSynthetic = new GraphGeneratorGridTester(PATH_GRAPH, comprimento,altura, percentagemPoi);
 			graphSynthetic.generateGraph();
 			GraphBounds graph = graphSynthetic.getGraph();
 			
@@ -151,7 +153,7 @@ public class RNNComparatorTest {
 			int comprimento = 1000;
 			int altura = 1000;
 			
-			GraphGeneratorGrid graphSynthetic = new GraphGeneratorGrid(PATH_GRAPH, comprimento,altura, percentagemPoi);
+			GraphGeneratorGridTester graphSynthetic = new GraphGeneratorGridTester(PATH_GRAPH, comprimento,altura, percentagemPoi);
 			graphSynthetic.generateGraph();
 			GraphBounds graph = graphSynthetic.getGraph();
 			

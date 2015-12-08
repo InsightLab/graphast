@@ -142,7 +142,9 @@ public class OSMDBImporter implements Importer {
 				DistanceUtils.distanceLatLong(nodeFrom.getLatitude(), nodeFrom.getLongitude(), 
 				nodeTo.getLatitude(), nodeTo.getLongitude());
 		
-		int[] edgesCosts = CostGenerator.generateSyntheticEdgesCosts(Double.valueOf(distanceBetweenLatLongHaversine).intValue());
+		double distanceBetweenLatLongHaversineInMill = distanceBetweenLatLongHaversine * 1000;
+		
+		int[] edgesCosts = CostGenerator.generateSyntheticEdgesCosts(Double.valueOf(distanceBetweenLatLongHaversineInMill).intValue());
 		edge.setCosts(edgesCosts);
 	}
 }

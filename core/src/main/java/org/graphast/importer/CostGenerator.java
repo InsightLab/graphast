@@ -4,18 +4,19 @@ import java.util.Random;
 
 import org.graphast.model.Graph;
 
+
 public class CostGenerator {
 
 	public static int[] generateSyntheticEdgesCosts(int distance) {
 
 		Random random = new Random();
 
-		int minSpeed, maxSpeed;
+		int minSpeed, maxSpeed;	 //Millimeters Per Millisecond (mm/ms)	
 		int[] syntheticCosts = new int[96];
 		
 		for(int i=0; i<24; i++) {
-			minSpeed = 14;
-			maxSpeed = 17;
+			minSpeed = 14; // 50km/h
+			maxSpeed = 17; // 60km/h
 
 			syntheticCosts[i] = distance/(random.nextInt(maxSpeed-minSpeed)+minSpeed);
 			
@@ -46,7 +47,7 @@ public class CostGenerator {
 		}
 
 		for(int i=44; i<56; i++) {
-			minSpeed = 1;
+			minSpeed = 1; //3km/h
 			maxSpeed = 4;
 
 			syntheticCosts[i] = distance/(random.nextInt(maxSpeed-minSpeed)+minSpeed);
