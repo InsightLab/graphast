@@ -5,8 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.graphast.model.Edge;
 import org.graphast.model.EdgeImpl;
@@ -20,6 +18,9 @@ import org.graphast.util.DistanceUtils;
 import org.graphast.util.GeoUtils;
 import org.postgis.LineString;
 import org.postgis.Point;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public class OSMDBImporter implements Importer {
 
@@ -29,8 +30,7 @@ public class OSMDBImporter implements Importer {
 	private final int FIELD_ID_LINESTRING = 1;
 	private final int FIELD_LINESTRING = 2;
 	private final int SIZE_INTERVAL = 96;
-	
-	protected static final Logger LOGGER = Logger.getGlobal();
+	protected final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 	
 	public OSMDBImporter(String table, String directory) {
 		this.table = table;
@@ -59,7 +59,7 @@ public class OSMDBImporter implements Importer {
 		while (result.next()) {
 			LineString lineString = new LineString(result.getString(FIELD_LINESTRING));
 			Point[] arrayPoints = lineString.getPoints();
-			LOGGER.log(Level.INFO, String.format("registro: %s", result.getString(FIELD_LINESTRING)));
+			LOGGER.info(String.format("registro: %s", result.getString(FIELD_LINESTRING)));
 			
 			
 			int idRoad = result.getInt(FIELD_ID_LINESTRING);
@@ -67,23 +67,23 @@ public class OSMDBImporter implements Importer {
 
 			for (Point point : arrayPoints) {
 				pointCount++;
-				LOGGER.log(Level.INFO, String.format("Point [x,y]: %s,%s", point.getX(), point.getY()));
+				LOGGER.info( String.format("Point [x,y]: %s,%s", point.getX(), point.getY()));
 				Node node = new NodeImpl(point.getY(), point.getX());
 				node.setLabel(Long.valueOf(idRoad).toString());
 				Long nodeId = graph.getNodeId(GeoUtils.latLongToInt(node.getLatitude()), GeoUtils.latLongToInt(node.getLongitude()));
 
 				if (nodeId != null) {
-					LOGGER.log(Level.INFO, String.format("point already exist in graph"));
+					LOGGER.info(String.format("point already exist in graph"));
 					node = graph.getNode(nodeId);
 				} else {
 					graph.addNode(node);
-					LOGGER.log(Level.INFO, String.format("point inserted in graph with ID: %s", node.getId()));
+					LOGGER.info(String.format("point inserted in graph with ID: %s", node.getId()));
 				}
 				
 				
 
 				if (previousNode != null && !previousNode.getId().equals(node.getId())) {
-					LOGGER.log(Level.INFO, String.format("Add edge from previous: %s to current: %s node", previousNode.getId(), node.getId()));
+					LOGGER.info( String.format("Add edge from previous: %s to current: %s node", previousNode.getId(), node.getId()));
 					Edge edge = new EdgeImpl(idRoad, previousNode.getId().longValue(), node.getId().longValue(), 0, String.valueOf(idRoad));
 					addCost(edge);
 					graph.addEdge(edge);
@@ -98,14 +98,14 @@ public class OSMDBImporter implements Importer {
 						}
 					}
 				}
-				LOGGER.log(Level.INFO, String.format("Graph now has %s nodes", graph.getNumberOfNodes()));
-				LOGGER.log(Level.INFO, String.format("Graph now has %s edges",graph.getNumberOfEdges()));
+				LOGGER.info(String.format("Graph now has %s nodes", graph.getNumberOfNodes()));
+				LOGGER.info(String.format("Graph now has %s edges",graph.getNumberOfEdges()));
 
 
 				previousNode = node;
 			}
 		}
-		LOGGER.log(Level.INFO, String.format("Total points parsed are: %s", pointCount));
+		LOGGER.info( String.format("Total points parsed are: %s", pointCount));
 		ConnectionJDBC.getConnection().close();
 	}
 	
@@ -126,8 +126,8 @@ public class OSMDBImporter implements Importer {
 	@Deprecated
 	private void connectTaxiToEdge(Node taxi, Node end) {
 		graph.addNode(taxi);
-		LOGGER.log(Level.INFO, String.format("Taxi %s lies in edge and now taxi is node: %s", taxi.getCategory(), taxi.getId()));
-		LOGGER.log(Level.INFO, String.format("Connect Taxi %s with node: %s", taxi.getCategory(), end.getId()));
+		LOGGER.info(String.format("Taxi %s lies in edge and now taxi is node: %s", taxi.getCategory(), taxi.getId()));
+		LOGGER.info(String.format("Connect Taxi %s with node: %s", taxi.getCategory(), end.getId()));
 		Edge edge = new EdgeImpl(taxi.getId().longValue(), end.getId().longValue(), 0);
 		addCostZero(edge);
 		graph.addEdge(edge);
@@ -135,19 +135,14 @@ public class OSMDBImporter implements Importer {
 
 	private void addCost(Edge edge) {
 
-		int[] costs = new int[SIZE_INTERVAL];
-
 		Node nodeFrom = graph.getNode(edge.getFromNode());
 		Node nodeTo = graph.getNode(edge.getToNode());
 
-		double distanceBetweenLatLongHaversine = DistanceUtils.distanceLatLong(nodeFrom.getLatitude(), nodeFrom.getLongitude(), 
+		double distanceBetweenLatLongHaversine = 
+				DistanceUtils.distanceLatLong(nodeFrom.getLatitude(), nodeFrom.getLongitude(), 
 				nodeTo.getLatitude(), nodeTo.getLongitude());
-
-		for (int i = 0; i < costs.length; i++) {
-			costs[i] = Double.valueOf(distanceBetweenLatLongHaversine)
-					.intValue();
-		}
 		
-		edge.setCosts(costs);
+		int[] edgesCosts = CostGenerator.generateSyntheticEdgesCosts(Double.valueOf(distanceBetweenLatLongHaversine).intValue());
+		edge.setCosts(edgesCosts);
 	}
 }
