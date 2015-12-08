@@ -27,10 +27,16 @@ public class RNNBreadthFirstSearch implements IRNNTimeDependent{
 	
 	public NearestNeighbor search(Node customer, Date maxTravelTime, Date startServiceTime) {
 		
+		int numberVisitedNodes = 0;
+		
  		if (graph.getPoi(customer.getId()) != null) {
  			ArrayList<Long> path = new ArrayList<Long>();
  			path.add(customer.getId());
-			return new NearestNeighbor(customer.getId(), 0, path);
+ 			numberVisitedNodes = numberVisitedNodes + 1;
+ 			
+ 			NearestNeighbor nearestNeighbor = new NearestNeighbor(customer.getId(), 0, path);
+ 			nearestNeighbor.setNumberVisitedNodes(numberVisitedNodes);
+			return nearestNeighbor;
 		}
 		
 		PriorityQueue<RouteQueueRNNEntry> queue = new PriorityQueue<RouteQueueRNNEntry>();
@@ -47,6 +53,7 @@ public class RNNBreadthFirstSearch implements IRNNTimeDependent{
 		while(!queue.isEmpty()) {
 			
 			current = queue.poll();
+			numberVisitedNodes = numberVisitedNodes + 1; 
 			if (visited.contains(current.getId())) {
 				continue;
 			} else {
@@ -59,13 +66,17 @@ public class RNNBreadthFirstSearch implements IRNNTimeDependent{
 			}
 			
 			if (graph.getPoi(current.getId()) != null) {
-				return new NearestNeighbor(current.getId(), current.getTravelTime(), pathToTaxi(current.getId(), customer.getId(), parents));
+				ArrayList<Long> pathToTaxi = pathToTaxi(current.getId(), customer.getId(), parents);
+				NearestNeighbor nearestNeighbor = new NearestNeighbor(current.getId(), current.getTravelTime(),
+						pathToTaxi, numberVisitedNodes);
+				return nearestNeighbor;
 			}
 			
 			// Acessa os vizinhos do primeiro vértice da pilha, no caso os vizinho do vértice que representa o cliente.
 			HashMap<Node, Integer> neighbors = graph.accessNeighborhood(graph.getNode(current.getId()), current.getArrivalTime());
 			
 			for (Node neighbor : neighbors.keySet()) {
+				numberVisitedNodes = numberVisitedNodes + 1;
 				if (visited.contains(neighbor.getId())) {
 					continue;
 				}
@@ -84,7 +95,6 @@ public class RNNBreadthFirstSearch implements IRNNTimeDependent{
 						arrivalTime, current.getId(), current.getRoutes());
 				queue.offer(newRouteQueueTaxiEntry);
 			}
-			
 			
 		}
 		

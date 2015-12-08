@@ -20,6 +20,7 @@ public class RNNComparatorTest {
 	private Date endServiceTime = null;
 	private Date startServiceTime = null;
 	private Double percentagemPoi = null;
+	private String PATH_GRAPH = Configuration.USER_HOME + "/graphast/test/example";
 	
 	@Before
 	public void setUp() throws ParseException, IOException {
@@ -45,13 +46,13 @@ public class RNNComparatorTest {
 			int comprimento = 32;
 			int altura = 32;
 			
-			GraphGeneratorGrid graphSynthetic = new GraphGeneratorGrid(comprimento,altura, percentagemPoi);
+			GraphGeneratorGrid graphSynthetic = new GraphGeneratorGrid(PATH_GRAPH, comprimento,altura, percentagemPoi);
 			graphSynthetic.generateGraph();
 			GraphBounds graph = graphSynthetic.getGraph();
 			
 			//==== SOLUÇÃO I ====
 			long startSolution1 = System.currentTimeMillis();   
-			RNNDepthFirstSearch taxiSearch = new RNNDepthFirstSearch(graph);
+			RNNBacktrackingSearch taxiSearch = new RNNBacktrackingSearch(graph);
 			NearestNeighbor solution1 = taxiSearch.search(graph.getNode(idCustomer), endServiceTime, startServiceTime);
 			long endSolution1 = System.currentTimeMillis();
 			long timeSolution1 = endSolution1-startSolution1;
@@ -79,13 +80,13 @@ public class RNNComparatorTest {
 			int comprimento = 100;
 			int altura = 100;
 			
-			GraphGeneratorGrid graphSynthetic = new GraphGeneratorGrid(comprimento,altura, percentagemPoi);
+			GraphGeneratorGrid graphSynthetic = new GraphGeneratorGrid(PATH_GRAPH, comprimento,altura, percentagemPoi);
 			graphSynthetic.generateGraph();
 			GraphBounds graph = graphSynthetic.getGraph();
 			
 			//==== SOLUÇÃO I ====
 			long startSolution1 = System.currentTimeMillis();   
-			RNNDepthFirstSearch taxiSearch = new RNNDepthFirstSearch(graph);
+			RNNBacktrackingSearch taxiSearch = new RNNBacktrackingSearch(graph);
 			NearestNeighbor solution1 = taxiSearch.search(graph.getNode(idCustomer), endServiceTime, startServiceTime);
 			long endSolution1 = System.currentTimeMillis();
 			long timeSolution1 = endSolution1-startSolution1;
@@ -113,7 +114,7 @@ public class RNNComparatorTest {
 			int comprimento = 316;
 			int altura = 316;
 			
-			GraphGeneratorGrid graphSynthetic = new GraphGeneratorGrid(comprimento,altura, percentagemPoi);
+			GraphGeneratorGrid graphSynthetic = new GraphGeneratorGrid(PATH_GRAPH, comprimento,altura, percentagemPoi);
 			graphSynthetic.generateGraph();
 			GraphBounds graph = graphSynthetic.getGraph();
 			
@@ -123,7 +124,7 @@ public class RNNComparatorTest {
 			
 			//==== SOLUÇÃO I ====
 			long startSolution1 = System.currentTimeMillis();   
-			RNNDepthFirstSearch taxiSearch = new RNNDepthFirstSearch(graph);
+			RNNBacktrackingSearch taxiSearch = new RNNBacktrackingSearch(graph);
 			NearestNeighbor solution1 = taxiSearch.search(graph.getNode(idCustomer), endServiceTime, startServiceTime);
 			long endSolution1 = System.currentTimeMillis();
 			long timeSolution1 = endSolution1-startSolution1;
@@ -150,7 +151,7 @@ public class RNNComparatorTest {
 			int comprimento = 1000;
 			int altura = 1000;
 			
-			GraphGeneratorGrid graphSynthetic = new GraphGeneratorGrid(comprimento,altura, percentagemPoi);
+			GraphGeneratorGrid graphSynthetic = new GraphGeneratorGrid(PATH_GRAPH, comprimento,altura, percentagemPoi);
 			graphSynthetic.generateGraph();
 			GraphBounds graph = graphSynthetic.getGraph();
 			
@@ -160,7 +161,7 @@ public class RNNComparatorTest {
 			
 			//==== SOLUÇÃO I ====
 			long startSolution1 = System.currentTimeMillis();   
-			RNNDepthFirstSearch taxiSearch = new RNNDepthFirstSearch(graph);
+			RNNBacktrackingSearch taxiSearch = new RNNBacktrackingSearch(graph);
 			NearestNeighbor solution1 = taxiSearch.search(graph.getNode(idCustomer), endServiceTime, startServiceTime);
 			long endSolution1 = System.currentTimeMillis();
 			long timeSolution1 = endSolution1-startSolution1;
