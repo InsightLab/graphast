@@ -28,7 +28,8 @@ public class RNNBreadthFirstSearchTest {
 	private Integer idCustomer;
 	private Date maxTravelTime;
 	private Date hourServiceTime;
-
+	private String PATH_GRAPH = Configuration.USER_HOME + "/graphast/test/example";
+	
 	public void setUpNoRandomGraph() throws ParseException, IOException {
 
 		// Tempo para atendiemento
@@ -50,7 +51,7 @@ public class RNNBreadthFirstSearchTest {
 		// Hora que ele realiza a chamada do serviço meia-noite e vinte minutos
 		hourServiceTime = DateUtils.parseDate(00, 00, 00);
 
-		GraphGeneratorGrid graphSynthetic = new GraphGeneratorGrid(qtdX, qtdY, percentPois);
+		GraphGeneratorGrid graphSynthetic = new GraphGeneratorGrid(PATH_GRAPH, qtdX, qtdY, percentPois);
 		graphSynthetic.generateGraph();
 		
 		graphBoundsReverse = graphSynthetic.getGraph();
