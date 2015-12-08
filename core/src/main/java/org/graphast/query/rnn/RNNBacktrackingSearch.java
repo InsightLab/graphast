@@ -13,20 +13,22 @@ import org.graphast.query.route.shortestpath.dijkstra.DijkstraLinearFunction;
 import org.graphast.query.route.shortestpath.model.Path;
 import org.graphast.util.DateUtils;
 
-public class RNNDepthFirstSearch implements IRNNTimeDependent {
+public class RNNBacktrackingSearch implements IRNNTimeDependent {
 
 	private GraphBounds graph;
 
-	public RNNDepthFirstSearch(GraphBounds graphBounds) {
+	public RNNBacktrackingSearch(GraphBounds graphBounds) {
 		this.graph = graphBounds;
 	}
 
-	public NearestNeighbor search(Node root, Date timeout, Date timestamp) throws PathNotFoundException {
+	public NearestNeighbor search(Node root, Date timeout, Date timestamp)
+			throws PathNotFoundException {
 
 		long maxTravelTimeMillisenconds = DateUtils.dateToMilli(timeout);
 		double bestTravelTime = maxTravelTimeMillisenconds;
 		long currentPoi = -1;
 		Path pathResult = null;
+		int numberVisitedNodes = 0;
 
 		Dijkstra dijkstraShortestPathLinearFunction = new DijkstraLinearFunction(graph);
 
@@ -41,30 +43,32 @@ public class RNNDepthFirstSearch implements IRNNTimeDependent {
 					currentPoi = target.getId();
 					bestTravelTime = path.getTotalCost();
 					pathResult = path;
+					numberVisitedNodes = numberVisitedNodes + path.getNumberVisitedNodes();
 				}
-			} catch(PathNotFoundException e) {
-//				System.err.println(e.getMessage());
+			} catch (PathNotFoundException e) {
+				// System.err.println(e.getMessage());
 			}
 		}
 
-		NearestNeighbor nearestNeighbor = createNN(root, currentPoi, pathResult);
-
-		if (nearestNeighbor == null) {
-			throw new PathNotFoundException(
-					"target not found for root and set timestamp");
+		if (currentPoi > -1) {
+			NearestNeighbor nearestNeighbor = createNN(root, currentPoi, numberVisitedNodes, pathResult);
+			return nearestNeighbor;
 		}
 
-		return nearestNeighbor;
+		throw new PathNotFoundException(
+				"target not found for root and set timestamp");
 	}
 
-	private NearestNeighbor createNN(Node root, long currentPoi, Path path) {
+	private NearestNeighbor createNN(Node root, long currentPoi, int numberVisitedNodes, Path path) {
 
-		NearestNeighbor nearestNeighbor = null;
-		if (currentPoi > -1) {
+			NearestNeighbor nearestNeighbor = new NearestNeighbor();
 
-			nearestNeighbor = new NearestNeighbor();
-			nearestNeighbor.setDistance((int) path.getTotalCost());
+			double totalCostInMilissegundo = path.getTotalCost();
+			double totalCostInNanosegundos = totalCostInMilissegundo * Math.pow(10, 6);
+			
+			nearestNeighbor.setDistance(Double.valueOf(totalCostInNanosegundos).intValue());
 			nearestNeighbor.setId(currentPoi);
+			nearestNeighbor.setNumberVisitedNodes(numberVisitedNodes);
 
 			ArrayList<Long> arrayPath = new ArrayList<Long>();
 			List<Long> edges = path.getEdges();
@@ -77,7 +81,6 @@ public class RNNDepthFirstSearch implements IRNNTimeDependent {
 
 			arrayPath.add(root.getId());
 			nearestNeighbor.setPath(arrayPath);
-		}
 
 		return nearestNeighbor;
 	}
