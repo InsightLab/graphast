@@ -71,8 +71,8 @@ public class RNNBreadthFirstSearch implements IRNNTimeDependent{
 				double totalCostInNanosegundos = totalCostInMilissegundo * Math.pow(10, 6);
 				ArrayList<Long> pathToTaxi = pathToTaxi(current.getId(), customer.getId(), parents);
 				
-				NearestNeighbor nearestNeighbor = new NearestNeighbor(current.getId(),
-						Double.valueOf(totalCostInNanosegundos), pathToTaxi, numberVisitedNodes);
+				NearestNeighbor nearestNeighbor = new NearestNeighbor(current.getId(),totalCostInNanosegundos,
+						pathToTaxi, numberVisitedNodes);
 				return nearestNeighbor;
 			}
 			
