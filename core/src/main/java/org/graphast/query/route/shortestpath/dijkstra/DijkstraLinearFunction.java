@@ -33,13 +33,14 @@ public class DijkstraLinearFunction extends Dijkstra {
 		super(graphBounds);
 	}
 	
-	public void expandVertex(Node target, TimeEntry removed, HashMap<Long, Integer> wasTraversed, List<Long> allWasViseted, 
+	public void expandVertex(Node target, TimeEntry removed, HashMap<Long, Integer> wasTraversed, Set<Long> allWasViseted, 
 			PriorityQueue<TimeEntry> queue, HashMap<Long, RouteEntry> parents){
 		
 		HashMap<Node, Integer> neighbors = graph.accessNeighborhood(graph.getNode(removed.getId()), removed.getArrivalTime());
 		
 		for (Node node : neighbors.keySet()) {
 			long vid = node.getId();
+			allWasViseted.add(vid);
 			int at = graph.getArrival(removed.getArrivalTime(), neighbors.get(node));
 			int tt = removed.getTravelTime() + neighbors.get(node);
 			TimeEntry newEntry = new TimeEntry(	vid, tt, at, removed.getId());
@@ -49,10 +50,7 @@ public class DijkstraLinearFunction extends Dijkstra {
 			
 			if(!wasTraversed.containsKey(vid)){					
 				queue.offer(newEntry);
-				long idNewEntry = newEntry.getId();
 				wasTraversed.put(newEntry.getId(), newEntry.getTravelTime());
-				allWasViseted.add(idNewEntry);
-				//System.out.println(String.format("was viseted %s vertices", allWasViseted.size()));
 				
 				distance = neighbors.get(node);
 				edge = getEdge(removed.getId(), vid, distance);
@@ -66,9 +64,6 @@ public class DijkstraLinearFunction extends Dijkstra {
 						long idNewEntry = newEntry.getId();
 						wasTraversed.remove(idNewEntry);
 						wasTraversed.put(idNewEntry, newEntry.getTravelTime());
-						allWasViseted.add(idNewEntry);
-						//System.out.println("vertex already visited");
-						//System.out.println(String.format("was viseted %s vertices", allWasViseted.size()));
 						
 						parents.remove(node);
 						distance = neighbors.get(node);
