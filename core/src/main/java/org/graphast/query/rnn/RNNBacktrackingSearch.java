@@ -66,7 +66,7 @@ public class RNNBacktrackingSearch implements IRNNTimeDependent {
 			double totalCostInMilissegundo = path.getTotalCost();
 			double totalCostInNanosegundos = totalCostInMilissegundo * Math.pow(10, 6);
 			
-			nearestNeighbor.setTravelTime(Double.valueOf(totalCostInNanosegundos));
+			nearestNeighbor.setTravelTime(totalCostInNanosegundos);
 			nearestNeighbor.setId(currentPoi);
 			nearestNeighbor.setNumberVisitedNodes(numberVisitedNodes);
 

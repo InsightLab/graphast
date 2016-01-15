@@ -39,8 +39,8 @@ public class RNNBreadthFirstSearchTest {
 		hourServiceTime = DateUtils.parseDate(00, 00, 00);
 
 		graphBounds = new GraphGenerator().generateExampleTAXI();
-		graphBoundsReverse = new GraphGenerator().generateExampleTAXI();
-		graphBoundsReverse.reverseGraph();
+//		graphBoundsReverse = new GraphGenerator().generateExampleTAXI();
+//		graphBoundsReverse.reverseGraph();
 	}
 	
 	public void setUpRandomGraph(int qtdX, int qtdY, int percentPois) throws ParseException {
@@ -94,8 +94,8 @@ public class RNNBreadthFirstSearchTest {
 		// Tempo para atendiemento
 		maxTravelTime = DateUtils.parseDate(0, 11, 59);
 		
-		RNNBreadthFirstSearch taxiSearch = new RNNBreadthFirstSearch(graphBoundsReverse);
-		taxiSearch.search(graphBoundsReverse.getNode(idCustomer), maxTravelTime, hourServiceTime);
+		RNNBreadthFirstSearch taxiSearch = new RNNBreadthFirstSearch(graphBounds);
+		taxiSearch.search(graphBounds.getNode(idCustomer), maxTravelTime, hourServiceTime);
 	}
 	
 	// TESTE 2: O cliente está em um vértice vizinho ao taxista. CLIENTE -> TAXISTA (NÃO REVERSO)
