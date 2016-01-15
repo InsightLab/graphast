@@ -22,10 +22,25 @@ public class CompareRNNSearchsMethodsSyntheticAnalysis {
 	
 	public static void main(String[] args) throws IOException {
 		
-		runAnalysis("1k", 32, Integer.parseInt(args[0]), Integer.parseInt(args[1]));
-		runAnalysis("10k", 100, Integer.parseInt(args[0]), Integer.parseInt(args[1]));
-		runAnalysis("100k", 316 , Integer.parseInt(args[0]), Integer.parseInt(args[1]));
-		runAnalysis("1000k", 1000, Integer.parseInt(args[0]), Integer.parseInt(args[1]));
+		int side = 0;
+		switch (args[0]) {
+		case "1k":
+			side = 32;
+			break;
+		case "10k":
+			side = 100;
+			break;
+		case "100k":
+			side = 316;
+			break;
+		case "1000k":
+			side = 1000;
+			break;
+		default:
+			break;
+		}
+		
+		runAnalysis(args[0], side, Integer.parseInt(args[1]), Integer.parseInt(args[2]));
 	}
 
 	public static void runAnalysis(String experimentName, int side, int percentagemPoi, int testTimes) throws IOException {
