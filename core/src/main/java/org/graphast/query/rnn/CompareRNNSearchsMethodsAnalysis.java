@@ -21,7 +21,8 @@ public class CompareRNNSearchsMethodsAnalysis {
 	protected static final Logger LOGGER = Logger.getGlobal();
 	
 	public static void main(String[] args) throws IOException {
-		runAnalysis("view_exp_1k", Integer.parseInt(args[0]));
+		
+		runAnalysis("view_exp_1k", 10);
 		/*runAnalysis("view_exp_10k", Integer.parseInt(args[0]));
 		runAnalysis("view_exp_50k", Integer.parseInt(args[0]));
 		runAnalysis("view_exp_100k", Integer.parseInt(args[0]));*/
@@ -59,12 +60,19 @@ public class CompareRNNSearchsMethodsAnalysis {
 	private static void runSearchAndWrite(GraphBounds graph, IRNNTimeDependent rnn,
 			Node customer, Date timeout, Date timestamp, FileWriter fileCsv) throws IOException {
 		try {
+			
+			Runtime.getRuntime().gc();
+			long numberUseMemoryInit = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(); 
 			long startTime = System.nanoTime();
-			NearestNeighbor solution = rnn.search(customer, timeout, timestamp);
+			NearestNeighbor solution = null;
+			solution = rnn.search(customer, timeout, timestamp);
 			long endTime = System.nanoTime();
+			long numberUseMemoryFinal = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(); 
 			
 			long time = endTime - startTime;
-			
+			long numerUseMemory = (numberUseMemoryFinal - numberUseMemoryInit) / 1024;
+			System.out.println(" --------- >"+numerUseMemory);
+
 			Long solutionId = null;
 			Double travelTime = null;
 			Integer nodesSize = null;
