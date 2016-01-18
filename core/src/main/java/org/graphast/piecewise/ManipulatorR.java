@@ -14,6 +14,7 @@ public class ManipulatorR implements IManipulatorEngine {
 	
 	@Override
 	public Function run(long x) {
+
 		
 		RCaller caller = new RCaller();
 		RCode code = caller.getRCode();
@@ -108,5 +109,4 @@ public class ManipulatorR implements IManipulatorEngine {
 			this.y = y;
 		}
 	}
-
 }
