@@ -1,9 +1,16 @@
 package org.graphast.piecewise;
 
-public class GeneratorFunctionMatrix implements IGeneratorFunctionPiecewise {
+public class GeneratorFunctionMatrix implements IGeneratorFunction {
+	
+	private IManipulatorEngine engine;
+	
+	public GeneratorFunctionMatrix(IManipulatorEngine engine) {
+		this.engine = engine;
+	}
 
 	@Override
-	public double gerFuntionEdge(long idEdge, double timestamp) {
-		return 0;
+	public Function gerFuntionEdge(long idEdge, long timestamp) {
+		engine.run();
+		return null;
 	}
 }

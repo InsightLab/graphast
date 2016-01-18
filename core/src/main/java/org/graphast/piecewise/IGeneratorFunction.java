@@ -1,6 +1,6 @@
 package org.graphast.piecewise;
 
-public interface IGeneratorFunctionPiecewise {
+public interface IGeneratorFunction {
 	
 	Function gerFuntionEdge(long idEdge, long timestamp);
 }
