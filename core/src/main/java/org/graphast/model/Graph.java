@@ -14,6 +14,7 @@ import org.graphast.enums.TimeType;
 import org.graphast.geometry.BBox;
 import org.graphast.geometry.PoI;
 import org.graphast.geometry.Point;
+import org.graphast.piecewise.Function;
 import org.graphast.util.FileUtils;
 
 
@@ -330,6 +331,11 @@ public interface Graph {
 	public String getAbsoluteDirectory();
 
 	public void setDirectory(String directory);
+<<<<<<< HEAD
 	
 	public Set<Long> getPoiIds();
+=======
+
+	public void setFuntionEdge(long edgeId, Function function);
+>>>>>>> descoplando gerador de função do edge do graph e o engine
 }
