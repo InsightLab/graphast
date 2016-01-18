@@ -3,15 +3,31 @@ package org.graphast.piecewise;
 import rcaller.RCaller;
 import rcaller.RCode;
 
-public class GeneratorFunctionPiecewise {
+public class GeneratorFunctionLoess implements IGeneratorFunctionPiecewise {
+	
+	private IManipulatorEngine engine;
+	
+	public GeneratorFunctionLoess() {
+	}
+	
+	public GeneratorFunctionLoess(IManipulatorEngine engine) {
+		this.engine = engine;
+	}
 	
 	private static final String RSCRIPT = "/usr/bin/Rscript";
 
 	public double getValue(double timestamp) throws PiecewiseException {
 		
-		IGeneratorFunctionPiecewise generatorFunctionPiecewise = new GeneratorFunctionPiecewiseDatabase();
+		IBuilderDatasource generatorFunctionPiecewise = new BuilderDatasourceDB();
 		double[][] coleta = generatorFunctionPiecewise.getData();
 		return getFuntionEdge(coleta, timestamp);
+	}
+	
+	@Override
+	public Function gerFuntionEdge(long idEdge, long timestamp) {
+		
+		engine.run();
+		return null;
 	}
 
 	private double getFuntionEdge(double[][] data, double timestamp) throws PiecewiseException {

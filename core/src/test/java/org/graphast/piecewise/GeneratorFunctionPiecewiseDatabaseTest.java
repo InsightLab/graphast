@@ -25,7 +25,7 @@ public class GeneratorFunctionPiecewiseDatabaseTest {
 	@Test
 	public void getDataTest() throws PiecewiseException {
 		
-		IGeneratorFunctionPiecewise generatorFunctionPiecewise = new GeneratorFunctionPiecewiseDatabase();
+		IBuilderDatasource generatorFunctionPiecewise = new BuilderDatasourceDB();
 		double[][] data = generatorFunctionPiecewise.getData();
 		int length = data.length;
 		
@@ -39,7 +39,7 @@ public class GeneratorFunctionPiecewiseDatabaseTest {
 		RCode code = caller.getRCode();
 		caller.setRscriptExecutable(RSCRIPT);
 
-		IGeneratorFunctionPiecewise generatorFunctionPiecewise = new GeneratorFunctionPiecewiseDatabase();
+		IBuilderDatasource generatorFunctionPiecewise = new BuilderDatasourceDB();
 		double[][] data = generatorFunctionPiecewise.getData();
 		
 		code.addDoubleMatrix("matrix", data);
@@ -74,7 +74,7 @@ public class GeneratorFunctionPiecewiseDatabaseTest {
 	@Test
 	public void generationFunctionEdgeTest() throws NumberFormatException, PiecewiseException {
 		
-		GeneratorFunctionPiecewise generatorFunctionPiecewise = new GeneratorFunctionPiecewise();
+		GeneratorFunctionLoess generatorFunctionPiecewise = new GeneratorFunctionLoess();
 		double value = generatorFunctionPiecewise.getValue(Double.valueOf("1201977368000"));
 		
 		System.out.println(value);

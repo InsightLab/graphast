@@ -8,6 +8,7 @@ import org.graphast.enums.TimeType;
 import org.graphast.geometry.BBox;
 import org.graphast.geometry.PoI;
 import org.graphast.geometry.Point;
+import org.graphast.piecewise.Function;
 import org.graphast.util.FileUtils;
 
 import it.unimi.dsi.fastutil.ints.IntBigArrayBigList;
@@ -321,4 +322,6 @@ public interface Graph {
 	public String getAbsoluteDirectory();
 
 	public void setDirectory(String directory);
+
+	public void setFuntionEdge(long edgeId, Function function);
 }

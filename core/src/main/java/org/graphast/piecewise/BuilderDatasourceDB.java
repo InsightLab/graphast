@@ -9,7 +9,7 @@ import java.sql.Statement;
 import org.graphast.query.postgis.QueryPostgis;
 import org.graphast.util.ConnectionJDBC;
 
-public class GeneratorFunctionPiecewiseDatabase implements IGeneratorFunctionPiecewise {
+public class BuilderDatasourceDB implements IBuilderDatasource {
 
 	private int FIELD_DATE_TIME = 1;
 	private int FIELD_DURACAO   = 2;
