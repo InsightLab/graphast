@@ -108,4 +108,5 @@ public class ManipulatorR implements IManipulatorEngine {
 			this.y = y;
 		}
 	}
+
 }
