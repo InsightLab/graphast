@@ -28,6 +28,7 @@ import org.graphast.geometry.BBox;
 import org.graphast.geometry.PoI;
 import org.graphast.geometry.PoICategory;
 import org.graphast.geometry.Point;
+import org.graphast.piecewise.Function;
 import org.graphast.util.DistanceUtils;
 import org.graphast.util.FileUtils;
 import org.slf4j.Logger;
@@ -1469,6 +1470,12 @@ public class GraphImpl implements Graph {
 	public void setDirectory(String directory) {
 		this.absoluteDirectory = FileUtils.getAbsolutePath(directory);
 		this.directory = directory;
+	}
+
+	@Override
+	public void setFuntionEdge(long edgeId, Function function) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	@Override
