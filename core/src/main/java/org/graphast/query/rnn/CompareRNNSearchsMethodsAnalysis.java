@@ -12,6 +12,7 @@ import org.graphast.importer.OSMDBImporter;
 import org.graphast.model.GraphBounds;
 import org.graphast.model.Node;
 import org.graphast.query.knn.NearestNeighbor;
+import org.graphast.util.BenchmarkMemory;
 import org.graphast.util.DateUtils;
 import org.graphast.util.NumberUtils;
 
@@ -23,9 +24,9 @@ public class CompareRNNSearchsMethodsAnalysis {
 	public static void main(String[] args) throws IOException {
 		
 		runAnalysis("view_exp_1k", 10);
-		/*runAnalysis("view_exp_10k", Integer.parseInt(args[0]));
+		runAnalysis("view_exp_10k", Integer.parseInt(args[0]));
 		runAnalysis("view_exp_50k", Integer.parseInt(args[0]));
-		runAnalysis("view_exp_100k", Integer.parseInt(args[0]));*/
+		runAnalysis("view_exp_100k", Integer.parseInt(args[0]));
 	}
 
 	public static void runAnalysis(String tableName, int testTimes) throws IOException {
@@ -61,17 +62,39 @@ public class CompareRNNSearchsMethodsAnalysis {
 			Node customer, Date timeout, Date timestamp, FileWriter fileCsv) throws IOException {
 		try {
 			
-			Runtime.getRuntime().gc();
-			long numberUseMemoryInit = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(); 
+			//List<Integer> listIdProcess = BenchmarkMemory.listIdProcess();
+			long numberUseMemoryInit = BenchmarkMemory.getUsedMemory();
 			long startTime = System.nanoTime();
+			long ioProcessReadInit = 0;
+			long ioProcessWriteInit = 0;
+			
+			/*for (Integer pid : listIdProcess) {
+				ioProcessReadInit = ioProcessReadInit + BenchmarkMemory.ioProcess(pid, BenchmarkMemory.PROCESS.READ);
+				ioProcessWriteInit = ioProcessWriteInit + BenchmarkMemory.ioProcess(pid, BenchmarkMemory.PROCESS.WRITE);
+			}*/
+			
 			NearestNeighbor solution = null;
 			solution = rnn.search(customer, timeout, timestamp);
+			
+			long ioProcessReadEnd = 0;
+			long ioProcessWriteEnd = 0;
+			
+			/*for (Integer pid : listIdProcess) {
+				ioProcessReadEnd =  ioProcessReadEnd + BenchmarkMemory.ioProcess(pid, BenchmarkMemory.PROCESS.READ);
+				ioProcessWriteEnd =  ioProcessWriteEnd + BenchmarkMemory.ioProcess(pid, BenchmarkMemory.PROCESS.WRITE);
+			}*/
+			
 			long endTime = System.nanoTime();
-			long numberUseMemoryFinal = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory(); 
+			long numberUseMemoryFinal = BenchmarkMemory.getUsedMemory(); 
 			
 			long time = endTime - startTime;
 			long numerUseMemory = (numberUseMemoryFinal - numberUseMemoryInit) / 1024;
-			System.out.println(" --------- >"+numerUseMemory);
+			
+			long read = ioProcessReadEnd - ioProcessReadInit;
+			long write = ioProcessWriteEnd - ioProcessWriteInit;
+			
+			System.out.println(" READ "+read);
+			System.out.println(" WRITE "+write);
 
 			Long solutionId = null;
 			Double travelTime = null;
@@ -103,13 +126,12 @@ public class CompareRNNSearchsMethodsAnalysis {
 					gidVisited = gidVisited + "-" + nodeVisited.getLabel();
 				}
 				
-				String currentLine = String.format("%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s", coordinatesCustomer, 
+				String currentLine = String.format("%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s;%s", coordinatesCustomer, 
 						poiCoordinate, time, solutionId, externalId, travelTime, 
-						nodesSize, path, coordinateNodeVisited, gidCustomer, gidPoi, gidVisited, numberVisitedNodes) + "\n";
+						nodesSize, path, coordinateNodeVisited, gidCustomer, gidPoi, gidVisited, numberVisitedNodes, numerUseMemory) + "\n";
 				
 				
 				System.out.println(currentLine);
-				
 				fileCsv.write(currentLine);
 			}
 		} catch(PathNotFoundException e) {
@@ -117,7 +139,6 @@ public class CompareRNNSearchsMethodsAnalysis {
 		}
 	}
 
-	
 	private static Node getRandomCustomerInGraph(GraphBounds graph) {
 		Node node;
 		double[] bounds = new double[]{-3.710467, -38.591078, -3.802376, -38.465530};
