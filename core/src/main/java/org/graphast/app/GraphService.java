@@ -12,7 +12,7 @@ import org.graphast.importer.OSMImporterImpl;
 import org.graphast.importer.POIImporter;
 import org.graphast.model.Graph;
 import org.graphast.model.GraphBounds;
-import org.graphast.model.GraphBoundsImpl;
+import org.graphast.model.GraphImpl;
 import org.graphast.query.route.osr.BoundsRoute;
 import org.graphast.util.FileUtils;
 import org.graphast.util.POIUtils;
@@ -107,7 +107,7 @@ public class GraphService {
 		String graphDir = Configuration.getProperty(app, "dir");
 		AppGraph.setGraphDir(graphDir);
 		log.debug("graphDir: {}", graphDir);
-		GraphBounds graph = new GraphBoundsImpl(graphDir);
+		GraphBounds graph = new GraphImpl(graphDir);
 		graph.load();
 		AppGraph.setGraph(graph);
 		GraphInfo graphInfo = getGraphInfo(graph);

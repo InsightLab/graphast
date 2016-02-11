@@ -13,7 +13,7 @@ import org.graphast.model.Edge;
 import org.graphast.model.EdgeImpl;
 import org.graphast.model.Graph;
 import org.graphast.model.GraphBounds;
-import org.graphast.model.GraphBoundsImpl;
+import org.graphast.model.GraphImpl;
 import org.graphast.model.GraphImpl;
 import org.graphast.model.Node;
 import org.graphast.model.NodeImpl;
@@ -142,7 +142,7 @@ public class GraphGenerator {
 
 	public GraphBounds generateExample2() {
 
-		GraphBounds graph = new GraphBoundsImpl(Configuration.USER_HOME + "/graphast/test/example2");
+		GraphBounds graph = new GraphImpl(Configuration.USER_HOME + "/graphast/test/example2");
 
 		Edge e;
 		NodeImpl v;
@@ -310,7 +310,7 @@ public class GraphGenerator {
 	}
 
 	public GraphBounds generateExample4() {
-		GraphBounds graph = new GraphBoundsImpl(Configuration.USER_HOME + "/graphast/example");
+		GraphBounds graph = new GraphImpl(Configuration.USER_HOME + "/graphast/example");
 
 		Edge e;
 		NodeImpl v;
@@ -376,7 +376,7 @@ public class GraphGenerator {
 
 	public GraphBounds generateExamplePoI() {
 
-		GraphBounds graph = new GraphBoundsImpl(Configuration.USER_HOME + "/graphast/test/examplePoI");
+		GraphBounds graph = new GraphImpl(Configuration.USER_HOME + "/graphast/test/examplePoI");
 
 		Node node;
 		Edge edge;
