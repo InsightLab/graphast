@@ -1671,11 +1671,11 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		if (this.reverseGraph == null) {
 			try {
 				// load existent reverse graph
-				reverseGraph = new GraphBoundsImpl(this.directory + "/reverse");
+				reverseGraph = new GraphImpl(this.directory + "/reverse");
 				reverseGraph.load();
 			} catch (Exception e) {
 				// creates a new reverse graph
-				reverseGraph = new GraphBoundsImpl(this.directory);
+				reverseGraph = new GraphImpl(this.directory);
 				reverseGraph.load();
 				reverseGraph.reverseGraph();
 				reverseGraph.setDirectory(this.directory + "/reverse");
