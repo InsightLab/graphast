@@ -12,7 +12,7 @@ import org.graphast.geometry.Point;
 import org.graphast.model.Edge;
 import org.graphast.model.EdgeImpl;
 import org.graphast.model.GraphBounds;
-import org.graphast.model.GraphBoundsImpl;
+import org.graphast.model.GraphImpl;
 import org.graphast.model.NodeImpl;
 import org.graphast.util.FileUtils;
 import org.graphast.util.NumberUtils;
@@ -57,7 +57,7 @@ public class OSMImporterImpl implements Importer {
 		logger.info("Initial date: {}", new Date());
 		double initialTime = System.currentTimeMillis();
 
-		GraphBounds graph = new GraphBoundsImpl(graphastDir);
+		GraphBounds graph = new GraphImpl(graphastDir);
 
 		GraphHopper gh = OSMToGraphHopperReader.createGraph(osmFile, graphHopperDir, false, false);
 		GraphStorage gs = gh.getGraph();

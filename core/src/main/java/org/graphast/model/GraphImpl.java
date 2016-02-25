@@ -34,8 +34,17 @@ import it.unimi.dsi.fastutil.longs.LongList;
 import it.unimi.dsi.fastutil.objects.ObjectBigArrayBigList;
 import it.unimi.dsi.fastutil.objects.ObjectBigList;
 
-public class GraphImpl implements Graph {
+import java.io.Serializable;
 
+import org.graphast.enums.CompressionType;
+import org.graphast.enums.TimeType;
+
+public class GraphImpl implements Graph, GraphBounds, Serializable {
+
+	/*
+	 * Class that implements the two interfaces that build a graph
+	 */
+	
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 
 	private Long2LongMap nodeIndex = new Long2LongOpenHashMap();
@@ -69,6 +78,15 @@ public class GraphImpl implements Graph {
 	protected int maxTime = 86400000;
 
 	protected BBox bBox;
+	
+	/*
+	 * Attributes that came from GraphBoundsImpl
+	 */
+	
+	private static final long serialVersionUID = -6041223700543613773L;
+	private Long2IntMap edgesUpperBound, edgesLowerBound;
+	private Long2IntMap nodesUpperBound, nodesLowerBound;
+	private GraphBounds reverseGraph;
 
 	/**
 	 * Creates a Graph for the given directory passed as parameter.
@@ -97,6 +115,11 @@ public class GraphImpl implements Graph {
 		points = new IntBigArrayBigList();
 
 		nodeIndex.defaultReturnValue(-1);
+		
+		edgesUpperBound = new Long2IntOpenHashMap();
+		edgesLowerBound = new Long2IntOpenHashMap();
+		nodesUpperBound = new Long2IntOpenHashMap();
+		nodesLowerBound = new Long2IntOpenHashMap();
 
 	}
 
@@ -121,6 +144,11 @@ public class GraphImpl implements Graph {
 				compressionType);
 		FileUtils.saveIntList(absoluteDirectory + "/points", points, blockSize,
 				compressionType);
+		FileUtils.saveLong2IntMap(absoluteDirectory + "/edgesUpperBound", edgesUpperBound, blockSize, compressionType);
+		FileUtils.saveLong2IntMap(absoluteDirectory + "/edgesLowerBound", edgesLowerBound, blockSize, compressionType);
+
+		FileUtils.saveLong2IntMap(absoluteDirectory + "/nodesUpperBound", nodesUpperBound, blockSize, compressionType);
+		FileUtils.saveLong2IntMap(absoluteDirectory + "/nodesLowerBound", nodesLowerBound, blockSize, compressionType);
 	}
 
 	/*
@@ -144,6 +172,13 @@ public class GraphImpl implements Graph {
 				blockSize, compressionType);
 		points = FileUtils.loadIntList(absoluteDirectory + "/points", 
 				blockSize, compressionType);
+		
+		FileUtils.loadLong2IntMap(absoluteDirectory + "/edgesUpperBound", blockSize, compressionType);
+		FileUtils.loadLong2IntMap(absoluteDirectory + "/edgesLowerBound", blockSize, compressionType);
+
+		FileUtils.loadLong2IntMap(absoluteDirectory + "/nodesUpperBound", blockSize, compressionType);
+		FileUtils.loadLong2IntMap(absoluteDirectory + "/nodesLowerBound", blockSize, compressionType);
+		
 		createNodeIndex();
 		findBBox();
 		log.info("nodes: {}", this.getNumberOfNodes());
@@ -1465,6 +1500,166 @@ public class GraphImpl implements Graph {
 	public void setDirectory(String directory) {
 		this.absoluteDirectory = FileUtils.getAbsolutePath(directory);
 		this.directory = directory;
+	}
+	
+	/*
+	 * A partir daqui estão os métodos adicionais vindos da antiga classe GraphBoundsImpl:
+	 * 
+	 * Métodos save,load apenas foram adicionados para os mesmo métodos na GrahImpl
+	 * Métodos accessNeighborhood, poiGetCost foi criado mais uma versão
+	 * Métodos getPoiCost e getNodeCost eram idênticos então foram mantidos
+	 */
+
+	public void createEdgesLowerBounds() {
+		long numberOfEdges = getNumberOfEdges();
+		Edge edge; 
+
+		for(long i=0; i<numberOfEdges; i++) {
+			edge = getEdge(i);
+			edgesLowerBound.put((long)edge.getId(), getMinimunCostValue(edge.getCosts()));
+		}
+	}
+
+	public void createEdgesUpperBounds() {
+
+		long numberOfEdges = getNumberOfEdges();
+		Edge edge; 
+
+		for(int i=0; i<numberOfEdges; i++) {
+			edge = getEdge(i);
+			edgesUpperBound.put((long)edge.getId(), getMaximunCostValue(edge.getCosts()));
+		}
+	}
+
+	public void createNodesLowerBounds() {
+		long numberOfNodes = getNumberOfNodes();
+		Node node; 
+
+		for(long i=0; i<numberOfNodes; i++) {
+			node = getNode(i);
+			nodesLowerBound.put((long)node.getId(), getMinimunCostValue(node.getCosts()));
+		}
+	}
+
+	public void createNodesUpperBounds() {
+
+		long numberOfNodes = getNumberOfNodes();
+		Node node; 
+
+		for(int i=0; i<numberOfNodes; i++) {
+			node = getNode(i);
+			nodesUpperBound.put((long)node.getId(), getMaximunCostValue(node.getCosts()));
+		}
+	}
+
+	/**
+	 * This method return a list of nodes that are neighbors of a given node. 
+	 * This list contains node id and cost to reach it.
+	 * 
+	 * @param v Node which method is applied.
+	 * @param graphType The type of graph the will be used to retrieve costs needed. 0 = Regular Costs; 1 = Lower Bound Costs;
+	 * 					3 = Upper Bound Costs.
+	 * @param time	The time that will be used to get the time-dependent cost
+	 * @return	all neighbors for the given parameters
+	 */
+	public Long2IntMap accessNeighborhood(Node v, short graphType, int time){
+
+		Long2IntMap neighbors = new Long2IntOpenHashMap();
+		int cost;
+
+		for (Long e : this.getOutEdges(v.getId()) ) {
+
+			Edge edge = this.getEdge(e);
+			long neighborNodeId =  edge.getToNode();
+
+			if(graphType == 0) {
+				cost = this.getEdgeCost(edge, time);
+			} else if(graphType == 1) {
+				cost = getEdgesLowerBound().get(edge.getId());
+			} else {
+				cost = getEdgesUpperBound().get(edge.getId());
+			}
+
+			if(!neighbors.containsKey(neighborNodeId)) {
+				neighbors.put(neighborNodeId, cost);
+			}else{
+				if(neighbors.get(neighborNodeId) > cost){
+					neighbors.put(neighborNodeId, cost);
+				}
+			}
+		}
+
+		return neighbors;
+
+	}
+
+	public int poiGetCost(long vid, short graphType){
+
+		if(graphType == 0) {
+			LinearFunction[] lf = convertToLinearFunction(getPoiCost(vid));
+			return lf[0].calculateCost(0);
+		} else if(graphType == 1){
+			int[] nodeLowerBound = new int[] {getNodesLowerBound().get(vid), getNodesLowerBound().get(vid)};
+			LinearFunction[] lf = convertToLinearFunction(nodeLowerBound);
+			return lf[0].calculateCost(0);
+		} else {
+			int[] nodeUpperBound = new int[] {getNodesUpperBound().get(vid), getNodesUpperBound().get(vid)};
+			LinearFunction[] lf = convertToLinearFunction(nodeUpperBound);
+			return lf[0].calculateCost(0);
+		}
+	}
+
+	@Override
+	public void createBounds() {
+		createEdgesUpperBounds();
+		createEdgesLowerBounds();
+		createNodesUpperBounds();
+		createNodesLowerBounds();
+	}
+
+	@Override
+	public Long2IntMap getEdgesUpperBound() {
+		return edgesUpperBound;
+	}
+
+	@Override
+	public Long2IntMap getEdgesLowerBound() {
+		return edgesLowerBound;
+	}
+
+	@Override
+	public Long2IntMap getNodesUpperBound() {
+		return nodesUpperBound;
+	}
+	public int getEdgeLowerCost(long id){
+		return edgesLowerBound.get(id);
+	}
+
+	@Override
+	public Long2IntMap getNodesLowerBound() {
+		return nodesLowerBound;
+	}
+	public int getEdgeUpperCost(long id){
+		return edgesUpperBound.get(id);
+	}
+
+	@Override
+	public GraphBounds getReverseGraph() {
+		if (this.reverseGraph == null) {
+			try {
+				// load existent reverse graph
+				reverseGraph = new GraphImpl(this.directory + "/reverse");
+				reverseGraph.load();
+			} catch (Exception e) {
+				// creates a new reverse graph
+				reverseGraph = new GraphImpl(this.directory);
+				reverseGraph.load();
+				reverseGraph.reverseGraph();
+				reverseGraph.setDirectory(this.directory + "/reverse");
+				reverseGraph.save();
+			}
+		}
+		return this.reverseGraph;
 	}
 	
 }

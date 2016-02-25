@@ -26,7 +26,7 @@ public class GraphTest {
 	//private static GraphImpl graphExample1;
 	private static Graph graphExample2;
 	private static GraphImpl graphExample3;
-	private static GraphBoundsImpl graphExample4;	
+	private static GraphImpl graphExample4;	
 	private static GraphImpl graphExample;
 	private static GraphBounds graphMonaco;
 
@@ -36,7 +36,7 @@ public class GraphTest {
 		//graphExample1 = (GraphImpl) new GraphGenerator().generateExample1();
 		graphExample2 = new GraphGenerator().generateExample2();
 		graphExample3 =  (GraphImpl) new GraphGenerator().generateExample3();
-		graphExample4 =  (GraphBoundsImpl) new GraphGenerator().generateExample4();
+		graphExample4 =  (GraphImpl) new GraphGenerator().generateExample4();
 		graphExample4.setTimeType(TimeType.MINUTE);
 		graphMonaco = new GraphGenerator().generateMonaco();
 	}
@@ -446,7 +446,7 @@ public class GraphTest {
 	
 	@Test
 	public void linearFunctionArrayToCostIntArrayTest() {
-		GraphBoundsImpl graph = (GraphBoundsImpl)graphExample4;
+		GraphImpl graph = (GraphImpl)graphExample4;
 		LinearFunction linearFunction = new LinearFunction(0,10,graph.getMaxTime(),10);
 		int[] costArray = graph.linearFunctionArrayToCostIntArray(new LinearFunction[]{linearFunction});
 		assertEquals(10,costArray[0]);
@@ -460,7 +460,7 @@ public class GraphTest {
 	
 	@Test
 	public void convertToLinearFunctionTest() {
-		GraphBoundsImpl graph = (GraphBoundsImpl)graphExample4;
+		GraphImpl graph = (GraphImpl)graphExample4;
 		LinearFunction linearFunction = new LinearFunction(0,10,graph.getMaxTime(),10);
 		LinearFunction[] lfArray = graph.convertToLinearFunction(new int[]{10});
 		assertEquals(linearFunction,lfArray[0]);
