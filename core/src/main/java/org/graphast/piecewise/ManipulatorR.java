@@ -46,6 +46,7 @@ public class ManipulatorR implements IManipulatorEngine {
 		
 		double yFinal = 0;
 		PontoGeometrico pontoGeo1 = null;
+
 		yFinal = coeficienteAngularAnterior;
 		
 		for (int i = 0; i < (pontosInflexao.length/2) - 1; i++) {
@@ -69,7 +70,6 @@ public class ManipulatorR implements IManipulatorEngine {
 		
 		double coeficienteAngularFinal = getCoeficienteAngular(ponto1FinalGeo, ponto2FinalGeo);
 		double coeficienteLinearFinal = getCoeficienteLinear(ponto1FinalGeo, coeficienteAngularFinal);
-		
 		
 		yFinal = yFinal + (pontoGeo1.getX() * (coeficienteLinearAnterior - coeficienteLinearFinal)) + coeficienteAngularFinal * x;
 		
