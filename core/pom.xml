@@ -10,48 +10,38 @@
 	<url>https://github.com/ARiDa/graphast</url>
 
 	<repositories>
-	    <repository>
-	      <id>maven-repo</id>
-	      <url>http://arida.github.io/maven-repo/</url>
-	    </repository>
-	    <!-- 
-	    <repository>
-		   <id>sonatype-nexus-snapshots</id>
-		    <name>Sonatype Nexus Snapshots</name>
-		     <url>
-		      https://oss.sonatype.org/service/local/staging/deploy/maven2/
-		     </url>
-		     <releases>
-		      <enabled>true</enabled>
-		     </releases>
-		     <snapshots>
-		      <enabled>true</enabled>
-		     </snapshots>
-		</repository> -->
+		<repository>
+			<id>maven-repo</id>
+			<url>http://arida.github.io/maven-repo/</url>
+		</repository>
+		<!-- <repository> <id>sonatype-nexus-snapshots</id> <name>Sonatype Nexus 
+			Snapshots</name> <url> https://oss.sonatype.org/service/local/staging/deploy/maven2/ 
+			</url> <releases> <enabled>true</enabled> </releases> <snapshots> <enabled>true</enabled> 
+			</snapshots> </repository> -->
 	</repositories>
-	
+
 	<licenses>
-    		<license>
-      			<name>GNU Lesser General Public License (LGPL), Version 2.1</name>
-      			<url>http://www.fsf.org/licensing/licenses/lgpl.txt</url>
-      			<distribution>repo</distribution>
-    		</license>
-  	</licenses>
+		<license>
+			<name>GNU Lesser General Public License (LGPL), Version 2.1</name>
+			<url>http://www.fsf.org/licensing/licenses/lgpl.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 
 	<scm>
-    		<connection>scm:git:git://github.com/ARiDa/graphast.git</connection>
-    		<url>https://github.com/ARiDa/graphast.git</url>
-    		<developerConnection>https://github.com/ARiDa/graphast.git</developerConnection>
+		<connection>scm:git:git://github.com/ARiDa/graphast.git</connection>
+		<url>https://github.com/ARiDa/graphast.git</url>
+		<developerConnection>https://github.com/ARiDa/graphast.git</developerConnection>
 	</scm>
 
 	<developers>
 		<developer>
 			<id>graphast</id>
 			<name>Graphast</name>
-		</developer>	
+		</developer>
 	</developers>
-	
-	<properties> 
+
+	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -85,25 +75,28 @@
 			<artifactId>osmpoispbf</artifactId>
 			<version>1.1</version>
 		</dependency>
-		
+
 		<dependency>
-		    <groupId>com.github.davidmoten</groupId>
-		    <artifactId>rtree</artifactId>
-		    <version>0.6.9</version>
+			<groupId>com.github.davidmoten</groupId>
+			<artifactId>rtree</artifactId>
+			<version>0.6.9</version>
 		</dependency>
-		<!-- 
-		 <dependency>
-			  <groupId>org.expr.rcaller</groupId>
-			  <artifactId>RCaller</artifactId>
-			  <version>2.6.0.3</version>
-		 </dependency> -->
-		 
-		 <dependency>
+		<!-- <dependency> <groupId>org.expr.rcaller</groupId> <artifactId>RCaller</artifactId> 
+			<version>2.6.0.3</version> </dependency> -->
+
+		<dependency>
 			<groupId>postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>9.1-901-1.jdbc4</version>
 		</dependency>
-		 
+
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20160212</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>
@@ -151,21 +144,10 @@
 					</execution>
 				</executions>
 			</plugin>
-			
-<!-- 
-			<plugin>
-	        	<artifactId>maven-gpg-plugin</artifactId>
-	        	<version>1.6</version>
-	        	<executions>
-	          		<execution>
-	            		<phase>package</phase>
-	            		<goals>
-	              			<goal>sign</goal>
-	            		</goals>
-	          		</execution>
-	        	</executions>
-	      	</plugin>
- -->
+
+			<!-- <plugin> <artifactId>maven-gpg-plugin</artifactId> <version>1.6</version> 
+				<executions> <execution> <phase>package</phase> <goals> <goal>sign</goal> 
+				</goals> </execution> </executions> </plugin> -->
 		</plugins>
 	</build>
 </project>
