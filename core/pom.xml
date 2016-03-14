@@ -14,31 +14,30 @@
 	      <id>maven-repo</id>
 	      <url>http://arida.github.io/maven-repo/</url>
 	    </repository>
-	    
 	</repositories>
-	
+
 	<licenses>
-    		<license>
-      			<name>GNU Lesser General Public License (LGPL), Version 2.1</name>
-      			<url>http://www.fsf.org/licensing/licenses/lgpl.txt</url>
-      			<distribution>repo</distribution>
-    		</license>
-  	</licenses>
+		<license>
+			<name>GNU Lesser General Public License (LGPL), Version 2.1</name>
+			<url>http://www.fsf.org/licensing/licenses/lgpl.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
 
 	<scm>
-    		<connection>scm:git:git://github.com/ARiDa/graphast.git</connection>
-    		<url>https://github.com/ARiDa/graphast.git</url>
-    		<developerConnection>https://github.com/ARiDa/graphast.git</developerConnection>
+		<connection>scm:git:git://github.com/ARiDa/graphast.git</connection>
+		<url>https://github.com/ARiDa/graphast.git</url>
+		<developerConnection>https://github.com/ARiDa/graphast.git</developerConnection>
 	</scm>
 
 	<developers>
 		<developer>
 			<id>graphast</id>
 			<name>Graphast</name>
-		</developer>	
+		</developer>
 	</developers>
-	
-	<properties> 
+
+	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
@@ -72,14 +71,14 @@
 			<artifactId>osmpoispbf</artifactId>
 			<version>1.1</version>
 		</dependency>
-		
+
 		<dependency>
 		    <groupId>com.github.davidmoten</groupId>
 		    <artifactId>rtree</artifactId>
 		    <version>0.7.1</version>
 		</dependency>
 
-		 <dependency>
+		<dependency>
 			<groupId>postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>9.1-901-1.jdbc4</version>
@@ -144,21 +143,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			
-<!-- 
-			<plugin>
-	        	<artifactId>maven-gpg-plugin</artifactId>
-	        	<version>1.6</version>
-	        	<executions>
-	          		<execution>
-	            		<phase>package</phase>
-	            		<goals>
-	              			<goal>sign</goal>
-	            		</goals>
-	          		</execution>
-	        	</executions>
-	      	</plugin>
- -->
+
  			<plugin>
 		        <groupId>org.apache.maven.plugins</groupId>
 		        <artifactId>maven-shade-plugin</artifactId>
