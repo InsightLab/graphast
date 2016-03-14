@@ -102,6 +102,12 @@
 			<version>3.4</version>
 		</dependency>
 		 
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20160212</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -170,6 +176,7 @@
 		          </execution>
 		        </executions>
 		      </plugin>
+
 		</plugins>
 	</build>
 </project>
