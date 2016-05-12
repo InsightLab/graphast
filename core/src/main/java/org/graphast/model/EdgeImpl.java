@@ -39,6 +39,10 @@ public class EdgeImpl implements Edge {
 	private long labelIndex;
 
 	private String label;
+	
+	public EdgeImpl() {
+
+	}
 
 	public EdgeImpl(long fromNode, long toNode, int distance,
 			int[] costs, List<Point> geometry, String label) {
@@ -135,6 +139,10 @@ public class EdgeImpl implements Edge {
 
 	int getExternalIdOffset() {
 		return BigArrays.displacement(externalId);
+	}
+
+	public long getExternalId() {
+		return externalId;
 	}
 
 	@Override
@@ -241,11 +249,11 @@ public class EdgeImpl implements Edge {
 		this.geometry = geometry;
 	}
 
-	long getLabelIndex(){
+	public long getLabelIndex(){
 		return labelIndex;
 	}
 
-	void setLabelIndex(long labelIndex) {
+	public void setLabelIndex(long labelIndex) {
 		this.labelIndex = labelIndex;
 	}
 

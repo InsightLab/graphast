@@ -89,7 +89,7 @@ public class GraphService {
 		Configuration.save(graphInfo);
 		
 		// Create a reverse graph for use with OSR
-		graph.getReverseGraph();
+		graph.getReverseGraphBounds();
 		
 		// Create Route Bounds
 		BoundsRoute br = new BoundsRoute(graph, (short)0);

@@ -81,8 +81,12 @@ public interface Edge {
 	public abstract String toString();
 	
 	public boolean equals(Edge e);
-	
+	public long getExternalId();
 	public void addGeometryPoint(Point p);
 	public void setGeometry(List<Point> geometry);
+	public long getGeometryIndex();
+	public long getCostsIndex();
+	public long getLabelIndex();
+	public void setDistance(int distance);
 	
 }

@@ -9,12 +9,15 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 import org.graphast.config.Configuration;
 import org.graphast.enums.TimeType;
 import org.graphast.geometry.BBox;
 import org.graphast.geometry.Point;
 import org.graphast.graphgenerator.GraphGenerator;
+import org.graphast.model.contraction.CHNodeImpl;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -26,9 +29,9 @@ public class GraphTest {
 	//private static GraphImpl graphExample1;
 	private static Graph graphExample2;
 	private static GraphImpl graphExample3;
-	private static GraphImpl graphExample4;	
 	private static GraphImpl graphExample5;	
 	private static GraphImpl graphExample6;	
+	private static GraphBounds graphExample4;	
 	private static GraphImpl graphExample;
 	private static GraphBounds graphMonaco;
 
@@ -38,7 +41,7 @@ public class GraphTest {
 		//graphExample1 = (GraphImpl) new GraphGenerator().generateExample1();
 		graphExample2 = new GraphGenerator().generateExample2();
 		graphExample3 =  (GraphImpl) new GraphGenerator().generateExample3();
-		graphExample4 =  (GraphImpl) new GraphGenerator().generateExample4();
+		graphExample4 =  (GraphBounds) new GraphGenerator().generateExample4();
 		graphExample4.setTimeType(TimeType.MINUTE);
 		graphExample5 =  (GraphImpl) new GraphGenerator().generateExample5();
 		graphExample6 =  (GraphImpl) new GraphGenerator().generateExample6();
@@ -529,11 +532,38 @@ public class GraphTest {
 	
 	@Test
 	public void convertToLinearFunctionTest() {
-		GraphImpl graph = (GraphImpl)graphExample4;
+		GraphBounds graph = (GraphBounds)graphExample4;
 		LinearFunction linearFunction = new LinearFunction(0,10,graph.getMaxTime(),10);
 		LinearFunction[] lfArray = graph.convertToLinearFunction(new int[]{10});
 		assertEquals(linearFunction,lfArray[0]);
 		assertEquals(1, lfArray.length);
 	}
+	
+//	@Test
+//	public void nodeWithPriorityTest() {
+//		
+//		Queue<CHNodeImpl> nodePriorityQueue = new PriorityQueue<>();
+//		
+//		CHNodeImpl n = new CHNodeImpl(0l, 5);
+//		nodePriorityQueue.offer(n);
+//	
+//		n = new CHNodeImpl(1l, 6);
+//		nodePriorityQueue.offer(n);
+//		
+//		n = new CHNodeImpl(2l, 3);
+//		nodePriorityQueue.offer(n);
+//		
+//		n = new CHNodeImpl(3l, 1);
+//		nodePriorityQueue.offer(n);
+//		
+//		n = new CHNodeImpl(4l, 2);
+//		nodePriorityQueue.offer(n);
+//		
+//		n = new CHNodeImpl(5l, 4);
+//		nodePriorityQueue.offer(n);
+//
+//		assertEquals(nodePriorityQueue.poll().getPriority(), 1);
+//
+//	}
 
 }

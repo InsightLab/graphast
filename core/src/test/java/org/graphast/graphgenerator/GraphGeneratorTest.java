@@ -8,6 +8,7 @@ import java.util.Map;
 import org.graphast.config.Configuration;
 import org.graphast.model.Graph;
 import org.graphast.model.GraphBounds;
+import org.graphast.model.contraction.CHGraph;
 import org.graphast.util.FileUtils;
 import org.graphast.util.MapUtils;
 import org.graphast.util.SimpleMap;
@@ -24,6 +25,7 @@ public class GraphGeneratorTest {
 	private static Graph graphExample3;
 	private static Graph graphExamplePoI;
 	private static Graph graphAndorra;
+	private static CHGraph graphExampleCH;
 
 	@BeforeClass
 	public static void setup() throws NumberFormatException, IOException {
@@ -34,6 +36,7 @@ public class GraphGeneratorTest {
 		graphExample3 = new GraphGenerator().generateExample3();
 		graphExamplePoI = new GraphGenerator().generateExamplePoI();
 		graphAndorra = new GraphGenerator().generateAndorra();
+		graphExampleCH = new GraphGenerator().generateExampleCH();
 	}
 
 	@Test
@@ -78,6 +81,12 @@ public class GraphGeneratorTest {
 		assertEquals(5326, graphAndorra.getNumberOfEdges());
 	}
 	
+	@Test
+	public void generateExampleCHTest() {
+		assertEquals(10, graphExampleCH.getNumberOfNodes());
+		assertEquals(19, graphExampleCH.getNumberOfEdges());
+	}
+	
 	
 	@Test
 	public void upperAndLowerBoundsTest() {
@@ -101,8 +110,6 @@ public class GraphGeneratorTest {
 		assertEquals(2, graphExample2.getEdgeLowerCost(7l));
 
 	}
-	
-	
 	
 	@AfterClass
 	public static void tearDown() {

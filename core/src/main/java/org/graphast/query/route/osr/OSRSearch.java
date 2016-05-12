@@ -42,7 +42,7 @@ public class OSRSearch {
 		this.graphBounds = graphBounds;
 		this.graphType = graphType;
 		//Double check this instantiation
-		this.dijkstra = new DijkstraLinearFunction(this.graphBounds.getReverseGraph());
+		this.dijkstra = new DijkstraLinearFunction(this.graphBounds.getReverseGraphBounds());
 	}
 
 	public ArrayList<Long> reconstructPath(Node origin, Node destination, RouteQueueEntry route, 

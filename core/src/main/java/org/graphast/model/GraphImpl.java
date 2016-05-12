@@ -3,6 +3,7 @@ package org.graphast.model;
 import static org.graphast.util.GeoUtils.latLongToDouble;
 import static org.graphast.util.GeoUtils.latLongToInt;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -42,31 +43,31 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 * Class that implements the two interfaces that build a graph
 	 */
 	
-	private Logger log = LoggerFactory.getLogger(this.getClass());
+	protected Logger log = LoggerFactory.getLogger(this.getClass());
 
-	private Long2LongMap nodeIndex = new Long2LongOpenHashMap();
+	protected Long2LongMap nodeIndex = new Long2LongOpenHashMap();
 
 	protected String directory;
 
 	protected String absoluteDirectory;
 
-	private IntBigArrayBigList nodes;
+	protected IntBigArrayBigList nodes;
 
-	private IntBigArrayBigList edges;
+	protected IntBigArrayBigList edges;
 
-	private ObjectBigList<String> nodesLabels;
+	protected ObjectBigList<String> nodesLabels;
 
-	private ObjectBigList<String> edgesLabels;
+	protected ObjectBigList<String> edgesLabels;
 
-	private IntBigArrayBigList edgesCosts;
+	protected IntBigArrayBigList edgesCosts;
 
-	private IntBigArrayBigList nodesCosts;
+	protected IntBigArrayBigList nodesCosts;
 
-	private IntBigArrayBigList points;
+	protected IntBigArrayBigList points;
 
 	protected int blockSize = 4096;
 
-	private int[] intCosts;
+	protected int[] intCosts;
 
 	protected CompressionType compressionType;
 
@@ -83,7 +84,7 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	private static final long serialVersionUID = -6041223700543613773L;
 	private Long2IntMap edgesUpperBound, edgesLowerBound;
 	private Long2IntMap nodesUpperBound, nodesLowerBound;
-	private GraphBounds reverseGraph;
+	protected GraphBounds reverseGraph;
 
 	/**
 	 * Creates a Graph for the given directory passed as parameter.
@@ -96,6 +97,10 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 */
 	public GraphImpl(String directory) {
 		this(directory, CompressionType.GZIP_COMPRESSION, TimeType.MILLISECOND);
+	}
+	
+	public GraphImpl() {
+		
 	}
 
 	public GraphImpl(String directory, CompressionType compressionType, TimeType timeType) {
@@ -125,6 +130,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 * 
 	 * @see org.graphast.model.Graphast#save()
 	 */
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#save()
+	 */
 	@Override
 	public void save() {
 		FileUtils.saveIntList(absoluteDirectory + "/nodes", nodes, blockSize,
@@ -152,6 +160,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 * (non-Javadoc)
 	 * 
 	 * @see org.graphast.model.Graphast#load()
+	 */
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#load()
 	 */
 	@Override
 	public void load() {
@@ -198,6 +209,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 * 
 	 * @see org.graphast.model.Graphast#addNode(org.graphast.model.GraphastNode)
 	 */
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#addNode(org.graphast.model.Node)
+	 */
 	@Override
 	public void addNode(Node n) {
 
@@ -236,13 +250,10 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 
 	// TODO Why we only update the latitude, longitude and FirstEdge?
 	// Wouldn't be better if we had a method that updates everything?
-	/**
-	 * This method will update the IntBigArrayBigList of nodes with need
-	 * information of a passed GraphastNode.
-	 * 
-	 * @param n
-	 *            GraphastNode with the informations that must be updated.
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#updateNodeInfo(org.graphast.model.Node)
 	 */
+	@Override
 	public void updateNodeInfo(Node n) {
 
 		NodeImpl node = (NodeImpl) n;
@@ -274,11 +285,14 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 * 
 	 * @see org.graphast.model.Graphast#getNode(long)
 	 */
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getNode(long)
+	 */
 	@Override
 	public Node getNode(long id) {
 
 		long position = id * Node.NODE_BLOCKSIZE;
-		NodeImpl node = new NodeImpl(BigArrays.index(nodes.getInt(position),
+		Node node = new NodeImpl(BigArrays.index(nodes.getInt(position),
 				nodes.getInt(position + 1)), // externalId
 				nodes.getInt(position + 2), // category
 				latLongToDouble(nodes.getInt(position + 3)), // latitude
@@ -307,6 +321,10 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		return node;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getEdge(long, long)
+	 */
+	@Override
 	public Edge getEdge(long originNodeId, long destinationNodeId) {
 
 		List<Edge> listOfPossibleEdges = new ArrayList<Edge>();
@@ -349,6 +367,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 * @see org.graphast.model.Graphast#setEdge(org.graphast.model.GraphastEdge,
 	 * long)
 	 */
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#setEdge(org.graphast.model.Edge, long)
+	 */
 	@Override
 	public void setEdge(Edge e, long pos) {
 
@@ -379,6 +400,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 * (non-Javadoc)
 	 * 
 	 * @see org.graphast.model.Graphast#addEdge(org.graphast.model.GraphastEdge)
+	 */
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#addEdge(org.graphast.model.Edge)
 	 */
 	@Override
 	public void addEdge(Edge e) {
@@ -515,6 +539,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 * @see org.graphast.model.Graphast#updateNeighborhood(org.graphast.model.
 	 * GraphastEdge)
 	 */
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#updateNeighborhood(org.graphast.model.Edge)
+	 */
 	@Override
 	public void updateNeighborhood(Edge edge) {
 
@@ -539,6 +566,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 * @see
 	 * org.graphast.model.Graphast#updateNodeNeighborhood(org.graphast.model
 	 * .GraphastNode, long)
+	 */
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#updateNodeNeighborhood(org.graphast.model.Node, long)
 	 */
 	@Override
 	public void updateNodeNeighborhood(Node n, long eid) {
@@ -584,6 +614,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 * (non-Javadoc)
 	 * 
 	 * @see org.graphast.model.Graphast#getOutEdges(long)
+	 */
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getOutEdges(long)
 	 */
 	@Override
 	public LongList getOutEdges(long nodeId) {
@@ -652,6 +685,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 * org.graphast.model.Graphast#getEdgesCosts(it.unimi.dsi.fastutil.longs
 	 * .LongList, int)
 	 */
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getEdgesCosts(it.unimi.dsi.fastutil.longs.LongList, int)
+	 */
 	@Override
 	public int[] getEdgesCosts(LongList edges, int time) {
 
@@ -680,7 +716,7 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 * 
 	 * @return all costs of all nodes
 	 */
-	IntBigArrayBigList getNodesCosts() {
+	public IntBigArrayBigList getNodesCosts() {
 
 		return nodesCosts;
 	}
@@ -689,6 +725,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 * (non-Javadoc)
 	 * 
 	 * @see org.graphast.model.Graphast#getOutNeighbors(long)
+	 */
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getOutNeighbors(long)
 	 */
 	@Override
 	public LongList getOutNeighbors(long vid) {
@@ -699,6 +738,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 * (non-Javadoc)
 	 * 
 	 * @see org.graphast.model.Graphast#getOutNeighborsAndCosts(long, int)
+	 */
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getOutNeighborsAndCosts(long, int)
 	 */
 	@Override
 	public LongList getOutNeighborsAndCosts(long vid, int time) {
@@ -784,6 +826,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 * 
 	 * @see org.graphast.model.Graphast#getEdge(long)
 	 */
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getEdge(long)
+	 */
 	@Override
 	public Edge getEdge(long id) {
 
@@ -829,6 +874,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getEdgeCosts(long)
+	 */
 	@Override
 	public int[] getEdgeCosts(long edgeId) {
 
@@ -856,6 +904,10 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		return c;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getNodeCosts(long)
+	 */
+	@Override
 	public int[] getNodeCosts(long nodeId) {
 
 		NodeImpl node = (NodeImpl) getNode(nodeId);
@@ -869,6 +921,10 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getNodeCostsByCostsIndex(long)
+	 */
+	@Override
 	public int[] getNodeCostsByCostsIndex(long costsIndex) {
 
 		int size = nodesCosts.getInt(costsIndex);
@@ -891,6 +947,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 * int)
 	 */
 	// TODO getEdgeCost
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getEdgeCost(org.graphast.model.Edge, int)
+	 */
 	@Override
 	public Integer getEdgeCost(Edge e, int time) {
 		EdgeImpl edge = (EdgeImpl) e;
@@ -912,6 +971,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 * 
 	 * @see org.graphast.model.Graphast#getEdgePoints(long)
 	 */
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getGeometry(long)
+	 */
 	@Override
 	public List<Point> getGeometry(long id) {
 		EdgeImpl edge = (EdgeImpl) getEdge(id);
@@ -927,6 +989,10 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		return listPoints;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getGeometryByGeometryIndex(long)
+	 */
+	@Override
 	public List<Point> getGeometryByGeometryIndex(long geometryIndex) {
 
 		int size = points.getInt(geometryIndex++);
@@ -959,6 +1025,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 * 
 	 * @see org.graphast.model.Graphast#getNode(double, double)
 	 */
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getNodeId(double, double)
+	 */
 	@Override
 	public Long getNodeId(double latitude, double longitude) {
 
@@ -979,6 +1048,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 * 
 	 * @see org.graphast.model.Graphast#getNodeLabel(long)
 	 */
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getNodeLabel(long)
+	 */
 	@Override
 	public String getNodeLabel(long id) {
 		Node node = this.getNode(id);
@@ -989,6 +1061,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 * (non-Javadoc)
 	 * 
 	 * @see org.graphast.model.Graphast#getEdgeLabel(long)
+	 */
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getEdgeLabel(long)
 	 */
 	@Override
 	public String getEdgeLabel(long id) {
@@ -1001,6 +1076,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 * 
 	 * @see org.graphast.model.Graphast#getNodes()
 	 */
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getNodes()
+	 */
 	@Override
 	public IntBigArrayBigList getNodes() {
 		return nodes;
@@ -1011,24 +1089,27 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 * 
 	 * @see org.graphast.model.Graphast#getEdges()
 	 */
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getEdges()
+	 */
 	@Override
 	public IntBigArrayBigList getEdges() {
 		return edges;
 	}
 
-	ObjectBigList<String> getNodesLabels() {
+	public ObjectBigList<String> getNodesLabels() {
 		return nodesLabels;
 	}
 
-	void setNodesLabels(ObjectBigList<String> labels) {
+	public void setNodesLabels(ObjectBigList<String> labels) {
 		this.nodesLabels = labels;
 	}
 
-	ObjectBigList<String> getEdgesLabels() {
+	public ObjectBigList<String> getEdgesLabels() {
 		return edgesLabels;
 	}
 
-	void setEdgesLabels(ObjectBigList<String> labels) {
+	public void setEdgesLabels(ObjectBigList<String> labels) {
 		this.edgesLabels = labels;
 	}
 
@@ -1036,6 +1117,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 * (non-Javadoc)
 	 * 
 	 * @see org.graphast.model.Graphast#logNodes()
+	 */
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#logNodes()
 	 */
 	@Override
 	public void logNodes() {
@@ -1048,6 +1132,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 * (non-Javadoc)
 	 * 
 	 * @see org.graphast.model.Graphast#logEdges()
+	 */
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#logEdges()
 	 */
 	@Override
 	public void logEdges() {
@@ -1062,6 +1149,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 * 
 	 * @see org.graphast.model.Graphast#getNumberOfNodes()
 	 */
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getNumberOfNodes()
+	 */
 	@Override
 	public long getNumberOfNodes() {
 		return getNodes().size64() / Node.NODE_BLOCKSIZE;
@@ -1072,11 +1162,18 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 * 
 	 * @see org.graphast.model.Graphast#getNumberOfEdges()
 	 */
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getNumberOfEdges()
+	 */
 	@Override
 	public long getNumberOfEdges() {
 		return getEdges().size64() / Edge.EDGE_BLOCKSIZE;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#accessNeighborhood(org.graphast.model.Node)
+	 */
+	@Override
 	public Long2IntMap accessNeighborhood(Node v) {
 
 		Long2IntMap neighbors = new Long2IntOpenHashMap();
@@ -1100,6 +1197,10 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	}
 
 	// TODO Reimplement this method
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#accessNeighborhood(org.graphast.model.Node, int)
+	 */
+	@Override
 	public HashMap<Node, Integer> accessNeighborhood(Node v, int time) {
 
 		HashMap<Node, Integer> neig = new HashMap<Node, Integer>();
@@ -1122,6 +1223,10 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#hasNode(long)
+	 */
+	@Override
 	public boolean hasNode(long id) {
 		try {
 			long position = id * Node.NODE_BLOCKSIZE;
@@ -1135,6 +1240,10 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#hasNode(org.graphast.model.Node)
+	 */
+	@Override
 	public boolean hasNode(Node n) {
 
 		NodeImpl node = (NodeImpl) n;
@@ -1152,6 +1261,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#hasNode(double, double)
+	 */
 	@Override
 	public boolean hasNode(double latitude, double longitude) {
 		int lat = latLongToInt(latitude);
@@ -1167,6 +1279,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#addPoi(long, double, double, int, org.graphast.model.LinearFunction[])
+	 */
 	@Override
 	public Node addPoi(long id, double lat, double lon, int category,
 			LinearFunction[] costs) {
@@ -1176,12 +1291,20 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		return poi;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#addPoi(long, double, double, int)
+	 */
+	@Override
 	public Node addPoi(long id, double lat, double lon, int category) {
 		Node poi = new NodeImpl(id, lat, lon, category);
 		this.addNode(poi);
 		return poi;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#poiGetCost(long, int)
+	 */
+	@Override
 	public int poiGetCost(long vid, int time) {
 		int i = 0;
 		LinearFunction[] lf = convertToLinearFunction(getPoiCost(vid));
@@ -1191,15 +1314,27 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		return lf[i].calculateCost(time);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#poiGetCost(long)
+	 */
+	@Override
 	public int poiGetCost(long vid) {
 		LinearFunction[] lf = convertToLinearFunction(getPoiCost(vid));
 		return lf[0].calculateCost(0);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getPoiCost(long)
+	 */
+	@Override
 	public int[] getPoiCost(long vid) {
 		return getNodeCosts(vid);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#convertToLinearFunction(int[])
+	 */
+	@Override
 	public LinearFunction[] convertToLinearFunction(int[] costs) {
 		int tetoCosts = (int)Math.ceil(costs.length / 2.0);
 		LinearFunction[] result = new LinearFunction[tetoCosts];
@@ -1224,6 +1359,10 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		return intCosts;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getMaximunCostValue(int[])
+	 */
+	@Override
 	public int getMaximunCostValue(int[] costs) {
 
 		if (costs == null) {
@@ -1243,6 +1382,10 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		return max;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getMinimunCostValue(int[])
+	 */
+	@Override
 	public int getMinimunCostValue(int[] costs) {
 
 		if (costs == null) {
@@ -1262,10 +1405,18 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		return min;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#isPoi(long)
+	 */
+	@Override
 	public boolean isPoi(long vid) {
 		return getNode(vid).getCategory() >= 0;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getPoi(long)
+	 */
+	@Override
 	public Node getPoi(long vid) {
 		Node v = getNode(vid);
 		if (v.getCategory() < 0)
@@ -1275,6 +1426,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	}
 
 	// TODO Verify if this access is correct
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getCategories()
+	 */
 	@Override
 	public IntSet getCategories() {
 		IntSet categories = new IntOpenHashSet();
@@ -1294,16 +1448,26 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		return categories;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getCompressionType()
+	 */
 	@Override
 	public CompressionType getCompressionType() {
 		return compressionType;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#setCompressionType(org.graphast.enums.CompressionType)
+	 */
 	@Override
 	public void setCompressionType(CompressionType compressionType) {
 		this.compressionType = compressionType;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#reverseGraph()
+	 */
+	@Override
 	public void reverseGraph() {
 
 		for (long i = 0; i < (edges.size64() / Edge.EDGE_BLOCKSIZE); i++) {
@@ -1336,19 +1500,33 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getMaxTime()
+	 */
+	@Override
 	public int getMaxTime() {
 		return maxTime;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#setMaxTime(int)
+	 */
+	@Override
 	public void setMaxTime(int maxTime) {
 		this.maxTime = maxTime;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getTimeType()
+	 */
 	@Override
 	public TimeType getTimeType() {
 		return timeType;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#setTimeType(org.graphast.enums.TimeType)
+	 */
 	@Override
 	public void setTimeType(TimeType timeType) {
 		this.timeType = timeType;
@@ -1365,6 +1543,10 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#setEdgeCosts(long, int[])
+	 */
+	@Override
 	public void setEdgeCosts(long edgeId, int[] costs) {
 
 		EdgeImpl edge = (EdgeImpl) getEdge(edgeId);
@@ -1397,6 +1579,10 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#setNodeCosts(long, int[])
+	 */
+	@Override
 	public void setNodeCosts(long nodeId, int[] costs) {
 
 		NodeImpl node = (NodeImpl) getNode(nodeId);
@@ -1429,6 +1615,10 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getArrival(int, int)
+	 */
+	@Override
 	public int getArrival(int dt, int tt) {
 		int arrivalTime = dt + tt;
 
@@ -1439,6 +1629,10 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	// TODO This method must be improved. It should use a spatial index to 
 	// be much more efficient.
 	// See rtree implementation in: https://github.com/davidmoten/rtree 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getNearestNode(double, double)
+	 */
+	@Override
 	public Node getNearestNode (double latitude, double longitude) {
 		StopWatch sw = new StopWatch();
 		sw.start();
@@ -1465,6 +1659,7 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		return nearestNode;
 	}
 
+	@Override
 	public boolean equals(Graph obj) {
 		if((obj.getNumberOfNodes() == this.getNumberOfNodes()) && (obj.getNumberOfEdges() == this.getNumberOfEdges())) {
 			for(int i = 0; i < this.getNumberOfNodes(); i++) {
@@ -1481,11 +1676,19 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		}
 		return false;
 	}
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#setNodeCategory(long, int)
+	 */
+	@Override
 	public void setNodeCategory(long nodeId, int category) {
 		long position = nodeId * Node.NODE_BLOCKSIZE;
 		getNodes().set(position+2, category);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#setEdgeGeometry(long, java.util.List)
+	 */
+	@Override
 	public void setEdgeGeometry(long edgeId, List<Point> geometry) {
 		EdgeImpl e = (EdgeImpl) this.getEdge(edgeId);
 		e.setGeometry(geometry);
@@ -1494,6 +1697,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		this.updateEdgeInfo(e);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getBBox()
+	 */
 	@Override
 	public BBox getBBox() {
 		if (bBox == null) {
@@ -1502,6 +1708,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		return bBox;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#setBBox(org.graphast.geometry.BBox)
+	 */
 	@Override
 	public void setBBox(BBox bBox) {
 		this.bBox = bBox;
@@ -1540,10 +1749,18 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		setBBox(bBox);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getPOIs()
+	 */
+	@Override
 	public List<PoI> getPOIs() {
 		return getPOIs(null);
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getPOIs(java.lang.Integer)
+	 */
+	@Override
 	public List<PoI> getPOIs(Integer categoryId) {
 		List<PoI> result = new ArrayList<>();
 		for (long i = 0; i < this.getNumberOfNodes(); i++) {
@@ -1557,6 +1774,10 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getPOICategories()
+	 */
+	@Override
 	public List<Integer> getPOICategories() {
 		List<Integer> result = new ArrayList<Integer>();
 		for (long i = 0; i < this.getNumberOfNodes(); i++) {
@@ -1569,14 +1790,26 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		return result;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getDirectory()
+	 */
+	@Override
 	public String getDirectory() {
 		return directory;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getAbsoluteDirectory()
+	 */
+	@Override
 	public String getAbsoluteDirectory() {
 		return absoluteDirectory;
 	}
 	
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#setDirectory(java.lang.String)
+	 */
+	@Override
 	public void setDirectory(String directory) {
 		this.absoluteDirectory = FileUtils.getAbsolutePath(directory);
 		this.directory = directory;
@@ -1590,6 +1823,10 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 * Métodos getPoiCost e getNodeCost eram idênticos então foram mantidos
 	 */
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#createEdgesLowerBounds()
+	 */
+	@Override
 	public void createEdgesLowerBounds() {
 		long numberOfEdges = getNumberOfEdges();
 		Edge edge; 
@@ -1600,6 +1837,10 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#createEdgesUpperBounds()
+	 */
+	@Override
 	public void createEdgesUpperBounds() {
 
 		long numberOfEdges = getNumberOfEdges();
@@ -1611,6 +1852,10 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#createNodesLowerBounds()
+	 */
+	@Override
 	public void createNodesLowerBounds() {
 		long numberOfNodes = getNumberOfNodes();
 		Node node; 
@@ -1621,6 +1866,10 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#createNodesUpperBounds()
+	 */
+	@Override
 	public void createNodesUpperBounds() {
 
 		long numberOfNodes = getNumberOfNodes();
@@ -1632,16 +1881,10 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		}
 	}
 
-	/**
-	 * This method return a list of nodes that are neighbors of a given node. 
-	 * This list contains node id and cost to reach it.
-	 * 
-	 * @param v Node which method is applied.
-	 * @param graphType The type of graph the will be used to retrieve costs needed. 0 = Regular Costs; 1 = Lower Bound Costs;
-	 * 					3 = Upper Bound Costs.
-	 * @param time	The time that will be used to get the time-dependent cost
-	 * @return	all neighbors for the given parameters
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#accessNeighborhood(org.graphast.model.Node, short, int)
 	 */
+	@Override
 	public Long2IntMap accessNeighborhood(Node v, short graphType, int time){
 
 		Long2IntMap neighbors = new Long2IntOpenHashMap();
@@ -1673,6 +1916,10 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#poiGetCost(long, short)
+	 */
+	@Override
 	public int poiGetCost(long vid, short graphType){
 
 		if(graphType == 0) {
@@ -1689,6 +1936,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#createBounds()
+	 */
 	@Override
 	public void createBounds() {
 		createEdgesUpperBounds();
@@ -1697,34 +1947,57 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		createNodesLowerBounds();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getEdgesUpperBound()
+	 */
 	@Override
 	public Long2IntMap getEdgesUpperBound() {
 		return edgesUpperBound;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getEdgesLowerBound()
+	 */
 	@Override
 	public Long2IntMap getEdgesLowerBound() {
 		return edgesLowerBound;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getNodesUpperBound()
+	 */
 	@Override
 	public Long2IntMap getNodesUpperBound() {
 		return nodesUpperBound;
 	}
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getEdgeLowerCost(long)
+	 */
+	@Override
 	public int getEdgeLowerCost(long id){
 		return edgesLowerBound.get(id);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getNodesLowerBound()
+	 */
 	@Override
 	public Long2IntMap getNodesLowerBound() {
 		return nodesLowerBound;
 	}
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getEdgeUpperCost(long)
+	 */
+	@Override
 	public int getEdgeUpperCost(long id){
 		return edgesUpperBound.get(id);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getReverseGraphBounds()
+	 */
 	@Override
-	public GraphBounds getReverseGraph() {
+	public GraphBounds getReverseGraphBounds() {
 		if (this.reverseGraph == null) {
 			try {
 				// load existent reverse graph
@@ -1741,6 +2014,215 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		}
 		return this.reverseGraph;
 	}
+	
+	@Override
+	public Graph getReverseGraph() {
+		if (this.reverseGraph == null) {
+			try {
+				// load existent reverse graph
+				reverseGraph = new GraphImpl(this.directory + "/reverse");
+				reverseGraph.load();
+			} catch (Exception e) {
+				// creates a new reverse graph
+				reverseGraph = new GraphImpl(this.directory);
+				reverseGraph.load();
+				reverseGraph.reverseGraph();
+				reverseGraph.setDirectory(this.directory + "/reverse");
+				reverseGraph.save();
+			}
+		}
+		return this.reverseGraph;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getLog()
+	 */
+	@Override
+	public Logger getLog() {
+		return log;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getNodeIndex()
+	 */
+	@Override
+	public Long2LongMap getNodeIndex() {
+		return nodeIndex;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getEdgesCosts()
+	 */
+	@Override
+	public IntBigArrayBigList getEdgesCosts() {
+		return edgesCosts;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getPoints()
+	 */
+	@Override
+	public IntBigArrayBigList getPoints() {
+		return points;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getBlockSize()
+	 */
+	@Override
+	public int getBlockSize() {
+		return blockSize;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getIntCosts()
+	 */
+	@Override
+	public int[] getIntCosts() {
+		return intCosts;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#getbBox()
+	 */
+	@Override
+	public BBox getbBox() {
+		return bBox;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#setLog(org.slf4j.Logger)
+	 */
+	@Override
+	public void setLog(Logger log) {
+		this.log = log;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#setNodeIndex(it.unimi.dsi.fastutil.longs.Long2LongMap)
+	 */
+	@Override
+	public void setNodeIndex(Long2LongMap nodeIndex) {
+		this.nodeIndex = nodeIndex;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#setAbsoluteDirectory(java.lang.String)
+	 */
+	@Override
+	public void setAbsoluteDirectory(String absoluteDirectory) {
+		this.absoluteDirectory = absoluteDirectory;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#setNodes(it.unimi.dsi.fastutil.ints.IntBigArrayBigList)
+	 */
+	@Override
+	public void setNodes(IntBigArrayBigList nodes) {
+		this.nodes = nodes;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#setEdges(it.unimi.dsi.fastutil.ints.IntBigArrayBigList)
+	 */
+	@Override
+	public void setEdges(IntBigArrayBigList edges) {
+		this.edges = edges;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#setEdgesCosts(it.unimi.dsi.fastutil.ints.IntBigArrayBigList)
+	 */
+	@Override
+	public void setEdgesCosts(IntBigArrayBigList edgesCosts) {
+		this.edgesCosts = edgesCosts;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#setNodesCosts(it.unimi.dsi.fastutil.ints.IntBigArrayBigList)
+	 */
+	@Override
+	public void setNodesCosts(IntBigArrayBigList nodesCosts) {
+		this.nodesCosts = nodesCosts;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#setPoints(it.unimi.dsi.fastutil.ints.IntBigArrayBigList)
+	 */
+	@Override
+	public void setPoints(IntBigArrayBigList points) {
+		this.points = points;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#setBlockSize(int)
+	 */
+	@Override
+	public void setBlockSize(int blockSize) {
+		this.blockSize = blockSize;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#setIntCosts(int[])
+	 */
+	@Override
+	public void setIntCosts(int[] intCosts) {
+		this.intCosts = intCosts;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#setbBox(org.graphast.geometry.BBox)
+	 */
+	@Override
+	public void setbBox(BBox bBox) {
+		this.bBox = bBox;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#setEdgesUpperBound(it.unimi.dsi.fastutil.longs.Long2IntMap)
+	 */
+	@Override
+	public void setEdgesUpperBound(Long2IntMap edgesUpperBound) {
+		this.edgesUpperBound = edgesUpperBound;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#setEdgesLowerBound(it.unimi.dsi.fastutil.longs.Long2IntMap)
+	 */
+	@Override
+	public void setEdgesLowerBound(Long2IntMap edgesLowerBound) {
+		this.edgesLowerBound = edgesLowerBound;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#setNodesUpperBound(it.unimi.dsi.fastutil.longs.Long2IntMap)
+	 */
+	@Override
+	public void setNodesUpperBound(Long2IntMap nodesUpperBound) {
+		this.nodesUpperBound = nodesUpperBound;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#setNodesLowerBound(it.unimi.dsi.fastutil.longs.Long2IntMap)
+	 */
+	@Override
+	public void setNodesLowerBound(Long2IntMap nodesLowerBound) {
+		this.nodesLowerBound = nodesLowerBound;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#setReverseGraph(org.graphast.model.GraphBounds)
+	 */
+	@Override
+	public void setReverseGraph(GraphBounds reverseGraph) {
+		this.reverseGraph = reverseGraph;
+	}
+	
+	
 	
 	/**
 	 * This is an utility method to print the internal representation of the edges in Graphast.

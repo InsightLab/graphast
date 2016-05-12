@@ -218,8 +218,12 @@ public class NodeImpl implements Node {
 		return BigArrays.displacement(firstEdge);
 	}
 
-	void setFirstEdge(long firstEdge) {
+	public void setFirstEdge(long firstEdge) {
 		this.firstEdge = firstEdge;
+	}
+
+	public long getFirstEdge() {
+		return firstEdge;
 	}
 
 	/* (non-Javadoc)
@@ -234,8 +238,9 @@ public class NodeImpl implements Node {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-	long getLabelIndex(){
+	
+	@Override
+	public long getLabelIndex(){
 		return labelIndex;
 	}
 
@@ -263,7 +268,7 @@ public class NodeImpl implements Node {
 		return costsIndex;
 	}
 
-	void setCostsIndex(long costIndex) {
+	public void setCostsIndex(long costIndex) {
 		this.costsIndex = costIndex;
 	}
 
@@ -295,7 +300,7 @@ public class NodeImpl implements Node {
 	 */
 	@Override
 	public String toString() {
-		return "FastGraphNode [id=" + id + ", externalId=" + externalId + ", latitude=" + latitude
+		return "Node [id=" + id + ", externalId=" + externalId + ", latitude=" + latitude
 				+ ", longitude=" + longitude + ", firstEdge=" + firstEdge + ", label="+ label + "]";
 	}
 	

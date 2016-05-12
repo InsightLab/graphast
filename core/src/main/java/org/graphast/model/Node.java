@@ -91,6 +91,8 @@ public interface Node {
 	 */
 	public long getCostsIndex();
 
+	public long getFirstEdge();
+	
 	/**
 	 * toString method
 	 * @return String object
@@ -102,6 +104,8 @@ public interface Node {
 	public abstract void setCosts(int[] costs);
 	
 	public boolean equals(Node n);
+	
+	public long getLabelIndex();
 
 
 }
