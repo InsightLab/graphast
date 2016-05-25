@@ -14,7 +14,6 @@ import org.graphast.model.EdgeImpl;
 import org.graphast.model.Graph;
 import org.graphast.model.GraphBounds;
 import org.graphast.model.GraphImpl;
-import org.graphast.model.GraphImpl;
 import org.graphast.model.Node;
 import org.graphast.model.NodeImpl;
 import org.graphast.query.route.shortestpath.dijkstra.DijkstraConstantWeight;
@@ -71,7 +70,6 @@ public class GraphGenerator {
 		graph = new OSMImporterImpl(null, graphHopperExampleDir, graphastExampleDir).execute();
 
 		return graph;
-
 	}
 
 	public Graph generateExample1() {
@@ -317,7 +315,8 @@ public class GraphGenerator {
 		e = new EdgeImpl(2l, 4l, 60);
 		graph.addEdge(e);
 
-		e = new EdgeImpl(3l, 0l, 70);
+		costs = new int[]{5};
+		e = new EdgeImpl(3l, 0l, 70, costs);
 		graph.addEdge(e);
 
 		//Create RTree
@@ -400,7 +399,43 @@ public class GraphGenerator {
 		return graph;
 	}
 
+	public GraphBounds generateExample5() {
+		GraphBounds graph = new GraphImpl(Configuration.USER_HOME + "/graphast/example");
+		
+		Node n1 = new NodeImpl(60054510, 52.3515, 20.9447);		
+		Node n2 = new NodeImpl(249476123, 52.3499, 20.9461);
+		
+		graph.addNode(n1);
+		graph.addNode(n2);
 
+		graph.addEdge(new EdgeImpl(n1.getId(), n2.getId(), 112));
+		graph.addEdge(new EdgeImpl(n2.getId(), n2.getId(), 0));
+		graph.addEdge(new EdgeImpl(n2.getId(), n1.getId(), 195));
+		return graph;
+	}
+	
+	public GraphBounds generateExample6() {
+		GraphBounds graph = new GraphImpl(Configuration.USER_HOME + "/graphast/example");
+		Node n0 = new NodeImpl(60054477, 52.3524, 20.9440);		
+		Node n1 = new NodeImpl(60054510, 52.3515, 20.9447);		
+		Node n2 = new NodeImpl(249476123, 52.3499, 20.9461);
+		Node n3 = new NodeImpl(252417127, 52.3509, 20.9452);
+		Node n4 = new NodeImpl(252417130, 52.3514, 20.9449);
+		
+		graph.addNode(n0);
+		graph.addNode(n1);
+		graph.addNode(n2);
+		graph.addNode(n3);
+		graph.addNode(n4);
+
+		graph.addEdge(new EdgeImpl(n4.getId(), n0.getId(), 121)); // 252417130 60054477 0.121
+		graph.addEdge(new EdgeImpl(n0.getId(), n1.getId(), 112)); // 60054477 60054510 0.112
+		graph.addEdge(new EdgeImpl(n3.getId(), n2.getId(), 123)); // 252417127 249476123 0.123
+		graph.addEdge(new EdgeImpl(n2.getId(), n2.getId(), 0));   
+		graph.addEdge(new EdgeImpl(n1.getId(), n2.getId(), 195)); // 60054510 249476123 0.195
+		return graph;
+	}
+	
 	public GraphBounds generateExamplePoI() {
 
 		GraphBounds graph = new GraphImpl(Configuration.USER_HOME + "/graphast/test/examplePoI");

@@ -39,9 +39,6 @@ import it.unimi.dsi.fastutil.objects.ObjectBigList;
 
 import java.io.Serializable;
 
-import org.graphast.enums.CompressionType;
-import org.graphast.enums.TimeType;
-
 public class GraphImpl implements Graph, GraphBounds, Serializable {
 
 	/*
@@ -393,7 +390,8 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 */
 	@Override
 	public void addEdge(Edge e) {
-
+		// fromNode can be equal to toNode in an edge 
+		// Previously this caused infinity loops in updateNeighborhood method.
 		EdgeImpl edge = (EdgeImpl) e;
 		long labelIndex = storeLabel(edge.getLabel(), edgesLabels);
 		long costsIndex = storeCosts(edge.getCosts(), edgesCosts);
@@ -537,7 +535,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		long eid = edge.getId();
 
 		updateNodeNeighborhood(from, eid);
-		updateNodeNeighborhood(to, eid);
+		if (! from.getId().equals(to.getId())) {   // Avoid a problem (infinite loop) with double update if from == to
+			updateNodeNeighborhood(to, eid);
+		}
 
 	}
 
@@ -552,39 +552,38 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	public void updateNodeNeighborhood(Node n, long eid) {
 
 		NodeImpl node = (NodeImpl) n;
-
-		if (BigArrays.index(node.getFirstEdgeSegment(),
-				node.getFirstEdgeOffset()) == -1) {
-
+		long firstEdge = BigArrays.index(node.getFirstEdgeSegment(), node.getFirstEdgeOffset());
+		
+		if (firstEdge == -1) {   // First edge related to node n is still undefined
 			node.setFirstEdge(eid);
 			updateNodeInfo(node);
+			
+		} else {                // First edge related to node n has already been defined
 
-		} else {
+			long nextEdgeId = BigArrays.index(node.getFirstEdgeSegment(), node.getFirstEdgeOffset());
+			EdgeImpl nextEdge = (EdgeImpl) getEdge(nextEdgeId);
 
-			long next = 0;
-			EdgeImpl nextEdge = (EdgeImpl) getEdge(BigArrays.index(
-					node.getFirstEdgeSegment(), node.getFirstEdgeOffset()));
-
-			while (next != -1) {
+			while (nextEdgeId != -1) {
 
 				if (node.getId() == nextEdge.getFromNode()) {
-					next = nextEdge.getFromNodeNextEdge();
+					nextEdgeId = nextEdge.getFromNodeNextEdge();
 				} else if (node.getId() == nextEdge.getToNode()) {
-					next = nextEdge.getToNodeNextEdge();
+					nextEdgeId = nextEdge.getToNodeNextEdge();
 				}
-				if (next != -1) {
-					nextEdge = (EdgeImpl) getEdge(next);
+				if (nextEdgeId != -1) {
+					nextEdge = (EdgeImpl) getEdge(nextEdgeId);
 				}
 			}
 
 			if (node.getId() == nextEdge.getFromNode()) {
 				nextEdge.setFromNodeNextEdge(eid);
-			} else if (node.getId() == nextEdge.getToNode()) {
+			} 
+			if (node.getId() == nextEdge.getToNode()) {
 				nextEdge.setToNodeNextEdge(eid);
 			}
 
 			updateEdgeInfo(nextEdge);
-
+			//this.printInternalEdgeRepresentation();  // Used only to debug the internal graph representation
 		}
 
 	}
@@ -621,6 +620,39 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		return outEdges;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.graphast.model.Graphast#getOutEdges(long)
+	 */
+	@Override
+	public LongList getInEdges(long nodeId) {
+
+		LongList inEdges = new LongArrayList();
+		NodeImpl v = (NodeImpl) getNode(nodeId);
+
+		long firstEdgeId = BigArrays.index(v.getFirstEdgeSegment(),
+				v.getFirstEdgeOffset());
+		Edge nextEdge = getEdge(firstEdgeId);
+		long next = 0;
+
+		while (next != -1) {
+
+			if (nodeId == nextEdge.getToNode()) {
+				inEdges.add(nextEdge.getId());
+				next = nextEdge.getToNodeNextEdge();
+			} else if (nodeId == nextEdge.getFromNode()) {
+				next = nextEdge.getFromNodeNextEdge();
+			}
+
+			if (next != -1) {
+				nextEdge = getEdge(next);
+			}
+		}
+		return inEdges;
+	}
+
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -706,6 +738,54 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 
 		return neighborsCosts;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.graphast.model.Graphast#getOutNeighbors(long)
+	 */
+	@Override
+	public LongList getInNeighbors(long vid) {
+		return getInNeighbors(vid, 0, false);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.graphast.model.Graphast#getOutNeighborsAndCosts(long, int)
+	 */
+	@Override
+	public LongList getInNeighborsAndCosts(long vid, int time) {
+		return getInNeighbors(vid, time, true);
+	}
+
+	private LongList getInNeighbors(long vid, int time, boolean getCosts) {
+		LongList neighborsCosts = new LongArrayList();
+		NodeImpl v = (NodeImpl) getNode(vid);
+		long firstEdgeId = BigArrays.index(v.getFirstEdgeSegment(), v.getFirstEdgeOffset());
+
+		Edge nextEdge = getEdge(firstEdgeId);
+		long next = 0;
+		
+		while (next != -1) {
+			if (vid == nextEdge.getToNode()) {
+				neighborsCosts.add(nextEdge.getFromNode());
+
+				if (getCosts) {
+					neighborsCosts.add(getEdgeCost(nextEdge, time));
+				}
+				next = nextEdge.getToNodeNextEdge();
+			} else if (vid == nextEdge.getFromNode()) {
+				next = nextEdge.getFromNodeNextEdge();
+			}
+			if (next != -1) {
+				nextEdge = getEdge(next);
+			}
+		}
+
+		return neighborsCosts;
+	}
+
 
 	/*
 	 * (non-Javadoc)
@@ -1681,4 +1761,24 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		
 	}
 	
+	/**
+	 * This is an utility method to print the internal representation of the edges in Graphast.
+	 */
+	public void printInternalEdgeRepresentation() {
+		long numberOfEdges = this.getNumberOfEdges();
+		System.out.println("EdgeId\tFromNode\tToNode\tFromNodeNextEdge\tToNodeNextEdge");
+		for (long i = 0; i < numberOfEdges; i++) {
+			Edge edge = this.getEdge(i);
+			System.out.print(i);
+			System.out.print("\t");
+			System.out.print(edge.getFromNode());
+			System.out.print("\t");
+			System.out.print(edge.getToNode());
+			System.out.print("\t");
+			System.out.print(edge.getFromNodeNextEdge());
+			System.out.print("\t");
+			System.out.println(edge.getToNodeNextEdge());
+		}
+	}
+
 }
