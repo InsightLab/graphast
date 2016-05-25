@@ -1,9 +1,9 @@
 package org.graphast.model.contraction;
 
-import static org.graphast.util.GeoUtils.latLongToDouble;
-
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -27,30 +27,31 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 	private IntBigArrayBigList edgesComplement;
 
-	Map<Long, Set<CHEdge>> possibleShortcuts = new HashMap<>();
+	Map<Long, List<CHEdge>> possibleShortcuts = new HashMap<>();
 
 	private Queue<CHNodeImpl> nodePriorityQueue = new PriorityQueue<>();
 
 	private Map<Long, Integer> oldPriorities = new HashMap<>();
 
+	private Set<CHNode> hyperPoIsSet = new HashSet<>();
+
 	private int neighborUpdatePercentage = 20;
+	private int periodicUpdatesPercentage = 20;
+	private int lastNodesLazyUpdatePercentage = 10;
+	private double nodesContractedPercentage = 100;
+	private long counter;
+	private double meanDegree;
 	private final Random rand = new Random(123);
+	private int regularNodeHighestPriority = Integer.MIN_VALUE;
 
 	private CHGraph reverseGraph;
 
 	private ShortestPathService shortestPath;
-	private int maximumEdgeCount, maxLevel;
+	private int maximumEdgeCount, maxLevel, minLevelPoI;
 
 	public CHGraphImpl() {
 		super();
 	}
-
-	// public CHGraphImpl(Graph graph) {
-	// super(graph.getDirectory());
-	// graph.load();
-	//
-	// this.
-	// }
 
 	public CHGraphImpl(String directory) {
 		super(directory);
@@ -72,13 +73,13 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 	}
 
-	public void updateNodeInfo(CHNode n, int maxLevel) {
+	public void updateNodeInfo(CHNode n, int maxLevel, int priority) {
 
 		super.updateNodeInfo(n);
 
 		long position = n.getId() * CHNode.NODE_BLOCKSIZE;
 
-		nodesComplement.set(position, n.getPriority());
+		nodesComplement.set(position, priority);
 		nodesComplement.set(position + 1, maxLevel);
 
 	}
@@ -116,11 +117,11 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 		CHNode chNode = new CHNodeImpl(node);
 
-		long position = id * CHNode.NODE_BLOCKSIZE;
+		long position = chNode.getId() * CHNode.NODE_BLOCKSIZE;
 
-		chNode.setPriority(nodesComplement.getInt(position));
-		chNode.setLevel(nodesComplement.getInt(position + 1));
-
+		chNode.setPriority(nodesComplement.get(position));
+		chNode.setLevel(nodesComplement.get(position + 1));
+		
 		return chNode;
 
 	}
@@ -184,37 +185,31 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 		for (int i = 0; i < this.getNumberOfNodes(); i++) {
 
-			long position = i * Node.NODE_BLOCKSIZE;
-
-			double latitude = latLongToDouble(this.getNodes().getInt(position + 3));
-			double longitude = latLongToDouble(this.getNodes().getInt(position + 4));
-
-			long nodeId = this.getNodeId(latitude, longitude);
-
-			this.updateNodeInfo(this.getNode(nodeId), maxLevel);
+			this.updateNodeInfo(this.getNode(i), maxLevel, 0);
 
 		}
 
 		for (int i = 0; i < this.getNumberOfNodes(); i++) {
 
-			long position = i * Node.NODE_BLOCKSIZE;
-
-			double latitude = latLongToDouble(this.getNodes().getInt(position + 3));
-			double longitude = latLongToDouble(this.getNodes().getInt(position + 4));
-
-			long nodeId = this.getNodeId(latitude, longitude);
+			long nodeId = i;
 
 			int priority = calculatePriority(this.getNode(nodeId));
 
 			oldPriorities.put(nodeId, priority);
 			
-			CHNode node = this.getNode(nodeId);
-			node.setPriority(priority);
-			node.setLevel(maxLevel);
+			this.updateNodeInfo(this.getNode(nodeId), maxLevel, priority);
+			nodePriorityQueue.add((CHNodeImpl)this.getNode(nodeId));
 			
-			nodePriorityQueue.add((CHNodeImpl) node);
-
 		}
+
+//		int j = nodePriorityQueue.size();
+//
+//		for (int i = 0; i < j; i++) {
+//
+//			System.out.println("NID: " + nodePriorityQueue.peek().getId() + ", Priority: "
+//					+ nodePriorityQueue.peek().getPriority());
+//			nodePriorityQueue.poll();
+//		}
 
 		if (nodePriorityQueue.isEmpty()) {
 			return false;
@@ -229,13 +224,12 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 		findShortcut(n);
 
 		int originalEdgeCount = 0;
-
 		for (CHEdge e : possibleShortcuts.get(n.getId())) {
 			originalEdgeCount += e.getOriginalEdgeCounter();
 		}
 
 		int degree = this.getReverseGraph().getOutEdges(n.getId()).size() + this.getOutEdges(n.getId()).size();
-
+		possibleShortcuts.get(n.getId()).size();
 		int numberOfContractedNeighbors = 0;
 
 		for (Long edgeId : this.getReverseGraph().getOutEdges(n.getId())) {
@@ -252,11 +246,29 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 		int edgeDifference = possibleShortcuts.get(n.getId()).size() - degree;
 
-		int priority = 10 * edgeDifference + originalEdgeCount + numberOfContractedNeighbors;
+		int hyperPoICoefficient = 0;
 
-		System.out.println("NID: " + n.getId() + ", Edge Difference: " + edgeDifference + ", Original Edges Count: "
-				+ originalEdgeCount + ", Contracted Neighbors: " + numberOfContractedNeighbors);
-		System.out.println("\t Priority: " + priority);
+		// SOMAR O NUMERO DE ARESTAS E NUMERO DE NOS COMO LOWERBOUNDS
+		if (n.getCategory() == 2) {
+			// hyperPoICoefficient += 20 * this.getNumberOfEdges() +
+			// this.getNumberOfEdges() + this.getNumberOfNodes();
+			hyperPoICoefficient += 1000;
+		}
+
+		int priority = 10 * edgeDifference + originalEdgeCount + numberOfContractedNeighbors + hyperPoICoefficient;
+
+		// if( n.getCategory() != 2 ) {
+		// if(priority > regularNodeHighestPriority) {
+		// regularNodeHighestPriority = priority;
+		// }
+		// } else {
+		// //TODO Double check this
+		// priority = Math.abs(priority) + regularNodeHighestPriority;
+		// }
+//
+//		System.out.println("NID: " + n.getId() + ", Edge Difference: " + edgeDifference + ", Original Edges Count: "
+//				+ originalEdgeCount + ", Contracted Neighbors: " + numberOfContractedNeighbors);
+//		System.out.println("\t Priority: " + priority);
 
 		return priority;
 
@@ -265,15 +277,17 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 	// Consider the following "graph": u --> u --> w
 	public void findShortcut(Node n) {
 
-		Set<CHEdge> possibleLocalShortcut = new HashSet<>();
+		List<CHEdge> possibleLocalShortcut = new ArrayList<>();
 
-		// Arestas chegando no nó N (equivalente aos outgoings do grafo reverso).
-		// Nó TO das arestas outgoings do grafo reverso serão os FROM do grafo original.
+		// Arestas chegando no nó N (equivalente aos outgoings do grafo
+		// reverso).
+		// Nó TO das arestas outgoings do grafo reverso serão os FROM do grafo
+		// original.
 		for (Long edgeIngoing : this.getReverseGraph().getOutEdges(n.getId())) {
 
 			Long fromNode = this.getReverseGraph().getEdge(edgeIngoing).getToNode();
-			
-			if(this.getNode(fromNode).getLevel()!=maxLevel) {
+
+			if (this.getNode(fromNode).getLevel() != maxLevel) {
 				continue;
 			}
 
@@ -281,19 +295,20 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 			for (Long edgeOutgoing : this.getOutEdges(n.getId())) {
 
 				Long toNode = this.getEdge(edgeOutgoing).getToNode();
-				
-				//TODO Explicar essa verificação
+
+				// TODO Explicar essa verificação
 				if (this.getNode(toNode).getLevel() != maxLevel || toNode == fromNode) {
 					continue;
 				}
 
 				long previsousReverseEdgeId = 0l;
 				double ingoingDistance = this.getReverseGraph().getEdge(edgeIngoing).getDistance();
-				
+
 				// Arestas de entrada no nó "n"
 				for (Long reverseEdge : this.getReverseGraph().getOutEdges(n.getId())) {
 					if (this.getReverseGraph().getEdge(reverseEdge).getToNode() == fromNode
-							&& this.getReverseGraph().getEdge(reverseEdge).getDistance() <= this.getReverseGraph().getEdge(previsousReverseEdgeId).getDistance()) {
+							&& this.getReverseGraph().getEdge(reverseEdge).getDistance() <= this.getReverseGraph()
+									.getEdge(previsousReverseEdgeId).getDistance()) {
 						ingoingDistance = this.getReverseGraph().getEdge(reverseEdge).getDistance();
 					}
 				}
@@ -311,92 +326,35 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 				shortestPath = new DijkstraConstantWeight(this);
 
-				Path path = shortestPath.shortestPath(fromNode, toNode);
-				path.getTotalDistance();
+				Path path;
 
-				if (path.getTotalDistance() < shortestPathBeforeContraction) {
-					// System.out.println("WITNESS PATH FOUND");
-				} else {
-					if (path.getTotalDistance() == shortestPathBeforeContraction) {
-
-						if (this.getEdge(path.getEdges().get(0))
-								.getFromNode() == this
-										.getEdge(this.getReverseGraph().getEdge(edgeIngoing).getToNode(),
-												this.getReverseGraph().getEdge(edgeIngoing).getFromNode())
-										.getFromNode()
-								&& this.getEdge(path.getEdges().get(0))
-										.getToNode() == this
-												.getEdge(this.getReverseGraph().getEdge(edgeIngoing).getToNode(),
-														this.getReverseGraph().getEdge(edgeIngoing).getFromNode())
-												.getToNode()
-								&& this.getEdge(path.getEdges().get(path.getEdges().size() - 1)).getFromNode() == this
-										.getEdge(edgeOutgoing).getFromNode()
-								&& this.getEdge(path.getEdges().get(path.getEdges().size() - 1)).getToNode() == this
-										.getEdge(edgeOutgoing).getToNode()) {
-
-							// System.out.println("CREATE SHORTCUT");
-							int ingoingEdgeCounter = this.getEdge(path.getEdges().get(0)).getOriginalEdgeCounter();
-							int outgoingEdgeCounter = this.getEdge(path.getEdges().get(path.getEdges().size() - 1))
-									.getOriginalEdgeCounter();
-							CHEdge shortcut = new CHEdgeImpl(
-									this.getEdge(path.getEdges().get(0)).getFromNode(),
-									this.getEdge(path.getEdges().get(path.getEdges().size() - 1)).getToNode(),
-									this.getEdge(path.getEdges().get(0)).getDistance() + this.getEdge(path.getEdges().get(path.getEdges().size() - 1)).getDistance(),
-									ingoingEdgeCounter + outgoingEdgeCounter, 
-									n.getId(),
-									this.getEdge(path.getEdges().get(0)).getId(),
-									this.getEdge(path.getEdges().get(path.getEdges().size() - 1)).getId(), 
-									true);
-							
-							
-							// Verificando se já existe um shortcut igual
-							boolean existShortcut = false;
-							for(CHEdge edge : possibleLocalShortcut) {
-								if(edge.getIngoingSkippedEdge() == shortcut.getIngoingSkippedEdge() &&
-										edge.getOutgoingSkippedEdge() == shortcut.getOutgoingSkippedEdge()) {
-									existShortcut = true;
-									break;
-								}
-							}
-							
-							if(existShortcut == false) {
-								possibleLocalShortcut.add(shortcut);
-							}
-							
-							
-
-						} else {
-							// System.out.println("WITNESS PATH FOUND");
-						}
-					} else {
-						// System.out.println("CREATE SHORTCUT");
-						int ingoingEdgeCounter = this.getEdge(path.getEdges().get(0)).getOriginalEdgeCounter();
-						int outgoingEdgeCounter = this.getEdge(path.getEdges().get(path.getEdges().size() - 1))
-								.getOriginalEdgeCounter();
-						CHEdge shortcut = new CHEdgeImpl(this.getEdge(path.getEdges().get(0)).getFromNode(),
-								this.getEdge(path.getEdges().get(path.getEdges().size() - 1)).getToNode(),
-								(int)shortestPathBeforeContraction,
-								ingoingEdgeCounter + outgoingEdgeCounter, 
-								n.getId(),
-								this.getEdge(path.getEdges().get(0)).getId(),
-								this.getEdge(path.getEdges().get(path.getEdges().size() - 1)).getId(), 
-								true);
-
-						// Verificando se já existe um shortcut igual
-						boolean existShortcut = false;
-						for(CHEdge edge : possibleLocalShortcut) {
-							if(edge.getIngoingSkippedEdge() == shortcut.getIngoingSkippedEdge() &&
-									edge.getOutgoingSkippedEdge() == shortcut.getOutgoingSkippedEdge()) {
-								existShortcut = true;
-								break;
-							}
-						}
-						
-						if(existShortcut == false) {
-							possibleLocalShortcut.add(shortcut);
-						}
-					}
+				try {
+					path = shortestPath.shortestPath(this.getNode(fromNode), this.getNode(toNode), n);
+				} catch (Exception e) {
+					path = null;
 				}
+
+				if (path != null && path.getTotalDistance() <= shortestPathBeforeContraction)
+					// Witness path found! Continue the search for the next
+					// neighbor
+					continue;
+
+				// Shortcut must be created
+				int ingoingEdgeCounter = this.getReverseGraph().getEdge(edgeIngoing).getOriginalEdgeCounter();
+				int outgoingEdgeCounter = this.getEdge(edgeOutgoing).getOriginalEdgeCounter();
+
+				CHEdge shortcut = new CHEdgeImpl(fromNode, toNode, (int) shortestPathBeforeContraction,
+						ingoingEdgeCounter + outgoingEdgeCounter, n.getId(),
+						this.getReverseGraph().getEdge(edgeIngoing).getId(), this.getEdge(edgeOutgoing).getId(), true);
+
+				// System.out.println("shortcutFrom: " + fromNode
+				// + ", shortcutTo: " + toNode
+				// + ", Distance: " + (int) shortestPathBeforeContraction + ",
+				// originalEdgeCount: "
+				// + (ingoingEdgeCounter + outgoingEdgeCounter));
+
+				possibleLocalShortcut.add(shortcut);
+
 			}
 
 		}
@@ -411,25 +369,117 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 	public void contractNodes() {
 
 		int level = 1;
+		//TODO Rename this variable counter!!
+		counter = 0;
+		int updateCounter = 0;
+		meanDegree = this.getNumberOfEdges() / this.getNumberOfNodes();
+		
+		// preparation takes longer but queries are slightly faster with preparation
+        // => enable it but call not so often
+        boolean periodicUpdate = true;
+        
+        long periodicUpdatesCount = Math.round(Math.max(10, nodePriorityQueue.size() / 100d * periodicUpdatesPercentage));
+        if (periodicUpdatesPercentage == 0)
+            periodicUpdate = false;
+        
+     // disable lazy updates for last x percentage of nodes as preparation is then a lot slower
+        // and query time does not really benefit
+        long lastNodesLazyUpdates = Math.round(nodePriorityQueue.size() / 100d * lastNodesLazyUpdatePercentage);
+
+        // according to paper "Polynomial-time Construction of Contraction Hierarchies for Multi-criteria Objectives" by Funke and Storandt
+        // we don't need to wait for all nodes to be contracted
+        long nodesToAvoidContract = Math.round((100 - nodesContractedPercentage) / 100 * nodePriorityQueue.size());
 
 		// Recompute priority of uncontracted neighbors.
 		// Without neighbor updates preparation is faster but we need them
 		// to slightly improve query time. Also if not applied too often it
 		// decreases the shortcut number.
 		boolean neighborUpdate = true;
-		// if (neighborUpdatePercentage == 0)
-		// neighborUpdate = false;
+		if (neighborUpdatePercentage == 0)
+			neighborUpdate = false;
 
 		while (!nodePriorityQueue.isEmpty()) {
+			
+			
+			if(periodicUpdate && counter > 0 && counter % periodicUpdatesCount == 0) {
+				
+				nodePriorityQueue.clear();
+				
+				for(int nodeId = 0; nodeId < this.getNumberOfNodes(); nodeId++) {
+					
+					if(this.getNode(nodeId).getLevel() != maxLevel) 
+						continue;
+					
+					int priority = calculatePriority(this.getNode(nodeId));
+
+					oldPriorities.put((long)nodeId, priority);
+					//TODO Change "maxLevel"to this.getNode(nodeId).getLevel() or the opposite?
+					this.updateNodeInfo(this.getNode(nodeId), this.getNode(nodeId).getLevel(), priority);
+					nodePriorityQueue.add((CHNodeImpl)this.getNode(nodeId));
+					
+//					oldPriorities.put((long)nodeId, priority);
+
+//					CHNode node = this.getNode(nodeId);
+//					node.setPriority(priority);
+//					//TODO Double check this maxLevel setter. Is it necessary?
+//					node.setLevel(maxLevel);
+
+//					nodePriorityQueue.add((CHNodeImpl) node);
+					
+				}
+				updateCounter++;
+				if (nodePriorityQueue.isEmpty())
+                    throw new IllegalStateException("Cannot prepare as no unprepared nodes where found. Called preparation twice?");
+				
+			}
+			
+			
+			counter++;
+			
+			System.out.println("NID: " + nodePriorityQueue.peek().getId() + ", Priority: "
+			+ nodePriorityQueue.peek().getPriority());
+			
 
 			CHNode polledNode = nodePriorityQueue.poll();
-			int numberShortcutsCreated = this.addShortcuts(polledNode.getId());
-			System.out.println("nodeID: " + polledNode.getId() + ", #shortcuts: " + numberShortcutsCreated);
 			
-//			this.getNode(polledNode.getId()).      setLevel(level);
-			this.updateNodeInfo(polledNode, level);
+			
+			if (!nodePriorityQueue.isEmpty() && nodePriorityQueue.size() < lastNodesLazyUpdates)
+            {
+				int priority = calculatePriority(this.getNode(polledNode.getId()));
+
+				oldPriorities.put((long)polledNode.getId(), priority);
+                if (priority > nodePriorityQueue.peek().getPriority())
+                {
+                    // current node got more important => insert as new value and contract it later
+                	CHNode node = this.getNode(polledNode.getId());
+					node.setPriority(priority);
+					//TODO Double check this maxLevel setter. Is it necessary?
+					node.setLevel(maxLevel);
+
+					nodePriorityQueue.add((CHNodeImpl) node);
+                    continue;
+                }
+            }
+			
+			
+			
+			
+			
+			
+			int numberShortcutsCreated = this.addShortcuts(polledNode.getId());
+			// System.out.println("nodeID: " + polledNode.getId() + ", Priority:
+			// " + polledNode.getPriority());
+			// System.out.println("nodeID: " + polledNode.getId() + ",
+			// #shortcuts: " + numberShortcutsCreated);
+
+			// this.getNode(polledNode.getId()). setLevel(level);
+			this.updateNodeInfo(polledNode, level, polledNode.getPriority());
 			polledNode.setLevel(level);
 			level++;
+			
+			if (nodePriorityQueue.size() < nodesToAvoidContract)
+                // skipped nodes are already set to maxLevel
+                break;
 
 			for (Long edgeID : this.getOutEdges(polledNode.getId())) {
 
@@ -471,12 +521,11 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 	 */
 
 	int addShortcuts(long node) {
-		
+
 		possibleShortcuts.clear();
 		findShortcut(this.getNode(node));
 		int temporaryShortcutCounter = 0;
-		NEXT_SC:
-		for (CHEdge shortcutEntry : possibleShortcuts.get(node)) {
+		NEXT_SC: for (CHEdge shortcutEntry : possibleShortcuts.get(node)) {
 
 			boolean updatedInGraph = false;
 
@@ -518,7 +567,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 				this.addEdge(newShortcut);
 				temporaryShortcutCounter++;
-				
+
 			}
 
 		}
@@ -583,7 +632,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 		this.edgesComplement = edgesComplement;
 	}
 
-	public void setPossibleShortcuts(Map<Long, Set<CHEdge>> possibleShortcuts) {
+	public void setPossibleShortcuts(Map<Long, List<CHEdge>> possibleShortcuts) {
 		this.possibleShortcuts = possibleShortcuts;
 	}
 
@@ -606,8 +655,8 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 		for (int i = 0; i < originalCHGraph.getNumberOfNodes(); i++) {
 
 			CHNode node = new CHNodeImpl(originalCHGraph.getNode(i).getExternalId(),
-					originalCHGraph.getNode(i).getLatitude(), originalCHGraph.getNode(i).getLatitude());
-
+					originalCHGraph.getNode(i).getLatitude(), originalCHGraph.getNode(i).getLongitude());
+			// System.out.println(node);
 			reverseCHGraph.addNode(node);
 
 		}
@@ -625,4 +674,64 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 		return reverseCHGraph;
 	}
 
+	public void createHyperPOIS() {
+
+		Set<CHEdge> hyperEdges;
+
+		for (int i = 0; i < this.getNumberOfNodes(); i++) {
+
+			CHNode auxiliarCHNode = this.getNode(i);
+
+			if (auxiliarCHNode.getCategory() == 1) {
+
+				// HyperPoI's must have category==2
+				CHNode hyperPoICH = new CHNodeImpl(auxiliarCHNode.getExternalId(), auxiliarCHNode.getLatitude(),
+						auxiliarCHNode.getLongitude(), 2);
+
+				this.addNode(hyperPoICH);
+
+				hyperEdges = new HashSet<>();
+
+				CHEdge hyperPoICHEdge = new CHEdgeImpl(auxiliarCHNode.getId(), hyperPoICH.getId(), 0, 1);
+				hyperEdges.add(hyperPoICHEdge);
+				// this.addEdge(hyperPoICHEdge);
+
+				// Copiando arestas de saída
+				for (Long auxiliarCHEdgeID : this.getOutEdges(auxiliarCHNode.getId())) {
+
+					CHEdge auxiliarOutgoingEdge = this.getEdge(auxiliarCHEdgeID);
+					hyperPoICHEdge = new CHEdgeImpl(hyperPoICH.getId(), auxiliarOutgoingEdge.getToNode(),
+							auxiliarOutgoingEdge.getDistance(), 1);
+					// this.addEdge(hyperPoICHEdge);
+					hyperEdges.add(hyperPoICHEdge);
+
+				}
+
+				// Copiando arestas de entrada
+				for (Long auxiliarCHEdgeID : this.reverseGraph.getOutEdges(auxiliarCHNode.getId())) {
+
+					CHEdge auxiliarIngoingEdge = this.getEdge(auxiliarCHEdgeID);
+					hyperPoICHEdge = new CHEdgeImpl(auxiliarIngoingEdge.getFromNode(), hyperPoICH.getId(),
+							auxiliarIngoingEdge.getDistance(), 1);
+					// this.addEdge(hyperPoICHEdge);
+					hyperEdges.add(hyperPoICHEdge);
+
+				}
+
+				for (CHEdge e : hyperEdges) {
+					this.addEdge(e);
+				}
+
+			}
+
+		}
+
+	}
+
+	public Queue<CHNodeImpl> getNodePriorityQueue() {
+		return nodePriorityQueue;
+	}
+
+	
+	
 }

@@ -7,6 +7,8 @@ import java.io.IOException;
 import org.graphast.config.Configuration;
 import org.graphast.graphgenerator.GraphGenerator;
 import org.graphast.model.Graph;
+import org.graphast.model.contraction.CHGraph;
+import org.graphast.model.contraction.CHNode;
 import org.graphast.query.route.shortestpath.model.Path;
 import org.graphast.util.FileUtils;
 import org.junit.AfterClass;
@@ -24,12 +26,14 @@ public abstract class AbstractShortestPathTest {
 //	protected static Graph graphSeattle;
 	protected static Graph graphExample;
 	protected static Graph graphExample2;
+	protected static CHGraph graphHopperExample;
 	
 	
 	protected static AbstractShortestPathService serviceMonaco;
 //	protected static AbstractShortestPathService serviceSeattle;
 	protected static AbstractShortestPathService serviceExample;
 	protected static AbstractShortestPathService serviceExample2;
+	protected static AbstractShortestPathService serviceGraphHopperExample;
 	
 	
 	
@@ -39,6 +43,7 @@ public abstract class AbstractShortestPathTest {
 //		graphSeattle = new GraphGenerator().generateSeattle();
 		graphExample = new GraphGenerator().generateExample();
 		graphExample2 = new GraphGenerator().generateExample2();
+		graphHopperExample = new GraphGenerator().generateExampleCHWithPoIs();
 	}
 
 	@Test
@@ -147,6 +152,36 @@ public abstract class AbstractShortestPathTest {
 		assertEquals(475, shortestPath.getTotalCost(), 0);
 
 	}
+	
+	@Test
+	public void shortestPathSkippedNodeTest() {
+
+		
+		CHNode source = graphHopperExample.getNode(10);
+		CHNode target = graphHopperExample.getNode(1);
+		CHNode skippedNode = graphHopperExample.getNode(3);
+		
+		StopWatch sw = new StopWatch();
+
+		sw.start();
+		Path shortestPath = serviceGraphHopperExample.shortestPath(source, target, skippedNode);
+		sw.stop();
+
+		logger.debug(shortestPath.toString());
+		logger.debug("Execution Time of shortestPathExampleTest(): {}ms", sw.getTime());
+		logger.debug("Path Total Distance: {}", shortestPath.getTotalDistance());
+		logger.debug("Path Total Cost: {}", shortestPath.getTotalCost());
+
+//		for(Point point : shortestPath.getGeometry()) {
+//			System.out.println("(" + point.getLatitude() + "," + point.getLongitude()+")");
+//		}
+
+//		assertEquals(6, shortestPath.getGeometry().size());
+//		assertEquals(475, shortestPath.getTotalCost(), 0);
+
+	}
+	
+	
 	
 //	@Test
 //	public void shortestPathExample2Test() {

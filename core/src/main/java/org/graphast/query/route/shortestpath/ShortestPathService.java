@@ -15,6 +15,12 @@ public interface ShortestPathService {
 	
 	public Path shortestPath(long source, long target, Date time);
 	
+	public Path shortestPath(Node source, Node target, Node skippedNode);
+	
+	public Path shortestPath(long source, long target, Node skippedNode);
+	
+	public Path shortestPath(long source, long target, Date time, Node skippedNode);
+	
 //	public Int2ObjectMap<Path> shortestPath(Node source);
 
 }

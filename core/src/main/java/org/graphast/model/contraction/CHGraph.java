@@ -1,5 +1,6 @@
 package org.graphast.model.contraction;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
@@ -61,7 +62,7 @@ public interface CHGraph extends Graph {
 
 	public void setEdgesComplement(IntBigArrayBigList edgesComplement);
 
-	public void setPossibleShortcuts(Map<Long, Set<CHEdge>> possibleShortcuts);
+	public void setPossibleShortcuts(Map<Long, List<CHEdge>> possibleShortcuts);
 
 	public void setNodePriorityQueue(Queue<CHNodeImpl> nodePriorityQueue);
 
@@ -72,6 +73,9 @@ public interface CHGraph extends Graph {
 	public CHGraph generateReverseCHGraph(CHGraph originalCHGraph);
 	
 	public void contractNodes();
+	public void createHyperPOIS();
 //	public CHGraphImpl clone();
+	
+	public Queue<CHNodeImpl> getNodePriorityQueue();
     
 }

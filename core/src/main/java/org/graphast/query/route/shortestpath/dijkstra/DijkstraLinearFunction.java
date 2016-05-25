@@ -33,8 +33,9 @@ public class DijkstraLinearFunction extends Dijkstra{
 		super(graphBounds);
 	}
 	
+	//TODO Implement the skippedNode functionality 
 	public void expandVertex(Node target, TimeEntry removed, HashMap<Long, Integer> wasTraversed, 
-			PriorityQueue<TimeEntry> queue, HashMap<Long, RouteEntry> parents){
+			PriorityQueue<TimeEntry> queue, HashMap<Long, RouteEntry> parents, Node skippedNode){
 		
 		HashMap<Node, Integer> neig = graph.accessNeighborhood(graph.getNode(removed.getId()), removed.getArrivalTime());
 		

@@ -8,7 +8,9 @@ import java.util.Map;
 import org.graphast.config.Configuration;
 import org.graphast.model.Graph;
 import org.graphast.model.GraphBounds;
+import org.graphast.model.contraction.CHEdge;
 import org.graphast.model.contraction.CHGraph;
+import org.graphast.model.contraction.CHNode;
 import org.graphast.util.FileUtils;
 import org.graphast.util.MapUtils;
 import org.graphast.util.SimpleMap;
@@ -26,6 +28,7 @@ public class GraphGeneratorTest {
 	private static Graph graphExamplePoI;
 	private static Graph graphAndorra;
 	private static CHGraph graphExampleCH;
+	private static CHGraph graphExampleCHWithPoIs;
 
 	@BeforeClass
 	public static void setup() throws NumberFormatException, IOException {
@@ -37,6 +40,7 @@ public class GraphGeneratorTest {
 		graphExamplePoI = new GraphGenerator().generateExamplePoI();
 		graphAndorra = new GraphGenerator().generateAndorra();
 		graphExampleCH = new GraphGenerator().generateExampleCH();
+		graphExampleCHWithPoIs = new GraphGenerator().generateExampleCHWithPoIs();
 	}
 
 	@Test
@@ -85,6 +89,44 @@ public class GraphGeneratorTest {
 	public void generateExampleCHTest() {
 		assertEquals(10, graphExampleCH.getNumberOfNodes());
 		assertEquals(19, graphExampleCH.getNumberOfEdges());
+	}
+	
+	@Test
+	public void generateExampleCHWithPoIsTest() {
+		
+		for(int i=0; i<graphExampleCHWithPoIs.getNumberOfNodes(); i++) {
+			CHNode testNode = graphExampleCHWithPoIs.getNode(i);
+			System.out.println("nodeID: " + testNode.getId() + ", Latitude: " + testNode.getLatitude() + 
+					", Longitude: " + testNode.getLongitude() + ", isPoI: " + testNode.getCategory());
+		}
+		
+		for(int i=0; i<graphExampleCHWithPoIs.getNumberOfEdges(); i++) {
+			CHEdge testEdge = graphExampleCHWithPoIs.getEdge(i);
+			System.out.println("edgeID: " + testEdge.getId() + ", From: " + testEdge.getFromNode() + 
+					", To: " + testEdge.getToNode() + ", Distance: " + testEdge.getDistance());
+		}
+		
+		assertEquals(12, graphExampleCHWithPoIs.getNumberOfNodes());
+		assertEquals(28, graphExampleCHWithPoIs.getNumberOfEdges());
+	}
+	
+	@Test
+	public void reverseCHGraphWithPoIsTest() {
+		
+		for(int i=0; i<graphExampleCHWithPoIs.getReverseGraph().getNumberOfNodes(); i++) {
+			CHNode testNode = graphExampleCHWithPoIs.getReverseGraph().getNode(i);
+			System.out.println("nodeID: " + testNode.getId() + ", Latitude: " + testNode.getLatitude() + 
+					", Longitude: " + testNode.getLongitude() + ", isPoI: " + testNode.getCategory());
+		}
+		
+		for(int i=0; i<graphExampleCHWithPoIs.getReverseGraph().getNumberOfEdges(); i++) {
+			CHEdge testEdge = graphExampleCHWithPoIs.getReverseGraph().getEdge(i);
+			System.out.println("edgeID: " + testEdge.getId() + ", From: " + testEdge.getFromNode() + 
+					", To: " + testEdge.getToNode() + ", Distance: " + testEdge.getDistance());
+		}
+		
+		assertEquals(12, graphExampleCHWithPoIs.getNumberOfNodes());
+		assertEquals(28, graphExampleCHWithPoIs.getNumberOfEdges());
 	}
 	
 	

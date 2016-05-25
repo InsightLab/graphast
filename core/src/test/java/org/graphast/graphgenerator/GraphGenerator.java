@@ -688,5 +688,123 @@ public class GraphGenerator {
 		return graph;
 
 	}
+	
+	public CHGraph generateExampleCHWithPoIs() {
+
+		CHGraph graph = new CHGraphImpl(Configuration.USER_HOME + "/graphast/test/exampleCHWithPoIs");
+
+		CHEdge edge;
+		CHNode node;
+		
+		node = new CHNodeImpl(0l, 10, 10);
+		graph.addNode(node);
+		
+		node = new CHNodeImpl(1l, 20, 20, 1);
+		graph.addNode(node);
+		
+		node = new CHNodeImpl(2l, 20, 10);
+		graph.addNode(node);
+
+		node = new CHNodeImpl(3l, 10, 20);
+		graph.addNode(node);
+		
+		node = new CHNodeImpl(4l, 0, 20);
+		graph.addNode(node);
+		
+		node = new CHNodeImpl(5l, 5, 30, 1);
+		graph.addNode(node);
+		
+		node = new CHNodeImpl(6l, 10, 30);
+		graph.addNode(node);
+		
+//		node = new CHNodeImpl(7l, 15, 30);
+		node = new CHNodeImpl(7l, 15, 30, 1);
+		graph.addNode(node);
+		
+		node = new CHNodeImpl(8l, 30, 20);
+		graph.addNode(node);
+		
+		node = new CHNodeImpl(9l, 30, 10);
+		graph.addNode(node);
+		
+		
+		edge = new CHEdgeImpl(0l, 2l, 2, 1);
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(2l, 0l, 2, 1);
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(2l, 9l, 2, 1);
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(9l, 2l, 2, 1);
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(2l, 8l, 2, 1);
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(8l, 2l, 2, 1);
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(2l, 1l, 2, 1);
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(1l, 2l, 2, 1);
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(2l, 1l, 10, 1);
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(1l, 3l, 2, 1);
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(3l, 1l, 2, 1);
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(3l, 4l, 2, 1);
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(4l, 3l, 2, 1);
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(3l, 5l, 2, 1);
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(5l, 3l, 2, 1);
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(3l, 6l, 2, 1);
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(6l, 3l, 2, 1);
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(3l, 7l, 2, 1);
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(7l, 3l, 2, 1);
+		graph.addEdge(edge);
+		
+		graph.setMaximumEdgeCount((int)graph.getNumberOfEdges());
+		graph.setMaxLevel((int) graph.getNumberOfNodes());
+		
+		graph.save();
+		
+		graph.setReverseGraph(graph.generateReverseCHGraph(graph));
+		
+		graph.createHyperPOIS();
+		
+		graph.save();
+		
+		graph.setReverseGraph(graph.generateReverseCHGraph(graph));
+		
+		graph.save();
+		
+//		I don't think we need bounds
+//		graph.createBounds();
+
+		return graph;
+
+	}
 
 }

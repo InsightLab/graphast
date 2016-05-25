@@ -51,7 +51,7 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 		return path;
 	}
 
-	public Path shortestPath(Node source, Node target, Date time) {
+	public Path shortestPath(Node source, Node target, Date time, Node skippedNode) {
 		PriorityQueue<TimeEntry> queue = new PriorityQueue<TimeEntry>();
 		HashMap<Long, Integer> wasTraversed = new HashMap<Long, Integer>();
 		HashMap<Long, RouteEntry> parents = new HashMap<Long, RouteEntry>();
@@ -71,7 +71,7 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 				return path;
 			}
 
-			expandVertex(target, removed, wasTraversed, queue, parents);
+			expandVertex(target, removed, wasTraversed, queue, parents, skippedNode);
 		}
 		throw new PathNotFoundException("Path not found between (" + source.getLatitude() + "," + source.getLongitude() + ") and (" 
 				+ target.getLatitude() + "," + target.getLongitude() + ")");
@@ -85,21 +85,41 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 	}
 
 	public abstract void expandVertex(Node target, TimeEntry removed, HashMap<Long, Integer> wasTraversed, 
-			PriorityQueue<TimeEntry> queue, HashMap<Long, RouteEntry> parents);
+			PriorityQueue<TimeEntry> queue, HashMap<Long, RouteEntry> parents, Node skippedNode);
 	
 	@Override
 	public Path shortestPath(Node source, Node target) {
-		return shortestPath(source, target, null);
+		return shortestPath(source, target, null, null);
+	}
+	
+	@Override
+	public Path shortestPath(Node source, Node target, Node skippedNode) {
+		return shortestPath(source, target, null, skippedNode);
+	}
+	
+	@Override
+	public Path shortestPath(Node source, Node target, Date time) {
+		return shortestPath(source, target, time, null);
 	}
 
 	@Override
 	public Path shortestPath(long source, long target) {
-		return shortestPath(source, target, null);
+		return shortestPath(source, target, null, null);
 	}
 
 	@Override
 	public Path shortestPath(long source, long target, Date time) {
-		return shortestPath(graph.getNode(source), graph.getNode(target), time);
+		return shortestPath(graph.getNode(source), graph.getNode(target), time, null);
+	}
+	
+	@Override
+	public Path shortestPath(long source, long target, Node skippedNode) {
+		return shortestPath(graph.getNode(source), graph.getNode(target), null, skippedNode);
+	}
+	
+	@Override
+	public Path shortestPath(long source, long target, Date time, Node skippedNode) {
+		return shortestPath(graph.getNode(source), graph.getNode(target), time, skippedNode);
 	}
 	
 }

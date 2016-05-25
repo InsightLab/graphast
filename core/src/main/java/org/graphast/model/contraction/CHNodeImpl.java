@@ -12,6 +12,10 @@ public class CHNodeImpl extends NodeImpl implements CHNode, Comparable<CHNodeImp
 	public CHNodeImpl(long externalId, double latitude, double longitude) {
 		super(externalId, latitude, longitude);
 	}
+	
+	public CHNodeImpl(long externalId, double latitude, double longitude, int category) {
+		super(externalId, latitude, longitude, category);
+	}
 
 	// TODO Refactor this to copy the whole node at once
 	public CHNodeImpl(Node node) {
@@ -34,6 +38,7 @@ public class CHNodeImpl extends NodeImpl implements CHNode, Comparable<CHNodeImp
 	@Override
 	public int compareTo(CHNodeImpl np) {
 
+//		return Integer.valueOf(np.priority).compareTo(priority);
 		return Integer.valueOf(priority).compareTo(np.priority);
 
 	}
