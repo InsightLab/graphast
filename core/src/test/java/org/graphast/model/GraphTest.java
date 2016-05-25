@@ -27,6 +27,8 @@ public class GraphTest {
 	private static Graph graphExample2;
 	private static GraphImpl graphExample3;
 	private static GraphImpl graphExample4;	
+	private static GraphImpl graphExample5;	
+	private static GraphImpl graphExample6;	
 	private static GraphImpl graphExample;
 	private static GraphBounds graphMonaco;
 
@@ -38,6 +40,8 @@ public class GraphTest {
 		graphExample3 =  (GraphImpl) new GraphGenerator().generateExample3();
 		graphExample4 =  (GraphImpl) new GraphGenerator().generateExample4();
 		graphExample4.setTimeType(TimeType.MINUTE);
+		graphExample5 =  (GraphImpl) new GraphGenerator().generateExample5();
+		graphExample6 =  (GraphImpl) new GraphGenerator().generateExample6();
 		graphMonaco = new GraphGenerator().generateMonaco();
 	}
 
@@ -170,14 +174,66 @@ public class GraphTest {
 		pos = 0;
 		assertEquals(0,  (long) neig.get(pos++));
 
-		LongList neig4 = graphExample4.getOutNeighborsAndCosts(0, 600);
-		int pos4 = 0;
+		neig = graphExample4.getOutNeighborsAndCosts(0, 600);
+		pos = 0;
 
-		assertEquals(1, (long) neig4.get(pos4++));
-		assertEquals(3,  (long) neig4.get(pos4++));
+		assertEquals(1, (long) neig.get(pos++));  // nodeId = 1
+		assertEquals(3, (long) neig.get(pos++));  // cost   = 3
+		assertEquals(2, (long) neig.get(pos++));  // nodeId = 2
+		assertEquals(5, (long) neig.get(pos++));  // cost   = 5
 
 	}
 
+	@Test
+	public void getInNeighborsTest() {
+		LongList neig = graphExample3.getInNeighbors(0);
+		assertEquals(3, (long) neig.size());
+		int pos = 0;
+		assertEquals(1, (long) neig.get(pos++));
+		assertEquals(2,  (long) neig.get(pos++));
+		assertEquals(3,  (long) neig.get(pos++));
+		
+		neig = graphExample3.getInNeighbors(2);
+		assertEquals(1, (long) neig.size());
+		pos = 0;
+		assertEquals(0, (long) neig.get(pos++));
+	}
+
+	@Test
+	public void getInNeighborsAndCostsTest() {
+		LongList neig = graphExample3.getInNeighborsAndCosts(0, 36000000);
+		int pos = 0;
+
+		assertEquals(1, (long) neig.get(pos++));
+		assertEquals(6,  (long) neig.get(pos++));
+
+		assertEquals(2,  (long) neig.get(pos++));
+		assertEquals(6, (long) neig.get(pos++));
+
+		assertEquals(3,  (long) neig.get(pos++));
+		assertEquals(5, (long) neig.get(pos++));
+
+		neig = graphExample3.getInNeighbors(2);
+		pos = 0;
+		assertEquals(0,  (long) neig.get(pos++));
+
+		neig = graphExample3.getInNeighbors(3);
+		pos = 0;
+		assertEquals(0,  (long) neig.get(pos++));
+
+		neig = graphExample4.getInNeighborsAndCosts(0, 600);
+		assertEquals(0, (long) neig.size());
+
+		neig = graphExample4.getInNeighborsAndCosts(5, 600);
+		pos = 0;
+
+		assertEquals(3, (long) neig.get(pos++));  // nodeId = 1
+		assertEquals(6, (long) neig.get(pos++));  // cost   = 3
+		assertEquals(4, (long) neig.get(pos++));  // nodeId = 2
+		assertEquals(2, (long) neig.get(pos++));  // cost   = 5
+	}
+
+	
 	@Test
 	public void saveLoadTest() throws IOException{
 		graphExample3.save();
@@ -213,11 +269,15 @@ public class GraphTest {
 	@Test
 	public void getNumberOfNodesTest() {
 		assertEquals(6, graphExample3.getNumberOfNodes());
+		assertEquals(2, graphExample5.getNumberOfNodes());
+		assertEquals(5, graphExample6.getNumberOfNodes());
 	}
 
 	@Test
 	public void getNumberOfEdgesTest() {
 		assertEquals(7, graphExample3.getNumberOfEdges());
+		assertEquals(3, graphExample5.getNumberOfEdges());
+		assertEquals(5, graphExample6.getNumberOfEdges());
 	}
 
 	@Test
@@ -231,6 +291,18 @@ public class GraphTest {
 		assertEquals(6, (long)l.get(0));
 	}
 
+	@Test
+	public void getInEdgesTest() {
+		LongList l = graphExample3.getInEdges(0);
+		assertEquals(1, (long) l.get(0));
+		assertEquals(3, (long) l.get(1));
+		assertEquals(6, (long) l.get(2));
+
+		l = graphExample3.getInEdges(3);
+		assertEquals(4, (long)l.get(0));
+	}
+
+	
 	@Test
 	public void accessNeighborhoodTest() {
 		Long2IntMap neighbors = graphExample3.accessNeighborhood(graphExample3.getNode(3));
@@ -268,20 +340,17 @@ public class GraphTest {
 		assertEquals(1, graphExample3.getEdgeCosts(2).length);
 		assertEquals(5, graphExample3.getEdgeCosts(3).length);
 		assertEquals(1, graphExample3.getEdgeCosts(4).length);
+		assertEquals(1, graphExample3.getEdgeCosts(6).length);
 		//No costs test
 		assertNull(graphExample3.getEdgeCosts(5));
-		assertNull(graphExample3.getEdgeCosts(6));
 	}
 
 	@Test
 	public void getNodeCostsTest() {
-
 		assertEquals(4, graphExample3.getNodeCosts(2).length);
 		// No costs test
 		assertNull(graphExample3.getNodeCosts(0));
 		assertNull(graphExample3.getNodeCosts(1));
-
-
 	}
 
 	@Test
