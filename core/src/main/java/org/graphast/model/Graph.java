@@ -119,6 +119,14 @@ public interface Graph {
 	 * @return Outgoing edges for a given node.
 	 */
 	public LongList getOutEdges(long nodeId);
+	
+	/**
+	 * This method will return all ingoing edges for a given node.
+	 * 
+	 * @param nodeId Given node id.
+	 * @return Ingoing edges for a given node.
+	 */
+	public LongList getInEdges(long nodeId);
 
 	/**
 	 * For a given edge and time, this method will return 
@@ -132,24 +140,38 @@ public interface Graph {
 	
 	//TODO documentation
 	public int[] getNodeCosts(long id);
-
-	
 	
 	/**
-	 * This method returns all neighbors of a given node. 
+	 * This method returns all out neighbors of a given node. 
 	 * @param vid of a node
-	 * @return a list of all neighboring nodes
+	 * @return a list of all out neighboring nodes
 	 */
 	public LongList getOutNeighbors(long vid);
 
 	/**
-	 * This method returns all neighbors of a given node with the costs based on a given time.
+	 * This method returns all out neighbors of a given node with the costs based on a given time.
 	 * @param vid Id of a node
 	 * @param time Time used to get edge costs.
-	 * @return a list of all neighboring nodes with costs
+	 * @return a list of all out neighboring nodes with costs
 	 */
 	public LongList getOutNeighborsAndCosts(long vid, int time);
 
+	/**
+	 * This method returns all in neighbors of a given node. 
+	 * @param vid of a node
+	 * @return a list of all in neighboring nodes
+	 */
+	public LongList getInNeighbors(long vid);
+
+	/**
+	 * This method returns all in neighbors of a given node with the costs based on a given time.
+	 * @param vid Id of a node
+	 * @param time Time used to get edge costs.
+	 * @return a list of all in neighboring nodes with costs
+	 */
+	public LongList getInNeighborsAndCosts(long vid, int time);
+
+	
 	/**
 	 * This method returns a Edge for a given edgeId.
 	 * @param id Id of a edge
