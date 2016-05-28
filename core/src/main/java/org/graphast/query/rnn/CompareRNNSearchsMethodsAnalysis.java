@@ -24,9 +24,9 @@ public class CompareRNNSearchsMethodsAnalysis {
 	public static void main(String[] args) throws IOException {
 		
 		runAnalysis("view_exp_1k", 10);
-		runAnalysis("view_exp_10k", Integer.parseInt(args[0]));
-		runAnalysis("view_exp_50k", Integer.parseInt(args[0]));
-		runAnalysis("view_exp_100k", Integer.parseInt(args[0]));
+		//runAnalysis("view_exp_10k", Integer.parseInt(args[0]));
+		//runAnalysis("view_exp_50k", Integer.parseInt(args[0]));
+		//runAnalysis("view_exp_100k", Integer.parseInt(args[0]));
 	}
 
 	public static void runAnalysis(String tableName, int testTimes) throws IOException {
@@ -62,27 +62,16 @@ public class CompareRNNSearchsMethodsAnalysis {
 			Node customer, Date timeout, Date timestamp, FileWriter fileCsv) throws IOException {
 		try {
 			
-			//List<Integer> listIdProcess = BenchmarkMemory.listIdProcess();
 			long numberUseMemoryInit = BenchmarkMemory.getUsedMemory();
 			long startTime = System.nanoTime();
 			long ioProcessReadInit = 0;
 			long ioProcessWriteInit = 0;
-			
-			/*for (Integer pid : listIdProcess) {
-				ioProcessReadInit = ioProcessReadInit + BenchmarkMemory.ioProcess(pid, BenchmarkMemory.PROCESS.READ);
-				ioProcessWriteInit = ioProcessWriteInit + BenchmarkMemory.ioProcess(pid, BenchmarkMemory.PROCESS.WRITE);
-			}*/
-			
+		
 			NearestNeighbor solution = null;
 			solution = rnn.search(customer, timeout, timestamp);
 			
 			long ioProcessReadEnd = 0;
 			long ioProcessWriteEnd = 0;
-			
-			/*for (Integer pid : listIdProcess) {
-				ioProcessReadEnd =  ioProcessReadEnd + BenchmarkMemory.ioProcess(pid, BenchmarkMemory.PROCESS.READ);
-				ioProcessWriteEnd =  ioProcessWriteEnd + BenchmarkMemory.ioProcess(pid, BenchmarkMemory.PROCESS.WRITE);
-			}*/
 			
 			long endTime = System.nanoTime();
 			long numberUseMemoryFinal = BenchmarkMemory.getUsedMemory(); 
