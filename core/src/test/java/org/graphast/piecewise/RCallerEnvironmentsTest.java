@@ -10,8 +10,8 @@ import rcaller.RCode;
 
 public class RCallerEnvironmentsTest {
 
-	private static final String RSCRIPT = "/usr/bin/Rscript";
-
+	private static final String RSCRIPT = "C:\\Program Files\\R\\R-3.2.2\\bin\\Rscript";
+	
 	@Test
 	public void createRscriptTest() {
 

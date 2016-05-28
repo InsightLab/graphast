@@ -75,7 +75,7 @@ public class GeneratorFunctionPiecewiseDatabaseTest {
 	public void generationFunctionEdgeTest() throws NumberFormatException, PiecewiseException {
 		
 		GeneratorFunctionLoess generatorFunctionPiecewise = new GeneratorFunctionLoess();
-		double value = generatorFunctionPiecewise.getValue(Long.valueOf("1201977368000"));
+		Function value = generatorFunctionPiecewise.gerFuntionEdge(1l, Long.valueOf("1201977368000").longValue());
 		
 		System.out.println(value);
 		Assert.assertNotNull(value);
