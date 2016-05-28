@@ -12,12 +12,8 @@ public class GeneratorFunctionLoess implements IGeneratorFunction {
 		this.engine = engine;
 	}
 
-	public double getValue(long timestamp) throws PiecewiseException {
-		return engine.run().getValue(timestamp);
-	}
-	
 	@Override
 	public Function gerFuntionEdge(long idEdge, long timestamp) {
-		return engine.run();
+		return engine.run(timestamp);
 	}
 }

@@ -10,7 +10,7 @@ public class GeneratorFunctionMatrix implements IGeneratorFunction {
 
 	@Override
 	public Function gerFuntionEdge(long idEdge, long timestamp) {
-		engine.run();
+		engine.run(timestamp);
 		return null;
 	}
 }
