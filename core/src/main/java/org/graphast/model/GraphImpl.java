@@ -1453,7 +1453,7 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 * @see org.graphast.model.Graph#getNearestNode(double, double)
 	 * NearestNode with RTree
 	 */
-	public <T> Node getNearestNode(double latitude, double longitude) {
+	public Node getNearestNode(double latitude, double longitude) {
 		double maxDistance = 0.001;
 		int maxCount = 1;
 		com.github.davidmoten.rtree.geometry.Point query = Geometries.point(latitude, longitude);
