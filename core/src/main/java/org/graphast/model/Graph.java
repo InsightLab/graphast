@@ -10,6 +10,8 @@ import org.graphast.geometry.PoI;
 import org.graphast.geometry.Point;
 import org.graphast.util.FileUtils;
 
+import com.github.davidmoten.rtree.RTree;
+
 import it.unimi.dsi.fastutil.ints.IntBigArrayBigList;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
@@ -318,7 +320,7 @@ public interface Graph {
 	
 	public void setEdgeCosts(long edgeId, int[] costs);
 	
-	public Node getNearestNode (double latitude, double longitude);
+	public <T> Node getNearestNode (double latitude, double longitude);
 	
 	public boolean equals(Graph graph);
 
@@ -343,4 +345,9 @@ public interface Graph {
 	public String getAbsoluteDirectory();
 
 	public void setDirectory(String directory);
+	
+	public RTree<Object, com.github.davidmoten.rtree.geometry.Point> getRTree();
+	
+	public abstract void setRTree(RTree<Object, com.github.davidmoten.rtree.geometry.Point> add);
+	
 }
