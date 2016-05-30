@@ -62,7 +62,7 @@ public class POIImporter {
 
 					if(poisFilter.contains(Integer.parseInt(splittedRow[0]))) {
 						numberOfPoIs++;
-						Node n = graph.getNearestNode(graph.getRTree(),Double.parseDouble(splittedRow[2]), Double.parseDouble(splittedRow[3]));
+						Node n = graph.getNearestNode(Double.parseDouble(splittedRow[2]), Double.parseDouble(splittedRow[3]));
 
 						n.setCategory(Integer.parseInt(splittedRow[0]));
 						n.setLabel(splittedRow[4]);
@@ -81,7 +81,7 @@ public class POIImporter {
 					
 					splittedRow = row.split("\\|");
 					
-					Node n = graph.getNearestNode(graph.getRTree(),Double.parseDouble(splittedRow[2]), Double.parseDouble(splittedRow[3]));
+					Node n = graph.getNearestNode(Double.parseDouble(splittedRow[2]), Double.parseDouble(splittedRow[3]));
 
 					n.setCategory(Integer.parseInt(splittedRow[0]));
 					n.setLabel(splittedRow[4]);

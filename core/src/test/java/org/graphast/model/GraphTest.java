@@ -388,10 +388,10 @@ public class GraphTest {
 
 	@Test
 	public void getNearestNodeTest() {
-		assertEquals(2, (long) graphExample3.getNearestNode(graphExample3.getRTree(),10d, 31d).getId());
-		assertEquals(380, (long) graphMonaco.getNearestNode(graphMonaco.getRTree(),43.738331, 7.421239).getId());
-		assertEquals(253, (long) graphMonaco.getNearestNode(graphMonaco.getRTree(),43.7294668047756, 7.413772473047058).getId());
-		assertEquals(252, (long) graphMonaco.getNearestNode(graphMonaco.getRTree(),43.73079058671274, 7.415815422292399).getId());
+		assertEquals(2, (long) graphExample3.getNearestNode(10d, 31d).getId());
+		assertEquals(380, (long) graphMonaco.getNearestNode(43.738331, 7.421239).getId());
+		assertEquals(253, (long) graphMonaco.getNearestNode(43.7294668047756, 7.413772473047058).getId());
+		assertEquals(252, (long) graphMonaco.getNearestNode(43.73079058671274, 7.415815422292399).getId());
 	}
 	
 //	@Test

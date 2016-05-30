@@ -238,6 +238,10 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 				BigArrays.index(node.getLatitudeConvertedToInt(),
 						node.getLongitudeConvertedToInt()), (long) id);
 		node.setId(id);
+		
+		com.github.davidmoten.rtree.geometry.Point p = Geometries.point(this.getNode(node.getId()).getLatitude(), this.getNode(node.getId()).getLongitude());
+		this.setRTree(this.getRTree().add(node.getId(), p));
+		
 	}
 
 
@@ -975,7 +979,7 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		lat = latLongToInt(latitude);
 		lon = latLongToInt(longitude);
 		if (getNodeId(lat, lon) == null) {
-			return getNearestNode(this.tree,latitude, longitude).getId();
+			return getNearestNode(latitude, longitude).getId();
 		}
 		else {
 			return getNodeId(lat, lon);
@@ -1446,18 +1450,18 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	
 	/*
 	 * (non-Javadoc)
-	 * @see org.graphast.model.Graph#getNearestNode(com.github.davidmoten.rtree.RTree, double, double)
+	 * @see org.graphast.model.Graph#getNearestNode(double, double)
 	 * NearestNode with RTree
 	 */
-	public <T> Node getNearestNode(RTree <T, com.github.davidmoten.rtree.geometry.Point> tree, double latitude, double longitude) {
+	public <T> Node getNearestNode(double latitude, double longitude) {
 		double maxDistance = 0.001;
 		int maxCount = 1;
 		com.github.davidmoten.rtree.geometry.Point query = Geometries.point(latitude, longitude);
-		List<Entry<T, com.github.davidmoten.rtree.geometry.Point>> list = tree.nearest(query, maxDistance, maxCount).toList().toBlocking().single();
+		List<Entry<Object, com.github.davidmoten.rtree.geometry.Point>> list = this.tree.nearest(query, maxDistance, maxCount).toList().toBlocking().single();
 		
 		while(list.isEmpty()){
 			maxDistance = maxDistance * 2;
-			list = tree.nearest(query, maxDistance, maxCount).toList().toBlocking().single();
+			list = this.tree.nearest(query, maxDistance, maxCount).toList().toBlocking().single();
 		}
 		
 		Node nearestNode = new NodeImpl();

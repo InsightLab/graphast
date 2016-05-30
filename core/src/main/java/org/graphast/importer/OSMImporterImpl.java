@@ -167,14 +167,6 @@ public class OSMImporterImpl implements Importer {
 			FileUtils.deleteDir(graphastTmpDir);
 		}
 		
-		//Create RTree
-		for (long node = 0; node < graph.getNumberOfNodes(); node++) {
-			com.github.davidmoten.rtree.geometry.Point p = Geometries.point(graph.getNode(node).getLatitude(), graph.getNode(node).getLongitude());
-			graph.setRTree(graph.getRTree().add(node, p));
-		}
-		
-		graph.save();
-		
 		return graph;
 	}
 

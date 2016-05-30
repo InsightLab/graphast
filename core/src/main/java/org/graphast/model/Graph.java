@@ -320,7 +320,7 @@ public interface Graph {
 	
 	public void setEdgeCosts(long edgeId, int[] costs);
 	
-	public <T> Node getNearestNode (RTree <T, com.github.davidmoten.rtree.geometry.Point> tree,double latitude, double longitude);
+	public <T> Node getNearestNode (double latitude, double longitude);
 	
 	public boolean equals(Graph graph);
 
