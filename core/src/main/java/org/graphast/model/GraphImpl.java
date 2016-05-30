@@ -19,6 +19,9 @@ import org.graphast.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.davidmoten.rtree.Entry;
+import com.github.davidmoten.rtree.RTree;
+import com.github.davidmoten.rtree.geometry.Geometries;
 import com.graphhopper.util.StopWatch;
 
 import it.unimi.dsi.fastutil.BigArrays;
@@ -79,6 +82,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 
 	protected BBox bBox;
 	
+	//RTree for index
+	private RTree<Object, com.github.davidmoten.rtree.geometry.Point> tree;
+	
 	/*
 	 * Attributes that came from GraphBoundsImpl
 	 */
@@ -120,6 +126,8 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		edgesLowerBound = new Long2IntOpenHashMap();
 		nodesUpperBound = new Long2IntOpenHashMap();
 		nodesLowerBound = new Long2IntOpenHashMap();
+		
+		this.tree = RTree.create();
 
 	}
 
@@ -887,7 +895,7 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		lat = latLongToInt(latitude);
 		lon = latLongToInt(longitude);
 		if (getNodeId(lat, lon) == null) {
-			return getNearestNode(latitude, longitude).getId();
+			return getNearestNode(this.tree,latitude, longitude).getId();
 		}
 		else {
 			return getNodeId(lat, lon);
@@ -1355,33 +1363,26 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		arrivalTime = arrivalTime % maxTime;
 		return arrivalTime;
 	}
-
-	// TODO This method must be improved. It should use a spatial index to 
-	// be much more efficient.
-	// See rtree implementation in: https://github.com/davidmoten/rtree 
-	public Node getNearestNode (double latitude, double longitude) {
-		StopWatch sw = new StopWatch();
-		sw.start();
-
-		Node point = new NodeImpl();
-		point.setLatitude(latitude);
-		point.setLongitude(longitude);
-		Node nearestNode = getNode(nodes.get(0));
-		Node currentNode;
-		double currentDistance;
-		double nearestDistance = DistanceUtils.distanceLatLong(point, nearestNode);
-		for (long i = 1; i<getNumberOfNodes(); i++) {
-			currentNode = getNode(i);
-			currentDistance = DistanceUtils.distanceLatLong(point, currentNode);
-			if (currentDistance < nearestDistance) {
-				nearestNode = currentNode;
-				nearestDistance = currentDistance;
-			}
+	
+	/*
+	 * (non-Javadoc)
+	 * @see org.graphast.model.Graph#getNearestNode(com.github.davidmoten.rtree.RTree, double, double)
+	 * NearestNode with RTree
+	 */
+	public <T> Node getNearestNode(RTree <T, com.github.davidmoten.rtree.geometry.Point> tree, double latitude, double longitude) {
+		double maxDistance = 0.001;
+		int maxCount = 1;
+		com.github.davidmoten.rtree.geometry.Point query = Geometries.point(latitude, longitude);
+		List<Entry<T, com.github.davidmoten.rtree.geometry.Point>> list = tree.nearest(query, maxDistance, maxCount).toList().toBlocking().single();
+		
+		while(list.isEmpty()){
+			maxDistance = maxDistance * 2;
+			list = tree.nearest(query, maxDistance, maxCount).toList().toBlocking().single();
 		}
-
-		sw.stop();
-		//log.debug("Execution Time of getNearestNode(): {}ms", sw.getTime());
-
+		
+		Node nearestNode = new NodeImpl();
+		nearestNode = this.getNode((Long) list.get(0).value());
+		
 		return nearestNode;
 	}
 
@@ -1660,6 +1661,24 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 			}
 		}
 		return this.reverseGraph;
+	}
+
+	@Override
+	public List<Node> getNodesList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public RTree<Object, com.github.davidmoten.rtree.geometry.Point> getRTree() {
+		return this.tree;
+	}
+
+	@Override
+	public void setRTree(RTree<Object, com.github.davidmoten.rtree.geometry.Point> rtree) {
+		
+		this.tree = rtree;
+		
 	}
 	
 }

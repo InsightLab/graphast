@@ -19,6 +19,7 @@ import org.graphast.util.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.github.davidmoten.rtree.geometry.Geometries;
 import com.graphhopper.GraphHopper;
 import com.graphhopper.storage.GraphStorage;
 import com.graphhopper.util.EdgeIterator;
@@ -165,6 +166,14 @@ public class OSMImporterImpl implements Importer {
 		if (graphHopperDir.equals(graphastTmpDir)) {
 			FileUtils.deleteDir(graphastTmpDir);
 		}
+		
+		//Create RTree
+		for (long node = 0; node < graph.getNumberOfNodes(); node++) {
+			com.github.davidmoten.rtree.geometry.Point p = Geometries.point(graph.getNode(node).getLatitude(), graph.getNode(node).getLongitude());
+			graph.setRTree(graph.getRTree().add(node, p));
+		}
+		
+		graph.save();
 		
 		return graph;
 	}

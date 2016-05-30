@@ -18,7 +18,9 @@ import org.graphast.model.GraphImpl;
 import org.graphast.model.Node;
 import org.graphast.model.NodeImpl;
 import org.graphast.query.route.shortestpath.dijkstra.DijkstraConstantWeight;
+import org.graphast.util.FileUtils;
 
+import com.github.davidmoten.rtree.geometry.Geometries;
 import com.graphhopper.routing.util.EncodingManager;
 import com.graphhopper.storage.GraphBuilder;
 import com.graphhopper.storage.GraphStorage;
@@ -137,6 +139,12 @@ public class GraphGenerator {
 		e = new EdgeImpl(3l, 0l, 70);
 		graph.addEdge(e);
 
+		//Create RTree
+		for (long node = 0; node < graph.getNumberOfNodes(); node++) {
+			com.github.davidmoten.rtree.geometry.Point p = Geometries.point(graph.getNode(node).getLatitude(), graph.getNode(node).getLongitude());
+			graph.setRTree(graph.getRTree().add(node, p));
+		}
+		
 		return graph;
 	}
 
@@ -203,6 +211,12 @@ public class GraphGenerator {
 		graph.addEdge(e);
 		graph.createBounds();
 
+		//Create RTree
+		for (long node = 0; node < graph.getNumberOfNodes(); node++) {
+			com.github.davidmoten.rtree.geometry.Point p = Geometries.point(graph.getNode(node).getLatitude(), graph.getNode(node).getLongitude());
+			graph.setRTree(graph.getRTree().add(node, p));
+		}
+		
 		return graph;
 
 	}
@@ -306,6 +320,12 @@ public class GraphGenerator {
 		e = new EdgeImpl(3l, 0l, 70);
 		graph.addEdge(e);
 
+		//Create RTree
+		for (long node = 0; node < graph.getNumberOfNodes(); node++) {
+			com.github.davidmoten.rtree.geometry.Point p = Geometries.point(graph.getNode(node).getLatitude(), graph.getNode(node).getLongitude());
+			graph.setRTree(graph.getRTree().add(node, p));
+		}
+		
 		return graph;
 	}
 
@@ -370,6 +390,13 @@ public class GraphGenerator {
 		graph.addEdge(e);
 
 		graph.createBounds();
+		
+		//Create RTree
+		for (long node = 0; node < graph.getNumberOfNodes(); node++) {
+			com.github.davidmoten.rtree.geometry.Point p = Geometries.point(graph.getNode(node).getLatitude(), graph.getNode(node).getLongitude());
+			graph.setRTree(graph.getRTree().add(node, p));
+		}
+		
 		return graph;
 	}
 
@@ -521,6 +548,13 @@ public class GraphGenerator {
 		graph.addEdge(edge);
 
 		graph.createBounds();
+		
+		//Create RTree
+		for (long nodeId = 0; nodeId < graph.getNumberOfNodes(); nodeId++) {
+			com.github.davidmoten.rtree.geometry.Point p = Geometries.point(graph.getNode(nodeId).getLatitude(), graph.getNode(nodeId).getLongitude());
+			graph.setRTree(graph.getRTree().add(nodeId, p));
+		}
+		
 		graph.save();
 		return graph;
 
