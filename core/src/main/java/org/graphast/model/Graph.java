@@ -345,9 +345,6 @@ public interface Graph {
 	public String getAbsoluteDirectory();
 
 	public void setDirectory(String directory);
-	
-	public RTree<Object, com.github.davidmoten.rtree.geometry.Point> getRTree();
-	
-	public abstract void setRTree(RTree<Object, com.github.davidmoten.rtree.geometry.Point> add);
+
 	
 }

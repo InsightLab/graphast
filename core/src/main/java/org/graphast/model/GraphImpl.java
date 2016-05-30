@@ -1747,14 +1747,12 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		}
 		return this.reverseGraph;
 	}
-	
-	@Override
-	public RTree<Object, com.github.davidmoten.rtree.geometry.Point> getRTree() {
+
+	protected RTree<Object, com.github.davidmoten.rtree.geometry.Point> getRTree() {
 		return this.tree;
 	}
 
-	@Override
-	public void setRTree(RTree<Object, com.github.davidmoten.rtree.geometry.Point> rtree) {
+	protected void setRTree(RTree<Object, com.github.davidmoten.rtree.geometry.Point> rtree) {
 		
 		this.tree = rtree;
 		
