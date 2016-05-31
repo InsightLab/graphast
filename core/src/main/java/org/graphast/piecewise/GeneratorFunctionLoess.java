@@ -11,9 +11,9 @@ public class GeneratorFunctionLoess implements IGeneratorFunction {
 	public GeneratorFunctionLoess(IManipulatorEngine engine) {
 		this.engine = engine;
 	}
-	
+
 	@Override
 	public Function gerFuntionEdge(long idEdge, long timestamp) {
-		return engine.run();
+		return engine.run(timestamp);
 	}
 }
