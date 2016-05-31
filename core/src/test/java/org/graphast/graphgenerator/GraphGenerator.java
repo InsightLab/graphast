@@ -576,7 +576,7 @@ public class GraphGenerator {
 	
 public GraphBounds generateExampleTAXI() {
 		
-		GraphBounds graph = new GraphBoundsImpl(Configuration.USER_HOME + "/graphast/test/examplePoI");
+		GraphBounds graph = new GraphImpl(Configuration.USER_HOME + "/graphast/test/examplePoI");
 
 		Node node;
 		Edge edge;
@@ -727,7 +727,7 @@ public GraphBounds generateExampleTAXI() {
 		final String directory = Configuration.USER_HOME + separator + 
 				"graphast" + separator + "test" +separator + "exampleTaxi";
 		
-		GraphBounds graph = new GraphBoundsImpl(directory);
+		GraphBounds graph = new GraphImpl(directory);
 
 		graph.addNode(new NodeImpl(0l, 0.0d, 1.0d));
 

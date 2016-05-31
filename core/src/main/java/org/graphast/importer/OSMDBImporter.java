@@ -9,7 +9,7 @@ import java.util.Map;
 import org.graphast.model.Edge;
 import org.graphast.model.EdgeImpl;
 import org.graphast.model.GraphBounds;
-import org.graphast.model.GraphBoundsImpl;
+import org.graphast.model.GraphImpl;
 import org.graphast.model.Node;
 import org.graphast.model.NodeImpl;
 import org.graphast.query.dao.postgis.GraphastDAO;
@@ -35,7 +35,7 @@ public class OSMDBImporter implements Importer {
 	public OSMDBImporter(String table, String directory) {
 		this.table = table;
 		dao = new GraphastDAO();
-		graph = new GraphBoundsImpl(directory);
+		graph = new GraphImpl(directory);
 	}
 	
 	@Override

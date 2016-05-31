@@ -6,11 +6,10 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-import org.graphast.importer.CostGenerator;
 import org.graphast.model.Edge;
 import org.graphast.model.EdgeImpl;
 import org.graphast.model.GraphBounds;
-import org.graphast.model.GraphBoundsImpl;
+import org.graphast.model.GraphImpl;
 import org.graphast.model.Node;
 import org.graphast.model.NodeImpl;
 
@@ -27,7 +26,7 @@ public class GraphGeneratorGrid {
 		this.width = width;
 		this.length = length;
 		this.percentagemPoi = percentualPoi;
-		this.graph = new GraphBoundsImpl(pathGraph);
+		this.graph = new GraphImpl(pathGraph);
 	}
 	
 	public GraphGeneratorGrid(String pathGraph, int size, double percentualPoi) {
