@@ -28,6 +28,7 @@ public class GraphGeneratorGridTester {
 		this.length = length;
 		this.percentagemPoi = percentualPoi;
 		this.graph = new GraphImpl(pathGraph);
+
 	}
 	
 	public GraphGeneratorGridTester(String pathGraph, int size, double percentualPoi) {

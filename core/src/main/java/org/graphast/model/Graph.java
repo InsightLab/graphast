@@ -16,13 +16,6 @@ import org.graphast.geometry.PoI;
 import org.graphast.geometry.Point;
 import org.graphast.util.FileUtils;
 
-import com.github.davidmoten.rtree.RTree;
-
-import it.unimi.dsi.fastutil.ints.IntBigArrayBigList;
-import it.unimi.dsi.fastutil.ints.IntSet;
-import it.unimi.dsi.fastutil.longs.Long2IntMap;
-import it.unimi.dsi.fastutil.longs.LongList;
-
 public interface Graph {
 
 	/**
