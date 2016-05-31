@@ -8,8 +8,8 @@ import org.graphast.util.ConnectionJDBC;
 import org.junit.Assert;
 import org.junit.Test;
 
-import rcaller.RCaller;
-import rcaller.RCode;
+import com.github.rcaller.rStuff.RCaller;
+import com.github.rcaller.rStuff.RCode;
 
 public class GeneratorFunctionPiecewiseDatabaseTest {
 	

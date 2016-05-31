@@ -1,7 +1,7 @@
 package org.graphast.piecewise;
 
-import rcaller.RCaller;
-import rcaller.RCode;
+import com.github.rcaller.rStuff.RCaller;
+import com.github.rcaller.rStuff.RCode;
 
 public class ManipulatorR implements IManipulatorEngine {
 	
