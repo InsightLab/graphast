@@ -10,7 +10,7 @@ import com.github.rcaller.rStuff.RCode;
 
 public class RCallerEnvironmentsTest {
 
-	private static final String RSCRIPT = "C:\\Program Files\\R\\R-3.2.2\\bin\\Rscript";
+	private static final String RSCRIPT = "C:\\Program Files\\R\\R-3.2.2\\bin\\Rscript.exe";
 	
 	@Test
 	public void createRscriptTest() {
@@ -24,6 +24,7 @@ public class RCallerEnvironmentsTest {
 	public void baseLinearOutXMLTest() throws IOException {
 
 		RCaller caller = new RCaller();
+		caller.setRscriptExecutable(RSCRIPT);
 		RCode code = caller.getRCode();
 
 		code.addRCode("set.seed(123)");

@@ -4,6 +4,7 @@ import com.github.rcaller.rStuff.RCaller;
 import com.github.rcaller.rStuff.RCode;
 
 
+
 public class ManipulatorR implements IManipulatorEngine {
 	
 	private static final String RSCRIPT = "/usr/bin/Rscript";
