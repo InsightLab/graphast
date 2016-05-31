@@ -25,7 +25,6 @@ public class RCallerEnvironmentsTest {
 
 		RCaller caller = new RCaller();
 		caller.setRscriptExecutable(RSCRIPT);
-
 		RCode code = caller.getRCode();
 
 		code.addRCode("set.seed(123)");
