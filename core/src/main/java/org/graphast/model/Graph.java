@@ -331,11 +331,8 @@ public interface Graph {
 	public String getAbsoluteDirectory();
 
 	public void setDirectory(String directory);
-<<<<<<< HEAD
 	
 	public Set<Long> getPoiIds();
-=======
 
 	public void setFuntionEdge(long edgeId, Function function);
->>>>>>> descoplando gerador de função do edge do graph e o engine
 }

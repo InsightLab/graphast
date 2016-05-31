@@ -2,6 +2,5 @@ package org.graphast.piecewise;
 
 public interface IManipulatorEngine {
 	
-	Function run();
-	
+	Function run(long x);
 }

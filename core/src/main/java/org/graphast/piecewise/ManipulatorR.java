@@ -1,7 +1,8 @@
 package org.graphast.piecewise;
 
-import rcaller.RCaller;
-import rcaller.RCode;
+import com.github.rcaller.rStuff.RCaller;
+import com.github.rcaller.rStuff.RCode;
+
 
 public class ManipulatorR implements IManipulatorEngine {
 	
@@ -13,7 +14,7 @@ public class ManipulatorR implements IManipulatorEngine {
 	}
 	
 	@Override
-	public Function run() {
+	public Function run(long x) {
 		
 		RCaller caller = new RCaller();
 		RCode code = caller.getRCode();
@@ -44,16 +45,17 @@ public class ManipulatorR implements IManipulatorEngine {
 					
 		
 		double yFinal = 0;
+		PontoGeometrico pontoGeo1 = null;
 		yFinal = coeficienteAngularAnterior;
 		
 		for (int i = 0; i < (pontosInflexao.length/2) - 1; i++) {
 			
-			PontoGeometrico pontoGeo1 = new PontoGeometrico(pontosInflexao[i], pontosInflexao[pontosInflexao.length/2+i]);
+			pontoGeo1 = new PontoGeometrico(pontosInflexao[i], pontosInflexao[pontosInflexao.length/2+i]);
 			PontoGeometrico pontoGeo2 = new PontoGeometrico(pontosInflexao[i+1], pontosInflexao[pontosInflexao.length/2+(i+1)]);
 			double coeficienteAngularCurrent = getCoeficienteAngular(pontoGeo1, pontoGeo2);
 			double coeficienteLinearCurrent = getCoeficienteLinear(pontoGeo1, coeficienteAngularCurrent);
 			
-			yFinal = yFinal + (coeficienteAngularAnterior + pontoGeo1.getX() * (coeficienteLinearAnterior - coeficienteLinearCurrent));
+			yFinal = yFinal + (pontoGeo1.getX() * (coeficienteLinearAnterior - coeficienteLinearCurrent));
 			
 			coeficienteAngularAnterior = coeficienteAngularCurrent;
 			coeficienteLinearAnterior = coeficienteLinearCurrent; 
@@ -68,7 +70,8 @@ public class ManipulatorR implements IManipulatorEngine {
 		double coeficienteAngularFinal = getCoeficienteAngular(ponto1FinalGeo, ponto2FinalGeo);
 		double coeficienteLinearFinal = getCoeficienteLinear(ponto1FinalGeo, coeficienteAngularFinal);
 		
-		//yFinal = yFinal + (coeficienteAngularFinal * timestamp + coeficienteLinearFinal);
+		
+		yFinal = yFinal + (pontoGeo1.getX() * (coeficienteLinearAnterior - coeficienteLinearFinal)) + coeficienteAngularFinal * x;
 		
 		return null;
 	}
