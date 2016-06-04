@@ -2,6 +2,7 @@ package org.graphast.util;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Random;
 
 import org.graphast.exception.GraphastException;
 
@@ -111,6 +112,10 @@ public class NumberUtils {
 	 */
 	public static int index( final short segment, final short displacement ) {
 		return (short)segment << 16 | displacement & 0xFFFF;
+	}
+	
+	public static double generatePdseurandom(int rangeMin, int rangeMax) {
+		return rangeMin + (rangeMax - rangeMin) * new Random().nextDouble();
 	}
 	
 }

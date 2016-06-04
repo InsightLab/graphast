@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.longs.Long2IntMap;
 
 import java.util.HashMap;
 import java.util.PriorityQueue;
+import java.util.Set;
 
 import org.graphast.model.Edge;
 import org.graphast.model.Graph;
@@ -22,7 +23,7 @@ public class DijkstraConstantWeight extends Dijkstra {
 		super(graphBounds);
 	}
 	
-	public void expandVertex(Node target, TimeEntry removed, HashMap<Long, Integer> wasTraversed, 
+	public void expandVertex(Node target, TimeEntry removed, HashMap<Long, Integer> wasTraversed, Set<Long> wasVisited,
 			PriorityQueue<TimeEntry> queue, HashMap<Long, RouteEntry> parents){
 		
 		Long2IntMap neig = graph.accessNeighborhood(graph.getNode(removed.getId()));

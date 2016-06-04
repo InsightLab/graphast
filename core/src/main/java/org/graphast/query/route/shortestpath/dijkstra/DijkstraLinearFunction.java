@@ -23,7 +23,7 @@ import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongSet;
 
-public class DijkstraLinearFunction extends Dijkstra{
+public class DijkstraLinearFunction extends Dijkstra {
 
 	public DijkstraLinearFunction(Graph graph) {
 		super(graph);
@@ -33,15 +33,16 @@ public class DijkstraLinearFunction extends Dijkstra{
 		super(graphBounds);
 	}
 	
-	public void expandVertex(Node target, TimeEntry removed, HashMap<Long, Integer> wasTraversed, 
+	public void expandVertex(Node target, TimeEntry removed, HashMap<Long, Integer> wasTraversed, Set<Long> allWasViseted, 
 			PriorityQueue<TimeEntry> queue, HashMap<Long, RouteEntry> parents){
 		
-		HashMap<Node, Integer> neig = graph.accessNeighborhood(graph.getNode(removed.getId()), removed.getArrivalTime());
+		HashMap<Node, Integer> neighbors = graph.accessNeighborhood(graph.getNode(removed.getId()), removed.getArrivalTime());
 		
-		for (Node v : neig.keySet()) {
-			long vid = v.getId();
-			int at = graph.getArrival(removed.getArrivalTime(), neig.get(v));
-			int tt = removed.getTravelTime() + neig.get(v);
+		for (Node node : neighbors.keySet()) {
+			long vid = node.getId();
+			allWasViseted.add(vid);
+			int at = graph.getArrival(removed.getArrivalTime(), neighbors.get(node));
+			int tt = removed.getTravelTime() + neighbors.get(node);
 			TimeEntry newEntry = new TimeEntry(	vid, tt, at, removed.getId());
 			
 			Edge edge = null;
@@ -51,7 +52,7 @@ public class DijkstraLinearFunction extends Dijkstra{
 				queue.offer(newEntry);
 				wasTraversed.put(newEntry.getId(), newEntry.getTravelTime());
 				
-				distance = neig.get(v);
+				distance = neighbors.get(node);
 				edge = getEdge(removed.getId(), vid, distance);
 				parents.put(vid, new RouteEntry(removed.getId(), distance, edge.getId(), edge.getLabel()));
 			}else{
@@ -60,11 +61,12 @@ public class DijkstraLinearFunction extends Dijkstra{
 					if(cost>newEntry.getTravelTime()){
 						queue.remove(newEntry);
 						queue.offer(newEntry);
-						wasTraversed.remove(newEntry.getId());
-						wasTraversed.put(newEntry.getId(), newEntry.getTravelTime());
+						long idNewEntry = newEntry.getId();
+						wasTraversed.remove(idNewEntry);
+						wasTraversed.put(idNewEntry, newEntry.getTravelTime());
 						
-						parents.remove(v);
-						distance = neig.get(v);
+						parents.remove(node);
+						distance = neighbors.get(node);
 						edge = getEdge(removed.getId(), vid, distance);
 						parents.put(vid, new RouteEntry(removed.getId(), distance, edge.getId(), edge.getLabel()));
 					}
