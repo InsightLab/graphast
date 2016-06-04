@@ -6,5 +6,5 @@ public class BuilderDatasourceStream implements IBuilderDatasource {
 	public double[][] getData() throws PiecewiseException {
 		return null;
 	}
-
 }
+

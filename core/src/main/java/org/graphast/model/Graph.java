@@ -356,5 +356,5 @@ public interface Graph {
 	public Set<Long> getPoiIds();
 
 	public void setFuntionEdge(long edgeId, Function function);
-
 }
+

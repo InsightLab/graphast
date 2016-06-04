@@ -17,3 +17,4 @@ public class GeneratorFunctionLoess implements IGeneratorFunction {
 		return engine.run(timestamp);
 	}
 }
+

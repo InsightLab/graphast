@@ -21,3 +21,4 @@ public class GeneratorGraphFunctionPiecewiseTest {
 		graph.addNode(node2);
 	}
 }
+

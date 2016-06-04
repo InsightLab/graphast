@@ -1081,6 +1081,4 @@ public GraphBounds generateExampleTAXI() {
 		
 		return graph;
 	}
-
-
 }
