@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Set;
 
 import org.graphast.exception.PathNotFoundException;
 import org.graphast.model.Graph;
@@ -54,25 +56,30 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 	public Path shortestPath(Node source, Node target, Date time) {
 		PriorityQueue<TimeEntry> queue = new PriorityQueue<TimeEntry>();
 		HashMap<Long, Integer> wasTraversed = new HashMap<Long, Integer>();
+		Set<Long> allWasViseted = new HashSet<Long>();
 		HashMap<Long, RouteEntry> parents = new HashMap<Long, RouteEntry>();
 		TimeEntry removed = null;
 		int targetId = convertToInt(target.getId());
-		int t = DateUtils.dateToMilli(time);
+		int timeInMilli = DateUtils.dateToMilli(time);
 
-		init(source, target, queue, parents, t);
+		init(source, target, queue, parents, timeInMilli);
+		allWasViseted.add(source.getId());
 
-		while(!queue.isEmpty()){
+		while(!queue.isEmpty()) {
 			removed = queue.poll();
-			wasTraversed.put(removed.getId(), wasRemoved);		
+			long idRemoved = removed.getId();
+			wasTraversed.put(idRemoved, wasRemoved);	
 
 			if(removed.getId() == targetId) {
 				Path path = new Path();
 				path.constructPath(removed.getId(), parents, graph);
+				path.setNumberVisitedNodes(allWasViseted.size());
 				return path;
 			}
 
-			expandVertex(target, removed, wasTraversed, queue, parents);
+			expandVertex(target, removed, wasTraversed, allWasViseted, queue, parents);
 		}
+		
 		throw new PathNotFoundException("Path not found between (" + source.getLatitude() + "," + source.getLongitude() + ") and (" 
 				+ target.getLatitude() + "," + target.getLongitude() + ")");
 	}
@@ -85,7 +92,7 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 	}
 
 	public abstract void expandVertex(Node target, TimeEntry removed, HashMap<Long, Integer> wasTraversed, 
-			PriorityQueue<TimeEntry> queue, HashMap<Long, RouteEntry> parents);
+			Set<Long> wasVisited, PriorityQueue<TimeEntry> queue, HashMap<Long, RouteEntry> parents);
 	
 	@Override
 	public Path shortestPath(Node source, Node target) {

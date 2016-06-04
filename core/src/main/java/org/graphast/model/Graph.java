@@ -1,7 +1,13 @@
 package org.graphast.model;
 
+import it.unimi.dsi.fastutil.ints.IntBigArrayBigList;
+import it.unimi.dsi.fastutil.ints.IntSet;
+import it.unimi.dsi.fastutil.longs.Long2IntMap;
+import it.unimi.dsi.fastutil.longs.LongList;
+
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import org.graphast.enums.CompressionType;
 import org.graphast.enums.TimeType;
@@ -9,14 +15,6 @@ import org.graphast.geometry.BBox;
 import org.graphast.geometry.PoI;
 import org.graphast.geometry.Point;
 import org.graphast.util.FileUtils;
-
-import com.github.davidmoten.rtree.RTree;
-
-import it.unimi.dsi.fastutil.ints.IntBigArrayBigList;
-import it.unimi.dsi.fastutil.ints.IntSet;
-import it.unimi.dsi.fastutil.longs.Long2IntMap;
-import it.unimi.dsi.fastutil.longs.LongList;
-
 
 public interface Graph {
 
@@ -210,6 +208,14 @@ public interface Graph {
 	 * @return Id of a node
 	 */
 	public Long getNodeId(double latitude, double longitude);
+	
+	/**
+	 * This method return a nodeId based on a given absolute latitude and longitude.
+	 * @param latitude latitude that is given
+	 * @param longitude longitude that is given
+	 * @return Id of a node
+	 */
+	public Long getNodeId(int latitude, int longitude);
 
 	/**
 	 * This method returns a label of a given node. 
@@ -345,6 +351,6 @@ public interface Graph {
 	public String getAbsoluteDirectory();
 
 	public void setDirectory(String directory);
-
 	
+	public Set<Long> getPoiIds();
 }
