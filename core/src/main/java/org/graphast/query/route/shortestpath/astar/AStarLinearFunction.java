@@ -42,18 +42,16 @@ public class AStarLinearFunction extends AStar{
 				parents.put(vid, new RouteEntry(removed.getId(), distance, edge.getId(), edge.getLabel()));
 			}else{
 				int cost = wasTraversed.get(vid);
-				if(cost != wasRemoved){
-					if(cost>newEntry.getTravelTime()){
-						queue.remove(newEntry);
-						queue.offer(newEntry);
-						wasTraversed.remove(newEntry.getId());
-						wasTraversed.put(newEntry.getId(), newEntry.getTravelTime());
+				if(cost != wasRemoved && cost>newEntry.getTravelTime()){
+					queue.remove(newEntry);
+					queue.offer(newEntry);
+					wasTraversed.remove(newEntry.getId());
+					wasTraversed.put(newEntry.getId(), newEntry.getTravelTime());
 						
-						parents.remove(v);
-						distance = neig.get(v);
-						edge = getEdge(removed.getId(), vid, distance);
-						parents.put(vid, new RouteEntry(removed.getId(), distance, edge.getId(), edge.getLabel()));
-					}
+					parents.remove(v);
+					distance = neig.get(v);
+					edge = getEdge(removed.getId(), vid, distance);
+					parents.put(vid, new RouteEntry(removed.getId(), distance, edge.getId(), edge.getLabel()));
 				}
 			}
 		}

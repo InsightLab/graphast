@@ -232,10 +232,8 @@ public class POIUtils extends Scanner {
 		    @Override
 		    public void foundEntity(Entity entity) {
 		    	// Check if way is closed
-		    	if(onlyClosedWays && entity.getEntityType() == EntityType.WAY) {
-		    		if(!((Way)entity).isClosed()) {
-		    			return;
-		    		}
+		    	if(onlyClosedWays && entity.getEntityType() == EntityType.WAY && !((Way)entity).isClosed()) {
+		    		return;
 		    	}
 				
 				// Get category
@@ -303,9 +301,7 @@ public class POIUtils extends Scanner {
 		
 		printPoisFound();
 		log.info("Elapsed time in milliseconds: " + stopWatch.getElapsedTime());
-		
-		// Quit
-		return;
+
 	}
 	
 	private static void printPoisFound() {

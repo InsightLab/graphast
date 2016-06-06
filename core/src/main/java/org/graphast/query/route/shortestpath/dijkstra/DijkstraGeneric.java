@@ -162,7 +162,8 @@ public class DijkstraGeneric {
 	    HashMap<Long, Integer> shortestDistances = new HashMap<Long, Integer>();
 	    Long2ObjectMap<Bound> bounds = new Long2ObjectOpenHashMap<Bound>();
 	    int upper = Integer.MIN_VALUE;
-	    int waitingTime, timeToService;
+	    int waitingTime;
+	    int timeToService;
 	    
 	    shortestDistances.put(v, 0);
 	    QueueEntry e = new QueueEntry(v, 0);
@@ -206,7 +207,8 @@ public class DijkstraGeneric {
 		PriorityQueue<QueueEntry> unsettledNodes = new PriorityQueue<QueueEntry>();
 	    Set<Long> settledNodes = new HashSet<Long>();
 	    HashMap<Long, Integer> shortestDistances = new HashMap<Long, Integer>();
-	    int wt, ts;
+	    int wt;
+	    int ts;
 	    Bound best = new Bound(-1, Integer.MAX_VALUE);
 	    
 	    shortestDistances.put(v, 0);
@@ -221,12 +223,10 @@ public class DijkstraGeneric {
             if(!settledNodes.contains(e.getId())){
             	settledNodes.add(e.getId());
                 Node poi = graph.getPoi(e.getId());
-                if(poi != null){
-                	if(e.getTravelTime() < best.getCost()){
-                		wt = graph.poiGetCost(e.getId());
-                		ts = e.getTravelTime() + wt;
-                		best = new Bound(e.getId(), ts);
-                	}
+                if(poi != null && e.getTravelTime() < best.getCost()){
+                	wt = graph.poiGetCost(e.getId());
+                	ts = e.getTravelTime() + wt;
+                	best = new Bound(e.getId(), ts);
                 }
                 if(type.equals(GraphBoundsType.NORMAL)) {
                 	expandVertex(e, settledNodes, shortestDistances, unsettledNodes);

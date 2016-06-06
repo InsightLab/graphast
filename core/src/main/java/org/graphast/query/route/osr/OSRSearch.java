@@ -101,8 +101,11 @@ public class OSRSearch {
 
 		Sequence seq = new Sequence();
 		int t = DateUtils.dateToMinutes(time);
-		int wt, ts, upper = Integer.MAX_VALUE;
-		int nextCat, nextId;
+		int wt;
+		int ts;
+		int upper = Integer.MAX_VALUE;
+		int nextCat;
+		int nextId;
 		init(origin, destination, categories, t, queue, destinationPaths);
 		RouteQueueEntry removed = null;
 		ArrayList<NearestNeighborTC> reachedNN;
@@ -112,10 +115,8 @@ public class OSRSearch {
 			addWasTraversed(removed.getRoute().size(), convertToInt(removed.getId()), wasRemoved, wasTraversed);
 			addParent(removed.getRoute().size(), convertToInt(removed.getId()), convertToInt(removed.getParent()), parents);
 
-			if(removed.getId() == convertToInt(destination.getId())){
-				if(removed.getRoute().size() >= categories.size()){
+			if(removed.getId() == convertToInt(destination.getId()) && removed.getRoute().size() >= categories.size()){
 					return new Sequence(removed.getId(), removed.getTravelTime(), reconstructPath(origin, destination, removed, parents), removed.getRoute());
-				}
 			}
 
 			if(removed.getLowerBound() > upper) {
@@ -136,14 +137,12 @@ public class OSRSearch {
 				if(nextId < categories.size()){
 					nextCat = categories.get(nextId);
 					Node poi = ((Graph) graphBounds).getPoi(vid);
-					if(poi != null){
-						if(poi.getCategory() == nextCat){
-							wt = ((Graph) graphBounds).poiGetCost(vid, removed.getArrivalTime());
-							ts = wt + tt;
-							NearestNeighborTC nn = new NearestNeighborTC(vid, tt, wt, ts);
-							reachedNN.add(nn);
-							nextId++;
-						}
+					if(poi != null && poi.getCategory() == nextCat){
+						wt = ((Graph) graphBounds).poiGetCost(vid, removed.getArrivalTime());
+						ts = wt + tt;
+						NearestNeighborTC nn = new NearestNeighborTC(vid, tt, wt, ts);
+						reachedNN.add(nn);
+						nextId++;
 					}
 				}
 				int at = graphBounds.getArrival(removed.getArrivalTime() + wt, neig.get(v));
@@ -151,19 +150,18 @@ public class OSRSearch {
 				RouteQueueEntry newEntry = new RouteQueueEntry(	vid, tt, at, convertToInt(removed.getId()), tt + lb, reachedNN);
 
 				int pos = newEntry.getRoute().size();
-				if(!wasRemoved(vid, pos, categories, wasTraversed)){
-					if(!isInQ(vid, pos, tt, wasTraversed, categories)){
-						if(isInQ(vid, pos, wasTraversed)){
-							int cost = wasTraversed.get(pos).get(vid);
-							if(cost>newEntry.getTravelTime()){
-								queue.remove(newEntry);
-								queue.offer(newEntry);
-								wasTraversed.get(pos).remove(vid);
-							}
-						}else{
+				if(!wasRemoved(vid, pos, categories, wasTraversed) && !isInQ(vid, pos, tt, wasTraversed, categories)){
+					if(isInQ(vid, pos, wasTraversed)){
+						int cost = wasTraversed.get(pos).get(vid);
+						
+						if(cost>newEntry.getTravelTime()){
+							queue.remove(newEntry);
 							queue.offer(newEntry);
-							addWasTraversed(pos, vid, tt, wasTraversed);
+							wasTraversed.get(pos).remove(vid);
 						}
+					}else{
+						queue.offer(newEntry);
+						addWasTraversed(pos, vid, tt, wasTraversed);
 					}
 				}
 			}	
@@ -174,18 +172,16 @@ public class OSRSearch {
 	private boolean wasRemoved(int id, int pos, List<Integer> c, 
 			HashMap<Integer, HashMap<Integer, Integer>> wasTraversed){
 		for(int i = pos; i <= c.size(); i++){
-			if(wasTraversed.containsKey(i)){
-				if(wasTraversed.get(i).containsKey(id)){
-					if(wasTraversed.get(i).get(id).equals(wasRemoved))	return true;
-				}
+			if(wasTraversed.containsKey(i) && wasTraversed.get(i).containsKey(id)){
+				if(wasTraversed.get(i).get(id).equals(wasRemoved))	return true;
 			}
 		}
 		return false;
 	}
 
 	private boolean isInQ(int id, int pos, HashMap<Integer, HashMap<Integer, Integer>> wasTraversed){
-		if(wasTraversed.containsKey(pos)){
-			if(wasTraversed.get(pos).containsKey(id))	return true;
+		if(wasTraversed.containsKey(pos) && wasTraversed.get(pos).containsKey(id)){
+			return true;
 		}
 		return false;
 	}
@@ -194,11 +190,9 @@ public class OSRSearch {
 			List<Integer> c){
 		for(int i = pos; i <= c.size(); i++){
 			if(wasTraversed.containsKey(i)){
-				if(wasTraversed.get(i).containsKey(id)){
-					if(!wasTraversed.get(i).get(id).equals(wasRemoved)){
-						int cost = wasTraversed.get(i).get(id);
-						if(cost <= newCost)	return true;
-					}
+				if(wasTraversed.get(i).containsKey(id) && !wasTraversed.get(i).get(id).equals(wasRemoved)){
+					int cost = wasTraversed.get(i).get(id);
+					if(cost <= newCost)	return true;
 				}
 			}
 		}
@@ -236,21 +230,20 @@ public class OSRSearch {
 
 		int pos = 0;
 		ArrayList<NearestNeighborTC> reached = new ArrayList<NearestNeighborTC>();
-		int travelTime, waitingTime, timeToService;
+		int travelTime;
+		int waitingTime;
+		int timeToService;
 		travelTime = 0;
 		int originId = convertToInt(origin.getId());
 
 		Node poi = ((Graph) graphBounds).getPoi(originId);
 
-		if(poi != null) {
-
-			if(poi.getCategory() == categories.get(0)){
-				pos++;
-				waitingTime = ((Graph) graphBounds).poiGetCost(originId, t);
-				timeToService = travelTime + waitingTime;
-				NearestNeighborTC nn = new NearestNeighborTC(originId, travelTime, waitingTime, timeToService);
-				reached.add(nn);
-			}
+		if(poi != null && poi.getCategory() == categories.get(0)) {
+			pos++;
+			waitingTime = ((Graph) graphBounds).poiGetCost(originId, t);
+			timeToService = travelTime + waitingTime;
+			NearestNeighborTC nn = new NearestNeighborTC(originId, travelTime, waitingTime, timeToService);
+			reached.add(nn);
 		}
 
 		int lb = lowerBound(originId, pos, categories, destinationPaths);
@@ -294,15 +287,13 @@ public class OSRSearch {
 			
 			List<Integer> listOfPois = categories;
 			
-			if(possiblePoI.getCategory()>0) {
-				if(listOfPois.contains(possiblePoI.getCategory())) {
-					PoICategory poiCategory = new PoICategory(possiblePoI.getCategory());
-					PoI temporaryPoI = new PoI(possiblePoI.getLabel(), 
-							possiblePoI.getLatitude(), possiblePoI.getLongitude(), poiCategory);
-					temporaryListOfPoIs.add(temporaryPoI);
+			if(possiblePoI.getCategory()>0 && listOfPois.contains(possiblePoI.getCategory())) {
+				PoICategory poiCategory = new PoICategory(possiblePoI.getCategory());
+				PoI temporaryPoI = new PoI(possiblePoI.getLabel(), 
+						possiblePoI.getLatitude(), possiblePoI.getLongitude(), poiCategory);
+				temporaryListOfPoIs.add(temporaryPoI);
 					
-					listOfPois.remove((Integer)possiblePoI.getCategory());
-				}
+				listOfPois.remove((Integer)possiblePoI.getCategory());
 			}
 			shortestPath.setListOfPoIs(temporaryListOfPoIs);
 			allPaths.add(shortestPath);

@@ -19,7 +19,7 @@ public class FileUtilsTest {
 	}
 
 	@Test
-	public void Long2ShortMapTest() throws Exception {
+	public void long2ShortMapTest() throws Exception {
 		
 		Long2IntMap testMap = new Long2IntOpenHashMap();
 		testMap.put(10000L, 100);

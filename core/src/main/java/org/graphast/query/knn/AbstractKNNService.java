@@ -109,13 +109,12 @@ public abstract class AbstractKNNService implements KNNService{
 					wasTraversed.put(newEntry.getId(), newEntry.getTravelTime());
 				}else{
 					int cost = wasTraversed.get(v);
-					if(cost != wasRemoved){
-						if(cost>newEntry.getTravelTime()){
-							queue.remove(newEntry);
-							queue.offer(newEntry);
-							wasTraversed.remove(newEntry.getId());
-							wasTraversed.put(newEntry.getId(), newEntry.getTravelTime());
-						}
+					
+					if(cost != wasRemoved && cost>newEntry.getTravelTime()){
+						queue.remove(newEntry);
+						queue.offer(newEntry);
+						wasTraversed.remove(newEntry.getId());
+						wasTraversed.put(newEntry.getId(), newEntry.getTravelTime());
 					}
 				}
 				Bound bMax = maxBounds.getBounds().get(v).iterator().next();

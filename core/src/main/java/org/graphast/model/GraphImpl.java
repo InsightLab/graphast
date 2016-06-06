@@ -974,7 +974,8 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	@Override
 	public Long getNodeId(double latitude, double longitude) {
 
-		int lat, lon;
+		int lat;
+		int lon;
 
 		lat = latLongToInt(latitude);
 		lon = latLongToInt(longitude);
@@ -1515,7 +1516,10 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 
 	private void findBBox() {
 		Node node = this.getNode(0);
-		Node minLatNode = null, minLongNode = null, maxLatNode = null, maxLongNode = null;
+		Node minLatNode = null;
+		Node minLongNode = null;
+		Node maxLatNode = null;
+		Node maxLongNode = null;
 		BBox bBox = new BBox(node.getLatitude(), node.getLongitude(), node.getLatitude(), node.getLongitude());
 
 		for (long i = 1; i < this.getNumberOfNodes(); i++) {
