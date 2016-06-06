@@ -84,9 +84,11 @@ public class OSMImporterImpl implements Importer {
 			double latitudeTo = latLongToDouble(latLongToInt(gs.getNodeAccess().getLatitude(externalToNodeId)));
 			double longitudeTo = latLongToDouble(latLongToInt(gs.getNodeAccess().getLongitude(externalToNodeId)));			
 
-			NodeImpl fromNode, toNode;
+			NodeImpl fromNode;
+			NodeImpl toNode;
 
-			long fromNodeId, toNodeId;
+			long fromNodeId;
+			long toNodeId;
 
 			if(!hashExternalIdToId.containsKey(externalFromNodeId)){
 

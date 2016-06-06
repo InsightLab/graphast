@@ -8,7 +8,6 @@ import java.util.Date;
 
 import org.graphast.config.Configuration;
 import org.graphast.graphgenerator.GraphGenerator;
-import org.graphast.model.Graph;
 import org.graphast.model.GraphBounds;
 import org.graphast.query.route.shortestpath.model.Path;
 import org.graphast.util.DateUtils;

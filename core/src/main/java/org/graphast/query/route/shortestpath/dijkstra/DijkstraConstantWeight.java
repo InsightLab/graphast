@@ -48,18 +48,16 @@ public class DijkstraConstantWeight extends Dijkstra {
 				
 				int cost = wasTraversed.get(vid);
 				
-				if (cost != wasRemoved) {
-					if(cost > newEntry.getTravelTime()) {
-						queue.remove(newEntry);
-						queue.offer(newEntry);
-						wasTraversed.remove(newEntry.getId());
-						wasTraversed.put(newEntry.getId(), newEntry.getTravelTime());
+				if (cost != wasRemoved && cost > newEntry.getTravelTime()) {
+					queue.remove(newEntry);
+					queue.offer(newEntry);
+					wasTraversed.remove(newEntry.getId());
+					wasTraversed.put(newEntry.getId(), newEntry.getTravelTime());
 						
-						parents.remove(vid);
-						distance = neig.get(vid);
-						edge = getEdge(removed.getId(), vid, distance);
-						parents.put(vid, new RouteEntry(removed.getId(), distance/17, edge.getId(), edge.getLabel()));
-					}
+					parents.remove(vid);
+					distance = neig.get(vid);
+					edge = getEdge(removed.getId(), vid, distance);
+					parents.put(vid, new RouteEntry(removed.getId(), distance/17, edge.getId(), edge.getLabel()));
 				}
 			}
 		}

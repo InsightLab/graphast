@@ -25,14 +25,12 @@ public class Path {
 	private long totalDistance;
 	private double totalCost;
 
-	public Path() {
-
-	}
 
 
 	//TODO MAJOR REFACTOR NEEDED IN THIS METHOD!
 	public void constructPath(long id, HashMap<Long, RouteEntry> parents, Graph graph) {
-		Instruction oldInstruction, newInstruction;
+		Instruction oldInstruction;
+		Instruction newInstruction;
 		LinkedList<Instruction> verificationQueue = new LinkedList<Instruction>();
 		if (parents.get(id) == null) {
 			instructions = new ArrayList<Instruction>();

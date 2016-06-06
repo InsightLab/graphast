@@ -17,10 +17,6 @@ public class GraphInfo {
 	private String costs;
 	private List<Integer> poiCategoryFilter;
 	private String queryServices;
-	
-	public GraphInfo() {
-		super();
-	}
 
 	public String getAppName() {
 		return appName;

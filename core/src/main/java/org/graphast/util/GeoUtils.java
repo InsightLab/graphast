@@ -11,9 +11,6 @@ public class GeoUtils {
     public static int LAT_LONG_CONVERTION_FACTOR = 1000000;
 	
 	
-	public GeoUtils() {
-	}
-
 	public static int latLongToInt(double number) {
 		return (int) NumberUtils.convert(number, LAT_LONG_CONVERTION_FACTOR);
 	}

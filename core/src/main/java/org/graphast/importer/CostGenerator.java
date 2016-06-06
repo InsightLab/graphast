@@ -10,7 +10,8 @@ public class CostGenerator {
 
 		Random random = new Random();
 
-		int minSpeed, maxSpeed;
+		int minSpeed;
+		int maxSpeed;
 		int[] syntheticCosts = new int[96];
 		
 		for(int i=0; i<24; i++) {

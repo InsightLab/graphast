@@ -67,19 +67,16 @@ public class AStarConstantWeight extends AStar{
 				
 				int cost = wasTraversed.get(vid);
 				
-				if (cost != wasRemoved){
-					
-					if(cost > newEntry.getTravelTime()){
+				if (cost != wasRemoved && cost > newEntry.getTravelTime()){
 						
-						queue.remove(newEntry);
-						queue.offer(newEntry);
-						wasTraversed.remove(newEntry.getId());
-						wasTraversed.put(newEntry.getId(), newEntry.getTravelTime());
+					queue.remove(newEntry);
+					queue.offer(newEntry);
+					wasTraversed.remove(newEntry.getId());
+					wasTraversed.put(newEntry.getId(), newEntry.getTravelTime());
 						
-						parents.remove(vid);
-						distance = neig.get(vid);
-						parents.put(vid, new RouteEntry(removed.getId(), distance/17, edgeId, label));
-					}
+					parents.remove(vid);
+					distance = neig.get(vid);
+					parents.put(vid, new RouteEntry(removed.getId(), distance/17, edgeId, label));
 				}
 			}
 		}

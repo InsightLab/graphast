@@ -44,7 +44,8 @@ public class POIImporter {
 
 			Random random = new Random();
 
-			int minTime, maxTime;
+			int minTime;
+			int maxTime;
 
 			minTime = 1;
 			maxTime = 300000;

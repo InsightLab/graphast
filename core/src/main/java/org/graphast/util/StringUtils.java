@@ -72,7 +72,7 @@ public class StringUtils {
 		return target;
 	}
 	
-	public static String ArrayToString(Object[] ls){
+	public static String arrayToString(Object[] ls){
 		StringBuilder sb = new StringBuilder();
 		sb.append("[");
 		for(int i = 0; i < ls.length; i++){

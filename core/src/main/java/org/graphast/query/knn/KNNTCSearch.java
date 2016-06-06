@@ -27,7 +27,9 @@ public class KNNTCSearch extends AbstractKNNService{
 		HashMap<Long, Long> parents = new HashMap<Long, Long>();
 		int kth = Integer.MAX_VALUE;
 		int t = DateUtils.dateToMinutes(time);
-		int wt, ts, upper = Integer.MAX_VALUE;
+		int wt;
+		int ts;
+		int upper = Integer.MAX_VALUE;
 		LowerBoundEntry removed = null;
 		
 		init(v.getId(), t, k, kth, queue, upperCandidates, isIn, parents);
