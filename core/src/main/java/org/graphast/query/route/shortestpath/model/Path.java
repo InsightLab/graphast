@@ -25,9 +25,6 @@ public class Path {
 	private long totalDistance;
 	private double totalCost;
 
-	public Path() {
-
-	}
 
 
 	//TODO MAJOR REFACTOR NEEDED IN THIS METHOD!

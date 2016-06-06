@@ -106,7 +106,7 @@ public class OSRSearch {
 		int upper = Integer.MAX_VALUE;
 		int nextCat;
 		int nextId;
-		init(origin, destination, categories, t, queue, destinationPaths);
+		init(origin, categories, t, queue, destinationPaths);
 		RouteQueueEntry removed = null;
 		ArrayList<NearestNeighborTC> reachedNN;
 
@@ -225,7 +225,7 @@ public class OSRSearch {
 		parents.get(pos).put(id, parent);
 	}
 
-	private void init(Node origin, Node d, List<Integer> categories, int t, PriorityQueue<RouteQueueEntry> queue, 
+	private void init(Node origin, List<Integer> categories, int t, PriorityQueue<RouteQueueEntry> queue, 
 			Long2DoubleMap destinationPaths){
 
 		int pos = 0;
