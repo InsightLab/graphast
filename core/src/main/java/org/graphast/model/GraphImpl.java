@@ -14,7 +14,6 @@ import org.graphast.geometry.BBox;
 import org.graphast.geometry.PoI;
 import org.graphast.geometry.PoICategory;
 import org.graphast.geometry.Point;
-import org.graphast.util.DistanceUtils;
 import org.graphast.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import com.github.davidmoten.rtree.Entry;
 import com.github.davidmoten.rtree.RTree;
 import com.github.davidmoten.rtree.geometry.Geometries;
-import com.graphhopper.util.StopWatch;
 
 import it.unimi.dsi.fastutil.BigArrays;
 import it.unimi.dsi.fastutil.ints.IntBigArrayBigList;
