@@ -162,11 +162,11 @@ public class NodeImpl implements Node {
 		return externalId;
 	}
 
-	public int getExternalIdSegment(){
+	protected int getExternalIdSegment(){
 		return BigArrays.segment(externalId);
 	}
 
-	public int getExternalIdOffset(){
+	protected int getExternalIdOffset(){
 		return BigArrays.displacement(externalId);
 	}
 
@@ -183,7 +183,7 @@ public class NodeImpl implements Node {
 		return latLongToDouble(latitude);
 	}
 
-	public int getLatitudeConvertedToInt() {
+	protected int getLatitudeConvertedToInt() {
 		return latitude;
 	}
 
@@ -201,7 +201,7 @@ public class NodeImpl implements Node {
 		return latLongToDouble(longitude);
 	}
 
-	public int getLongitudeConvertedToInt() {
+	protected int getLongitudeConvertedToInt() {
 		return longitude;
 	}
 
@@ -210,15 +210,15 @@ public class NodeImpl implements Node {
 		this.longitude = latLongToInt(longitude);
 	}
 
-	public int getFirstEdgeSegment(){
+	protected int getFirstEdgeSegment(){
 		return BigArrays.segment(firstEdge);
 	}
 
-	public int getFirstEdgeOffset(){
+	protected int getFirstEdgeOffset(){
 		return BigArrays.displacement(firstEdge);
 	}
 
-	public void setFirstEdge(long firstEdge) {
+	protected void setFirstEdge(long firstEdge) {
 		this.firstEdge = firstEdge;
 	}
 
@@ -235,27 +235,27 @@ public class NodeImpl implements Node {
 		this.id = id;
 	}
 
-	public long getLabelIndex(){
+	protected long getLabelIndex(){
 		return labelIndex;
 	}
 
-	public int getLabelIndexSegment(){
+	protected int getLabelIndexSegment(){
 		return BigArrays.segment(labelIndex);
 	}
 
-	public int getLabelIndexOffset(){
+	protected int getLabelIndexOffset(){
 		return BigArrays.displacement(labelIndex);
 	}
 
-	public void setLabelIndex(long labelIndex) {
+	protected void setLabelIndex(long labelIndex) {
 		this.labelIndex = labelIndex;
 	}
 
-	public int getCostsIndexSegment(){
+	protected int getCostsIndexSegment(){
 		return BigArrays.segment(costsIndex);
 	}
 
-	public int getCostsIndexOffset(){
+	protected int getCostsIndexOffset(){
 		return BigArrays.displacement(costsIndex);
 	}
 
@@ -263,7 +263,7 @@ public class NodeImpl implements Node {
 		return costsIndex;
 	}
 
-	public void setCostsIndex(long costIndex) {
+	protected void setCostsIndex(long costIndex) {
 		this.costsIndex = costIndex;
 	}
 
