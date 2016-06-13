@@ -189,11 +189,9 @@ public class OSRSearch {
 	private boolean isInQ(int id, int pos, int newCost, HashMap<Integer, HashMap<Integer, Integer>> wasTraversed,
 			List<Integer> c){
 		for(int i = pos; i <= c.size(); i++){
-			if(wasTraversed.containsKey(i)){
-				if(wasTraversed.get(i).containsKey(id) && !wasTraversed.get(i).get(id).equals(wasRemoved)){
-					int cost = wasTraversed.get(i).get(id);
-					if(cost <= newCost)	return true;
-				}
+			if(wasTraversed.containsKey(i) && wasTraversed.get(i).containsKey(id) && !wasTraversed.get(i).get(id).equals(wasRemoved)){
+				int cost = wasTraversed.get(i).get(id);
+				if(cost <= newCost)	return true;
 			}
 		}
 		return false;

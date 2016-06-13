@@ -162,11 +162,11 @@ public class NodeImpl implements Node {
 		return externalId;
 	}
 
-	int getExternalIdSegment(){
+	public int getExternalIdSegment(){
 		return BigArrays.segment(externalId);
 	}
 
-	int getExternalIdOffset(){
+	public int getExternalIdOffset(){
 		return BigArrays.displacement(externalId);
 	}
 
@@ -183,7 +183,7 @@ public class NodeImpl implements Node {
 		return latLongToDouble(latitude);
 	}
 
-	int getLatitudeConvertedToInt() {
+	public int getLatitudeConvertedToInt() {
 		return latitude;
 	}
 
@@ -201,7 +201,7 @@ public class NodeImpl implements Node {
 		return latLongToDouble(longitude);
 	}
 
-	int getLongitudeConvertedToInt() {
+	public int getLongitudeConvertedToInt() {
 		return longitude;
 	}
 
@@ -210,15 +210,15 @@ public class NodeImpl implements Node {
 		this.longitude = latLongToInt(longitude);
 	}
 
-	int getFirstEdgeSegment(){
+	public int getFirstEdgeSegment(){
 		return BigArrays.segment(firstEdge);
 	}
 
-	int getFirstEdgeOffset(){
+	public int getFirstEdgeOffset(){
 		return BigArrays.displacement(firstEdge);
 	}
 
-	void setFirstEdge(long firstEdge) {
+	public void setFirstEdge(long firstEdge) {
 		this.firstEdge = firstEdge;
 	}
 
@@ -235,27 +235,27 @@ public class NodeImpl implements Node {
 		this.id = id;
 	}
 
-	long getLabelIndex(){
+	public long getLabelIndex(){
 		return labelIndex;
 	}
 
-	int getLabelIndexSegment(){
+	public int getLabelIndexSegment(){
 		return BigArrays.segment(labelIndex);
 	}
 
-	int getLabelIndexOffset(){
+	public int getLabelIndexOffset(){
 		return BigArrays.displacement(labelIndex);
 	}
 
-	void setLabelIndex(long labelIndex) {
+	public void setLabelIndex(long labelIndex) {
 		this.labelIndex = labelIndex;
 	}
 
-	int getCostsIndexSegment(){
+	public int getCostsIndexSegment(){
 		return BigArrays.segment(costsIndex);
 	}
 
-	int getCostsIndexOffset(){
+	public int getCostsIndexOffset(){
 		return BigArrays.displacement(costsIndex);
 	}
 
@@ -263,7 +263,7 @@ public class NodeImpl implements Node {
 		return costsIndex;
 	}
 
-	void setCostsIndex(long costIndex) {
+	public void setCostsIndex(long costIndex) {
 		this.costsIndex = costIndex;
 	}
 

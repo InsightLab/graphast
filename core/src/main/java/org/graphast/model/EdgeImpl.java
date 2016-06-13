@@ -129,11 +129,11 @@ public class EdgeImpl implements Edge {
 		this.id = id;
 	}
 
-	int getExternalIdSegment() {
+	public int getExternalIdSegment() {
 		return BigArrays.segment(externalId);
 	}
 
-	int getExternalIdOffset() {
+	public int getExternalIdOffset() {
 		return BigArrays.displacement(externalId);
 	}
 
@@ -173,11 +173,11 @@ public class EdgeImpl implements Edge {
 		this.toNodeNextEdge = toNodeNextEdge;
 	}
 
-	int getFromNodeSegment() {
+	public int getFromNodeSegment() {
 		return BigArrays.segment(fromNode);
 	}
 
-	int getFromNodeOffset() {
+	public int getFromNodeOffset() {
 		return BigArrays.displacement(fromNode);
 	}
 
@@ -185,7 +185,7 @@ public class EdgeImpl implements Edge {
 		return BigArrays.segment(toNode);
 	}
 
-	int getToNodeOffset() {
+	public int getToNodeOffset() {
 		return BigArrays.displacement(toNode);
 	}
 
@@ -194,7 +194,7 @@ public class EdgeImpl implements Edge {
 		return BigArrays.segment(costsIndex);
 	}
 
-	int getCostsOffset() {
+	public int getCostsOffset() {
 		return BigArrays.displacement(costsIndex);
 	}
 
@@ -202,7 +202,7 @@ public class EdgeImpl implements Edge {
 		return BigArrays.segment(geometryIndex);
 	}
 
-	int getGeometryOffset() {
+	public int getGeometryOffset() {
 		return BigArrays.displacement(geometryIndex);
 	}
 
@@ -241,19 +241,19 @@ public class EdgeImpl implements Edge {
 		this.geometry = geometry;
 	}
 
-	long getLabelIndex(){
+	public long getLabelIndex(){
 		return labelIndex;
 	}
 
-	void setLabelIndex(long labelIndex) {
+	public void setLabelIndex(long labelIndex) {
 		this.labelIndex = labelIndex;
 	}
 
-	int getLabelIndexSegment(){
+	public int getLabelIndexSegment(){
 		return BigArrays.segment(labelIndex);
 	}
 
-	int getLabelIndexOffset(){
+	public int getLabelIndexOffset(){
 		return BigArrays.displacement(labelIndex);
 	}
 
@@ -266,19 +266,19 @@ public class EdgeImpl implements Edge {
 		this.label = label;
 	}
 
-	int getFromNodeNextEdgeSegment(){
+	public int getFromNodeNextEdgeSegment(){
 		return BigArrays.segment(fromNodeNextEdge);
 	}
 
-	int getFromNodeNextEdgeOffset(){
+	public int getFromNodeNextEdgeOffset(){
 		return BigArrays.displacement(fromNodeNextEdge);
 	}
 
-	int getToNodeNextEdgeSegment(){
+	public int getToNodeNextEdgeSegment(){
 		return BigArrays.segment(toNodeNextEdge);
 	}
 
-	int getToNodeNextEdgeOffset(){
+	public int getToNodeNextEdgeOffset(){
 		return BigArrays.displacement(toNodeNextEdge);
 	}
 

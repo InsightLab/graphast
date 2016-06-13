@@ -2,8 +2,8 @@ package org.graphast.query.knn;
 
 class UpperEntry implements Comparable<UpperEntry>{
 	
-	long unn;
-	Integer  utdd;
+	protected long unn;
+	protected Integer  utdd;
 
 	public UpperEntry(long unn, Integer utdd) {
 		this.unn = unn;

@@ -680,7 +680,7 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 * 
 	 * @return all costs of all edges
 	 */
-	IntBigArrayBigList getCosts() {
+	public IntBigArrayBigList getCosts() {
 
 		return edgesCosts;
 	}
@@ -690,7 +690,7 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 * 
 	 * @return all costs of all nodes
 	 */
-	IntBigArrayBigList getNodesCosts() {
+	public IntBigArrayBigList getNodesCosts() {
 
 		return nodesCosts;
 	}
@@ -852,7 +852,7 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		}
 	}
 
-	int[] getEdgeCostsByCostsIndex(long costsIndex) {
+	public int[] getEdgeCostsByCostsIndex(long costsIndex) {
 
 		int size = edgesCosts.getInt(costsIndex);
 		int[] c = new int[size];
@@ -950,7 +950,7 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		return listPoints;
 	}
 
-	Long getNodeId(int latitude, int longitude) {
+	public Long getNodeId(int latitude, int longitude) {
 
 		Long result = nodeIndex.get(BigArrays.index(latitude, longitude));
 
@@ -1027,19 +1027,19 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		return edges;
 	}
 
-	ObjectBigList<String> getNodesLabels() {
+	public ObjectBigList<String> getNodesLabels() {
 		return nodesLabels;
 	}
 
-	void setNodesLabels(ObjectBigList<String> labels) {
+	public void setNodesLabels(ObjectBigList<String> labels) {
 		this.nodesLabels = labels;
 	}
 
-	ObjectBigList<String> getEdgesLabels() {
+	public ObjectBigList<String> getEdgesLabels() {
 		return edgesLabels;
 	}
 
-	void setEdgesLabels(ObjectBigList<String> labels) {
+	public void setEdgesLabels(ObjectBigList<String> labels) {
 		this.edgesLabels = labels;
 	}
 
@@ -1227,7 +1227,7 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		return result;
 	}
 
-	int[] linearFunctionArrayToCostIntArray(LinearFunction[] linearFunction) {
+	public int[] linearFunctionArrayToCostIntArray(LinearFunction[] linearFunction) {
 		intCosts = new int[linearFunction.length];
 		for (int i = 0; i < linearFunction.length; i++) {
 			intCosts[i] = (linearFunction[i].getEndCost() + linearFunction[i].getStartCost())/2;

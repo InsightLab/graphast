@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 
 public class GraphService {
 
-	Logger log = LoggerFactory.getLogger(this.getClass());
+	private Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	public void create(GraphInfo graphInfo) {
 		String importer = graphInfo.getImporter();
