@@ -122,11 +122,9 @@ public class Path {
 
 						listOfGeometries = graph.getEdge(re.getEdgeId()).getGeometry();
 
-						if(geometry.size()!=0) {
-							if(DistanceUtils.distanceLatLong(listOfGeometries.get(0).getLatitude(), listOfGeometries.get(0).getLongitude(), geometry.get(geometry.size()-1).getLatitude(), geometry.get(geometry.size()-1).getLongitude()) > 
-							DistanceUtils.distanceLatLong(listOfGeometries.get(listOfGeometries.size()-1).getLatitude(), listOfGeometries.get(listOfGeometries.size()-1).getLongitude(), geometry.get(geometry.size()-1).getLatitude(), geometry.get(geometry.size()-1).getLongitude()) ) {
-								Collections.reverse(listOfGeometries);
-							}
+						if(geometry.size()!=0   &&   DistanceUtils.distanceLatLong(listOfGeometries.get(0).getLatitude(), listOfGeometries.get(0).getLongitude(), geometry.get(geometry.size()-1).getLatitude(), geometry.get(geometry.size()-1).getLongitude()) > 
+						DistanceUtils.distanceLatLong(listOfGeometries.get(listOfGeometries.size()-1).getLatitude(), listOfGeometries.get(listOfGeometries.size()-1).getLongitude(), geometry.get(geometry.size()-1).getLatitude(), geometry.get(geometry.size()-1).getLongitude()) ) {
+							Collections.reverse(listOfGeometries);
 						}
 
 						for (Point point : listOfGeometries) {
