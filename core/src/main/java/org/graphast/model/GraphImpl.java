@@ -879,7 +879,7 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 
 	}
 
-	protected int[] getNodeCostsByCostsIndex(long costsIndex) {
+	public int[] getNodeCostsByCostsIndex(long costsIndex) {
 
 		int size = nodesCosts.getInt(costsIndex);
 		int[] c = new int[size];
