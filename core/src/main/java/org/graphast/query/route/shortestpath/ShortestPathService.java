@@ -20,6 +20,8 @@ public interface ShortestPathService {
 	public Path shortestPath(long source, long target, Node skippedNode);
 	
 	public Path shortestPath(long source, long target, Date time, Node skippedNode);
+
+	public void setMaxVisitedNodes(int maxVisitedNodes);
 	
 //	public Int2ObjectMap<Path> shortestPath(Node source);
 

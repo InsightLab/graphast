@@ -3,10 +3,8 @@ package org.graphast.model.contraction;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Set;
 
 import org.graphast.model.Graph;
-import org.graphast.model.GraphImpl;
 import org.graphast.model.Node;
 import org.graphast.query.route.shortestpath.ShortestPathService;
 
@@ -17,6 +15,9 @@ public interface CHGraph extends Graph {
 	
 	/**
      * This methods sets the level of the specified node.
+     * 
+     * @param nodeId the ID of the node
+     * @param level level to be setted
      */
     void setLevel( int nodeId, int level );
     
@@ -30,21 +31,16 @@ public interface CHGraph extends Graph {
     public void addNode(CHNode n);
 
     /**
+     * @param nodeId the ID of the node
      * @return the level of the specified node.
      */
     int getLevel( int nodeId );
 
     boolean isShortcut( int edgeId );
 
-    /**
-     * This method creates a shortcut between a to b which is nearly identical to creating an edge
-     * except that it can be excluded or included for certain traversals or algorithms.
-     */
-    boolean shortcut( int a, int b );
-    
-    public void findShortcut(Node n);
+    public void findShortcut(Node n, boolean contract);
 
-    public int calculatePriority(Node n);
+    public int calculatePriority(Node n, boolean contract);
     
 	public void setReverseGraph(CHGraph reverseGraph);
 	
@@ -68,14 +64,14 @@ public interface CHGraph extends Graph {
 
 	public void setShortestPath(ShortestPathService shortestPath);
 	
-//	public void setReverseGraph(Graph reverseGraph);
-	
 	public CHGraph generateReverseCHGraph(CHGraph originalCHGraph);
 	
 	public void contractNodes();
+	
 	public void createHyperPOIS();
-//	public CHGraphImpl clone();
 	
 	public Queue<CHNodeImpl> getNodePriorityQueue();
-    
+	
+	
+	
 }

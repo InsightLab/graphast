@@ -46,7 +46,7 @@ public abstract class AStar extends AbstractShortestPathService{
 		return path;
 	}
 	
-	public Path shortestPath(Node source, Node target, Date time) {
+	public Path shortestPath(Node source, Node target, Date time, Node skippedNode) {
 		PriorityQueue<LowerBoundEntry> queue = new PriorityQueue<LowerBoundEntry>();
 		HashMap<Long, Integer> wasTraversed = new HashMap<Long, Integer>();
 		HashMap<Long, RouteEntry> parents = new HashMap<Long, RouteEntry>();
@@ -86,17 +86,37 @@ public abstract class AStar extends AbstractShortestPathService{
 	
 	@Override
 	public Path shortestPath(Node source, Node target) {
-		return shortestPath(source, target, null);
+		return shortestPath(source, target, null, null);
+	}
+	
+	@Override
+	public Path shortestPath(Node source, Node target, Node skippedNode) {
+		return shortestPath(source, target, null, skippedNode);
+	}
+	
+	@Override
+	public Path shortestPath(Node source, Node target, Date time) {
+		return shortestPath(source, target, time, null);
 	}
 
 	@Override
 	public Path shortestPath(long source, long target) {
-		return shortestPath(source, target, null);
+		return shortestPath(source, target, null, null);
 	}
 
 	@Override
 	public Path shortestPath(long source, long target, Date time) {
-		return shortestPath(graph.getNode(source), graph.getNode(target), time);
+		return shortestPath(graph.getNode(source), graph.getNode(target), time, null);
+	}
+	
+	@Override
+	public Path shortestPath(long source, long target, Node skippedNode) {
+		return shortestPath(graph.getNode(source), graph.getNode(target), null, skippedNode);
+	}
+	
+	@Override
+	public Path shortestPath(long source, long target, Date time, Node skippedNode) {
+		return shortestPath(graph.getNode(source), graph.getNode(target), time, skippedNode);
 	}
 
 }

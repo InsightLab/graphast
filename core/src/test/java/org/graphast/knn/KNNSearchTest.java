@@ -20,22 +20,51 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.graphhopper.util.StopWatch;
+
 public class KNNSearchTest {
 	
-	private static KNNSearch knn;
+	private static KNNSearch knn, knnMonaco;
 	
 	private GraphBounds graphPoI;
+	private GraphBounds graphMonacoPoI;
 	
 	@Before
 	public void setUp() throws Exception{
+		
+		graphMonacoPoI = new GraphGenerator().generateMonaco();
+		graphMonacoPoI.createBounds();
+		
 		graphPoI = new GraphGenerator().generateExamplePoI();
 		graphPoI.createBounds();
+		
+		//calculate or load bounds
+		BoundsKNN minBoundsMonaco = new BoundsKNN(graphMonacoPoI, GraphBoundsType.LOWER);
+		BoundsKNN maxBoundsMonaco = new BoundsKNN(graphMonacoPoI, GraphBoundsType.UPPER);
+		
+		knnMonaco = new KNNSearch(graphMonacoPoI, minBoundsMonaco, maxBoundsMonaco);
 		
 		//calculate or load bounds
 		BoundsKNN minBounds = new BoundsKNN(graphPoI, GraphBoundsType.LOWER);
 		BoundsKNN maxBounds = new BoundsKNN(graphPoI, GraphBoundsType.UPPER);
 		
 		knn = new KNNSearch(graphPoI, minBounds, maxBounds);
+	}
+	
+	@Test
+	public void searchMonaco() throws ParseException {
+		
+		// TODO Verify if the date is being used
+		Date date = DateUtils.parseDate(0, 550, 0);
+		
+		StopWatch knnSW = new StopWatch();
+		knnSW.start();
+		ArrayList<NearestNeighbor> nn = knnMonaco.search(graphMonacoPoI.getNode(177), date, 3);
+		knnSW.stop();
+		
+		System.out.println(knnSW.getNanos());
+		System.out.println("teste");
+		
 	}
 	
 	@Test

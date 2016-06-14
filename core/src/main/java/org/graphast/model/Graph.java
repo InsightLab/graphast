@@ -117,12 +117,6 @@ public interface Graph {
 	 * This method returns all out neighbors of a given node. 
 	 * @param vid of a node
 	 * @return a list of all out neighboring nodes
-
-	/**
-	 * This method returns all out neighbors of a given node with the costs based on a given time.
-	 * @param vid Id of a node
-	 * @param time Time used to get edge costs.
-	 * @return a list of all out neighboring nodes with costs
 	 */
 	LongList getOutNeighbors(long vid);
 
@@ -143,8 +137,9 @@ public interface Graph {
 
 	
 	/**
-	 * This method returns a Edge for a given edgeId.
-	 * @param id Id of a edge
+	 * This method returns all neighbors of a given node with the costs based on a given time.
+	 * @param vid Id of a edge
+	 * @param time time to be considered
 	 * @return Edge
 	 */
 	LongList getOutNeighborsAndCosts(long vid, int time);

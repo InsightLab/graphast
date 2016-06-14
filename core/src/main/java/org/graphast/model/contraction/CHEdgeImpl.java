@@ -1,5 +1,8 @@
 package org.graphast.model.contraction;
 
+import java.util.List;
+
+import org.graphast.geometry.Point;
 import org.graphast.model.Edge;
 import org.graphast.model.EdgeImpl;
 
@@ -18,9 +21,22 @@ public class CHEdgeImpl extends EdgeImpl implements CHEdge {
 		this.originalEdgeCounter = originalEdgeCounter;
 	}
 	
+	public CHEdgeImpl(long fromNode, long toNode, int distance, int originalEdgeCounter, String label) {
+		//TODO create a super constructor without the externalID
+		super(-1, fromNode, toNode, distance, label);
+		this.originalEdgeCounter = originalEdgeCounter;
+		this.ingoingSkippedEdge = -1;
+		this.outgoingSkippedEdge = -1;
+	}
+	
+	public CHEdgeImpl(int externalEdgeId, long fromNodeId, long toNodeId, int distance, String label, List<Point> geometry) {
+		super(externalEdgeId, fromNodeId, toNodeId, distance, label, geometry);
+		this.originalEdgeCounter = 1;
+	}
+	
 	public CHEdgeImpl(long fromNode, long toNode, int distance, int originalEdgeCounter, long contractedNodeId,
-			long ingoingSkippedEdge, long outgoingSkippedEdge, boolean isShortcut) {
-		super(fromNode, toNode, distance);
+			long ingoingSkippedEdge, long outgoingSkippedEdge, String label, boolean isShortcut) {
+		super(-1, fromNode, toNode, distance, label);
 		this.originalEdgeCounter = originalEdgeCounter;
 		this.contractedNodeId = contractedNodeId;
 		this.ingoingSkippedEdge = ingoingSkippedEdge;

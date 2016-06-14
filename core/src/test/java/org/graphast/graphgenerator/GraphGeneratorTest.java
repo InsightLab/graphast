@@ -39,8 +39,8 @@ public class GraphGeneratorTest {
 		graphExample3 = new GraphGenerator().generateExample3();
 		graphExamplePoI = new GraphGenerator().generateExamplePoI();
 		graphAndorra = new GraphGenerator().generateAndorra();
-		graphExampleCH = new GraphGenerator().generateExampleCH();
-		graphExampleCHWithPoIs = new GraphGenerator().generateExampleCHWithPoIs();
+		graphExampleCH = new GraphGenerator().generateGraphHopperExample();
+		graphExampleCHWithPoIs = new GraphGenerator().generateGraphHopperExampleWithPoIs();
 	}
 
 	@Test
@@ -106,29 +106,9 @@ public class GraphGeneratorTest {
 					", To: " + testEdge.getToNode() + ", Distance: " + testEdge.getDistance());
 		}
 		
-		assertEquals(12, graphExampleCHWithPoIs.getNumberOfNodes());
-		assertEquals(28, graphExampleCHWithPoIs.getNumberOfEdges());
+		assertEquals(13, graphExampleCHWithPoIs.getNumberOfNodes());
+		assertEquals(31, graphExampleCHWithPoIs.getNumberOfEdges());
 	}
-	
-	@Test
-	public void reverseCHGraphWithPoIsTest() {
-		
-		for(int i=0; i<graphExampleCHWithPoIs.getReverseGraph().getNumberOfNodes(); i++) {
-			CHNode testNode = graphExampleCHWithPoIs.getReverseGraph().getNode(i);
-			System.out.println("nodeID: " + testNode.getId() + ", Latitude: " + testNode.getLatitude() + 
-					", Longitude: " + testNode.getLongitude() + ", isPoI: " + testNode.getCategory());
-		}
-		
-		for(int i=0; i<graphExampleCHWithPoIs.getReverseGraph().getNumberOfEdges(); i++) {
-			CHEdge testEdge = graphExampleCHWithPoIs.getReverseGraph().getEdge(i);
-			System.out.println("edgeID: " + testEdge.getId() + ", From: " + testEdge.getFromNode() + 
-					", To: " + testEdge.getToNode() + ", Distance: " + testEdge.getDistance());
-		}
-		
-		assertEquals(12, graphExampleCHWithPoIs.getNumberOfNodes());
-		assertEquals(28, graphExampleCHWithPoIs.getNumberOfEdges());
-	}
-	
 	
 	@Test
 	public void upperAndLowerBoundsTest() {

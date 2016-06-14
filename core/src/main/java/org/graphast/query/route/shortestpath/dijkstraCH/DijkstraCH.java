@@ -2,11 +2,13 @@ package org.graphast.query.route.shortestpath.dijkstraCH;
 
 import static org.graphast.util.NumberUtils.convertToInt;
 
+import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
-import java.util.Set;
+import java.util.Queue;
 
 import org.graphast.exception.PathNotFoundException;
 import org.graphast.model.Edge;
@@ -25,19 +27,16 @@ public class DijkstraCH {
 	protected static int wasRemoved = -1;
 
 	private CHGraph graph;
-	
-	HashMap<Long, Integer> wasTraversed = new HashMap<Long, Integer>();
-	HashMap<Long, Integer> wasTraversedPoI = new HashMap<Long, Integer>();
-	
+
 	public DijkstraCH(CHGraph graph) {
 		this.graph = graph;
 	}
-	
-	public Set<Path> shortestPath(CHNode source, int k) {
-		
+
+	public List<Path> shortestPath(CHNode source, int k) {
+
 		PriorityQueue<DistanceEntry> queue = new PriorityQueue<>();
-//		HashMap<Long, Integer> wasTraversed = new HashMap<Long, Integer>();
-//		HashMap<Long, Integer> wasTraversedPoI = new HashMap<Long, Integer>();
+		HashMap<Long, Integer> wasTraversed = new HashMap<Long, Integer>();
+		HashMap<Long, Integer> wasTraversedPoI = new HashMap<Long, Integer>();
 		HashMap<Long, RouteEntry> parents = new HashMap<Long, RouteEntry>();
 		DistanceEntry removed = null;
 
@@ -47,22 +46,37 @@ public class DijkstraCH {
 			removed = queue.poll();
 			wasTraversed.put(removed.getId(), wasRemoved);
 
-			if (wasTraversedPoI.size() >= k) {
-				
-				Set<Path> resultSet = new HashSet<>();
-				
-				for(Map.Entry<Long, Integer> removedPoI : wasTraversedPoI.entrySet()) {
-				
-					Path path = new Path();
-					path.constructPath(removedPoI.getKey(), parents, graph);
-					resultSet.add(path);
-				}
-
-				return resultSet;
-			
+			if (graph.getNode(removed.getId()).getCategory() == 2) {
+				wasTraversedPoI.put(removed.getId(), wasRemoved);
 			}
 
-			expandVertex(removed, queue, parents);
+			if (wasTraversedPoI.size() >= k) {
+
+				Queue<Path> localResultQueue = new PriorityQueue<Path>(new Comparator<Path>() {
+
+					public int compare(Path w1, Path w2) {
+						return w1.compareTo(w2);
+					}
+				});
+
+				List<Path> resultList = new LinkedList<>();
+
+				for (Map.Entry<Long, Integer> removedPoI : wasTraversedPoI.entrySet()) {
+
+					Path path = new Path();
+					path.constructPath(removedPoI.getKey(), parents, graph);
+					localResultQueue.add(path);
+				}
+
+				for (int i = 0; i < k; i++) {
+					resultList.add(localResultQueue.poll());
+				}
+
+				return resultList;
+
+			}
+
+			expandVertex(removed, queue, parents, wasTraversed, wasTraversedPoI);
 		}
 		throw new PathNotFoundException(
 				"Path not found between (" + source.getLatitude() + "," + source.getLongitude() + ")");
@@ -74,24 +88,20 @@ public class DijkstraCH {
 		queue.offer(new DistanceEntry(sid, 0, -1));
 	}
 
-	public void expandVertex(DistanceEntry removed,
-			PriorityQueue<DistanceEntry> queue, HashMap<Long, RouteEntry> parents) {
+	public void expandVertex(DistanceEntry removed, PriorityQueue<DistanceEntry> queue,
+			HashMap<Long, RouteEntry> parents, HashMap<Long, Integer> wasTraversed,
+			HashMap<Long, Integer> wasTraversedPoI) {
 
 		Long2IntMap neighbors = graph.accessNeighborhood(graph.getNode(removed.getId()));
 
 		for (long vid : neighbors.keySet()) {
 
-
-			if(graph.getNode(vid).getLevel() < graph.getNode(removed.getId()).getLevel()) {
+			if (graph.getNode(vid).getLevel() < graph.getNode(removed.getId()).getLevel()) {
 				continue;
 			}
-			
-//			int arrivalTime = graph.getArrival(removed.getArrivalTime(), neighbors.get(vid));
-//			int travelTime = removed.getTravelTime() + neighbors.get(vid);
-//			TimeEntry newEntry = new TimeEntry(vid, travelTime, arrivalTime, removed.getId());
 
 			DistanceEntry newEntry = new DistanceEntry(vid, neighbors.get(vid), removed.getId());
-			
+
 			Edge edge = null;
 			int distance = -1;
 
@@ -99,17 +109,12 @@ public class DijkstraCH {
 
 				queue.offer(newEntry);
 				wasTraversed.put(newEntry.getId(), neighbors.get(vid));
-				
+
 				distance = neighbors.get(vid);
 				edge = getEdge(removed.getId(), vid, distance);
 
-//				distance/17
 				parents.put(vid, new RouteEntry(removed.getId(), distance, edge.getId(), edge.getLabel()));
-				
-				if(graph.getNode(vid).getCategory()==2) {
-					wasTraversedPoI.put(newEntry.getId(), neighbors.get(vid));
-				}
-				
+
 			} else {
 
 				int cost = wasTraversed.get(vid);
@@ -126,20 +131,16 @@ public class DijkstraCH {
 						distance = neighbors.get(vid);
 						edge = getEdge(removed.getId(), vid, distance);
 						parents.put(vid, new RouteEntry(removed.getId(), distance, edge.getId(), edge.getLabel()));
-						
-						if(graph.getNode(vid).getCategory()==2) {
-							wasTraversedPoI.put(newEntry.getId(), neighbors.get(vid));
-						}
+
 					}
 				}
 			}
 		}
-
 	}
-	
+
 	private CHEdge getEdge(long fromNodeId, long toNodeId, int distance) {
 		CHEdge edge = null;
-		for(Long outEdge : graph.getOutEdges(fromNodeId)) {
+		for (Long outEdge : graph.getOutEdges(fromNodeId)) {
 			edge = graph.getEdge(outEdge);
 			if ((int) edge.getToNode() == toNodeId && edge.getDistance() == distance) {
 				break;

@@ -22,6 +22,8 @@ import org.graphast.util.DateUtils;
 public abstract class Dijkstra extends AbstractShortestPathService {
 
 	//private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
+	protected int maxVisitedNodes = Integer.MAX_VALUE;
 
 	public Dijkstra(GraphBounds graphBounds) {
 		super(graphBounds);
@@ -65,6 +67,9 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 			removed = queue.poll();
 			wasTraversed.put(removed.getId(), wasRemoved);		
 
+			if(this.getMaxVisitedNodes() < wasTraversed.size())
+				return null;
+			
 			if(removed.getId() == targetId) {
 				Path path = new Path();
 				path.constructPath(removed.getId(), parents, graph);
@@ -86,6 +91,14 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 
 	public abstract void expandVertex(Node target, TimeEntry removed, HashMap<Long, Integer> wasTraversed, 
 			PriorityQueue<TimeEntry> queue, HashMap<Long, RouteEntry> parents, Node skippedNode);
+	
+	public int getMaxVisitedNodes() {
+		return maxVisitedNodes;
+	}
+
+	public void setMaxVisitedNodes(int maxVisitedNodes) {
+		this.maxVisitedNodes = maxVisitedNodes;
+	}
 	
 	@Override
 	public Path shortestPath(Node source, Node target) {

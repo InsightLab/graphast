@@ -11,6 +11,8 @@ import org.graphast.geometry.PoI;
 import org.graphast.geometry.Point;
 import org.graphast.model.Edge;
 import org.graphast.model.Graph;
+import org.graphast.model.contraction.CHEdge;
+import org.graphast.model.contraction.CHGraph;
 import org.graphast.query.route.osr.Sequence;
 import org.graphast.query.route.shortestpath.AbstractShortestPathService;
 import org.graphast.query.route.shortestpath.dijkstra.DijkstraLinearFunction;
@@ -327,5 +329,55 @@ public class Path {
 		}
 		return totalCost;
 	}
+	
+	//TODO Create tests for this method.
+	public List<CHEdge> uncontractPath(CHGraph graph) {
+		
+		List<CHEdge> uncontractedPath = new LinkedList<>();
+		//TODO Create a linkedList
+		for(Long edgeId : this.edges) {
+			
+			CHEdge shortcut = graph.getEdge(edgeId);
+			uncontractedPath.addAll(uncontractShortcut(graph, shortcut));
+			
+		}
+		
+		return uncontractedPath;
+		
+	}
+	
+	public List<CHEdge> uncontractShortcut(CHGraph graph, CHEdge shortcut) {
+		List<CHEdge> listOfEdges = new LinkedList<>();
+		
+		if(shortcut.getOutgoingSkippedEdge() != -1) {
+			listOfEdges.addAll(uncontractShortcut(graph, graph.getEdge(shortcut.getOutgoingSkippedEdge())));
+			
+			if(shortcut.getIngoingSkippedEdge() != -1) {
+				listOfEdges.addAll(uncontractShortcut(graph, graph.getEdge(shortcut.getIngoingSkippedEdge())));
+			} else {
+				listOfEdges.add(shortcut);
+			}
+			
+		} else {
+			
+			if(shortcut.getIngoingSkippedEdge() != -1) {
+				listOfEdges.addAll(uncontractShortcut(graph, graph.getEdge(shortcut.getIngoingSkippedEdge())));
+			} else {
+				listOfEdges.add(shortcut);
+			}
+		}
+		
+		return listOfEdges;
+	}
 
+	public int compareTo(Path path) {
+		
+		if(this.getTotalDistance() < path.getTotalDistance())
+			return -1;
+		
+		if(this.getTotalDistance() > path.getTotalDistance())
+			return 1;
+		
+		return 0;
+	}
 }

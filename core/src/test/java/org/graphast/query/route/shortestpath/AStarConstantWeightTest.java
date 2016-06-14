@@ -1,6 +1,7 @@
 package org.graphast.query.route.shortestpath;
 
 import org.graphast.query.route.shortestpath.astar.AStarConstantWeight;
+import org.graphast.query.route.shortestpath.dijkstra.DijkstraConstantWeight;
 import org.junit.BeforeClass;
 
 public class AStarConstantWeightTest extends AbstractShortestPathTest{
@@ -11,6 +12,7 @@ public class AStarConstantWeightTest extends AbstractShortestPathTest{
 		serviceMonaco = new AStarConstantWeight(graphMonaco);
 //		serviceSeattle = new AStarConstantWeight(graphSeattle);
 		serviceExample = new AStarConstantWeight(graphExample);
+		serviceGraphHopperExample = new DijkstraConstantWeight(graphHopperExample);
 	
 	}
 

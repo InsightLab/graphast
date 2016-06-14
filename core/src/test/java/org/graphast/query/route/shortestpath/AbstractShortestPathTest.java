@@ -43,7 +43,7 @@ public abstract class AbstractShortestPathTest {
 //		graphSeattle = new GraphGenerator().generateSeattle();
 		graphExample = new GraphGenerator().generateExample();
 		graphExample2 = new GraphGenerator().generateExample2();
-		graphHopperExample = new GraphGenerator().generateExampleCHWithPoIs();
+		graphHopperExample = new GraphGenerator().generateGraphHopperExampleWithPoIs();
 	}
 
 	@Test

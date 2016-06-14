@@ -1,5 +1,8 @@
 package org.graphast.model.contraction;
 
+import java.util.Comparator;
+import java.util.List;
+
 import org.graphast.model.Node;
 import org.graphast.model.NodeImpl;
 
@@ -74,5 +77,44 @@ public class CHNodeImpl extends NodeImpl implements CHNode, Comparable<CHNodeImp
 				+ ", longitude=" + this.getLongitude() + ", firstEdge=" + this.getFirstEdge() + ", label="+ this.getLabel()
 				+ ", priority=" + this.getPriority() + ", level=" +this.getLevel() + "]";
 	}
+
+}
+
+class HighPriorityComparator implements Comparator<CHNodeImpl> {
+    public int compare(CHNodeImpl task1, CHNodeImpl task2) {
+        return task1.compareTo(task2);
+    }
+}
+
+class IdComparator implements Comparator<CHNodeImpl> {
+    public int compare(CHNodeImpl task1, CHNodeImpl task2) {
+        int compareResult = 0;
+        if (task2.getId() < task1.getId())
+            compareResult = 1;
+        else
+            compareResult = -1;
+
+        return compareResult;
+    }
+}
+
+class MixAndMatchComparator implements Comparator<CHNodeImpl> {
+
+    List<Comparator<CHNodeImpl>> comparators;
+
+    public MixAndMatchComparator(List<Comparator<CHNodeImpl>> comparators) {
+        this.comparators=comparators;
+    }
+
+    @Override
+    public int compare(CHNodeImpl o1, CHNodeImpl o2) {
+        int compareResult = 0;
+        for(Comparator<CHNodeImpl> comparator : comparators) {
+            if(comparator.compare(o1, o2)!=0) {
+                return comparator.compare(o1, o2);
+            }
+        }
+        return compareResult;
+    }
 
 }
