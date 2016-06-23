@@ -23,6 +23,8 @@ public interface ShortestPathService {
 
 	public void setMaxVisitedNodes(int maxVisitedNodes);
 	
+	public void setMaxHopLimit(int maxHopLimit);
+	
 //	public Int2ObjectMap<Path> shortestPath(Node source);
 
 }

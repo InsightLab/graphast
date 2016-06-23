@@ -6,7 +6,7 @@ import java.util.Queue;
 
 import org.graphast.model.Graph;
 import org.graphast.model.Node;
-import org.graphast.query.route.shortestpath.ShortestPathService;
+import org.graphast.query.route.shortestpath.dijkstraCH.DijkstraCH;
 
 import it.unimi.dsi.fastutil.ints.IntBigArrayBigList;
 
@@ -62,7 +62,7 @@ public interface CHGraph extends Graph {
 
 	public void setNodePriorityQueue(Queue<CHNodeImpl> nodePriorityQueue);
 
-	public void setShortestPath(ShortestPathService shortestPath);
+	public void setShortestPath(DijkstraCH shortestPath);
 	
 	public CHGraph generateReverseCHGraph(CHGraph originalCHGraph);
 	

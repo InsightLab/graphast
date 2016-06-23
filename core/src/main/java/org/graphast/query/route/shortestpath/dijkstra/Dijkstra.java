@@ -21,26 +21,25 @@ import org.graphast.util.DateUtils;
 
 public abstract class Dijkstra extends AbstractShortestPathService {
 
-	//private Logger logger = LoggerFactory.getLogger(this.getClass());
-	
+	// private Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	protected int maxVisitedNodes = Integer.MAX_VALUE;
+	protected int maxHopLimit = Integer.MAX_VALUE;
 
 	public Dijkstra(GraphBounds graphBounds) {
 		super(graphBounds);
 	}
-	
+
 	public Dijkstra(Graph graph) {
 		super(graph);
 	}
-	
-	//TODO Double check this method!!
-	//TODO Create tests!!
-	protected List<RouteEntry> reconstructPath(long id, HashMap<Long, RouteEntry> parents){
+
+	protected List<RouteEntry> reconstructPath(long id, HashMap<Long, RouteEntry> parents) {
 		RouteEntry re = parents.get(id);
 		long parent = re.getId();
 		List<RouteEntry> path = new ArrayList<RouteEntry>();
 		path.add(re);
-		while(parent != -1){
+		while (parent != -1) {
 			re = parents.get(parent);
 			if (re != null) {
 				path.add(re);
@@ -54,6 +53,12 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 	}
 
 	public Path shortestPath(Node source, Node target, Date time, Node skippedNode) {
+		
+		//TODO Refactor this verification
+//		if(this.getMaxVisitedNodes()==0) {
+//			this.setMaxVisitedNodes(1);
+//		}
+		
 		PriorityQueue<TimeEntry> queue = new PriorityQueue<TimeEntry>();
 		HashMap<Long, Integer> wasTraversed = new HashMap<Long, Integer>();
 		HashMap<Long, RouteEntry> parents = new HashMap<Long, RouteEntry>();
@@ -63,14 +68,17 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 
 		init(source, target, queue, parents, t);
 
-		while(!queue.isEmpty()){
+		while (!queue.isEmpty()) {
 			removed = queue.poll();
-			wasTraversed.put(removed.getId(), wasRemoved);		
+			wasTraversed.put(removed.getId(), wasRemoved);
 
-			if(this.getMaxVisitedNodes() < wasTraversed.size())
+			if (this.getMaxHopLimit() < wasTraversed.size())
 				return null;
 			
-			if(removed.getId() == targetId) {
+//			if (this.getMaxVisitedNodes() < wasTraversed.size())
+//				return null;
+
+			if (removed.getId() == targetId) {
 				Path path = new Path();
 				path.constructPath(removed.getId(), parents, graph);
 				return path;
@@ -78,20 +86,20 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 
 			expandVertex(target, removed, wasTraversed, queue, parents, skippedNode);
 		}
-		throw new PathNotFoundException("Path not found between (" + source.getLatitude() + "," + source.getLongitude() + ") and (" 
-				+ target.getLatitude() + "," + target.getLongitude() + ")");
+		throw new PathNotFoundException("Path not found between (" + source.getLatitude() + "," + source.getLongitude()
+				+ ") and (" + target.getLatitude() + "," + target.getLongitude() + ")");
 	}
-	
-	public void init(Node source, Node target, PriorityQueue<TimeEntry> queue, 
-			HashMap<Long, RouteEntry> parents, int t){
+
+	public void init(Node source, Node target, PriorityQueue<TimeEntry> queue, HashMap<Long, RouteEntry> parents,
+			int t) {
 		int sid = convertToInt(source.getId());
-		
+
 		queue.offer(new TimeEntry(sid, 0, t, -1));
 	}
 
-	public abstract void expandVertex(Node target, TimeEntry removed, HashMap<Long, Integer> wasTraversed, 
+	public abstract void expandVertex(Node target, TimeEntry removed, HashMap<Long, Integer> wasTraversed,
 			PriorityQueue<TimeEntry> queue, HashMap<Long, RouteEntry> parents, Node skippedNode);
-	
+
 	public int getMaxVisitedNodes() {
 		return maxVisitedNodes;
 	}
@@ -100,16 +108,24 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 		this.maxVisitedNodes = maxVisitedNodes;
 	}
 	
+	public int getMaxHopLimit() {
+		return maxHopLimit;
+	}
+	
+	public void setMaxHopLimit(int maxHopLimit) {
+		this.maxHopLimit = maxHopLimit;
+	}
+
 	@Override
 	public Path shortestPath(Node source, Node target) {
 		return shortestPath(source, target, null, null);
 	}
-	
+
 	@Override
 	public Path shortestPath(Node source, Node target, Node skippedNode) {
 		return shortestPath(source, target, null, skippedNode);
 	}
-	
+
 	@Override
 	public Path shortestPath(Node source, Node target, Date time) {
 		return shortestPath(source, target, time, null);
@@ -124,15 +140,15 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 	public Path shortestPath(long source, long target, Date time) {
 		return shortestPath(graph.getNode(source), graph.getNode(target), time, null);
 	}
-	
+
 	@Override
 	public Path shortestPath(long source, long target, Node skippedNode) {
 		return shortestPath(graph.getNode(source), graph.getNode(target), null, skippedNode);
 	}
-	
+
 	@Override
 	public Path shortestPath(long source, long target, Date time, Node skippedNode) {
 		return shortestPath(graph.getNode(source), graph.getNode(target), time, skippedNode);
 	}
-	
+
 }
