@@ -864,11 +864,11 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 				
 				hyperEdges.add(hyperPoICHEdge);
 
-//				newLabel = "HyperEdge " + hyperPoICH.getId() + "-" + auxiliarCHNode.getId();
-//				
-//				hyperPoICHEdge = new CHEdgeImpl(hyperPoICH.getId(), auxiliarCHNode.getId(), 0, 1, newLabel);
-//
-//				hyperEdges.add(hyperPoICHEdge);
+				newLabel = "HyperEdge " + hyperPoICH.getId() + "-" + auxiliarCHNode.getId();
+				
+				hyperPoICHEdge = new CHEdgeImpl(hyperPoICH.getId(), auxiliarCHNode.getId(), 0, 1, newLabel);
+
+				hyperEdges.add(hyperPoICHEdge);
 				
 				// Copiando arestas de saída
 				for (Long auxiliarCHEdgeID : this.getOutEdges(auxiliarCHNode.getId())) {

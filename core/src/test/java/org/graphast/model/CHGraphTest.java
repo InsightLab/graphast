@@ -140,6 +140,19 @@ public class CHGraphTest {
 
 	}
 	
+	
+	@Test
+	public void graphHopperExample3Test() {
+
+
+		graphHopperExample3.prepareNodes();
+		
+		graphHopperExample3.contractNodes();
+		
+		System.out.println(graphHopperExample3);
+
+	}
+	
 	/*
 	 * This test uses a modified version of testDirectedGraph3() graph from GraphHopper
 	 * PrepareContractionHierarchiesTest.java class. This modified version have HyperPoI's
@@ -153,6 +166,8 @@ public class CHGraphTest {
 		graphHopperExample3WithPoIs.prepareNodes();
 		
 		graphHopperExample3WithPoIs.contractNodes();
+		
+		System.out.println(graphHopperExample3WithPoIs);
 
 		DijkstraCH dj = new DijkstraCH(graphHopperExample3WithPoIs);
 

@@ -90,8 +90,7 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 				+ ") and (" + target.getLatitude() + "," + target.getLongitude() + ")");
 	}
 
-	public void init(Node source, Node target, PriorityQueue<TimeEntry> queue, HashMap<Long, RouteEntry> parents,
-			int t) {
+	public void init(Node source, Node target, PriorityQueue<TimeEntry> queue, HashMap<Long, RouteEntry> parents, int t) {
 		int sid = convertToInt(source.getId());
 
 		queue.offer(new TimeEntry(sid, 0, t, -1));
