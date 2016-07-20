@@ -50,6 +50,12 @@ public class BidirectionalDijkstraCH {
 				forwardsRemovedNode = forwardsUnsettleNodes.poll();
 				forwardsSettleNodes.put(forwardsRemovedNode.getId(), wasSettled);
 				
+				if(backwardsSettleNodes.containsKey(forwardsRemovedNode.getId())) {
+					//procurar vizinhos
+				}
+				
+				//expand node
+				
 
 			}
 			
@@ -57,11 +63,18 @@ public class BidirectionalDijkstraCH {
 				
 				backwardsRemovedNode = backwardsUnsettleNodes.poll();
 				backwardsSettleNodes.put(backwardsRemovedNode.getId(), wasSettled);
+				
+				if(forwardsSettleNodes.containsKey(backwardsRemovedNode.getId())) {
+					//procurar vizinhos
+				}
+				
+				//expand node
+				
 			}
 			
-			throw new PathNotFoundException("Path not found between (" + source.getLatitude() + "," + source.getLongitude() + ")");
-		
 		}
+
+		throw new PathNotFoundException("Path not found between (" + source.getLatitude() + "," + source.getLongitude() + ")");
 				
 	}
 	
