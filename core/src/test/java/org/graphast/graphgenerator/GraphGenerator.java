@@ -612,6 +612,57 @@ public class GraphGenerator {
 		return graph;
 
 	}
+
+	/**
+	 * Method to generate a graph based on the MIT example
+	 * found here: http://goo.gl/IlFPbo 
+	 * 
+	 * (Lecture 18: Shortest Paths IV - Speeding up Dijkstra)
+	 * 
+	 * @return graph The graph generated
+	 */
+	public CHGraph generateMITExample() {
+
+		CHGraph graph = new CHGraphImpl(Configuration.USER_HOME + "/graphast/test/graphMITExample");
+
+		CHEdge edge;
+		CHNode node;
+
+		node = new CHNodeImpl(0l, 10, 10);
+		graph.addNode(node);
+		
+		node = new CHNodeImpl(1l, 20, 20);
+		graph.addNode(node);
+		
+		node = new CHNodeImpl(2l, 30, 0);
+		graph.addNode(node);
+		
+		node = new CHNodeImpl(3l, 40, 20);
+		graph.addNode(node);
+		
+		node = new CHNodeImpl(4l, 50, 10);
+		graph.addNode(node);
+
+		edge = new CHEdgeImpl(0l, 1l, 3, 1, "Edge 0 to 1");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(0l, 2l, 5, 1, "Edge 0 to 2");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(1l, 3l, 3, 1, "Edge 1 to 3");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(2l, 4l, 5, 1, "Edge 2 to 4");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(3l, 4l, 3, 1, "Edge 3 to 4");
+		graph.addEdge(edge);
+
+		graph.save();
+
+		return graph;
+
+	}
 	
 	/*
 	 * Based on the createExampleGraph() graph from GraphHopper

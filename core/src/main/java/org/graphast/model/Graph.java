@@ -238,6 +238,8 @@ public interface Graph {
 	long getNumberOfEdges();
 
 	Long2IntMap accessNeighborhood(Node v);
+	
+	Long2IntMap accessIngoingNeighborhood(Node v);
 
 	// TODO Reimplement this method
 	HashMap<Node, Integer> accessNeighborhood(Node v, int time);

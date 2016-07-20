@@ -1195,6 +1195,32 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		return neighbors;
 
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.graphast.model.Graph#accessNeighborhood(org.graphast.model.Node)
+	 */
+	@Override
+	public Long2IntMap accessIngoingNeighborhood(Node v) {
+
+		Long2IntMap ingoingNeighbors = new Long2IntOpenHashMap();
+
+		for (Long e : this.getInEdges(v.getId())) {
+
+			Edge edge = this.getEdge(e);
+			long neighborNodeId = edge.getFromNode();
+			int cost = edge.getDistance();
+			if (!ingoingNeighbors.containsKey(neighborNodeId)) {
+				ingoingNeighbors.put(neighborNodeId, cost);
+			} else {
+				if (ingoingNeighbors.get(neighborNodeId) > cost) {
+					ingoingNeighbors.put(neighborNodeId, cost);
+				}
+			}
+		}
+
+		return ingoingNeighbors;
+
+	}
 
 	// TODO Reimplement this method
 	/* (non-Javadoc)
