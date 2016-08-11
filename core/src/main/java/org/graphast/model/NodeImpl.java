@@ -18,7 +18,7 @@ public class NodeImpl implements Node {
 
 	private int longitude;
 
-	private long firstEdge;
+	private long firstEdge = -1;
 
 	private long labelIndex;
 
@@ -41,7 +41,6 @@ public class NodeImpl implements Node {
 	public NodeImpl(double latitude, double longitude) {
 		setLatitude(latitude);
 		setLongitude(longitude);
-		this.firstEdge = -1;
 
 		if(latitude == Integer.MAX_VALUE || longitude==Integer.MAX_VALUE) {
 			throw new GraphastException("Invalid coordinate");

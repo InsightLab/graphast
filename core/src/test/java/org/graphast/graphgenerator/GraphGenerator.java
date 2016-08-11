@@ -137,6 +137,87 @@ public class GraphGenerator {
 
 		return graph;
 	}
+	
+	public Graph generateExampleGRA25() {
+
+		Graph graph = new GraphImpl(Configuration.USER_HOME + "/graphast/test/GRA25");
+		
+		NodeImpl v = new NodeImpl(3l, 10d, 10d, "label node 0");
+		graph.addNode(v);
+
+		
+		v = new NodeImpl();
+		v.setExternalId(15l);
+		v.setLatitude(11d);
+		v.setLongitude(32d);
+		graph.addNode(v);
+		
+		v = new NodeImpl(4l, 43.7294668047756,7.413772473047058);
+		graph.addNode(v);
+
+		int[] nodeCosts = new int[]{1,2,3,4};
+		v = new NodeImpl(2l, 10d, 30d, nodeCosts);
+		graph.addNode(v);
+
+		v = new NodeImpl(6l, 10d, 40d);
+		graph.addNode(v);
+
+		v = new NodeImpl(7l, 11d, 32d);
+		graph.addNode(v);
+
+		v = new NodeImpl(7, 11, 32, "Banco");
+		graph.addNode(v);
+
+		int[] costs = CostGenerator.generateSyntheticEdgesCosts(10);
+		List<Point> points = new ArrayList<Point>();
+		points.add(new Point(10,10));
+		points.add(new Point(10,20));
+		Edge e = new EdgeImpl(0l, 1l, 10, costs, points, "rua1");
+		graph.addEdge(e);
+
+		costs = CostGenerator.generateSyntheticEdgesCosts(20);
+		points = new ArrayList<Point>();
+		points.add(new Point(10,20));
+		points.add(new Point(10,15));
+		points.add(new Point(10,10));
+		e = new EdgeImpl(1l, 0l, 20, costs, points, "rua2");
+		graph.addEdge(e);
+
+		costs = CostGenerator.generateSyntheticEdgesCosts(30);
+		points = new ArrayList<Point>();
+		points.add(new Point(10,10));
+		points.add(new Point(10,30));
+		e = new EdgeImpl(0l, 2l, 30, costs, points, "rua3");
+		graph.addEdge(e);
+
+		costs = CostGenerator.generateSyntheticEdgesCosts(40);
+		points = new ArrayList<Point>();
+		points.add(new Point(10,30));
+		points.add(new Point(10,10));
+		e = new EdgeImpl(2l, 0l, 40, costs, points, "rua4");
+		graph.addEdge(e);
+
+		costs = CostGenerator.generateSyntheticEdgesCosts(50);
+		points = new ArrayList<Point>();
+		points.add(new Point(10,10));
+		points.add(new Point(10,40));
+		e = new EdgeImpl(0l, 3l, 50, costs, points, "");
+		graph.addEdge(e);
+
+		e = new EdgeImpl(2l, 4l, 60);
+		graph.addEdge(e);
+
+		e = new EdgeImpl(3l, 0l, 70);
+		graph.addEdge(e);
+
+		e = new EdgeImpl(graph.getNodeId(11d, 32d), graph.getNodeId(10d, 10d), 100);
+		graph.addEdge(e);
+		
+		e = new EdgeImpl(graph.getNodeId(10d, 10d), graph.getNodeId(11d, 32d), 100);
+		graph.addEdge(e);
+		
+		return graph;
+	}
 
 	public GraphBounds generateExample2() {
 
