@@ -24,6 +24,7 @@ public class GraphGeneratorTest {
 	private static Graph graphExample3;
 	private static Graph graphExamplePoI;
 	private static Graph graphAndorra;
+	private static Graph graphExampleGRA25;
 
 	@BeforeClass
 	public static void setup() throws NumberFormatException, IOException {
@@ -34,6 +35,7 @@ public class GraphGeneratorTest {
 		graphExample3 = new GraphGenerator().generateExample3();
 		graphExamplePoI = new GraphGenerator().generateExamplePoI();
 		graphAndorra = new GraphGenerator().generateAndorra();
+		graphExampleGRA25 = new GraphGenerator().generateExampleGRA25();
 	}
 
 	@Test
