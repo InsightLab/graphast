@@ -48,44 +48,48 @@ public class BidirectionalDijkstraCH {
 		HashMap<Long, RouteEntry> forwardsParentNodes = new HashMap<Long, RouteEntry>();
 		HashMap<Long, RouteEntry> backwardsParentNodes = new HashMap<Long, RouteEntry>();
 
-		backwardsParentNodes.put(-1l, new RouteEntry(4, 0, -1, null));
-		
-		
 		DistanceEntry forwardsRemovedNode = null;
 		DistanceEntry backwardsRemovedNode = null;
+		DistanceEntry meetingNode = null;
 
 		initializeQueue(source, forwardsUnsettleNodes);
 		initializeQueue(target, backwardsUnsettleNodes);
 
+		
+		//TODO && or || ?
 		while (!forwardsUnsettleNodes.isEmpty() && !backwardsUnsettleNodes.isEmpty()) {
 
 			if (!forwardsUnsettleNodes.isEmpty()) {
 
 				forwardsRemovedNode = forwardsUnsettleNodes.poll();
-				forwardsSettleNodes.put(forwardsRemovedNode.getId(), wasSettled);
+				forwardsSettleNodes.put(forwardsRemovedNode.getId(), forwardsRemovedNode.getDistance());
 
 				if (backwardsSettleNodes.containsKey(forwardsRemovedNode.getId())) {
 
-					DistanceEntry candidateNode = forwardsUnsettleNodes.poll();
+					meetingNode = forwardsRemovedNode;
+					HashMap<Long, RouteEntry> resultParentNodes;
+					Path path = new Path();
+					
+					for (Long candidateNode : forwardsSettleNodes.keySet()) {
 
-					if (backwardsSettleNodes.containsKey(candidateNode.getId())) {
-						HashMap<Long, RouteEntry> resultParentNodes;
-						Path path = new Path();
-
-						if (forwardsRemovedNode.getDistance() + backwardsSettleNodes
-								.get(forwardsRemovedNode.getDistance()) > candidateNode.getDistance()
-										+ backwardsSettleNodes.get(candidateNode.getDistance())) {
-							resultParentNodes = joinParents(candidateNode, forwardsParentNodes, backwardsParentNodes);
-							path.constructPath(target.getId(), resultParentNodes, graph);
-							return path;
-						} else {
-							resultParentNodes = joinParents(forwardsRemovedNode, forwardsParentNodes,
-									backwardsParentNodes);
-							path.constructPath(target.getId(), resultParentNodes, graph);
-							return path;
+						if (backwardsUnsettleNodes.contains(candidateNode)) {
+							
+							//TODO double check if we can compare just with the top of the backwardsUnsettleNodes Queue!
+							if (backwardsSettleNodes.get(forwardsRemovedNode.getId()) + forwardsSettleNodes.get(forwardsRemovedNode.getId()) > 	forwardsSettleNodes.get(candidateNode) + backwardsUnsettleNodes.peek().getDistance()) {
+								
+								//TODO double check this DistanceEntry!!!
+								meetingNode = new DistanceEntry(candidateNode, forwardsSettleNodes.get(candidateNode), forwardsParentNodes.get(candidateNode).getId());
+								
+								
+							} 
 						}
-					}
 
+					}
+					
+					resultParentNodes = joinParents(meetingNode, forwardsParentNodes, backwardsParentNodes);
+					path.constructPath(target.getId(), resultParentNodes, graph);
+					return path;
+					
 				}
 
 				expandVertex(forwardsRemovedNode, forwardsUnsettleNodes, forwardsParentNodes, forwardsSettleNodes,
@@ -96,28 +100,35 @@ public class BidirectionalDijkstraCH {
 			if (!backwardsUnsettleNodes.isEmpty()) {
 
 				backwardsRemovedNode = backwardsUnsettleNodes.poll();
-				backwardsSettleNodes.put(backwardsRemovedNode.getId(), wasSettled);
+				backwardsSettleNodes.put(backwardsRemovedNode.getId(), backwardsRemovedNode.getDistance());
 
 				if (forwardsSettleNodes.containsKey(backwardsRemovedNode.getId())) {
 
-					DistanceEntry candidateNode = backwardsUnsettleNodes.poll();
+					meetingNode = backwardsRemovedNode;
+					HashMap<Long, RouteEntry> resultParentNodes;
+					Path path = new Path();
 
-					if (forwardsSettleNodes.containsKey(candidateNode.getId())) {
-						HashMap<Long, RouteEntry> resultParentNodes;
-						Path path = new Path();
+					for (Long candidateNode : backwardsSettleNodes.keySet()) {
 
-						if (backwardsRemovedNode.getDistance() + forwardsSettleNodes.get(backwardsRemovedNode.getId()) > candidateNode.getDistance()
-										+ forwardsSettleNodes.get(candidateNode.getId())) {
-							resultParentNodes = joinParents(candidateNode, forwardsParentNodes, backwardsParentNodes);
-							path.constructPath(target.getId(), resultParentNodes, graph);
-							return path;
-						} else {
-							resultParentNodes = joinParents(backwardsRemovedNode, forwardsParentNodes,
-									backwardsParentNodes);
-							path.constructPath(target.getId(), resultParentNodes, graph);
-							return path;
+						
+						for(DistanceEntry entry : forwardsUnsettleNodes) {
+						
+							if (entry.getId() == candidateNode) {
+	
+								if (forwardsSettleNodes.get(backwardsRemovedNode.getId()) + backwardsSettleNodes.get(backwardsRemovedNode.getId()) > 
+										entry.getDistance()	+ backwardsSettleNodes.get(candidateNode)) {
+	
+									meetingNode = new DistanceEntry(candidateNode, entry.getDistance(),
+											forwardsParentNodes.get(candidateNode).getId());
+	
+								}
+							}
 						}
 					}
+
+					resultParentNodes = joinParents(meetingNode, forwardsParentNodes, backwardsParentNodes);
+					path.constructPath(target.getId(), resultParentNodes, graph);
+					return path;
 
 				}
 
@@ -150,7 +161,7 @@ public class BidirectionalDijkstraCH {
 
 		for (long vid : neighbors.keySet()) {
 
-			DistanceEntry newEntry = new DistanceEntry(vid, neighbors.get(vid), removedNode.getId());
+			DistanceEntry newEntry = new DistanceEntry(vid, neighbors.get(vid) + settleNodes.get(removedNode.getId()), removedNode.getId());
 
 			Edge edge = null;
 			int distance = -1;
@@ -158,7 +169,7 @@ public class BidirectionalDijkstraCH {
 			if (!settleNodes.containsKey(vid)) {
 
 				unsettleNodes.offer(newEntry);
-				settleNodes.put(newEntry.getId(), neighbors.get(vid));
+//				settleNodes.put(newEntry.getId(), neighbors.get(vid));
 
 				distance = neighbors.get(vid);
 				edge = getEdge(removedNode.getId(), vid, distance, expandingDirection); // FIX
