@@ -664,6 +664,91 @@ public class GraphGenerator {
 
 	}
 	
+	
+	/**
+	 * Method to generate a graph based on a second MIT example.
+	 * 
+	 * @return graph The graph generated
+	 */
+	public CHGraph generateMITExample2() {
+
+		CHGraph graph = new CHGraphImpl(Configuration.USER_HOME + "/graphast/test/graphMITExample2");
+
+		CHEdge edge;
+		CHNode node;
+
+		node = new CHNodeImpl(0l, 10, 10);
+		graph.addNode(node);
+		
+		node = new CHNodeImpl(1l, 20, 20);
+		graph.addNode(node);
+		
+		node = new CHNodeImpl(2l, 30, 30);
+		graph.addNode(node);
+		
+		node = new CHNodeImpl(3l, 40, 40);
+		graph.addNode(node);
+		
+		node = new CHNodeImpl(4l, 50, 50);
+		graph.addNode(node);
+		
+		node = new CHNodeImpl(5l, 60, 60);
+		graph.addNode(node);
+		
+		node = new CHNodeImpl(6l, 70, 70);
+		graph.addNode(node);
+		
+		node = new CHNodeImpl(7l, 80, 80);
+		graph.addNode(node);
+		
+		node = new CHNodeImpl(8l, 90, 90);
+		graph.addNode(node);
+
+		edge = new CHEdgeImpl(0l, 1l, 4, 1, "Edge 0 to 1");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(0l, 2l, 7, 1, "Edge 0 to 2");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(0l, 3l, 5, 1, "Edge 0 to 3");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(1l, 5l, 9, 1, "Edge 1 to 5");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(2l, 4l, 4, 1, "Edge 2 to 4");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(2l, 6l, 6, 1, "Edge 2 to 6");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(3l, 4l, 3, 1, "Edge 3 to 4");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(4l, 5l, 12, 1, "Edge 4 to 5");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(4l, 6l, 2, 1, "Edge 4 to 6");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(4l, 7l, 5, 1, "Edge 4 to 7");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(5l, 8l, 13, 1, "Edge 5 to 8");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(6l, 8l, 9, 1, "Edge 6 to 8");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(7l, 8l, 3, 1, "Edge 7 to 8");
+		graph.addEdge(edge);
+		
+		graph.save();
+
+		return graph;
+
+	}
+	
 	/*
 	 * Based on the createExampleGraph() graph from GraphHopper
 	 * PrepareContractionHierarchiesTest.java class.

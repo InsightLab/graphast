@@ -5,6 +5,8 @@ import static org.graphast.util.NumberUtils.convertToInt;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 
+import javax.security.auth.callback.NameCallback;
+
 import org.graphast.exception.PathNotFoundException;
 import org.graphast.model.Edge;
 import org.graphast.model.Node;
@@ -72,21 +74,34 @@ public class BidirectionalDijkstraCH {
 					
 					for (Long candidateNode : forwardsSettleNodes.keySet()) {
 
-						if (backwardsUnsettleNodes.contains(candidateNode)) {
-							
-							//TODO double check if we can compare just with the top of the backwardsUnsettleNodes Queue!
-							if (backwardsSettleNodes.get(forwardsRemovedNode.getId()) + forwardsSettleNodes.get(forwardsRemovedNode.getId()) > 	forwardsSettleNodes.get(candidateNode) + backwardsUnsettleNodes.peek().getDistance()) {
-								
-								//TODO double check this DistanceEntry!!!
-								meetingNode = new DistanceEntry(candidateNode, forwardsSettleNodes.get(candidateNode), forwardsParentNodes.get(candidateNode).getId());
-								
-								
-							} 
+//						if (backwardsUnsettleNodes.contains(candidateNode)) {
+//							
+//							//TODO double check if we can compare just with the top of the backwardsUnsettleNodes Queue!
+//							if (backwardsSettleNodes.get(forwardsRemovedNode.getId()) + forwardsSettleNodes.get(forwardsRemovedNode.getId()) > 	forwardsSettleNodes.get(candidateNode) + backwardsUnsettleNodes.peek().getDistance()) {
+//								
+//								//TODO double check this DistanceEntry!!!
+//								meetingNode = new DistanceEntry(candidateNode, forwardsSettleNodes.get(candidateNode), forwardsParentNodes.get(candidateNode).getId());
+//								
+//								
+//							} 
+//						}
+						
+						
+						for(DistanceEntry entry : backwardsUnsettleNodes) {
+							if(entry.getId() == candidateNode) {
+								if(backwardsSettleNodes.get(forwardsRemovedNode.getId()) + forwardsSettleNodes.get(forwardsRemovedNode.getId()) >
+								entry.getDistance()	+ forwardsSettleNodes.get(candidateNode)) {
+									
+									forwardsParentNodes.remove(meetingNode.getId());
+									meetingNode = new DistanceEntry(candidateNode, entry.getDistance(), backwardsParentNodes.get(candidateNode).getId());
+									
+								}
+							}
 						}
-
+						
 					}
 					
-					resultParentNodes = joinParents(meetingNode, forwardsParentNodes, backwardsParentNodes);
+					resultParentNodes = joinParents(meetingNode, forwardsParentNodes, backwardsParentNodes, target);
 					path.constructPath(target.getId(), resultParentNodes, graph);
 					return path;
 					
@@ -118,6 +133,7 @@ public class BidirectionalDijkstraCH {
 								if (forwardsSettleNodes.get(backwardsRemovedNode.getId()) + backwardsSettleNodes.get(backwardsRemovedNode.getId()) > 
 										entry.getDistance()	+ backwardsSettleNodes.get(candidateNode)) {
 	
+									backwardsParentNodes.remove(meetingNode.getId());
 									meetingNode = new DistanceEntry(candidateNode, entry.getDistance(),
 											forwardsParentNodes.get(candidateNode).getId());
 	
@@ -126,7 +142,7 @@ public class BidirectionalDijkstraCH {
 						}
 					}
 
-					resultParentNodes = joinParents(meetingNode, forwardsParentNodes, backwardsParentNodes);
+					resultParentNodes = joinParents(meetingNode, forwardsParentNodes, backwardsParentNodes, target);
 					path.constructPath(target.getId(), resultParentNodes, graph);
 					return path;
 
@@ -169,7 +185,7 @@ public class BidirectionalDijkstraCH {
 			if (!settleNodes.containsKey(vid)) {
 
 				unsettleNodes.offer(newEntry);
-//				settleNodes.put(newEntry.getId(), neighbors.get(vid));
+				settleNodes.put(newEntry.getId(), neighbors.get(vid));
 
 				distance = neighbors.get(vid);
 				edge = getEdge(removedNode.getId(), vid, distance, expandingDirection); // FIX
@@ -215,20 +231,61 @@ public class BidirectionalDijkstraCH {
 
 	}
 
-	private HashMap<Long, RouteEntry> joinParents(DistanceEntry removedNode,
-			HashMap<Long, RouteEntry> forwardsParentNodes, HashMap<Long, RouteEntry> backwardsParentNodes) {
+	//TODO Remover meeting node errado. Receber por parametro o destination node tambem.
+	private HashMap<Long, RouteEntry> joinParents(DistanceEntry meetingNode,
+			HashMap<Long, RouteEntry> forwardsParentNodes, HashMap<Long, RouteEntry> backwardsParentNodes, Node target) {
 
-		HashMap<Long, RouteEntry> resultParentNodes = forwardsParentNodes;
-		RouteEntry temporaryParent = backwardsParentNodes.get(removedNode.getId());
+	
+		HashMap<Long, RouteEntry> resultListOfParents = new HashMap<>();
 
-		while (temporaryParent != null) {
-
-			resultParentNodes.put(temporaryParent.getId(), temporaryParent);
-			temporaryParent = backwardsParentNodes.get(temporaryParent);
+		RouteEntry nextForwardParent = forwardsParentNodes.get(meetingNode.getId());
+		
+		resultListOfParents.put(meetingNode.getId(), nextForwardParent);
+		
+		while(forwardsParentNodes.get(nextForwardParent.getId()) != null) {
+		
+			resultListOfParents.put(nextForwardParent.getId(), forwardsParentNodes.get(nextForwardParent.getId()));
+			
+			nextForwardParent = forwardsParentNodes.get(nextForwardParent.getId());
+			
 		}
-
-		return resultParentNodes;
+		
+		
+		RouteEntry nextBackwardsParent = backwardsParentNodes.get(meetingNode.getId());
+		
+		long auxiliarBackwardID = nextBackwardsParent.getId();
+		nextBackwardsParent.setId(meetingNode.getId());
+		
+		resultListOfParents.put(auxiliarBackwardID, nextBackwardsParent);
+		
+		while(backwardsParentNodes.get(nextBackwardsParent.getEdgeId()) != null) {
+			
+			//TODO Double check this two lines of code
+			resultListOfParents.put(nextBackwardsParent.getId(), backwardsParentNodes.get(nextBackwardsParent.getId()));
+			
+			nextBackwardsParent = backwardsParentNodes.get(nextBackwardsParent.getId());
+			
+		}
+		
+		
+		return resultListOfParents;
+		
 	}
+	
+//	private HashMap<Long, RouteEntry> joinParents(DistanceEntry removedNode,
+//			HashMap<Long, RouteEntry> forwardsParentNodes, HashMap<Long, RouteEntry> backwardsParentNodes) {
+//
+//		HashMap<Long, RouteEntry> resultParentNodes = forwardsParentNodes;
+//		RouteEntry temporaryParent = backwardsParentNodes.get(removedNode.getId());
+//
+//		while (temporaryParent != null) {
+//
+//			resultParentNodes.put(temporaryParent.getId(), temporaryParent);
+//			temporaryParent = backwardsParentNodes.get(temporaryParent);
+//		}
+//
+//		return resultParentNodes;
+//	}
 
 	// TODO TEST
 	private CHEdge getEdge(long fromNodeId, long toNodeId, int distance, boolean expandingDirection) {
