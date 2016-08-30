@@ -238,7 +238,7 @@ public class BidirectionalDijkstraCH {
 	
 		HashMap<Long, RouteEntry> resultListOfParents = new HashMap<>();
 
-		RouteEntry nextForwardParent = forwardsParentNodes.get(meetingNode.getId());
+		RouteEntry nextForwardParent = new RouteEntry(forwardsParentNodes.get(meetingNode.getId()).getId(), forwardsParentNodes.get(meetingNode.getId()).getCost(), forwardsParentNodes.get(meetingNode.getId()).getEdgeId(), forwardsParentNodes.get(meetingNode.getId()).getLabel());
 		
 		resultListOfParents.put(meetingNode.getId(), nextForwardParent);
 		
@@ -250,18 +250,19 @@ public class BidirectionalDijkstraCH {
 			
 		}
 		
-		
-		RouteEntry nextBackwardsParent = backwardsParentNodes.get(meetingNode.getId());
+
+		RouteEntry nextBackwardsParent = new RouteEntry(backwardsParentNodes.get(meetingNode.getId()).getId(), backwardsParentNodes.get(meetingNode.getId()).getCost(), backwardsParentNodes.get(meetingNode.getId()).getEdgeId(), backwardsParentNodes.get(meetingNode.getId()).getLabel());
 		
 		long auxiliarBackwardID = nextBackwardsParent.getId();
 		nextBackwardsParent.setId(meetingNode.getId());
 		
 		resultListOfParents.put(auxiliarBackwardID, nextBackwardsParent);
 		
-		while(backwardsParentNodes.get(nextBackwardsParent.getEdgeId()) != null) {
-			
+		while(backwardsParentNodes.get(nextBackwardsParent.getId()) != null) {
+			auxiliarBackwardID = backwardsParentNodes.get(nextBackwardsParent.getId()).getId();
+			nextBackwardsParent = new RouteEntry(nextBackwardsParent.getId(), backwardsParentNodes.get(nextBackwardsParent.getId()).getCost(), backwardsParentNodes.get(nextBackwardsParent.getId()).getEdgeId(), backwardsParentNodes.get(nextBackwardsParent.getId()).getLabel());
 			//TODO Double check this two lines of code
-			resultListOfParents.put(nextBackwardsParent.getId(), backwardsParentNodes.get(nextBackwardsParent.getId()));
+			resultListOfParents.put(auxiliarBackwardID, nextBackwardsParent);
 			
 			nextBackwardsParent = backwardsParentNodes.get(nextBackwardsParent.getId());
 			
