@@ -59,133 +59,144 @@ public class BidirectionalDijkstraCH {
 
 		while (!forwardsUnsettleNodes.isEmpty() || !backwardsUnsettleNodes.isEmpty()) {
 
-			if (!forwardsUnsettleNodes.isEmpty()) {
+			// Condition to alternate between forward and backward search
+			if (forwardsUnsettleNodes.peek().getDistance() <= backwardsUnsettleNodes.peek().getDistance()) {
 
-				forwardsRemovedNode = forwardsUnsettleNodes.poll();
-				forwardsSettleNodes.put(forwardsRemovedNode.getId(), forwardsRemovedNode.getDistance());
+				if (!forwardsUnsettleNodes.isEmpty()) {
 
-				if (backwardsSettleNodes.containsKey(forwardsRemovedNode.getId())) {
+					forwardsRemovedNode = forwardsUnsettleNodes.poll();
+					forwardsSettleNodes.put(forwardsRemovedNode.getId(), forwardsRemovedNode.getDistance());
 
-					meetingNode = forwardsRemovedNode;
-					HashMap<Long, RouteEntry> resultParentNodes;
-					Path path = new Path();
+					// Stopping criteria of Bidirectional search
+					if (backwardsSettleNodes.containsKey(forwardsRemovedNode.getId())) {
 
-					for (Long candidateNode : forwardsSettleNodes.keySet()) {
-						for (DistanceEntry entry : backwardsUnsettleNodes) {
-							if (entry.getId() == candidateNode) {
-								if (backwardsSettleNodes.get(forwardsRemovedNode.getId())
-										+ forwardsSettleNodes.get(forwardsRemovedNode.getId()) > entry.getDistance()
-												+ forwardsSettleNodes.get(candidateNode)) {
+						meetingNode = forwardsRemovedNode;
+						HashMap<Long, RouteEntry> resultParentNodes;
+						Path path = new Path();
 
-									forwardsParentNodes.remove(meetingNode.getId());
-									meetingNode = new DistanceEntry(candidateNode, entry.getDistance(),
-											backwardsParentNodes.get(candidateNode).getId());
+						for (Long candidateNode : forwardsSettleNodes.keySet()) {
+							
+							for (DistanceEntry entry : backwardsUnsettleNodes) {
+							
+								if (entry.getId() == candidateNode) {
+								
+									if (backwardsSettleNodes.get(forwardsRemovedNode.getId()) + forwardsSettleNodes.get(forwardsRemovedNode.getId()) > entry.getDistance() + forwardsSettleNodes.get(candidateNode)) {
 
+										forwardsParentNodes.remove(meetingNode.getId());
+										meetingNode = new DistanceEntry(candidateNode, entry.getDistance(),	backwardsParentNodes.get(candidateNode).getId());
+
+									}
 								}
 							}
+
+							// TODO DOUBLE CHECK Verificando a lista de Settle
+							// do
+							// sentido contrario (O QUE ESTAVA FALTANDO)
+							// for(Long entry : backwardsSettleNodes.keySet()) {
+							// if(entry == candidateNode) {
+							// if(backwardsSettleNodes.get(forwardsRemovedNode.getId())
+							// +
+							// forwardsSettleNodes.get(forwardsRemovedNode.getId())
+							// >
+							// backwardsSettleNodes.get(entry) +
+							// forwardsSettleNodes.get(candidateNode)) {
+							//
+							// forwardsParentNodes.remove(meetingNode.getId());
+							// meetingNode = new DistanceEntry(candidateNode,
+							// backwardsSettleNodes.get(entry),
+							// backwardsParentNodes.get(candidateNode).getId());
+							//
+							// }
+							//
+							// }
+							//
+							// }
+
 						}
 
-						// TODO DOUBLE CHECK Verificando a lista de Settle do
-						// sentido contrario (O QUE ESTAVA FALTANDO)
-						// for(Long entry : backwardsSettleNodes.keySet()) {
-						// if(entry == candidateNode) {
-						// if(backwardsSettleNodes.get(forwardsRemovedNode.getId())
-						// +
-						// forwardsSettleNodes.get(forwardsRemovedNode.getId())
-						// >
-						// backwardsSettleNodes.get(entry) +
-						// forwardsSettleNodes.get(candidateNode)) {
-						//
-						// forwardsParentNodes.remove(meetingNode.getId());
-						// meetingNode = new DistanceEntry(candidateNode,
-						// backwardsSettleNodes.get(entry),
-						// backwardsParentNodes.get(candidateNode).getId());
-						//
-						// }
-						//
-						// }
-						//
-						// }
+						resultParentNodes = joinParents(meetingNode, forwardsParentNodes, backwardsParentNodes, target);
+						path.constructPath(target.getId(), resultParentNodes, graph);
+						return path;
 
 					}
 
-					resultParentNodes = joinParents(meetingNode, forwardsParentNodes, backwardsParentNodes, target);
-					path.constructPath(target.getId(), resultParentNodes, graph);
-					return path;
+					expandVertex(forwardsRemovedNode, forwardsUnsettleNodes, forwardsParentNodes, forwardsSettleNodes,
+							graph);
 
 				}
+				
+			} else {
 
-				expandVertex(forwardsRemovedNode, forwardsUnsettleNodes, forwardsParentNodes, forwardsSettleNodes,
-						graph);
+				if (!backwardsUnsettleNodes.isEmpty()) {
 
-			}
+					backwardsRemovedNode = backwardsUnsettleNodes.poll();
+					backwardsSettleNodes.put(backwardsRemovedNode.getId(), backwardsRemovedNode.getDistance());
 
-			if (!backwardsUnsettleNodes.isEmpty()) {
+					if (forwardsSettleNodes.containsKey(backwardsRemovedNode.getId())) {
 
-				backwardsRemovedNode = backwardsUnsettleNodes.poll();
-				backwardsSettleNodes.put(backwardsRemovedNode.getId(), backwardsRemovedNode.getDistance());
+						meetingNode = backwardsRemovedNode;
+						HashMap<Long, RouteEntry> resultParentNodes;
+						Path path = new Path();
 
-				if (forwardsSettleNodes.containsKey(backwardsRemovedNode.getId())) {
+						for (Long candidateNode : backwardsSettleNodes.keySet()) {
 
-					meetingNode = backwardsRemovedNode;
-					HashMap<Long, RouteEntry> resultParentNodes;
-					Path path = new Path();
+							// TODO DOUBLE CHECK Verificando a lista de Unsuttle
+							// do
+							// sentido contrario
+							for (DistanceEntry entry : forwardsUnsettleNodes) {
 
-					for (Long candidateNode : backwardsSettleNodes.keySet()) {
+								if (entry.getId() == candidateNode) {
 
-						// TODO DOUBLE CHECK Verificando a lista de Unsuttle do
-						// sentido contrario
-						for (DistanceEntry entry : forwardsUnsettleNodes) {
+									if (forwardsSettleNodes.get(backwardsRemovedNode.getId()) + backwardsSettleNodes
+											.get(backwardsRemovedNode.getId()) > entry.getDistance()
+													+ backwardsSettleNodes.get(candidateNode)) {
 
-							if (entry.getId() == candidateNode) {
+										backwardsParentNodes.remove(meetingNode.getId());
+										meetingNode = new DistanceEntry(candidateNode, entry.getDistance(),
+												forwardsParentNodes.get(candidateNode).getId());
 
-								if (forwardsSettleNodes.get(backwardsRemovedNode.getId())
-										+ backwardsSettleNodes.get(backwardsRemovedNode.getId()) > entry.getDistance()
-												+ backwardsSettleNodes.get(candidateNode)) {
-
-									backwardsParentNodes.remove(meetingNode.getId());
-									meetingNode = new DistanceEntry(candidateNode, entry.getDistance(),
-											forwardsParentNodes.get(candidateNode).getId());
-
+									}
 								}
 							}
+							// // Verificando a lista de Settle do sentido
+							// contrario
+							// (O QUE ESTAVA FALTANDO)
+							// for(Long entry : forwardsSettleNodes.keySet()) {
+							//
+							// if (entry == candidateNode) {
+							//
+							// if
+							// (forwardsSettleNodes.get(backwardsRemovedNode.getId())
+							// +
+							// backwardsSettleNodes.get(backwardsRemovedNode.getId())
+							// > forwardsSettleNodes.get(entry) +
+							// backwardsSettleNodes.get(candidateNode)) {
+							//
+							// backwardsParentNodes.remove(meetingNode.getId());
+							// meetingNode = new DistanceEntry(candidateNode,
+							// forwardsSettleNodes.get(entry),
+							// forwardsParentNodes.get(candidateNode).getId());
+							//
+							//
+							// }
+							//
+							// }
+							//
+							// }
+
 						}
-						// // Verificando a lista de Settle do sentido contrario
-						// (O QUE ESTAVA FALTANDO)
-						// for(Long entry : forwardsSettleNodes.keySet()) {
-						//
-						// if (entry == candidateNode) {
-						//
-						// if
-						// (forwardsSettleNodes.get(backwardsRemovedNode.getId())
-						// +
-						// backwardsSettleNodes.get(backwardsRemovedNode.getId())
-						// > forwardsSettleNodes.get(entry) +
-						// backwardsSettleNodes.get(candidateNode)) {
-						//
-						// backwardsParentNodes.remove(meetingNode.getId());
-						// meetingNode = new DistanceEntry(candidateNode,
-						// forwardsSettleNodes.get(entry),
-						// forwardsParentNodes.get(candidateNode).getId());
-						//
-						//
-						// }
-						//
-						// }
-						//
-						// }
+
+						resultParentNodes = joinParents(meetingNode, forwardsParentNodes, backwardsParentNodes, target);
+						path.constructPath(target.getId(), resultParentNodes, graph);
+						return path;
 
 					}
 
-					resultParentNodes = joinParents(meetingNode, forwardsParentNodes, backwardsParentNodes, target);
-					path.constructPath(target.getId(), resultParentNodes, graph);
-					return path;
+					expandVertex(backwardsRemovedNode, backwardsUnsettleNodes, backwardsParentNodes,
+							backwardsSettleNodes, reverseGraph);
 
 				}
-
-				expandVertex(backwardsRemovedNode, backwardsUnsettleNodes, backwardsParentNodes, backwardsSettleNodes,
-						reverseGraph);
-
+			
 			}
 
 		}
