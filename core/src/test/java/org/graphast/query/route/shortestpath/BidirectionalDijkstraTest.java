@@ -3,8 +3,6 @@ package org.graphast.query.route.shortestpath;
 import static org.junit.Assert.assertEquals;
 
 import org.graphast.graphgenerator.GraphGenerator;
-import org.graphast.model.Graph;
-import org.graphast.model.contraction.CHEdge;
 import org.graphast.model.contraction.CHGraph;
 import org.graphast.query.route.shortestpath.dijkstra.Dijkstra;
 import org.graphast.query.route.shortestpath.dijkstra.DijkstraConstantWeight;
@@ -309,10 +307,7 @@ public class BidirectionalDijkstraTest {
 
 		bidirectionalDijkstraSW.stop();
 		
-		logger.info("[BIDIRECTIONAL] Execution Time of Dijkstra Algorithm in shortestPathMonacoTest(): {}ns", bidirectionalDijkstraSW.getNanos());
-		
-		logger.info("Shortest Path");
-		logger.info("\t{}", finalPath.getInstructions());
+		System.out.println("[BIDIRECTIONAL] Execution Time of Dijkstra Algorithm in shortestPathMonacoTest(): " + bidirectionalDijkstraSW.getNanos() + "ns");
 		
 		assertEquals(1073837, finalPath.getTotalDistance());
 		
@@ -326,17 +321,16 @@ public class BidirectionalDijkstraTest {
 
 		dijkstraSW.stop();
 		
-		logger.info("[REGULAR] Execution Time of Dijkstra Algorithm shortestPathMonacoTest(): {}ns", dijkstraSW.getNanos());
 		
-		logger.info("Shortest Path - Regular Dijkstra");
-		logger.info("\t{}", dijkstraPath.getInstructions());
+		System.out.println("[REGULAR] Execution Time of Dijkstra Algorithm shortestPathMonacoTest(): " + dijkstraSW.getNanos() + "ns");
+
 		
 		assertEquals(1073837, dijkstraPath.getTotalDistance());
 
 		if(dijkstraSW.getNanos() > bidirectionalDijkstraSW.getNanos()) {
-			logger.info("Bidirectional Dijkstra was FASTER");
+			System.out.println("Bidirectional Dijkstra was FASTER");
 		} else {
-			logger.info("Bidirectional Dijkstra was SLOWER");
+			System.out.println("Bidirectional Dijkstra was SLOWER");
 		}
 		
 	}

@@ -33,6 +33,9 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 	int numberOfNeighborsAccess = 0;
 	int averageNeighborsAccessTime = 0;
 
+	StopWatch expandingVertexSW = new StopWatch();
+	int totalExpandingVertexTime = 0;
+	
 	public Dijkstra(GraphBounds graphBounds) {
 		super(graphBounds);
 	}
@@ -91,12 +94,15 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 				System.out.println("[REGULAR] Number of total settle nodes: " + numberOfTotalSettleNodes);
 				
 				averageNeighborsAccessTime = averageNeighborsAccessTime/numberOfNeighborsAccess;
-				System.out.println("[REGULAR] Average Neighbors Access Time: " + averageNeighborsAccessTime);
-				
+				System.out.println("[REGULAR] Total Average Neighbors Access Time: " + averageNeighborsAccessTime);
+				System.out.println("[REGULAR] Total Expanding Vertex Time: " + totalExpandingVertexTime);
 				return path;
 			}
 
+			expandingVertexSW.start();
 			expandVertex(target, removed, wasTraversed, queue, parents, skippedNode);
+			expandingVertexSW.stop();
+			totalExpandingVertexTime += expandingVertexSW.getNanos();
 		}
 		throw new PathNotFoundException("Path not found between (" + source.getLatitude() + "," + source.getLongitude()
 				+ ") and (" + target.getLatitude() + "," + target.getLongitude() + ")");
