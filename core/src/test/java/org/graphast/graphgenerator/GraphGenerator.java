@@ -239,7 +239,32 @@ public class GraphGenerator {
 		System.out.println("#nodes: " + graph.getNumberOfNodes());
 		System.out.println("#edges: " + graph.getNumberOfEdges());
 
-		graph.createHyperPOIS();
+//		graph.createHyperPOIS();
+
+		System.out.println("#nodes: " + graph.getNumberOfNodes());
+		System.out.println("#edges: " + graph.getNumberOfEdges());
+
+		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
+		graph.setMaxLevel((int) (graph.getNumberOfNodes() + 1));
+
+		graph.save();
+
+		return graph;
+	}
+	
+	public CHGraph generateSeattleCH() {
+		String osmFile = this.getClass().getResource("/seattle.osm.pbf").getPath();
+		String graphHopperSeattleDir = Configuration.USER_HOME + "/graphhopper/test/seattle";
+		String graphastSeattleDir = Configuration.USER_HOME + "/graphast/test/seattle";
+
+		CHGraph graph = new OSMImporterImpl(osmFile, graphHopperSeattleDir, graphastSeattleDir).executeCH();
+
+//		POIImporter.importPoIList(graph, "src/test/resources/monaco-latest.csv");
+
+		System.out.println("#nodes: " + graph.getNumberOfNodes());
+		System.out.println("#edges: " + graph.getNumberOfEdges());
+
+//		graph.createHyperPOIS();
 
 		System.out.println("#nodes: " + graph.getNumberOfNodes());
 		System.out.println("#edges: " + graph.getNumberOfEdges());

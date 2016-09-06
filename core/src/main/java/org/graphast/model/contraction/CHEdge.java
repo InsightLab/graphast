@@ -28,6 +28,10 @@ public interface CHEdge extends Edge{
 	
 	boolean isShortcut();
 	
+	public void setFromNode(long fromNode);
+	
+	public void setToNode(long toNode);
+	
 	public void setShortcut(boolean isShortcut);
 	
 	public void setOriginalEdgeCounter(int originalEdgeCounter);

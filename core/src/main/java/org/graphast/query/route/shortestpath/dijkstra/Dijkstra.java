@@ -19,12 +19,19 @@ import org.graphast.query.route.shortestpath.model.RouteEntry;
 import org.graphast.query.route.shortestpath.model.TimeEntry;
 import org.graphast.util.DateUtils;
 
+import com.graphhopper.util.StopWatch;
+
 public abstract class Dijkstra extends AbstractShortestPathService {
 
 	// private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	protected int maxVisitedNodes = Integer.MAX_VALUE;
 	protected int maxHopLimit = Integer.MAX_VALUE;
+	int numberOfTotalSettleNodes = 0;
+	
+	StopWatch nearestNeighborSW = new StopWatch();
+	int numberOfNeighborsAccess = 0;
+	int averageNeighborsAccessTime = 0;
 
 	public Dijkstra(GraphBounds graphBounds) {
 		super(graphBounds);
@@ -71,7 +78,7 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 		while (!queue.isEmpty()) {
 			removed = queue.poll();
 			wasTraversed.put(removed.getId(), wasRemoved);
-
+			numberOfTotalSettleNodes++;
 			if (this.getMaxHopLimit() < wasTraversed.size())
 				return null;
 			
@@ -81,6 +88,11 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 			if (removed.getId() == targetId) {
 				Path path = new Path();
 				path.constructPath(removed.getId(), parents, graph);
+				System.out.println("[REGULAR] Number of total settle nodes: " + numberOfTotalSettleNodes);
+				
+				averageNeighborsAccessTime = averageNeighborsAccessTime/numberOfNeighborsAccess;
+				System.out.println("[REGULAR] Average Neighbors Access Time: " + averageNeighborsAccessTime);
+				
 				return path;
 			}
 
