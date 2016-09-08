@@ -32,11 +32,7 @@ public class DijkstraConstantWeight extends Dijkstra {
 	public void expandVertex(Node target, TimeEntry removed, HashMap<Long, Integer> wasTraversed,
 			PriorityQueue<TimeEntry> queue, HashMap<Long, RouteEntry> parents, Node skippedNode) {
 
-		super.nearestNeighborSW.start();
 		Long2IntMap neig = graph.accessNeighborhood(graph.getNode(removed.getId()));
-		super.nearestNeighborSW.stop();
-		super.numberOfNeighborsAccess++;
-		super.averageNeighborsAccessTime+=nearestNeighborSW.getNanos();
 		
 		for (long vid : neig.keySet()) {
 

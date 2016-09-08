@@ -15,6 +15,8 @@ import org.graphast.query.route.shortestpath.model.DistanceEntry;
 import org.graphast.query.route.shortestpath.model.Path;
 import org.graphast.query.route.shortestpath.model.RouteEntry;
 
+import com.graphhopper.util.StopWatch;
+
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 
 public class BidirectionalDijkstraCH {
@@ -22,7 +24,37 @@ public class BidirectionalDijkstraCH {
 	protected static int wasSettled = -1;
 	protected static boolean forwardDirection = true;
 	protected static boolean backwardDirection = false;
-	
+
+	int numberOfForwardSettleNodes = 0;
+	int numberOfBackwardSettleNodes = 0;
+	int numberOfTotalSettleNodes = 0;
+
+	// ---NearestNeighborAccess
+	StopWatch totalNearestNeighborSW = new StopWatch();
+	int numberOfTotalNeighborsAccess = 0;
+	int averageTotalNeighborsAccessTime = 0;
+
+	StopWatch forwardNearestNeighborSW = new StopWatch();
+	int numberOfForwardNeighborsAccess = 0;
+	int averageForwardNeighborsAccessTime = 0;
+
+	StopWatch backwardNearestNeighborSW = new StopWatch();
+	int numberOfBackwardNeighborsAccess = 0;
+	int averageBackwardNeighborsAccessTime = 0;
+
+	// ---ExpandingVertexTime
+	StopWatch totalExpantingVertexSW = new StopWatch();
+	double totalExpandingVertexTime = 0;
+	double averageTotalExpandingVertexTime = 0;
+
+	StopWatch forwardExpandingVertexSW = new StopWatch();
+	double numberOfForwardExpandingVertex = 0;
+	double averageForwardExpandingVertexTime = 0;
+
+	StopWatch backwardExpandingVertexSW = new StopWatch();
+	double numberOfBackwardExpandingVertex = 0;
+	double averageBackwardExpandingVertexTime = 0;
+
 	private CHGraph graph;
 
 	public BidirectionalDijkstraCH(CHGraph graph) {
@@ -48,25 +80,26 @@ public class BidirectionalDijkstraCH {
 		HashMap<Long, Integer> forwardsSettleNodes = new HashMap<>();
 		HashMap<Long, Integer> backwardsSettleNodes = new HashMap<>();
 
-		HashMap<Long, RouteEntry> forwardsParentNodes = new HashMap<Long, RouteEntry>();
-		HashMap<Long, RouteEntry> backwardsParentNodes = new HashMap<Long, RouteEntry>();
+		HashMap<Long, RouteEntry> forwardsParentNodes = new HashMap<>();
+		HashMap<Long, RouteEntry> backwardsParentNodes = new HashMap<>();
 
-		DistanceEntry forwardsRemovedNode = null;
-		DistanceEntry backwardsRemovedNode = null;
-		DistanceEntry meetingNode = null;
+		DistanceEntry forwardsRemovedNode;
+		DistanceEntry backwardsRemovedNode;
+		DistanceEntry meetingNode;
 
 		initializeQueue(source, forwardsUnsettleNodes);
 		initializeQueue(target, backwardsUnsettleNodes);
 
-		while (forwardsUnsettleNodes.isEmpty() == false && backwardsUnsettleNodes.isEmpty() == false) {
+		while (!forwardsUnsettleNodes.isEmpty() && !backwardsUnsettleNodes.isEmpty()) {
 
 			// Condition to alternate between forward and backward search
 			if (forwardsUnsettleNodes.peek().getDistance() <= backwardsUnsettleNodes.peek().getDistance()) {
 
-				if (forwardsUnsettleNodes.isEmpty() == false) {
+				if (!forwardsUnsettleNodes.isEmpty()) {
 
 					forwardsRemovedNode = forwardsUnsettleNodes.poll();
 					forwardsSettleNodes.put(forwardsRemovedNode.getId(), forwardsRemovedNode.getDistance());
+					numberOfForwardSettleNodes += 1;
 
 					// Stopping criteria of Bidirectional search
 					if (backwardsSettleNodes.containsKey(forwardsRemovedNode.getId())) {
@@ -78,35 +111,43 @@ public class BidirectionalDijkstraCH {
 
 							for (DistanceEntry entry : backwardsUnsettleNodes) {
 
-								if (entry.getId() == candidateNode) {
+								if (entry.getId() == candidateNode
+										&& (backwardsSettleNodes.get(forwardsRemovedNode.getId()) + forwardsSettleNodes
+												.get(forwardsRemovedNode.getId()) > entry.getDistance()
+														+ forwardsSettleNodes.get(candidateNode))) {
 
-									if (backwardsSettleNodes.get(forwardsRemovedNode.getId()) + forwardsSettleNodes.get(forwardsRemovedNode.getId()) > entry.getDistance() + forwardsSettleNodes.get(candidateNode)) {
+									forwardsParentNodes.remove(meetingNode.getId());
+									meetingNode = new DistanceEntry(candidateNode, entry.getDistance(),
+											backwardsParentNodes.get(candidateNode).getId());
 
-										forwardsParentNodes.remove(meetingNode.getId());
-										meetingNode = new DistanceEntry(candidateNode, entry.getDistance(),	backwardsParentNodes.get(candidateNode).getId());
-
-									}
 								}
 							}
 						}
 
-						resultParentNodes = joinParents(meetingNode, forwardsParentNodes, backwardsParentNodes, target);
+						resultParentNodes = joinParents(meetingNode, forwardsParentNodes, backwardsParentNodes);
 						path.constructPath(target.getId(), resultParentNodes, graph);
+
 						return path;
 
 					}
-					
-					expandVertexForward(forwardsRemovedNode, forwardsUnsettleNodes, forwardsParentNodes, forwardsSettleNodes);
-				
+
+					forwardExpandingVertexSW.start();
+					expandVertexForward(forwardsRemovedNode, forwardsUnsettleNodes, forwardsParentNodes,
+							forwardsSettleNodes);
+					forwardExpandingVertexSW.stop();
+
+					numberOfForwardExpandingVertex++;
+
 				}
 
 			} else {
 
-				if (backwardsUnsettleNodes.isEmpty() == false) {
+				if (!backwardsUnsettleNodes.isEmpty()) {
 
 					backwardsRemovedNode = backwardsUnsettleNodes.poll();
 					backwardsSettleNodes.put(backwardsRemovedNode.getId(), backwardsRemovedNode.getDistance());
-					
+					numberOfBackwardSettleNodes += 1;
+
 					// Stopping criteria of Bidirectional search
 					if (forwardsSettleNodes.containsKey(backwardsRemovedNode.getId())) {
 						meetingNode = backwardsRemovedNode;
@@ -117,45 +158,58 @@ public class BidirectionalDijkstraCH {
 
 							for (DistanceEntry entry : forwardsUnsettleNodes) {
 
-								if (entry.getId() == candidateNode) {
+								if (entry.getId() == candidateNode
+										&& (forwardsSettleNodes.get(backwardsRemovedNode.getId()) + backwardsSettleNodes
+												.get(backwardsRemovedNode.getId()) > entry.getDistance()
+														+ backwardsSettleNodes.get(candidateNode))) {
 
-									if (forwardsSettleNodes.get(backwardsRemovedNode.getId()) + backwardsSettleNodes.get(backwardsRemovedNode.getId()) > entry.getDistance() + backwardsSettleNodes.get(candidateNode)) {
+									backwardsParentNodes.remove(meetingNode.getId());
+									meetingNode = new DistanceEntry(candidateNode, entry.getDistance(),
+											forwardsParentNodes.get(candidateNode).getId());
 
-										backwardsParentNodes.remove(meetingNode.getId());
-										meetingNode = new DistanceEntry(candidateNode, entry.getDistance(),	forwardsParentNodes.get(candidateNode).getId());
-
-									}
 								}
 							}
 						}
 
-						resultParentNodes = joinParents(meetingNode, forwardsParentNodes, backwardsParentNodes, target);
+						resultParentNodes = joinParents(meetingNode, forwardsParentNodes, backwardsParentNodes);
 						path.constructPath(target.getId(), resultParentNodes, graph);
-						
+
 						return path;
 
 					}
-					
-					expandVertexBackward(backwardsRemovedNode, backwardsUnsettleNodes, backwardsParentNodes, backwardsSettleNodes);
+
+					backwardExpandingVertexSW.start();
+					expandVertexBackward(backwardsRemovedNode, backwardsUnsettleNodes, backwardsParentNodes,
+							backwardsSettleNodes);
+					backwardExpandingVertexSW.stop();
+
+					numberOfBackwardExpandingVertex++;
 
 				}
 			}
 		}
 
-		throw new PathNotFoundException("Path not found between (" + source.getLatitude() + "," + source.getLongitude() + ")");
+		throw new PathNotFoundException(
+				"Path not found between (" + source.getLatitude() + "," + source.getLongitude() + ")");
 
 	}
 
-	private void expandVertexForward(DistanceEntry removedNode, PriorityQueue<DistanceEntry> unsettleNodes, HashMap<Long, RouteEntry> parentNodes, HashMap<Long, Integer> settleNodes) {
+	private void expandVertexForward(DistanceEntry removedNode, PriorityQueue<DistanceEntry> unsettleNodes,
+			HashMap<Long, RouteEntry> parentNodes, HashMap<Long, Integer> settleNodes) {
 
+		forwardNearestNeighborSW.start();
 		Long2IntMap neighbors = graph.accessNeighborhood(graph.getNode(removedNode.getId()));
-		
+		forwardNearestNeighborSW.stop();
+		numberOfForwardNeighborsAccess++;
+		averageForwardNeighborsAccessTime += forwardNearestNeighborSW.getNanos();
+
 		for (long vid : neighbors.keySet()) {
 
-			DistanceEntry newEntry = new DistanceEntry(vid, neighbors.get(vid) + settleNodes.get(removedNode.getId()), removedNode.getId());
+			DistanceEntry newEntry = new DistanceEntry(vid, neighbors.get(vid) + settleNodes.get(removedNode.getId()),
+					removedNode.getId());
 
-			Edge edge = null;
-			int distance = -1;
+			Edge edge;
+			int distance;
 
 			if (!settleNodes.containsKey(vid)) {
 
@@ -165,8 +219,10 @@ public class BidirectionalDijkstraCH {
 				edge = getEdge(removedNode.getId(), vid, distance, forwardDirection);
 
 				if (parentNodes.containsKey(vid)) {
-					if (parentNodes.get(vid).getCost() + settleNodes.get(parentNodes.get(vid).getId()) > distance + settleNodes.get(removedNode.getId())) {
-						parentNodes.put(vid, new RouteEntry(removedNode.getId(), distance, edge.getId(), edge.getLabel()));
+					if (parentNodes.get(vid).getCost() + settleNodes.get(parentNodes.get(vid).getId()) > distance
+							+ settleNodes.get(removedNode.getId())) {
+						parentNodes.put(vid,
+								new RouteEntry(removedNode.getId(), distance, edge.getId(), edge.getLabel()));
 					}
 				} else {
 					parentNodes.put(vid, new RouteEntry(removedNode.getId(), distance, edge.getId(), edge.getLabel()));
@@ -177,35 +233,39 @@ public class BidirectionalDijkstraCH {
 				int cost = settleNodes.get(vid);
 				distance = settleNodes.get(removedNode.getId()) + neighbors.get(vid);
 
-				if (cost != wasSettled) {
-					if (cost > distance) {
-						unsettleNodes.remove(newEntry);
-						unsettleNodes.offer(newEntry);
-						settleNodes.remove(newEntry.getId());
-						settleNodes.put(newEntry.getId(), distance);
+				if (cost != wasSettled && cost > distance) {
 
-						parentNodes.remove(vid);
-						distance = neighbors.get(vid);
-						edge = getEdge(removedNode.getId(), vid, distance, forwardDirection);
-						parentNodes.put(vid, new RouteEntry(removedNode.getId(), distance, edge.getId(), edge.getLabel()));
+					unsettleNodes.remove(newEntry);
+					unsettleNodes.offer(newEntry);
+					settleNodes.remove(newEntry.getId());
+					settleNodes.put(newEntry.getId(), distance);
 
-					}
+					parentNodes.remove(vid);
+					distance = neighbors.get(vid);
+					edge = getEdge(removedNode.getId(), vid, distance, forwardDirection);
+					parentNodes.put(vid, new RouteEntry(removedNode.getId(), distance, edge.getId(), edge.getLabel()));
+
 				}
 			}
 		}
 	}
 
-	private void expandVertexBackward(DistanceEntry removedNode, PriorityQueue<DistanceEntry> unsettleNodes, HashMap<Long, RouteEntry> parentNodes, HashMap<Long, Integer> settleNodes) {
+	private void expandVertexBackward(DistanceEntry removedNode, PriorityQueue<DistanceEntry> unsettleNodes,
+			HashMap<Long, RouteEntry> parentNodes, HashMap<Long, Integer> settleNodes) {
 
-		
+		backwardNearestNeighborSW.start();
 		Long2IntMap neighbors = this.graph.accessIngoingNeighborhood(this.graph.getNode(removedNode.getId()));
-		
+		backwardNearestNeighborSW.stop();
+		numberOfBackwardNeighborsAccess++;
+		averageBackwardNeighborsAccessTime += backwardNearestNeighborSW.getNanos();
+
 		for (long vid : neighbors.keySet()) {
 
-			DistanceEntry newEntry = new DistanceEntry(vid, neighbors.get(vid) + settleNodes.get(removedNode.getId()), removedNode.getId());
+			DistanceEntry newEntry = new DistanceEntry(vid, neighbors.get(vid) + settleNodes.get(removedNode.getId()),
+					removedNode.getId());
 
-			Edge edge = null;
-			int distance = -1;
+			Edge edge;
+			int distance;
 
 			if (!settleNodes.containsKey(vid)) {
 
@@ -215,8 +275,10 @@ public class BidirectionalDijkstraCH {
 				edge = getEdge(removedNode.getId(), vid, distance, backwardDirection);
 
 				if (parentNodes.containsKey(vid)) {
-					if (parentNodes.get(vid).getCost() + settleNodes.get(parentNodes.get(vid).getId()) > distance + settleNodes.get(removedNode.getId())) {
-						parentNodes.put(vid, new RouteEntry(removedNode.getId(), distance, edge.getId(), edge.getLabel()));
+					if (parentNodes.get(vid).getCost() + settleNodes.get(parentNodes.get(vid).getId()) > distance
+							+ settleNodes.get(removedNode.getId())) {
+						parentNodes.put(vid,
+								new RouteEntry(removedNode.getId(), distance, edge.getId(), edge.getLabel()));
 					}
 				} else {
 					parentNodes.put(vid, new RouteEntry(removedNode.getId(), distance, edge.getId(), edge.getLabel()));
@@ -227,19 +289,18 @@ public class BidirectionalDijkstraCH {
 				int cost = settleNodes.get(vid);
 				distance = settleNodes.get(removedNode.getId()) + neighbors.get(vid);
 
-				if (cost != wasSettled) {
-					if (cost > distance) {
-						unsettleNodes.remove(newEntry);
-						unsettleNodes.offer(newEntry);
-						settleNodes.remove(newEntry.getId());
-						settleNodes.put(newEntry.getId(), distance);
+				if (cost != wasSettled && cost > distance) {
 
-						parentNodes.remove(vid);
-						distance = neighbors.get(vid);
-						edge = getEdge(removedNode.getId(), vid, distance, backwardDirection);
-						parentNodes.put(vid, new RouteEntry(removedNode.getId(), distance, edge.getId(), edge.getLabel()));
+					unsettleNodes.remove(newEntry);
+					unsettleNodes.offer(newEntry);
+					settleNodes.remove(newEntry.getId());
+					settleNodes.put(newEntry.getId(), distance);
 
-					}
+					parentNodes.remove(vid);
+					distance = neighbors.get(vid);
+					edge = getEdge(removedNode.getId(), vid, distance, backwardDirection);
+					parentNodes.put(vid, new RouteEntry(removedNode.getId(), distance, edge.getId(), edge.getLabel()));
+
 				}
 			}
 		}
@@ -253,7 +314,8 @@ public class BidirectionalDijkstraCH {
 
 	}
 
-	private HashMap<Long, RouteEntry> joinParents(DistanceEntry meetingNode, HashMap<Long, RouteEntry> forwardsParentNodes, HashMap<Long, RouteEntry> backwardsParentNodes,	Node target) {
+	private HashMap<Long, RouteEntry> joinParents(DistanceEntry meetingNode,
+			HashMap<Long, RouteEntry> forwardsParentNodes, HashMap<Long, RouteEntry> backwardsParentNodes) {
 
 		HashMap<Long, RouteEntry> resultListOfParents = new HashMap<>();
 
@@ -294,7 +356,7 @@ public class BidirectionalDijkstraCH {
 	// TODO TEST
 	private CHEdge getEdge(long fromNodeId, long toNodeId, int distance, boolean expandingDirection) {
 
-		if (expandingDirection == true) {
+		if (expandingDirection) {
 
 			return getEdgeForwards(fromNodeId, toNodeId, distance);
 
@@ -339,6 +401,206 @@ public class BidirectionalDijkstraCH {
 
 		return returningEdge;
 
+	}
+
+	public static int getWasSettled() {
+		return wasSettled;
+	}
+
+	public static void setWasSettled(int wasSettled) {
+		BidirectionalDijkstraCH.wasSettled = wasSettled;
+	}
+
+	public static boolean isForwardDirection() {
+		return forwardDirection;
+	}
+
+	public static void setForwardDirection(boolean forwardDirection) {
+		BidirectionalDijkstraCH.forwardDirection = forwardDirection;
+	}
+
+	public static boolean isBackwardDirection() {
+		return backwardDirection;
+	}
+
+	public static void setBackwardDirection(boolean backwardDirection) {
+		BidirectionalDijkstraCH.backwardDirection = backwardDirection;
+	}
+
+	public int getNumberOfForwardSettleNodes() {
+		return numberOfForwardSettleNodes;
+	}
+
+	public void setNumberOfForwardSettleNodes(int numberOfForwardSettleNodes) {
+		this.numberOfForwardSettleNodes = numberOfForwardSettleNodes;
+	}
+
+	public int getNumberOfBackwardSettleNodes() {
+		return numberOfBackwardSettleNodes;
+	}
+
+	public void setNumberOfBackwardSettleNodes(int numberOfBackwardSettleNodes) {
+		this.numberOfBackwardSettleNodes = numberOfBackwardSettleNodes;
+	}
+
+	public int getNumberOfTotalSettleNodes() {
+		return numberOfTotalSettleNodes;
+	}
+
+	public void setNumberOfTotalSettleNodes(int numberOfTotalSettleNodes) {
+		this.numberOfTotalSettleNodes = numberOfTotalSettleNodes;
+	}
+
+	public StopWatch getTotalNearestNeighborSW() {
+		return totalNearestNeighborSW;
+	}
+
+	public void setTotalNearestNeighborSW(StopWatch totalNearestNeighborSW) {
+		this.totalNearestNeighborSW = totalNearestNeighborSW;
+	}
+
+	public int getNumberOfTotalNeighborsAccess() {
+		return numberOfTotalNeighborsAccess;
+	}
+
+	public void setNumberOfTotalNeighborsAccess(int numberOfTotalNeighborsAccess) {
+		this.numberOfTotalNeighborsAccess = numberOfTotalNeighborsAccess;
+	}
+
+	public int getAverageTotalNeighborsAccessTime() {
+		return averageTotalNeighborsAccessTime;
+	}
+
+	public void setAverageTotalNeighborsAccessTime(int averageTotalNeighborsAccessTime) {
+		this.averageTotalNeighborsAccessTime = averageTotalNeighborsAccessTime;
+	}
+
+	public StopWatch getForwardNearestNeighborSW() {
+		return forwardNearestNeighborSW;
+	}
+
+	public void setForwardNearestNeighborSW(StopWatch forwardNearestNeighborSW) {
+		this.forwardNearestNeighborSW = forwardNearestNeighborSW;
+	}
+
+	public int getNumberOfForwardNeighborsAccess() {
+		return numberOfForwardNeighborsAccess;
+	}
+
+	public void setNumberOfForwardNeighborsAccess(int numberOfForwardNeighborsAccess) {
+		this.numberOfForwardNeighborsAccess = numberOfForwardNeighborsAccess;
+	}
+
+	public int getAverageForwardNeighborsAccessTime() {
+		return averageForwardNeighborsAccessTime;
+	}
+
+	public void setAverageForwardNeighborsAccessTime(int averageForwardNeighborsAccessTime) {
+		this.averageForwardNeighborsAccessTime = averageForwardNeighborsAccessTime;
+	}
+
+	public StopWatch getBackwardNearestNeighborSW() {
+		return backwardNearestNeighborSW;
+	}
+
+	public void setBackwardNearestNeighborSW(StopWatch backwardNearestNeighborSW) {
+		this.backwardNearestNeighborSW = backwardNearestNeighborSW;
+	}
+
+	public int getNumberOfBackwardNeighborsAccess() {
+		return numberOfBackwardNeighborsAccess;
+	}
+
+	public void setNumberOfBackwardNeighborsAccess(int numberOfBackwardNeighborsAccess) {
+		this.numberOfBackwardNeighborsAccess = numberOfBackwardNeighborsAccess;
+	}
+
+	public int getAverageBackwardNeighborsAccessTime() {
+		return averageBackwardNeighborsAccessTime;
+	}
+
+	public void setAverageBackwardNeighborsAccessTime(int averageBackwardNeighborsAccessTime) {
+		this.averageBackwardNeighborsAccessTime = averageBackwardNeighborsAccessTime;
+	}
+
+	public StopWatch getTotalExpantingVertexSW() {
+		return totalExpantingVertexSW;
+	}
+
+	public void setTotalExpantingVertexSW(StopWatch totalExpantingVertexSW) {
+		this.totalExpantingVertexSW = totalExpantingVertexSW;
+	}
+
+	public double getTotalExpandingVertexTime() {
+		return totalExpandingVertexTime;
+	}
+
+	public void setTotalExpandingVertexTime(double totalExpandingVertexTime) {
+		this.totalExpandingVertexTime = totalExpandingVertexTime;
+	}
+
+	public double getAverageTotalExpandingVertexTime() {
+		return averageTotalExpandingVertexTime;
+	}
+
+	public void setAverageTotalExpandingVertexTime(double averageTotalExpandingVertexTime) {
+		this.averageTotalExpandingVertexTime = averageTotalExpandingVertexTime;
+	}
+
+	public StopWatch getForwardExpandingVertexSW() {
+		return forwardExpandingVertexSW;
+	}
+
+	public void setForwardExpandingVertexSW(StopWatch forwardExpandingVertexSW) {
+		this.forwardExpandingVertexSW = forwardExpandingVertexSW;
+	}
+
+	public double getNumberOfForwardExpandingVertex() {
+		return numberOfForwardExpandingVertex;
+	}
+
+	public void setNumberOfForwardExpandingVertex(double numberOfForwardExpandingVertex) {
+		this.numberOfForwardExpandingVertex = numberOfForwardExpandingVertex;
+	}
+
+	public double getAverageForwardExpandingVertexTime() {
+		return averageForwardExpandingVertexTime;
+	}
+
+	public void setAverageForwardExpandingVertexTime(double averageForwardExpandingVertexTime) {
+		this.averageForwardExpandingVertexTime = averageForwardExpandingVertexTime;
+	}
+
+	public StopWatch getBackwardExpandingVertexSW() {
+		return backwardExpandingVertexSW;
+	}
+
+	public void setBackwardExpandingVertexSW(StopWatch backwardExpandingVertexSW) {
+		this.backwardExpandingVertexSW = backwardExpandingVertexSW;
+	}
+
+	public double getNumberOfBackwardExpandingVertex() {
+		return numberOfBackwardExpandingVertex;
+	}
+
+	public void setNumberOfBackwardExpandingVertex(double numberOfBackwardExpandingVertex) {
+		this.numberOfBackwardExpandingVertex = numberOfBackwardExpandingVertex;
+	}
+
+	public double getAverageBackwardExpandingVertexTime() {
+		return averageBackwardExpandingVertexTime;
+	}
+
+	public void setAverageBackwardExpandingVertexTime(double averageBackwardExpandingVertexTime) {
+		this.averageBackwardExpandingVertexTime = averageBackwardExpandingVertexTime;
+	}
+
+	public CHGraph getGraph() {
+		return graph;
+	}
+
+	public void setGraph(CHGraph graph) {
+		this.graph = graph;
 	}
 
 }

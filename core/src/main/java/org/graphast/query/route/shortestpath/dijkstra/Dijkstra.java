@@ -31,10 +31,11 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 	
 	StopWatch nearestNeighborSW = new StopWatch();
 	int numberOfNeighborsAccess = 0;
-	int averageNeighborsAccessTime = 0;
+	int averageTotalNeighborsAccessTime = 0;
 
 	StopWatch expandingVertexSW = new StopWatch();
-	int totalExpandingVertexTime = 0;
+	double numberOfExpandingVertex = 0;
+	double averageTotalExpandingVertexTime = 0;
 	
 	public Dijkstra(GraphBounds graphBounds) {
 		super(graphBounds);
@@ -91,18 +92,15 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 			if (removed.getId() == targetId) {
 				Path path = new Path();
 				path.constructPath(removed.getId(), parents, graph);
-				System.out.println("[REGULAR] Number of total settle nodes: " + numberOfTotalSettleNodes);
 				
-				averageNeighborsAccessTime = averageNeighborsAccessTime/numberOfNeighborsAccess;
-				System.out.println("[REGULAR] Total Average Neighbors Access Time: " + averageNeighborsAccessTime);
-				System.out.println("[REGULAR] Total Expanding Vertex Time: " + totalExpandingVertexTime);
 				return path;
 			}
 
 			expandingVertexSW.start();
 			expandVertex(target, removed, wasTraversed, queue, parents, skippedNode);
 			expandingVertexSW.stop();
-			totalExpandingVertexTime += expandingVertexSW.getNanos();
+			
+			numberOfExpandingVertex++;
 		}
 		throw new PathNotFoundException("Path not found between (" + source.getLatitude() + "," + source.getLongitude()
 				+ ") and (" + target.getLatitude() + "," + target.getLongitude() + ")");
@@ -168,4 +166,60 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 		return shortestPath(graph.getNode(source), graph.getNode(target), time, skippedNode);
 	}
 
+	public int getNumberOfTotalSettleNodes() {
+		return numberOfTotalSettleNodes;
+	}
+
+	public void setNumberOfTotalSettleNodes(int numberOfTotalSettleNodes) {
+		this.numberOfTotalSettleNodes = numberOfTotalSettleNodes;
+	}
+
+	public StopWatch getNearestNeighborSW() {
+		return nearestNeighborSW;
+	}
+
+	public void setNearestNeighborSW(StopWatch nearestNeighborSW) {
+		this.nearestNeighborSW = nearestNeighborSW;
+	}
+
+	public int getNumberOfNeighborsAccess() {
+		return numberOfNeighborsAccess;
+	}
+
+	public void setNumberOfNeighborsAccess(int numberOfNeighborsAccess) {
+		this.numberOfNeighborsAccess = numberOfNeighborsAccess;
+	}
+
+	public int getAverageTotalNeighborsAccessTime() {
+		return averageTotalNeighborsAccessTime;
+	}
+
+	public void setAverageTotalNeighborsAccessTime(int averageTotalNeighborsAccessTime) {
+		this.averageTotalNeighborsAccessTime = averageTotalNeighborsAccessTime;
+	}
+
+	public StopWatch getExpandingVertexSW() {
+		return expandingVertexSW;
+	}
+
+	public void setExpandingVertexSW(StopWatch expandingVertexSW) {
+		this.expandingVertexSW = expandingVertexSW;
+	}
+
+	public double getNumberOfExpandingVertex() {
+		return numberOfExpandingVertex;
+	}
+
+	public void setNumberOfExpandingVertex(double numberOfExpandingVertex) {
+		this.numberOfExpandingVertex = numberOfExpandingVertex;
+	}
+
+	public double getAverageTotalExpandingVertexTime() {
+		return averageTotalExpandingVertexTime;
+	}
+
+	public void setAverageTotalExpandingVertexTime(double averageTotalExpandingVertexTime) {
+		this.averageTotalExpandingVertexTime = averageTotalExpandingVertexTime;
+	}
+	
 }

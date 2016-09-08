@@ -38,7 +38,7 @@ public class BidirectionalDijkstraTest {
 		graphMITExample = new GraphGenerator().generateMITExample();
 		graphMITExample2 = new GraphGenerator().generateMITExample2();
 		graphMonaco = new GraphGenerator().generateMonacoCH();
-		graphSeattle = new GraphGenerator().generateSeattleCH();
+//		graphSeattle = new GraphGenerator().generateSeattleCH();
 		
 	}
 	
@@ -307,6 +307,16 @@ public class BidirectionalDijkstraTest {
 
 		bidirectionalDijkstraSW.stop();
 		
+		bidirectionalDijkstra.setAverageForwardExpandingVertexTime(bidirectionalDijkstra.getForwardExpandingVertexSW().getNanos()/bidirectionalDijkstra.getNumberOfForwardExpandingVertex());
+		System.out.println("[BIDIRECTIONAL] Expanding Forward average time: " + bidirectionalDijkstra.getAverageForwardExpandingVertexTime());
+		
+		bidirectionalDijkstra.setAverageBackwardExpandingVertexTime(bidirectionalDijkstra.getBackwardExpandingVertexSW().getNanos()/bidirectionalDijkstra.getNumberOfBackwardExpandingVertex());
+		System.out.println("[BIDIRECTIONAL] Expanding Backward average time: " + bidirectionalDijkstra.getAverageBackwardExpandingVertexTime());
+		
+		double totalAverageExpandingTime = bidirectionalDijkstra.getAverageForwardExpandingVertexTime() + bidirectionalDijkstra.getAverageBackwardExpandingVertexTime();
+		
+		System.out.println("[BIDIRECTIONAL] Expanding Total average time: " + totalAverageExpandingTime);
+		
 		System.out.println("[BIDIRECTIONAL] Execution Time of Dijkstra Algorithm in shortestPathMonacoTest(): " + bidirectionalDijkstraSW.getNanos() + "ns");
 		
 		assertEquals(1073837, finalPath.getTotalDistance());
@@ -321,6 +331,9 @@ public class BidirectionalDijkstraTest {
 
 		dijkstraSW.stop();
 		
+		dijkstra.setAverageTotalExpandingVertexTime(dijkstra.getExpandingVertexSW().getNanos()/dijkstra.getNumberOfExpandingVertex());
+		
+		System.out.println("[REGULAR] Expanding Total average time: " + dijkstra.getAverageTotalExpandingVertexTime());
 		
 		System.out.println("[REGULAR] Execution Time of Dijkstra Algorithm shortestPathMonacoTest(): " + dijkstraSW.getNanos() + "ns");
 
