@@ -17,7 +17,7 @@ import org.graphast.model.GraphImpl;
 import org.graphast.model.Node;
 import org.graphast.query.route.shortestpath.ShortestPathService;
 import org.graphast.query.route.shortestpath.dijkstra.DijkstraConstantWeight;
-import org.graphast.query.route.shortestpath.dijkstraCH.DijkstraCH;
+import org.graphast.query.route.shortestpath.dijkstrach.DijkstraCH;
 import org.graphast.query.route.shortestpath.model.Path;
 
 import it.unimi.dsi.fastutil.BigArrays;

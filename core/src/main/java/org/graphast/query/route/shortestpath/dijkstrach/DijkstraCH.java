@@ -1,4 +1,4 @@
-package org.graphast.query.route.shortestpath.dijkstraCH;
+package org.graphast.query.route.shortestpath.dijkstrach;
 
 import static org.graphast.util.NumberUtils.convertToInt;
 

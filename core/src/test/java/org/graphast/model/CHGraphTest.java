@@ -7,7 +7,7 @@ import java.util.List;
 import org.graphast.graphgenerator.GraphGenerator;
 import org.graphast.model.contraction.CHEdge;
 import org.graphast.model.contraction.CHGraph;
-import org.graphast.query.route.shortestpath.dijkstraCH.DijkstraCH;
+import org.graphast.query.route.shortestpath.dijkstrach.DijkstraCH;
 import org.graphast.query.route.shortestpath.model.Path;
 import org.junit.BeforeClass;
 import org.junit.Test;

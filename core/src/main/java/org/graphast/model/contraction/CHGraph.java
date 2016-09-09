@@ -6,7 +6,7 @@ import java.util.Queue;
 
 import org.graphast.model.Graph;
 import org.graphast.model.Node;
-import org.graphast.query.route.shortestpath.dijkstraCH.DijkstraCH;
+import org.graphast.query.route.shortestpath.dijkstrach.DijkstraCH;
 
 import it.unimi.dsi.fastutil.ints.IntBigArrayBigList;
 
