@@ -78,13 +78,13 @@ public class BidirectionalDijkstraTest {
 		
 		assertEquals(3, finalPath.getTotalDistance());
 		
-		Dijkstra dijkstra = new DijkstraConstantWeight(graphHopperExample2);
+		BidirectionalDijkstraCH dijkstra = new BidirectionalDijkstraCH(graphHopperExample2);
 
 		StopWatch dijkstraSW = new StopWatch();
 		
 		dijkstraSW.start();
 
-		Path dijkstraPath = dijkstra.shortestPath(graphHopperExample2.getNode(0), graphHopperExample2.getNode(3));
+		Path dijkstraPath = dijkstra.executeRegular(graphHopperExample2.getNode(0), graphHopperExample2.getNode(3));
 
 		dijkstraSW.stop();
 		
@@ -304,41 +304,29 @@ public class BidirectionalDijkstraTest {
 		Path finalPath = bidirectionalDijkstra.execute(graphMonaco.getNode(source), graphMonaco.getNode(target));
 
 		bidirectionalDijkstraSW.stop();
+
+		System.out.println("Number of Forward Searches: " + bidirectionalDijkstra.getNumberOfForwardSearches());
+		System.out.println("Number of Backward Searches: " + bidirectionalDijkstra.getNumberOfBackwardSearches());
+		System.out.println("General Counter: " + bidirectionalDijkstra.getGeneralCounter());
+		System.out.println("Forward Search Average Time: " + (bidirectionalDijkstra.getForwardSearchSW().getNanos()));
+		System.out.println("Backward Search Average Time: " + (bidirectionalDijkstra.getBackwardSearchSW().getNanos()));
+		System.out.println("General Stop Watch: " + (bidirectionalDijkstra.getGeneralSW().getNanos()));
 		
-		System.out.println("[BIDIRECTIONAL] forwardSearchTime: " + (bidirectionalDijkstra.getForwardSearchSW().getNanos()/bidirectionalDijkstra.getNumberOfForwardSearches()));
-		
-		System.out.println("[BIDIRECTIONAL] backwardSearchTime: " + (bidirectionalDijkstra.getBackwardSearchSW().getNanos()/bidirectionalDijkstra.getNumberOfBackwardSearches()));
-		
-		bidirectionalDijkstra.setAverageForwardExpandingVertexTime(bidirectionalDijkstra.getForwardExpandingVertexSW().getNanos()/bidirectionalDijkstra.getNumberOfForwardExpandingVertex());
-		System.out.println("[BIDIRECTIONAL] Expanding Forward average time: " + bidirectionalDijkstra.getAverageForwardExpandingVertexTime());
-		
-		bidirectionalDijkstra.setAverageBackwardExpandingVertexTime(bidirectionalDijkstra.getBackwardExpandingVertexSW().getNanos()/bidirectionalDijkstra.getNumberOfBackwardExpandingVertex());
-		System.out.println("[BIDIRECTIONAL] Expanding Backward average time: " + bidirectionalDijkstra.getAverageBackwardExpandingVertexTime());
-		
-		double totalAverageExpandingTime = bidirectionalDijkstra.getAverageForwardExpandingVertexTime() + bidirectionalDijkstra.getAverageBackwardExpandingVertexTime();
-		
-		System.out.println("[BIDIRECTIONAL] Expanding Total average time: " + totalAverageExpandingTime);
-		
-		System.out.println("[BIDIRECTIONAL] Execution Time of Dijkstra Algorithm in shortestPathMonacoTest(): " + bidirectionalDijkstraSW.getNanos() + "ns");
 		
 		assertEquals(1073837, finalPath.getTotalDistance());
 		
-		Dijkstra dijkstra = new DijkstraConstantWeight(graphMonaco);
+		BidirectionalDijkstraCH dijkstra = new BidirectionalDijkstraCH(graphMonaco);
 
 		StopWatch dijkstraSW = new StopWatch();
 		
 		dijkstraSW.start();
 
-		Path dijkstraPath = dijkstra.shortestPath(graphMonaco.getNode(source), graphMonaco.getNode(target));
+		Path dijkstraPath = dijkstra.executeRegular(graphMonaco.getNode(source), graphMonaco.getNode(target));
 
 		dijkstraSW.stop();
-		
-		dijkstra.setAverageTotalExpandingVertexTime(dijkstra.getExpandingVertexSW().getNanos()/dijkstra.getNumberOfExpandingVertex());
-		
-		System.out.println("[REGULAR] Expanding Total average time: " + dijkstra.getAverageTotalExpandingVertexTime());
-		
-		System.out.println("[REGULAR] Execution Time of Dijkstra Algorithm shortestPathMonacoTest(): " + dijkstraSW.getNanos() + "ns");
 
+		System.out.println("Number of Regular Searches: " + dijkstra.getNumberOfRegularSearches());
+		System.out.println("Regular Search Average Time: " + (dijkstra.getRegularSearchSW().getNanos()));
 		
 		assertEquals(1073837, dijkstraPath.getTotalDistance());
 
