@@ -261,16 +261,16 @@ public class GraphGenerator {
 
 //		POIImporter.importPoIList(graph, "src/test/resources/monaco-latest.csv");
 
-		System.out.println("#nodes: " + graph.getNumberOfNodes());
-		System.out.println("#edges: " + graph.getNumberOfEdges());
+//		System.out.println("#nodes: " + graph.getNumberOfNodes());
+//		System.out.println("#edges: " + graph.getNumberOfEdges());
 
 //		graph.createHyperPOIS();
 
-		System.out.println("#nodes: " + graph.getNumberOfNodes());
-		System.out.println("#edges: " + graph.getNumberOfEdges());
+//		System.out.println("#nodes: " + graph.getNumberOfNodes());
+//		System.out.println("#edges: " + graph.getNumberOfEdges());
 
-		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
-		graph.setMaxLevel((int) (graph.getNumberOfNodes() + 1));
+//		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
+//		graph.setMaxLevel((int) (graph.getNumberOfNodes() + 1));
 
 		graph.save();
 
