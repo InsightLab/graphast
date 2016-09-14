@@ -21,7 +21,7 @@ public class OSMImporterTest {
 
 	@BeforeClass
 	public static void setup() {
-		osmFile = OSMImporterTest.class.getResource("/monaco-150112.osm.pbf").getPath();
+		osmFile = OSMImporterTest.class.getResource("/monaco-latest.osm.pbf").getPath();
 		graphastDir = Configuration.USER_HOME + "/graphast/test/monaco";
 		FileUtils.deleteDir(graphastDir);
 		monaco = new OSMImporterImpl(osmFile, graphastDir).execute();

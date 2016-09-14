@@ -60,6 +60,8 @@ public class DijkstraConstantWeight extends Dijkstra {
 
 					if (cost != wasRemoved) {
 						if (cost > newEntry.getTravelTime()) {
+							
+//							System.out.println("Entrou");
 							queue.remove(newEntry);
 							queue.offer(newEntry);
 							wasTraversed.remove(newEntry.getId());

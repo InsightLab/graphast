@@ -213,7 +213,7 @@ public class GraphGenerator {
 
 	public GraphBounds generateMonaco() {
 
-		String osmFile = this.getClass().getResource("/monaco-150112.osm.pbf").getPath();
+		String osmFile = this.getClass().getResource("/monaco-latest.osm.pbf").getPath();
 		String graphHopperMonacoDir = Configuration.USER_HOME + "/graphhopper/test/monaco";
 		String graphastMonacoDir = Configuration.USER_HOME + "/graphast/test/monaco";
 
@@ -228,7 +228,7 @@ public class GraphGenerator {
 	}
 
 	public CHGraph generateMonacoCH() {
-		String osmFile = this.getClass().getResource("/monaco-150112.osm.pbf").getPath();
+		String osmFile = this.getClass().getResource("/monaco-latest.osm.pbf").getPath();
 		String graphHopperMonacoDir = Configuration.USER_HOME + "/graphhopper/test/monaco";
 		String graphastMonacoDir = Configuration.USER_HOME + "/graphast/test/monaco";
 
