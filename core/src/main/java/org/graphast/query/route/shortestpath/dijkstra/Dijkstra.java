@@ -81,7 +81,7 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 
 		while (!queue.isEmpty()) {
 			removed = queue.poll();
-			System.out.println("[VELHO] Nó removido: " + removed.getId());
+//			System.out.println("[VELHO] Nó removido: " + removed.getId());
 			wasTraversed.put(removed.getId(), wasRemoved);
 			numberOfTotalSettleNodes++;
 			if (this.getMaxHopLimit() < wasTraversed.size())
