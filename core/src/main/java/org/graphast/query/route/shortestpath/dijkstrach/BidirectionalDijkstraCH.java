@@ -33,6 +33,8 @@ public class BidirectionalDijkstraCH {
 
 	PriorityQueue<DistanceEntry> forwardsUnsettleNodes = new PriorityQueue<>();
 	PriorityQueue<DistanceEntry> backwardsUnsettleNodes = new PriorityQueue<>();
+	HashMap<Long, Integer> forwardsUnsettleNodesAux = new HashMap<>();
+	HashMap<Long, Integer> backwardsUnsettleNodesAux = new HashMap<>();
 
 	HashMap<Long, Integer> forwardsSettleNodes = new HashMap<>();
 	HashMap<Long, Integer> backwardsSettleNodes = new HashMap<>();
@@ -82,6 +84,8 @@ public class BidirectionalDijkstraCH {
 
 		initializeQueue(source, forwardsUnsettleNodes);
 		initializeQueue(target, backwardsUnsettleNodes);
+		
+		forwardsUnsettleNodesAux.put(source.getId(), 0);
 
 		forwardsRemovedNode = forwardsUnsettleNodes.peek();
 		backwardsRemovedNode = backwardsUnsettleNodes.peek();
@@ -124,6 +128,7 @@ public class BidirectionalDijkstraCH {
 	private void forwardSearch() {
 
 		forwardsRemovedNode = forwardsUnsettleNodes.poll();
+		forwardsUnsettleNodesAux.remove(forwardsRemovedNode.getId());
 		forwardsSettleNodes.put(forwardsRemovedNode.getId(), forwardsRemovedNode.getDistance());
 		forwardsSettleNodesAux.offer(forwardsRemovedNode);
 		
@@ -181,6 +186,7 @@ public class BidirectionalDijkstraCH {
 			if (!forwardsSettleNodes.containsKey(vid)) {
 				
 				forwardsUnsettleNodes.offer(newEntry);
+				forwardsUnsettleNodesAux.put(newEntry.getId(), newEntry.getDistance());
 				forwardsSettleNodes.put(newEntry.getId(), newEntry.getDistance());
 				
 				distance = neighbors.get(vid);
@@ -195,7 +201,9 @@ public class BidirectionalDijkstraCH {
 
 				if (cost > distance) {
 					forwardsUnsettleNodes.remove(newEntry);
+					forwardsUnsettleNodesAux.remove(newEntry.getId());
 					forwardsUnsettleNodes.offer(newEntry);
+					forwardsUnsettleNodesAux.put(newEntry.getId(), newEntry.getDistance());
 					
 					forwardsSettleNodesAux.remove(newEntry);
 					forwardsSettleNodesAux.offer(newEntry);
@@ -214,21 +222,25 @@ public class BidirectionalDijkstraCH {
 				}
 			}
 			
-			
-			if(backwardsSettleNodes.containsKey(vid) && (forwardsSettleNodes.get(forwardsRemovedNode.getId())+neighbors.get(vid)+backwardsSettleNodes.get(vid)) < miNode.getDistance() ) {
-				miNode = newEntry;
-			}
-			
-		
-			
-			for(DistanceEntry entry : backwardsUnsettleNodes) {
-				
-				if( miNode.getId()!=-1 && (entry.getId() == vid && (forwardsSettleNodes.get(forwardsRemovedNode.getId()) + neighbors.get(entry.getId()) + entry.getDistance() <= forwardsSettleNodes.get(miNode.getId()) + backwardsSettleNodes.get(miNode.getId()) ))) {
+			if(miNode.getId()==-1) {
+				if(backwardsSettleNodes.containsKey(vid) && (forwardsSettleNodes.get(forwardsRemovedNode.getId())+neighbors.get(vid)+backwardsSettleNodes.get(vid)) <= miNode.getDistance() ) {
 					miNode = newEntry;
 				}
-				
+			} else {
+				if(backwardsSettleNodes.containsKey(vid) && (forwardsSettleNodes.get(forwardsRemovedNode.getId())+neighbors.get(vid)+backwardsSettleNodes.get(vid)) <= forwardsSettleNodes.get(miNode.getId()) + backwardsSettleNodes.get(miNode.getId())) {
+					miNode = newEntry;
+				}
 			}
 			
+			if(miNode.getId()==-1) {
+				if(backwardsSettleNodes.containsKey(vid) && (forwardsSettleNodes.get(forwardsRemovedNode.getId())+neighbors.get(vid)+backwardsSettleNodes.get(vid)) <= miNode.getDistance() ) {
+					miNode = newEntry;
+				}
+			} else {
+				if(backwardsUnsettleNodesAux.containsKey(vid) && (forwardsSettleNodes.get(forwardsRemovedNode.getId())+neighbors.get(vid)+backwardsUnsettleNodesAux.get(vid)) <= forwardsSettleNodes.get(miNode.getId()) + backwardsUnsettleNodesAux.get(miNode.getId())) {
+					miNode = newEntry;
+				}
+			}
 		}
 	}
 
@@ -277,18 +289,24 @@ public class BidirectionalDijkstraCH {
 				}
 			}
 			
-			if(forwardsSettleNodes.containsKey(vid) && (backwardsSettleNodes.get(backwardsRemovedNode.getId())+neighbors.get(vid)+forwardsSettleNodes.get(vid)) < miNode.getDistance() ) {
-				miNode = newEntry;
-			}
-			
-			
-			
-			for(DistanceEntry entry : forwardsUnsettleNodes) {
-				
-				if(miNode.getId()!=-1 &&  (entry.getId() == newEntry.getId() &&    (backwardsSettleNodes.get(backwardsRemovedNode.getId())+neighbors.get(entry.getId())+entry.getDistance() <= forwardsSettleNodes.get(miNode.getId()) + backwardsSettleNodes.get(miNode.getId()) ))) {
+			if(miNode.getId()==-1) {
+				if(forwardsSettleNodes.containsKey(vid) && (backwardsSettleNodes.get(backwardsRemovedNode.getId())+neighbors.get(vid)+forwardsSettleNodes.get(vid)) <= miNode.getDistance() ) {
 					miNode = newEntry;
 				}
-				
+			} else {
+				if(forwardsSettleNodes.containsKey(vid) && (backwardsSettleNodes.get(backwardsRemovedNode.getId())+neighbors.get(vid)+forwardsSettleNodes.get(vid)) <= forwardsSettleNodes.get(miNode.getId()) + backwardsSettleNodes.get(miNode.getId()) ) {
+					miNode = newEntry;
+				}
+			}
+			
+			if(miNode.getId()==-1) {
+				if(forwardsSettleNodes.containsKey(vid) && (backwardsSettleNodes.get(backwardsRemovedNode.getId())+neighbors.get(vid)+forwardsSettleNodes.get(vid)) <= miNode.getDistance() ) {
+					miNode = newEntry;
+				}
+			} else {
+				if(forwardsUnsettleNodesAux.containsKey(vid) && (backwardsSettleNodes.get(backwardsRemovedNode.getId())+neighbors.get(vid)+forwardsUnsettleNodesAux.get(vid)) <= forwardsUnsettleNodesAux.get(miNode.getId()) + backwardsSettleNodes.get(miNode.getId()) ) {
+					miNode = newEntry;
+				}
 			}
 			
 		}
