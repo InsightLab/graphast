@@ -278,11 +278,11 @@ public class GraphGenerator {
 	}
 	
 	public CHGraph generateGreeceCH() {
-		String osmFile = this.getClass().getResource("/greece.osm.pbf").getPath();
-		String graphHopperSeattleDir = Configuration.USER_HOME + "/graphhopper/test/greece";
-		String graphastSeattleDir = Configuration.USER_HOME + "/graphast/test/greece";
+		String osmFile = this.getClass().getResource("/greece-latest.osm.pbf").getPath();
+		String graphHopperGreeceDir = Configuration.USER_HOME + "/graphhopper/test/greece";
+		String graphastGreeceDir = Configuration.USER_HOME + "/graphast/test/greece";
 
-		CHGraph graph = new OSMImporterImpl(osmFile, graphHopperSeattleDir, graphastSeattleDir).executeCH();
+		CHGraph graph = new OSMImporterImpl(osmFile, graphHopperGreeceDir, graphastGreeceDir).executeCH();
 
 //		POIImporter.importPoIList(graph, "src/test/resources/monaco-latest.csv");
 
@@ -301,7 +301,57 @@ public class GraphGenerator {
 
 		return graph;
 	}
+	
+	public CHGraph generateGermanyCH() {
+		String osmFile = this.getClass().getResource("/germany-latest.osm.pbf").getPath();
+		String graphHopperGermanyDir = Configuration.USER_HOME + "/graphhopper/test/germany";
+		String graphastGermanyDir = Configuration.USER_HOME + "/graphast/test/germany";
 
+		CHGraph graph = new OSMImporterImpl(osmFile, graphHopperGermanyDir, graphastGermanyDir).executeCH();
+
+//		POIImporter.importPoIList(graph, "src/test/resources/monaco-latest.csv");
+//
+//		System.out.println("#nodes: " + graph.getNumberOfNodes());
+//		System.out.println("#edges: " + graph.getNumberOfEdges());
+
+//		graph.createHyperPOIS();
+
+//		System.out.println("#nodes: " + graph.getNumberOfNodes());
+//		System.out.println("#edges: " + graph.getNumberOfEdges());
+//
+//		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
+//		graph.setMaxLevel((int) (graph.getNumberOfNodes() + 1));
+
+		graph.save();
+
+		return graph;
+	}
+
+	public CHGraph generateSpainCH() {
+		String osmFile = this.getClass().getResource("/spain-latest.osm.pbf").getPath();
+		String graphHopperSpainDir = Configuration.USER_HOME + "/graphhopper/test/spain";
+		String graphastSpainDir = Configuration.USER_HOME + "/graphast/test/spain";
+
+		CHGraph graph = new OSMImporterImpl(osmFile, graphHopperSpainDir, graphastSpainDir).executeCH();
+
+//		POIImporter.importPoIList(graph, "src/test/resources/monaco-latest.csv");
+//
+//		System.out.println("#nodes: " + graph.getNumberOfNodes());
+//		System.out.println("#edges: " + graph.getNumberOfEdges());
+
+//		graph.createHyperPOIS();
+
+//		System.out.println("#nodes: " + graph.getNumberOfNodes());
+//		System.out.println("#edges: " + graph.getNumberOfEdges());
+//
+//		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
+//		graph.setMaxLevel((int) (graph.getNumberOfNodes() + 1));
+
+		graph.save();
+
+		return graph;
+	}
+	
 	public GraphBounds generateSeattle() throws NumberFormatException, IOException {
 
 		String osmFile = this.getClass().getResource("/seattle.osm.pbf").getPath();

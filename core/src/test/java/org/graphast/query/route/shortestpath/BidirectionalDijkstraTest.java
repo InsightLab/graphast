@@ -26,9 +26,11 @@ public class BidirectionalDijkstraTest {
 	private static CHGraph graphMITExample;
 	private static CHGraph graphMITExample2;
 	private static CHGraph graphMITExample3;
-	private static CHGraph graphMonaco;
-	private static CHGraph graphSeattle;
-	private static CHGraph graphGreece;
+//	private static CHGraph graphMonaco;
+//	private static CHGraph graphSeattle;
+//	private static CHGraph graphGreece;
+//	private static CHGraph graphGermany;
+//	private static CHGraph graphSpain;
 	
 	@BeforeClass
 	public static void setup() {
@@ -40,9 +42,11 @@ public class BidirectionalDijkstraTest {
 		graphMITExample = new GraphGenerator().generateMITExample();
 		graphMITExample2 = new GraphGenerator().generateMITExample2();
 		graphMITExample3 = new GraphGenerator().generateMITExample3();
-		graphMonaco = new GraphGenerator().generateMonacoCH();
-		graphSeattle = new GraphGenerator().generateSeattleCH();
-		graphGreece = new GraphGenerator().generateGreeceCH();
+//		graphMonaco = new GraphGenerator().generateMonacoCH();
+//		graphSeattle = new GraphGenerator().generateSeattleCH();
+//		graphGreece = new GraphGenerator().generateGreeceCH();
+//		graphGermany = new GraphGenerator().generateGermanyCH();
+//		graphSpain = new GraphGenerator().generateSpainCH();
 		
 	}
 	
@@ -333,104 +337,279 @@ public class BidirectionalDijkstraTest {
 	
 	}
 	
-	@Test
-	public void regularShortestPathMonacoTest() {
+//	@Test
+//	public void regularShortestPathMonacoTest() {
+//
+//		Long source = graphMonaco.getNodeId(43.740174,7.424376);
+//		Long target = graphMonaco.getNodeId(43.735554,7.416147);
+//		
+//		Dijkstra regularDijkstra = new DijkstraConstantWeight(graphMonaco);
+//
+//		StopWatch regularDijkstraSW = new StopWatch();
+//		
+//		regularDijkstraSW.start();
+//
+//		Path regularDijkstraFinalPath = regularDijkstra.shortestPath(graphMonaco.getNode(source), graphMonaco.getNode(target));
+//
+//		regularDijkstraSW.stop();
+//
+//		assertEquals(1072346, regularDijkstraFinalPath.getTotalDistance());
+//		
+//		logger.info("[REGULAR] Execution Time for regularShortestPathMonacoTest(): {}ms", regularDijkstraSW.getNanos());
+//		
+//		logger.info("[REGULAR] Shortest Path");
+//		logger.info("\t{}", regularDijkstraFinalPath.getInstructions());
+//		
+//		BidirectionalDijkstraCH bidirectionalDijkstra = new BidirectionalDijkstraCH(graphMonaco);
+//		
+//		StopWatch bidirectionalDijkstraSW = new StopWatch();
+//		
+//		bidirectionalDijkstraSW.start();
+//		Path bidirectionalDijkstraFinalPath = bidirectionalDijkstra.execute(graphMonaco.getNode(source), graphMonaco.getNode(target));
+//		bidirectionalDijkstraSW.stop();
+//		
+//		logger.info("[BIDIRECTIONAL] Execution Time of regularShortestPathMonacoTest(): {}ms", bidirectionalDijkstraSW.getNanos());
+//	
+//		logger.info("[BIDIRECTIONAL] Shortest Path");
+//		logger.info("\t{}", bidirectionalDijkstraFinalPath.getInstructions());
+//		
+//		assertEquals(1072346, bidirectionalDijkstraFinalPath.getTotalDistance());
+//		
+//		double result;
+//		
+//		if(regularDijkstraSW.getNanos() > bidirectionalDijkstraSW.getNanos()) {
+//			result = (double)regularDijkstraSW.getNanos()/(double)bidirectionalDijkstraSW.getNanos();
+//			logger.info("Bidirectional Dijkstra was {}x FASTER",  result);
+//		} else {
+//			result = (double)bidirectionalDijkstraSW.getNanos()/(double)regularDijkstraSW.getNanos();
+//			logger.info("Bidirectional Dijkstra was {}x SLOWER",  result);
+//		}
+//		
+//	}
 
-		Long source = graphMonaco.getNodeId(43.740174,7.424376);
-		Long target = graphMonaco.getNodeId(43.735554,7.416147);
-		
-		Dijkstra regularDijkstra = new DijkstraConstantWeight(graphMonaco);
-
-		StopWatch regularDijkstraSW = new StopWatch();
-		
-		regularDijkstraSW.start();
-
-		Path regularDijkstraFinalPath = regularDijkstra.shortestPath(graphMonaco.getNode(source), graphMonaco.getNode(target));
-
-		regularDijkstraSW.stop();
-
-		assertEquals(1073837, regularDijkstraFinalPath.getTotalDistance());
-		
-		logger.info("[REGULAR] Execution Time for regularShortestPathMonacoTest(): {}ms", regularDijkstraSW.getNanos());
-		
-		logger.info("[REGULAR] Shortest Path");
-		logger.info("\t{}", regularDijkstraFinalPath.getInstructions());
-		
-		BidirectionalDijkstraCH bidirectionalDijkstra = new BidirectionalDijkstraCH(graphMonaco);
-		
-		StopWatch bidirectionalDijkstraSW = new StopWatch();
-		
-		bidirectionalDijkstraSW.start();
-		Path bidirectionalDijkstraFinalPath = bidirectionalDijkstra.execute(graphMonaco.getNode(source), graphMonaco.getNode(target));
-		bidirectionalDijkstraSW.stop();
-		
-		logger.info("[BIDIRECTIONAL] Execution Time of regularShortestPathMonacoTest(): {}ms", bidirectionalDijkstraSW.getNanos());
+//	@Test
+//	public void regularShortestPathSeattleTest() {
+//		
+//		Long source = graphSeattle.getNodeId(47.645642,-122.374813);
+//		Long target = graphSeattle.getNodeId(47.555600,-122.309465);
+//		
+//		Dijkstra regularDijkstra = new DijkstraConstantWeight(graphSeattle);
+//
+//		StopWatch regularDijkstraSW = new StopWatch();
+//		
+//		regularDijkstraSW.start();
+//
+//		Path regularDijkstraFinalPath = regularDijkstra.shortestPath(graphSeattle.getNode(source), graphSeattle.getNode(target));
+//
+//		regularDijkstraSW.stop();
+//
+//		assertEquals(12650453, regularDijkstraFinalPath.getTotalDistance());
+//		
+//		logger.info("[REGULAR] Execution Time for regularShortestPathSeattleTest(): {}ms", regularDijkstraSW.getNanos());
+//		
+//		logger.info("[REGULAR] Shortest Path");
+//		logger.info("\t{}", regularDijkstraFinalPath.getInstructions());
+//		
+//		BidirectionalDijkstraCH bidirectionalDijkstra = new BidirectionalDijkstraCH(graphSeattle);
+//		
+//		StopWatch bidirectionalDijkstraSW = new StopWatch();
+//		
+//		bidirectionalDijkstraSW.start();
+//		Path bidirectionalDijkstraFinalPath = bidirectionalDijkstra.execute(graphSeattle.getNode(source), graphSeattle.getNode(target));
+//		bidirectionalDijkstraSW.stop();
+//		
+//		logger.info("[BIDIRECTIONAL] Execution Time of regularShortestPathSeattleTest(): {}ms", bidirectionalDijkstraSW.getNanos());
+//	
+//		logger.info("[BIDIRECTIONAL] Shortest Path");
+//		logger.info("\t{}", bidirectionalDijkstraFinalPath.getInstructions());
+//		
+//		assertEquals(12650453, bidirectionalDijkstraFinalPath.getTotalDistance());
+//		
+//		double result;
+//		
+//		if(regularDijkstraSW.getNanos() > bidirectionalDijkstraSW.getNanos()) {
+//			result = (double)regularDijkstraSW.getNanos()/(double)bidirectionalDijkstraSW.getNanos();
+//			logger.info("Bidirectional Dijkstra was {}x FASTER",  result);
+//		} else {
+//			result = (double)bidirectionalDijkstraSW.getNanos()/(double)regularDijkstraSW.getNanos();
+//			logger.info("Bidirectional Dijkstra was {}x SLOWER",  result);
+//		}
+//		
+//	}
 	
-		logger.info("[BIDIRECTIONAL] Shortest Path");
-		logger.info("\t{}", bidirectionalDijkstraFinalPath.getInstructions());
-		
-		assertEquals(1073837, bidirectionalDijkstraFinalPath.getTotalDistance());
-		
-		double result;
-		
-		if(regularDijkstraSW.getNanos() > bidirectionalDijkstraSW.getNanos()) {
-			result = (double)regularDijkstraSW.getNanos()/(double)bidirectionalDijkstraSW.getNanos();
-			logger.info("Bidirectional Dijkstra was {}x FASTER",  result);
-		} else {
-			result = (double)bidirectionalDijkstraSW.getNanos()/(double)regularDijkstraSW.getNanos();
-			logger.info("Bidirectional Dijkstra was {}x SLOWER",  result);
-		}
-		
-	}
-
-	@Test
-	public void regularShortestPathSeattleTest() {
-		
-		Long source = graphSeattle.getNodeId(47.645642,-122.374813);
-		Long target = graphSeattle.getNodeId(47.555600,-122.309465);
-		
-		Dijkstra regularDijkstra = new DijkstraConstantWeight(graphSeattle);
-
-		StopWatch regularDijkstraSW = new StopWatch();
-		
-		regularDijkstraSW.start();
-
-		Path regularDijkstraFinalPath = regularDijkstra.shortestPath(graphSeattle.getNode(source), graphSeattle.getNode(target));
-
-		regularDijkstraSW.stop();
-
-		assertEquals(12650453, regularDijkstraFinalPath.getTotalDistance());
-		
-		logger.info("[REGULAR] Execution Time for regularShortestPathSeattleTest(): {}ms", regularDijkstraSW.getNanos());
-		
-		logger.info("[REGULAR] Shortest Path");
-		logger.info("\t{}", regularDijkstraFinalPath.getInstructions());
-		
-		BidirectionalDijkstraCH bidirectionalDijkstra = new BidirectionalDijkstraCH(graphSeattle);
-		
-		StopWatch bidirectionalDijkstraSW = new StopWatch();
-		
-		bidirectionalDijkstraSW.start();
-		Path bidirectionalDijkstraFinalPath = bidirectionalDijkstra.execute(graphSeattle.getNode(source), graphSeattle.getNode(target));
-		bidirectionalDijkstraSW.stop();
-		
-		logger.info("[BIDIRECTIONAL] Execution Time of regularShortestPathSeattleTest(): {}ms", bidirectionalDijkstraSW.getNanos());
+//	@Test
+//	public void regularShortestPathGreeceTest() {
+//		
+////		Long source = graphGreece.getNodeId(37.953927,23.754716);
+////		Long target = graphGreece.getNodeId(40.672339,22.921128);
+//		
+//		Long source = graphGreece.getNodeId(37.915357,23.72961);
+//		Long target = graphGreece.getNodeId(38.022131,23.677769);
+//		
+//		Dijkstra regularDijkstra = new DijkstraConstantWeight(graphGreece);
+//
+//		StopWatch regularDijkstraSW = new StopWatch();
+//		
+//		regularDijkstraSW.start();
+//
+//		Path regularDijkstraFinalPath = regularDijkstra.shortestPath(graphGreece.getNode(source), graphGreece.getNode(target));
+//
+//		regularDijkstraSW.stop();
+//
+////		assertEquals(445880802, regularDijkstraFinalPath.getTotalDistance());
+//		assertEquals(15697726, regularDijkstraFinalPath.getTotalDistance());
+//		
+//		logger.info("[REGULAR] Execution Time for regularShortestPathGreeceTest(): {}ms", regularDijkstraSW.getNanos());
+//		
+//		logger.info("[REGULAR] Shortest Path");
+//		logger.info("\t{}", regularDijkstraFinalPath.getInstructions());
+//		
+//		System.out.println("[REGULAR] Number of settle nodes: " + regularDijkstra.getNumberOfTotalSettleNodes());
+//
+//		BidirectionalDijkstraCH bidirectionalDijkstra = new BidirectionalDijkstraCH(graphGreece);
+//		
+//		StopWatch bidirectionalDijkstraSW = new StopWatch();
+//		
+//		bidirectionalDijkstraSW.start();
+//		Path bidirectionalDijkstraFinalPath = bidirectionalDijkstra.execute(graphGreece.getNode(source), graphGreece.getNode(target));
+//		bidirectionalDijkstraSW.stop();
+//		
+//		logger.info("[BIDIRECTIONAL] Execution Time of regularShortestPathGreeceTest(): {}ms", bidirectionalDijkstraSW.getNanos());
+//	
+//		logger.info("[BIDIRECTIONAL] Shortest Path");
+//		logger.info("\t{}", bidirectionalDijkstraFinalPath.getInstructions());
+//		
+////		assertEquals(445880802, bidirectionalDijkstraFinalPath.getTotalDistance());
+//		assertEquals(15697726, bidirectionalDijkstraFinalPath.getTotalDistance());
+//		
+//		double result;
+//		
+//		if(regularDijkstraSW.getNanos() > bidirectionalDijkstraSW.getNanos()) {
+//			result = (double)regularDijkstraSW.getNanos()/(double)bidirectionalDijkstraSW.getNanos();
+//			logger.info("Bidirectional Dijkstra was {}x FASTER",  result);
+//		} else {
+//			result = (double)bidirectionalDijkstraSW.getNanos()/(double)regularDijkstraSW.getNanos();
+//			logger.info("Bidirectional Dijkstra was {}x SLOWER",  result);
+//		}
+//		
+//		System.out.println("[BIDIRECTIONAL] Number of settle nodes: " + (bidirectionalDijkstra.getNumberOfForwardSettleNodes() + bidirectionalDijkstra.getNumberOfBackwardSettleNodes()));
+//		
+//	}
 	
-		logger.info("[BIDIRECTIONAL] Shortest Path");
-		logger.info("\t{}", bidirectionalDijkstraFinalPath.getInstructions());
-		
-		assertEquals(12650453, bidirectionalDijkstraFinalPath.getTotalDistance());
-		
-		double result;
-		
-		if(regularDijkstraSW.getNanos() > bidirectionalDijkstraSW.getNanos()) {
-			result = (double)regularDijkstraSW.getNanos()/(double)bidirectionalDijkstraSW.getNanos();
-			logger.info("Bidirectional Dijkstra was {}x FASTER",  result);
-		} else {
-			result = (double)bidirectionalDijkstraSW.getNanos()/(double)regularDijkstraSW.getNanos();
-			logger.info("Bidirectional Dijkstra was {}x SLOWER",  result);
-		}
-		
-	}
+//	@Test
+//	public void regularShortestPathGermanyTest() {
+//		
+//		Long source = graphGermany.getNodeId(52.636813,13.279037);
+//		Long target = graphGermany.getNodeId(48.150741,11.573753);
+//
+////		Long source = graphGermany.getNodeId(48.152115,11.545944);
+////		Long target = graphGermany.getNodeId(48.132413,11.575127);
+//		
+//		Dijkstra regularDijkstra = new DijkstraConstantWeight(graphGermany);
+//
+//		StopWatch regularDijkstraSW = new StopWatch();
+//		
+//		regularDijkstraSW.start();
+//
+//		Path regularDijkstraFinalPath = regularDijkstra.shortestPath(graphGermany.getNode(source), graphGermany.getNode(target));
+//
+//		regularDijkstraSW.stop();
+//		
+//		//587137.051  meters
+//		assertEquals(587137051, regularDijkstraFinalPath.getTotalDistance()); //millimetre
+//		
+//		logger.info("[REGULAR] Execution Time for regularShortestPathGermanyTest(): {}ms", regularDijkstraSW.getNanos());
+//		
+//		logger.info("[REGULAR] Shortest Path");
+//		logger.info("\t{}", regularDijkstraFinalPath.getInstructions());
+//		
+//		System.out.println("[REGULAR] Number of settle nodes: " + regularDijkstra.getNumberOfTotalSettleNodes());
+//
+//		
+//		BidirectionalDijkstraCH bidirectionalDijkstra = new BidirectionalDijkstraCH(graphGermany);
+//		
+//		StopWatch bidirectionalDijkstraSW = new StopWatch();
+//		
+//		bidirectionalDijkstraSW.start();
+//		Path bidirectionalDijkstraFinalPath = bidirectionalDijkstra.execute(graphGermany.getNode(source), graphGermany.getNode(target));
+//		bidirectionalDijkstraSW.stop();
+//		
+//		logger.info("[BIDIRECTIONAL] Execution Time of regularShortestPathGermanyTest(): {}ms", bidirectionalDijkstraSW.getNanos());
+//	
+//		logger.info("[BIDIRECTIONAL] Shortest Path");
+//		logger.info("\t{}", bidirectionalDijkstraFinalPath.getInstructions());
+//		
+////		assertEquals(445880802, bidirectionalDijkstraFinalPath.getTotalDistance());
+//		assertEquals(587137051, bidirectionalDijkstraFinalPath.getTotalDistance());
+//		
+//		double result;
+//		
+//		if(regularDijkstraSW.getNanos() > bidirectionalDijkstraSW.getNanos()) {
+//			result = (double)regularDijkstraSW.getNanos()/(double)bidirectionalDijkstraSW.getNanos();
+//			logger.info("Bidirectional Dijkstra was {}x FASTER",  result);
+//		} else {
+//			result = (double)bidirectionalDijkstraSW.getNanos()/(double)regularDijkstraSW.getNanos();
+//			logger.info("Bidirectional Dijkstra was {}x SLOWER",  result);
+//		}
+//		
+//		System.out.println("[BIDIRECTIONAL] Number of settle nodes: " + (bidirectionalDijkstra.getNumberOfForwardSettleNodes() + bidirectionalDijkstra.getNumberOfBackwardSettleNodes()));
+//		
+//	}
+	
+//	@Test
+//	public void regularShortestPathSpainTest() {
+//		
+//		Long source = graphSpain.getNodeId(40.976569,-5.671799);
+//		Long target = graphSpain.getNodeId(41.403066,2.173774);
+//		
+//		Dijkstra regularDijkstra = new DijkstraConstantWeight(graphSpain);
+//
+//		StopWatch regularDijkstraSW = new StopWatch();
+//		
+//		regularDijkstraSW.start();
+//
+//		Path regularDijkstraFinalPath = regularDijkstra.shortestPath(graphSpain.getNode(source), graphSpain.getNode(target));
+//
+//		regularDijkstraSW.stop();
+//
+//		assertEquals(756165176, regularDijkstraFinalPath.getTotalDistance());
+//		
+//		logger.info("[REGULAR] Execution Time for regularShortestPathSpainTest(): {}ms", regularDijkstraSW.getNanos());
+//		
+//		logger.info("[REGULAR] Shortest Path");
+//		logger.info("\t{}", regularDijkstraFinalPath.getInstructions());
+//		
+//		System.out.println("[REGULAR] Number of settle nodes: " + regularDijkstra.getNumberOfTotalSettleNodes());
+//
+//		
+//		BidirectionalDijkstraCH bidirectionalDijkstra = new BidirectionalDijkstraCH(graphSpain);
+//		
+//		StopWatch bidirectionalDijkstraSW = new StopWatch();
+//		
+//		bidirectionalDijkstraSW.start();
+//		Path bidirectionalDijkstraFinalPath = bidirectionalDijkstra.execute(graphSpain.getNode(source), graphSpain.getNode(target));
+//		bidirectionalDijkstraSW.stop();
+//		
+//		logger.info("[BIDIRECTIONAL] Execution Time of regularShortestPathSpainTest(): {}ms", bidirectionalDijkstraSW.getNanos());
+//	
+//		logger.info("[BIDIRECTIONAL] Shortest Path");
+//		logger.info("\t{}", bidirectionalDijkstraFinalPath.getInstructions());
+//		
+////		assertEquals(445880802, bidirectionalDijkstraFinalPath.getTotalDistance());
+//		assertEquals(756165176, bidirectionalDijkstraFinalPath.getTotalDistance());
+//		
+//		double result;
+//		
+//		if(regularDijkstraSW.getNanos() > bidirectionalDijkstraSW.getNanos()) {
+//			result = (double)regularDijkstraSW.getNanos()/(double)bidirectionalDijkstraSW.getNanos();
+//			logger.info("Bidirectional Dijkstra was {}x FASTER",  result);
+//		} else {
+//			result = (double)bidirectionalDijkstraSW.getNanos()/(double)regularDijkstraSW.getNanos();
+//			logger.info("Bidirectional Dijkstra was {}x SLOWER",  result);
+//		}
+//		
+//		System.out.println("[BIDIRECTIONAL] Number of settle nodes: " + (bidirectionalDijkstra.getNumberOfForwardSettleNodes() + bidirectionalDijkstra.getNumberOfBackwardSettleNodes()));
+//		
+//	}
 	
 }

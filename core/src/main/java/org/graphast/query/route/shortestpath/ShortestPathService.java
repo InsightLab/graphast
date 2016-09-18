@@ -21,9 +21,9 @@ public interface ShortestPathService {
 	
 	public Path shortestPath(long source, long target, Date time, Node skippedNode);
 
-	public void setMaxVisitedNodes(int maxVisitedNodes);
+//	public void setMaxVisitedNodes(int maxVisitedNodes);
 	
-	public void setMaxHopLimit(int maxHopLimit);
+//	public void setMaxHopLimit(int maxHopLimit);
 	
 //	public Int2ObjectMap<Path> shortestPath(Node source);
 
