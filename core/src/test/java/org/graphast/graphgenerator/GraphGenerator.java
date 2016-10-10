@@ -1271,61 +1271,61 @@ public class GraphGenerator {
 		node = new CHNodeImpl(9l, 30, 10);
 		graph.addNode(node);
 
-		edge = new CHEdgeImpl(0l, 2l, 2, 1, "Edge 0");
+		edge = new CHEdgeImpl(0l, 2l, 10, 1, "Edge 0");
 		graph.addEdge(edge);
 
-		edge = new CHEdgeImpl(2l, 0l, 2, 1, "Edge 1");
+		edge = new CHEdgeImpl(2l, 0l, 10, 1, "Edge 1");
 		graph.addEdge(edge);
 
-		edge = new CHEdgeImpl(2l, 9l, 2, 1, "Edge 2");
+		edge = new CHEdgeImpl(2l, 9l, 10, 1, "Edge 2");
 		graph.addEdge(edge);
 
-		edge = new CHEdgeImpl(9l, 2l, 2, 1, "Edge 3");
+		edge = new CHEdgeImpl(9l, 2l, 10, 1, "Edge 3");
 		graph.addEdge(edge);
 
-		edge = new CHEdgeImpl(2l, 8l, 2, 1, "Edge 4");
+		edge = new CHEdgeImpl(2l, 8l, 15, 1, "Edge 4");
 		graph.addEdge(edge);
 
-		edge = new CHEdgeImpl(8l, 2l, 2, 1, "Edge 5");
+		edge = new CHEdgeImpl(8l, 2l, 15, 1, "Edge 5");
 		graph.addEdge(edge);
 
-		edge = new CHEdgeImpl(2l, 1l, 2, 1, "Edge 6");
+		edge = new CHEdgeImpl(2l, 1l, 10, 1, "Edge 6");
 		graph.addEdge(edge);
 
-		edge = new CHEdgeImpl(1l, 2l, 2, 1, "Edge 7");
+		edge = new CHEdgeImpl(1l, 2l, 10, 1, "Edge 7");
 		graph.addEdge(edge);
 
-		edge = new CHEdgeImpl(2l, 1l, 10, 1, "Edge 8");
+		edge = new CHEdgeImpl(2l, 1l, 100, 1, "Edge 8");
 		graph.addEdge(edge);
 
-		edge = new CHEdgeImpl(1l, 3l, 2, 1, "Edge 9");
+		edge = new CHEdgeImpl(1l, 3l, 10, 1, "Edge 9");
 		graph.addEdge(edge);
 
-		edge = new CHEdgeImpl(3l, 1l, 2, 1, "Edge 10");
+		edge = new CHEdgeImpl(3l, 1l, 10, 1, "Edge 10");
 		graph.addEdge(edge);
 
-		edge = new CHEdgeImpl(3l, 4l, 2, 1, "Edge 11");
+		edge = new CHEdgeImpl(3l, 4l, 10, 1, "Edge 11");
 		graph.addEdge(edge);
 
-		edge = new CHEdgeImpl(4l, 3l, 2, 1, "Edge 12");
+		edge = new CHEdgeImpl(4l, 3l, 10, 1, "Edge 12");
 		graph.addEdge(edge);
 
-		edge = new CHEdgeImpl(3l, 5l, 2, 1, "Edge 13");
+		edge = new CHEdgeImpl(3l, 5l, 12, 1, "Edge 13");
 		graph.addEdge(edge);
 
-		edge = new CHEdgeImpl(5l, 3l, 2, 1, "Edge 14");
+		edge = new CHEdgeImpl(5l, 3l, 12, 1, "Edge 14");
 		graph.addEdge(edge);
 
-		edge = new CHEdgeImpl(3l, 6l, 2, 1, "Edge 15");
+		edge = new CHEdgeImpl(3l, 6l, 10, 1, "Edge 15");
 		graph.addEdge(edge);
 
-		edge = new CHEdgeImpl(6l, 3l, 2, 1, "Edge 16");
+		edge = new CHEdgeImpl(6l, 3l, 10, 1, "Edge 16");
 		graph.addEdge(edge);
 
-		edge = new CHEdgeImpl(3l, 7l, 2, 1, "Edge 17");
+		edge = new CHEdgeImpl(3l, 7l, 12, 1, "Edge 17");
 		graph.addEdge(edge);
 
-		edge = new CHEdgeImpl(7l, 3l, 2, 1, "Edge 18");
+		edge = new CHEdgeImpl(7l, 3l, 12, 1, "Edge 18");
 		graph.addEdge(edge);
 
 		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
