@@ -913,6 +913,55 @@ public class GraphGenerator {
 
 	}
 	
+	/**
+	 * Modified graph from generateMITExample to test the
+	 * Bidirectional A* algorithm
+	 * 
+	 * @return graph The graph generated
+	 */
+	public CHGraph generateMITExample4() {
+
+		CHGraph graph = new CHGraphImpl(Configuration.USER_HOME + "/graphast/test/graphMITExample4");
+
+		CHEdge edge;
+		CHNode node;
+
+		node = new CHNodeImpl(0l, 100, 100);
+		graph.addNode(node);
+		
+		node = new CHNodeImpl(1l, 100, 130);
+		graph.addNode(node);
+		
+		node = new CHNodeImpl(2l, 121.79449, 145);
+		graph.addNode(node);
+		
+		node = new CHNodeImpl(3l, 100, 160);
+		graph.addNode(node);
+		
+		node = new CHNodeImpl(4l, 100, 190);
+		graph.addNode(node);
+
+		edge = new CHEdgeImpl(0l, 1l, 30, 1, "Edge 0 to 1");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(0l, 2l, 50, 1, "Edge 0 to 2");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(1l, 3l, 30, 1, "Edge 1 to 3");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(2l, 4l, 50, 1, "Edge 2 to 4");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(3l, 4l, 30, 1, "Edge 3 to 4");
+		graph.addEdge(edge);
+
+		graph.save();
+
+		return graph;
+
+	}
+	
 	/*
 	 * Based on the createExampleGraph() graph from GraphHopper
 	 * PrepareContractionHierarchiesTest.java class.
