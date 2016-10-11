@@ -136,25 +136,22 @@ public class BidirectionalAStarTest {
 		Long source = graphMonaco.getNodeId(43.740174,7.424376);
 		Long target = graphMonaco.getNodeId(43.735554,7.416147);
 		
-		Dijkstra regularDijkstra = new DijkstraConstantWeight(graphMonaco);
-
-		StopWatch regularDijkstraSW = new StopWatch();
+		BidirectionalDijkstraCH bidirectionalDijkstra = new BidirectionalDijkstraCH(graphMonaco);
 		
-		regularDijkstraSW.start();
-
-		Path regularDijkstraFinalPath = regularDijkstra.shortestPath(graphMonaco.getNode(source), graphMonaco.getNode(target));
-
-		regularDijkstraSW.stop();
-
-//		assertEquals(1072346, regularDijkstraFinalPath.getTotalDistance());
-		assertEquals(1073837, regularDijkstraFinalPath.getTotalDistance());
+		StopWatch bidirectionalDijkstraSW = new StopWatch();
 		
-		logger.info("[REGULAR] Execution Time for regularShortestPathMonacoTest(): {}ms", regularDijkstraSW.getNanos());
+		bidirectionalDijkstraSW.start();
+		Path bidirectionalDijkstraFinalPath = bidirectionalDijkstra.execute(graphMonaco.getNode(source), graphMonaco.getNode(target));
+		bidirectionalDijkstraSW.stop();
 		
-		logger.info("[REGULAR] Shortest Path");
-		logger.info("\t{}", regularDijkstraFinalPath.getInstructions());
+		logger.info("[BIDIRECTIONAL] Execution Time of regularShortestPathMonacoTest(): {}ms", bidirectionalDijkstraSW.getNanos());
+	
+		logger.info("[BIDIRECTIONAL] Shortest Path");
+		logger.info("\t{}", bidirectionalDijkstraFinalPath.getInstructions());
 		
-		System.out.println("[REGULAR] Number of settle nodes: " + regularDijkstra.getNumberOfTotalSettleNodes());
+		assertEquals(1072346, bidirectionalDijkstraFinalPath.getTotalDistance());
+		
+		System.out.println("[BIDIRECTIONAL] Number of settle nodes: " + (bidirectionalDijkstra.getNumberOfForwardSettleNodes() + bidirectionalDijkstra.getNumberOfBackwardSettleNodes()));
 		
 		BidirectionalAStarCH bidirectionalAStar = new BidirectionalAStarCH(graphMonaco);
 		
@@ -169,18 +166,18 @@ public class BidirectionalAStarTest {
 		logger.info("[BIDIRECTIONAL] Shortest Path");
 		logger.info("\t{}", bidirectionalAStarFinalPath.getInstructions());
 		
-//		assertEquals(1072346, bidirectionalAStarFinalPath.getTotalDistance());
-		assertEquals(1073837, bidirectionalAStarFinalPath.getTotalDistance());
+		assertEquals(1072346, bidirectionalAStarFinalPath.getTotalDistance());
+//		assertEquals(1073837, bidirectionalAStarFinalPath.getTotalDistance());
 		
 		System.out.println("[BIDIRECTIONAL] Number of settle nodes: " + (bidirectionalAStar.getNumberOfForwardSettleNodes() + bidirectionalAStar.getNumberOfBackwardSettleNodes()));
 		
 		double result;
 		
-		if(regularDijkstraSW.getNanos() > bidirectionalAStarSW.getNanos()) {
-			result = (double)regularDijkstraSW.getNanos()/(double)bidirectionalAStarSW.getNanos();
+		if(bidirectionalDijkstraSW.getNanos() > bidirectionalAStarSW.getNanos()) {
+			result = (double)bidirectionalDijkstraSW.getNanos()/(double)bidirectionalAStarSW.getNanos();
 			logger.info("Bidirectional AStar was {}x FASTER",  result);
 		} else {
-			result = (double)bidirectionalAStarSW.getNanos()/(double)regularDijkstraSW.getNanos();
+			result = (double)bidirectionalAStarSW.getNanos()/(double)bidirectionalDijkstraSW.getNanos();
 			logger.info("Bidirectional AStar was {}x SLOWER",  result);
 		}
 		
