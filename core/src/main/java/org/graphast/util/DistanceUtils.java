@@ -18,7 +18,7 @@ public class DistanceUtils {
 	            + Math.cos(deg2rad(latitudeFrom)) * Math.cos(deg2rad(latitudeTo))
 	            * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
 	    Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-	    double distance = R * c * 1000; // convert to meters
+	    double distance = R * c * 100 * 100; // convert to meters
 
 	    
 	    distance = Math.pow(distance, 2);
@@ -35,7 +35,7 @@ public class DistanceUtils {
 	            + Math.cos(deg2rad(fromNode.getLatitude())) * Math.cos(deg2rad(toNode.getLatitude()))
 	            * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
 	    Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-	    double distance = R * c * 1000; // convert to meters
+	    double distance = R * c * 100 * 100; // convert to meters
 
 	    
 	    distance = Math.pow(distance, 2);
