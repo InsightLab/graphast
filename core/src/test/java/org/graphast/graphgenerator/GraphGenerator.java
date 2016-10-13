@@ -253,7 +253,7 @@ public class GraphGenerator {
 	}
 	
 	public CHGraph generateSeattleCH() {
-		String osmFile = this.getClass().getResource("/seattle.osm.pbf").getPath();
+		String osmFile = this.getClass().getResource("/seattle-latest.osm.pbf").getPath();
 		String graphHopperSeattleDir = Configuration.USER_HOME + "/graphhopper/test/seattle";
 		String graphastSeattleDir = Configuration.USER_HOME + "/graphast/test/seattle";
 
@@ -344,6 +344,31 @@ public class GraphGenerator {
 //		System.out.println("#nodes: " + graph.getNumberOfNodes());
 //		System.out.println("#edges: " + graph.getNumberOfEdges());
 //
+//		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
+//		graph.setMaxLevel((int) (graph.getNumberOfNodes() + 1));
+
+		graph.save();
+
+		return graph;
+	}
+	
+	public CHGraph generateTokyoBiggerCH() {
+		String osmFile = this.getClass().getResource("/tokyoBigger.osm.pbf").getPath();
+		String graphHopperTokyoBiggerDir = Configuration.USER_HOME + "/graphhopper/test/tokyoBigger";
+		String graphastTokyoBiggerDir = Configuration.USER_HOME + "/graphast/test/tokyoBigger";
+
+		CHGraph graph = new OSMImporterImpl(osmFile, graphHopperTokyoBiggerDir, graphastTokyoBiggerDir).executeCH();
+
+//		POIImporter.importPoIList(graph, "src/test/resources/monaco-latest.csv");
+
+//		System.out.println("#nodes: " + graph.getNumberOfNodes());
+//		System.out.println("#edges: " + graph.getNumberOfEdges());
+
+//		graph.createHyperPOIS();
+
+//		System.out.println("#nodes: " + graph.getNumberOfNodes());
+//		System.out.println("#edges: " + graph.getNumberOfEdges());
+
 //		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
 //		graph.setMaxLevel((int) (graph.getNumberOfNodes() + 1));
 

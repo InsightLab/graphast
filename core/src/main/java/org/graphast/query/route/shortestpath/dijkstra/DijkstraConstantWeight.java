@@ -53,7 +53,7 @@ public class DijkstraConstantWeight extends Dijkstra {
 
 					distance = neig.get(vid);
 					edge = getEdge(removed.getId(), vid, distance);
-					parents.put(vid, new RouteEntry(removed.getId(), distance / 17, edge.getId(), edge.getLabel()));
+					parents.put(vid, new RouteEntry(removed.getId(), distance, edge.getId(), edge.getLabel()));
 				} else {
 
 					int cost = wasTraversed.get(vid);
@@ -71,7 +71,7 @@ public class DijkstraConstantWeight extends Dijkstra {
 							distance = neig.get(vid);
 							edge = getEdge(removed.getId(), vid, distance);
 							parents.put(vid,
-									new RouteEntry(removed.getId(), distance / 17, edge.getId(), edge.getLabel()));
+									new RouteEntry(removed.getId(), distance, edge.getId(), edge.getLabel()));
 						}
 					}
 				}
@@ -92,7 +92,7 @@ public class DijkstraConstantWeight extends Dijkstra {
 
 						distance = neig.get(vid);
 						edge = getEdge(removed.getId(), vid, distance);
-						parents.put(vid, new RouteEntry(removed.getId(), distance / 17, edge.getId(), edge.getLabel()));
+						parents.put(vid, new RouteEntry(removed.getId(), distance, edge.getId(), edge.getLabel()));
 					} else {
 
 						int cost = wasTraversed.get(vid);
@@ -108,7 +108,7 @@ public class DijkstraConstantWeight extends Dijkstra {
 								distance = neig.get(vid);
 								edge = getEdge(removed.getId(), vid, distance);
 								parents.put(vid,
-										new RouteEntry(removed.getId(), distance / 17, edge.getId(), edge.getLabel()));
+										new RouteEntry(removed.getId(), distance, edge.getId(), edge.getLabel()));
 							}
 						}
 					}
