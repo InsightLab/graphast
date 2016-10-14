@@ -9,6 +9,7 @@ import org.graphast.query.route.shortestpath.dijkstra.DijkstraConstantWeight;
 import org.graphast.query.route.shortestpath.dijkstrach.BidirectionalAStarCH;
 import org.graphast.query.route.shortestpath.dijkstrach.BidirectionalDijkstraCH;
 import org.graphast.query.route.shortestpath.model.Path;
+import org.graphast.util.DistanceUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;

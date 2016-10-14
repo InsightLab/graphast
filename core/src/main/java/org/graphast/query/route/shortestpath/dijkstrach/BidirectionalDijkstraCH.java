@@ -204,11 +204,11 @@ public class BidirectionalDijkstraCH {
 			meetingNode.setParent(forwardsRemovedNode.getId());
 		}
 
-		if (backwardsUnsettleNodesAux.containsKey(vid) && (forwardsSettleNodes.get(forwardsRemovedNode.getId())	+ neighbors.get(vid) + backwardsUnsettleNodesAux.get(vid) < meetingNode.getDistance())) {
-			meetingNode.setId(vid);
-			meetingNode.setDistance(forwardsSettleNodes.get(forwardsRemovedNode.getId()) + neighbors.get(vid) + backwardsUnsettleNodesAux.get(vid));
-			meetingNode.setParent(forwardsRemovedNode.getId());
-		}
+//		if (backwardsUnsettleNodesAux.containsKey(vid) && (forwardsSettleNodes.get(forwardsRemovedNode.getId())	+ neighbors.get(vid) + backwardsUnsettleNodesAux.get(vid) < meetingNode.getDistance())) {
+//			meetingNode.setId(vid);
+//			meetingNode.setDistance(forwardsSettleNodes.get(forwardsRemovedNode.getId()) + neighbors.get(vid) + backwardsUnsettleNodesAux.get(vid));
+//			meetingNode.setParent(forwardsRemovedNode.getId());
+//		}
 
 	}
 
@@ -244,7 +244,7 @@ public class BidirectionalDijkstraCH {
 					backwardsUnsettleNodes.offer(newEntry);
 					
 					backwardsUnsettleNodesAux.remove(newEntry.getId());
-					backwardsUnsettleNodesAux.put(newEntry.getId(), distance);
+					backwardsUnsettleNodesAux.put(newEntry.getId(), newEntry.getDistance());
 					
 					backwardsSettleNodes.remove(newEntry.getId());
 					backwardsSettleNodes.put(newEntry.getId(), distance);
@@ -270,11 +270,11 @@ public class BidirectionalDijkstraCH {
 			meetingNode.setDistance(backwardsSettleNodes.get(backwardsRemovedNode.getId()) + neighbors.get(vid)	+ forwardsSettleNodes.get(vid));
 			meetingNode.setParent(backwardsRemovedNode.getId());
 		}
-		if (forwardsUnsettleNodesAux.containsKey(vid) && (backwardsSettleNodes.get(backwardsRemovedNode.getId()) + neighbors.get(vid) + forwardsUnsettleNodesAux.get(vid) < meetingNode.getDistance())) {
-			meetingNode.setId(vid);
-			meetingNode.setDistance(backwardsSettleNodes.get(backwardsRemovedNode.getId()) + neighbors.get(vid)	+ forwardsUnsettleNodesAux.get(vid));
-			meetingNode.setParent(backwardsRemovedNode.getId());
-		}
+//		if (forwardsUnsettleNodesAux.containsKey(vid) && (backwardsSettleNodes.get(backwardsRemovedNode.getId()) + neighbors.get(vid) + forwardsUnsettleNodesAux.get(vid) < meetingNode.getDistance())) {
+//			meetingNode.setId(vid);
+//			meetingNode.setDistance(backwardsSettleNodes.get(backwardsRemovedNode.getId()) + neighbors.get(vid)	+ forwardsUnsettleNodesAux.get(vid));
+//			meetingNode.setParent(backwardsRemovedNode.getId());
+//		}
 
 	}
 	
