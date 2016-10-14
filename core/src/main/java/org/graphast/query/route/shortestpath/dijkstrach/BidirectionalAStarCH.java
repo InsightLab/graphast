@@ -159,8 +159,8 @@ public class BidirectionalAStarCH {
 			//Change the neighbors.get(vid) by the new one
 			
 			newLength = neighbors.get(vid) + 
-					(forwardHeuristic(graph.getNode(vid)) - forwardHeuristic(graph.getNode(forwardsRemovedNode.getId())))/2 + 
-					(backwardHeuristic(graph.getNode(forwardsRemovedNode.getId())) - backwardHeuristic(graph.getNode(vid)))/2;
+					(int) Math.ceil( (forwardHeuristic(graph.getNode(vid)) - forwardHeuristic(graph.getNode(forwardsRemovedNode.getId())))/2 + 
+					(backwardHeuristic(graph.getNode(forwardsRemovedNode.getId())) - backwardHeuristic(graph.getNode(vid)))/2 );
 			
 			DistanceEntry newEntry = new DistanceEntry(vid,	newLength + forwardsRemovedNode.getDistance(), forwardsRemovedNode.getId());
 
@@ -186,12 +186,12 @@ public class BidirectionalAStarCH {
 				if (cost > distance) {
 					forwardsUnsettleNodes.remove(newEntry);
 					forwardsUnsettleNodesAux.remove(newEntry.getId());
+					
 					forwardsUnsettleNodes.offer(newEntry);
-					forwardsUnsettleNodesAux.put(newEntry.getId(), newEntry.getDistance());
+					forwardsUnsettleNodesAux.put(newEntry.getId(), distance);
 					
 					forwardsSettleNodes.remove(newEntry.getId());
 					forwardsSettleNodes.put(newEntry.getId(), distance);
-							
 						
 					forwardsParentNodes.remove(vid);
 					distance = neighbors.get(vid);
@@ -231,8 +231,8 @@ public class BidirectionalAStarCH {
 			//Change the neighbors.get(vid) by the new one
 			
 			newLength = neighbors.get(vid) + 
-					(forwardHeuristicBackwards(graph.getNode(vid)) - forwardHeuristicBackwards(graph.getNode(backwardsRemovedNode.getId())))/2 + 
-					(backwardHeuristicBackwards(graph.getNode(backwardsRemovedNode.getId())) - backwardHeuristicBackwards(graph.getNode(vid)))/2;
+					(int) Math.ceil((forwardHeuristicBackwards(graph.getNode(vid)) - forwardHeuristicBackwards(graph.getNode(backwardsRemovedNode.getId())))/2 + 
+					(backwardHeuristicBackwards(graph.getNode(backwardsRemovedNode.getId())) - backwardHeuristicBackwards(graph.getNode(vid)))/2);
 
 			DistanceEntry newEntry = new DistanceEntry(vid,	newLength + backwardsRemovedNode.getDistance(), backwardsRemovedNode.getId());
 
@@ -253,13 +253,13 @@ public class BidirectionalAStarCH {
 			} else {
 
 				int cost = backwardsSettleNodes.get(vid);
-				distance = backwardsRemovedNode.getDistance() + neighbors.get(vid);
+				distance = neighbors.get(vid) + backwardsRemovedNode.getDistance();
 
 				if (cost > distance) {
 					backwardsUnsettleNodes.remove(newEntry);
-					backwardsUnsettleNodes.offer(newEntry);
-					
 					backwardsUnsettleNodesAux.remove(newEntry.getId());
+					
+					backwardsUnsettleNodes.offer(newEntry);
 					backwardsUnsettleNodesAux.put(newEntry.getId(), distance);
 					
 					backwardsSettleNodes.remove(newEntry.getId());
@@ -268,8 +268,7 @@ public class BidirectionalAStarCH {
 					backwardsParentNodes.remove(vid);
 					distance = neighbors.get(vid);
 					edge = getEdge(backwardsRemovedNode.getId(), vid, distance, backwardDirection);
-					backwardsParentNodes.put(vid,
-							new RouteEntry(backwardsRemovedNode.getId(), distance, edge.getId(), edge.getLabel()));
+					backwardsParentNodes.put(vid, new RouteEntry(backwardsRemovedNode.getId(), distance, edge.getId(), edge.getLabel()));
 
 				}
 			}
@@ -294,39 +293,34 @@ public class BidirectionalAStarCH {
 
 	}
 	
-	private int forwardHeuristic(Node vid) {
+	private double forwardHeuristic(Node vid) {
 
 		
-		return (int) DistanceUtils.distanceLatLong(vid, target);
+		return DistanceUtils.distanceLatLong(vid, target);
 		
 //		return (int) Math.ceil(Math.sqrt(Math.pow((target.getLatitude() - vid.getLatitude()), 2)
 //				+ Math.pow((target.getLongitude() - vid.getLongitude()), 2)));
 
 	}
 	
-	private int backwardHeuristic(Node vid) {
+	private double backwardHeuristic(Node vid) {
 
-		return (int) DistanceUtils.distanceLatLong(vid, source);
+		return DistanceUtils.distanceLatLong(vid, source);
 		
 //		return (int) Math.ceil(Math.sqrt(Math.pow((source.getLatitude() - vid.getLatitude()), 2)
 //				+ Math.pow((source.getLongitude() - vid.getLongitude()), 2)));
 
 	}
 	
-	private int forwardHeuristicBackwards(Node vid) {
+	private double forwardHeuristicBackwards(Node vid) {
 
-		return (int) DistanceUtils.distanceLatLong(vid, source);
+		return DistanceUtils.distanceLatLong(vid, source);
 		
-//		return (int) Math.ceil(Math.sqrt(Math.pow((source.getLatitude() - vid.getLatitude()), 2)
-//				+ Math.pow((source.getLongitude() - vid.getLongitude()), 2)));
-
 	}
 	
-	private int backwardHeuristicBackwards(Node vid) {
+	private double backwardHeuristicBackwards(Node vid) {
 
-		return (int) DistanceUtils.distanceLatLong(vid, target);
-//		return (int) Math.ceil(Math.sqrt(Math.pow((target.getLatitude() - vid.getLatitude()), 2)
-//				+ Math.pow((target.getLongitude() - vid.getLongitude()), 2)));
+		return DistanceUtils.distanceLatLong(vid, target);
 
 	}
 	

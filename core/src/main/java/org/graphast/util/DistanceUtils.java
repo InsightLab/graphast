@@ -7,39 +7,62 @@ import org.graphast.model.Node;
 
 public class DistanceUtils {
 
+	/**
+	 * Haversine Formula can be found here: http://www.movable-type.co.uk/scripts/latlong.html
+	 * 
+	 * This method is going to return the distance between two geographic points.
+	 * 
+	 * @param latitudeFrom latitude of the From point
+	 * @param longitudeFrom longitude of the From point
+	 * @param latitudeTo latitude of the To point
+	 * @param longitudeTo longitude of the To point
+	 * @return the distance in millimeters
+	 */
 	public static double distanceLatLong(double latitudeFrom, double longitudeFrom,
 			double latitudeTo, double longitudeTo) {
 
-	    final int R = 6371; // Radius of the earth
+	    final int R = 6371 * 1000000; // Radius of the earth (converted by millimeters)
 
-	    Double latDistance = deg2rad(latitudeTo - latitudeFrom);
-	    Double lonDistance = deg2rad(longitudeTo - longitudeFrom);
-	    Double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
-	            + Math.cos(deg2rad(latitudeFrom)) * Math.cos(deg2rad(latitudeTo))
-	            * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
-	    Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-	    double distance = R * c * 1000 * 1000; // convert to millimeters
-
+	    Double phi1 = deg2rad(latitudeFrom);
+	    Double phi2 = deg2rad(latitudeTo);
 	    
-	    distance = Math.pow(distance, 2);
-	    return Math.sqrt(distance);
+	    Double deltaPhi = deg2rad(latitudeTo - latitudeFrom);
+	    Double deltaLambda = deg2rad(longitudeTo - longitudeFrom);
+	    
+	    Double a = Math.sin(deltaPhi/2) * Math.sin(deltaPhi/2) +
+	    		Math.cos(phi1) * Math.cos(phi2) *
+	    		Math.sin(deltaLambda/2) * Math.sin(deltaLambda/2);
+	    Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+	    return R * c;
+	    
 	}
-	
+	/**
+	 * Haversine Formula can be found here: http://www.movable-type.co.uk/scripts/latlong.html
+	 * 
+	 * This method is going to return the distance between two geographic points.
+	 * 
+	 * @param fromNode From point
+	 * @param toNode To point
+	 * @return the distance in millimeters
+	 */
 	public static double distanceLatLong(Node fromNode, Node toNode) {
+		
+	    final int R = 6371 * 1000000; // Radius of the earth (converted by millimeters)
 
-	    final int R = 6371; // Radius of the earth
-
-	    Double latDistance = deg2rad(toNode.getLatitude() - fromNode.getLatitude());
-	    Double lonDistance = deg2rad(toNode.getLongitude() - fromNode.getLongitude());
-	    Double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
-	            + Math.cos(deg2rad(fromNode.getLatitude())) * Math.cos(deg2rad(toNode.getLatitude()))
-	            * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
-	    Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-	    double distance = R * c * 1000 * 1000; // convert to millimeters
-
+	    Double phi1 = deg2rad(fromNode.getLatitude());
+	    Double phi2 = deg2rad(toNode.getLatitude());
 	    
-	    distance = Math.pow(distance, 2);
-	    return Math.sqrt(distance);
+	    Double deltaPhi = deg2rad(toNode.getLatitude() - fromNode.getLatitude());
+	    Double deltaLambda = deg2rad(toNode.getLongitude() - fromNode.getLongitude());
+	    
+	    Double a = Math.sin(deltaPhi/2) * Math.sin(deltaPhi/2) +
+	    		Math.cos(phi1) * Math.cos(phi2) *
+	    		Math.sin(deltaLambda/2) * Math.sin(deltaLambda/2);
+	    Double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+	    return R * c;
+	    
 	}
 
 	public static double deg2rad(double deg) {
