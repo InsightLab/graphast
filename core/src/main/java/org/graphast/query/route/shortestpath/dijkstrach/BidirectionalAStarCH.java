@@ -5,7 +5,6 @@ import static org.graphast.util.NumberUtils.convertToInt;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 
-import com.graphhopper.util.*;
 import org.graphast.exception.PathNotFoundException;
 import org.graphast.model.Edge;
 import org.graphast.model.Node;
@@ -35,9 +34,14 @@ public class BidirectionalAStarCH {
 
 	PriorityQueue<DistanceEntry> forwardsUnsettleNodes = new PriorityQueue<>();
 	PriorityQueue<DistanceEntry> backwardsUnsettleNodes = new PriorityQueue<>();
+//	HashMap<Long, Integer> forwardsUnsettleNodesAux = new HashMap<>();
+//	HashMap<Long, Integer> backwardsUnsettleNodesAux = new HashMap<>();
 
 	HashMap<Long, Integer> forwardsSettleNodes = new HashMap<>();
 	HashMap<Long, Integer> backwardsSettleNodes = new HashMap<>();
+	
+	HashMap<Long, Integer> forwardsSettleNodesAux = new HashMap<>();
+	HashMap<Long, Integer> backwardsSettleNodesAux = new HashMap<>();
 
 	HashMap<Long, RouteEntry> forwardsParentNodes = new HashMap<>();
 	HashMap<Long, RouteEntry> backwardsParentNodes = new HashMap<>();
@@ -47,7 +51,7 @@ public class BidirectionalAStarCH {
 	DistanceEntry meetingNode = new DistanceEntry(-1, Integer.MAX_VALUE, -1);
 	private CHGraph graph;
 	
-	private int newNeighborDistance;
+	private int tmpg;
 
 	// --METRICS VARIABLES
 	int numberOfForwardSettleNodes = 0;
@@ -74,11 +78,24 @@ public class BidirectionalAStarCH {
 		this.setSource(source);
 		this.setTarget(target);
 
-		initializeQueue(source, forwardsUnsettleNodes);
-		initializeQueue(target, backwardsUnsettleNodes);
+//		initializeQueueForward(source, forwardsUnsettleNodes);
+//		initializeQueueBackward(target, backwardsUnsettleNodes);
+//		
+//		forwardsSettleNodes.put(source.getId(), 0);
+//		backwardsSettleNodes.put(target.getId(), 0);
+//		
+//		forwardsSettleNodesAux.put(source.getId(), 0);
+//		backwardsSettleNodesAux.put(target.getId(), 0);
+//		
+//		
+//		forwardsRemovedNode = forwardsUnsettleNodes.peek();
+//		backwardsRemovedNode = backwardsUnsettleNodes.peek();
 		
-		forwardsRemovedNode = forwardsUnsettleNodes.peek();
-		backwardsRemovedNode = backwardsUnsettleNodes.peek();
+		initializeQueueForward(source, forwardsUnsettleNodes);
+		initializeQueueBackward(target, backwardsUnsettleNodes);
+		
+		forwardsSettleNodes.put(source.getId(), 0);
+		backwardsSettleNodes.put(target.getId(), 0);
 
 		while (!forwardsUnsettleNodes.isEmpty() && !backwardsUnsettleNodes.isEmpty()) {
 
@@ -103,7 +120,35 @@ public class BidirectionalAStarCH {
 	}
 
 	private void forwardSearch() {
+		
+//		double f1 = forwardsSettleNodes.get(forwardsUnsettleNodes.peek().getId()) + Math.round(forwardHeuristic(graph.getNode(forwardsUnsettleNodes.peek().getId()))*0);
+//		double f2 = backwardsSettleNodes.get(backwardsUnsettleNodes.peek().getId()) + Math.round(backwardHeuristic(graph.getNode(backwardsUnsettleNodes.peek().getId()))*0);
+		
+		// Stopping criteria of Bidirectional search
+		if ( forwardsUnsettleNodes.peek().getDistance() + backwardsUnsettleNodes.peek().getDistance() >= meetingNode.getDistance() ) {
+			
+			HashMap<Long, RouteEntry> resultParentNodes;
+			path = new Path();
+			resultParentNodes = joinParents(meetingNode, forwardsParentNodes, backwardsParentNodes);
+			path.constructPath(target.getId(), resultParentNodes, graph);
 
+			return;
+
+		}
+		
+		forwardsRemovedNode = forwardsUnsettleNodes.poll();
+		forwardsSettleNodesAux.put(forwardsRemovedNode.getId(), forwardsRemovedNode.getDistance());
+		numberOfForwardSettleNodes++;
+
+		expandVertexForward();
+
+	}
+
+	private void backwardSearch() {
+
+//		double f1 = forwardsSettleNodes.get(forwardsUnsettleNodes.peek().getId()) + Math.round(forwardHeuristic(graph.getNode(forwardsUnsettleNodes.peek().getId()))*0);
+//		double f2 = backwardsSettleNodes.get(backwardsUnsettleNodes.peek().getId()) + Math.round(backwardHeuristic(graph.getNode(backwardsUnsettleNodes.peek().getId()))*0);
+		
 		// Stopping criteria of Bidirectional search
 		if (forwardsUnsettleNodes.peek().getDistance() + backwardsUnsettleNodes.peek().getDistance() >= meetingNode.getDistance()) {
 			
@@ -116,30 +161,8 @@ public class BidirectionalAStarCH {
 
 		}
 		
-		forwardsRemovedNode = forwardsUnsettleNodes.poll();
-		forwardsSettleNodes.put(forwardsRemovedNode.getId(), forwardsRemovedNode.getDistance());
-		numberOfForwardSettleNodes++;
-
-		expandVertexForward();
-
-	}
-
-	private void backwardSearch() {
-
-		// Stopping criteria of Bidirectional search
-		if (forwardsUnsettleNodes.peek().getDistance() + backwardsUnsettleNodes.peek().getDistance() >= meetingNode.getDistance()) {
-
-			HashMap<Long, RouteEntry> resultParentNodes;
-			path = new Path();
-			resultParentNodes = joinParents(meetingNode, forwardsParentNodes, backwardsParentNodes);
-			path.constructPath(target.getId(), resultParentNodes, graph);
-
-			return;
-
-		}
-		
 		backwardsRemovedNode = backwardsUnsettleNodes.poll();
-		backwardsSettleNodes.put(backwardsRemovedNode.getId(), backwardsRemovedNode.getDistance());
+		backwardsSettleNodesAux.put(backwardsRemovedNode.getId(), backwardsRemovedNode.getDistance());
 		numberOfBackwardSettleNodes++;
 
 		expandVertexBackward();
@@ -152,23 +175,15 @@ public class BidirectionalAStarCH {
 
 		for (long vid : neighbors.keySet()) {
 
-
-			CHNode u = graph.getNode(forwardsRemovedNode.getId());
-			CHNode v = graph.getNode(vid);
-			
-			newNeighborDistance = neighbors.get(vid) + 
-					(int) Math.floor( 
-							( forwardHeuristicS(v) - forwardHeuristicS(u) )/2 + 
-							( forwardHeuristicT(u) - forwardHeuristicT(v) )/2 
-							);
-			
-			
-			if(newNeighborDistance<0) {
-				System.out.println("Break");
+			if(forwardsSettleNodesAux.containsKey(vid)) {
+				continue;
 			}
+
+			CHNode w = graph.getNode(vid);
 			
+			tmpg =  forwardsSettleNodes.get(forwardsRemovedNode.getId()) + neighbors.get(vid);
 			
-			DistanceEntry newEntry = new DistanceEntry(vid,	newNeighborDistance + forwardsRemovedNode.getDistance(), forwardsRemovedNode.getId());
+			DistanceEntry newEntry = new DistanceEntry(vid,	tmpg + (int) Math.round(forwardHeuristic(w)), forwardsRemovedNode.getId());
 
 			Edge edge;
 			int distance;
@@ -176,45 +191,50 @@ public class BidirectionalAStarCH {
 			if (!forwardsSettleNodes.containsKey(vid)) {
 				
 				forwardsUnsettleNodes.offer(newEntry);
-				forwardsSettleNodes.put(newEntry.getId(), newEntry.getDistance());
+				forwardsSettleNodes.put(newEntry.getId(), tmpg);
 				
 				distance = neighbors.get(vid);
 				edge = getEdge(forwardsRemovedNode.getId(), vid, distance, forwardDirection);
-				
+				//verificar se essa distancia está correta
 				forwardsParentNodes.put(vid, new RouteEntry(forwardsRemovedNode.getId(), distance, edge.getId(), edge.getLabel()));
+				
+				verifyMeetingNodeForwardSearch(vid, neighbors);
 
 			} else {
 
-				int cost = forwardsSettleNodes.get(vid);
-				distance = neighbors.get(vid) + forwardsRemovedNode.getDistance();
-
-				if (cost > distance) {
+				if (tmpg < forwardsSettleNodes.get(vid)) {
 					forwardsUnsettleNodes.remove(newEntry);
 					forwardsUnsettleNodes.offer(newEntry);
 					
 					forwardsSettleNodes.remove(newEntry.getId());
-					forwardsSettleNodes.put(newEntry.getId(), distance);
+					forwardsSettleNodes.put(newEntry.getId(), tmpg);
 						
 					forwardsParentNodes.remove(vid);
 					distance = neighbors.get(vid);
 					edge = getEdge(forwardsRemovedNode.getId(), vid, distance, forwardDirection);
+					//verificar se essa distancia está correta
 					forwardsParentNodes.put(vid, new RouteEntry(forwardsRemovedNode.getId(), distance, edge.getId(), edge.getLabel()));
+					
+					verifyMeetingNodeForwardSearch(vid, neighbors);
 
 				}
 			}
-			
-			verifyMeetingNodeForwardSearch(vid, neighbors);
-			
 		}
 	}
 	
 	private void verifyMeetingNodeForwardSearch(long vid, Long2IntMap neighbors) {
 
-		if (backwardsSettleNodes.containsKey(vid) && (forwardsSettleNodes.get(forwardsRemovedNode.getId()) + neighbors.get(vid) + backwardsSettleNodes.get(vid) < meetingNode.getDistance())) {
+		if (backwardsSettleNodesAux.containsKey(vid) && (tmpg + backwardsSettleNodes.get(vid) < meetingNode.getDistance())) {
 			meetingNode.setId(vid);
-			meetingNode.setDistance(forwardsSettleNodes.get(forwardsRemovedNode.getId()) + neighbors.get(vid) + backwardsSettleNodes.get(vid));
+			meetingNode.setDistance(tmpg + backwardsSettleNodes.get(vid));
 			meetingNode.setParent(forwardsRemovedNode.getId());
 		}
+		
+//		if (backwardsUnsettleNodesAux.containsKey(vid) && (forwardsSettleNodes.get(forwardsRemovedNode.getId())	+ neighbors.get(vid) + backwardsUnsettleNodesAux.get(vid) < meetingNode.getDistance())) {
+//			meetingNode.setId(vid);
+//			meetingNode.setDistance(forwardsSettleNodes.get(forwardsRemovedNode.getId()) + neighbors.get(vid) + backwardsUnsettleNodesAux.get(vid));
+//			meetingNode.setParent(forwardsRemovedNode.getId());
+//		}
 
 	}
 
@@ -224,29 +244,17 @@ public class BidirectionalAStarCH {
 
 		for (long vid : neighbors.keySet()) {
 			
-			//Change the neighbors.get(vid) by the new one
-			
-			CHNode u = graph.getNode(forwardsRemovedNode.getId());
-			CHNode v = graph.getNode(vid);
-			
-			newNeighborDistance = neighbors.get(vid) + 
-					(int) ( 
-							( backwardHeuristicS(v) - backwardHeuristicS(u) )/2 + 
-							( backwardHeuristicT(u) - backwardHeuristicT(v) )/2 
-						  );
-			
-			
-			
-			
-//			newNeighborDistance = neighbors.get(vid) + 
-//					(int) Math.ceil(  (forwardHeuristicBackwards(graph.getNode(vid)) - forwardHeuristicBackwards(graph.getNode(backwardsRemovedNode.getId())))/2 + 
-//					(backwardHeuristicBackwards(graph.getNode(backwardsRemovedNode.getId())) - backwardHeuristicBackwards(graph.getNode(vid)))/2);
-
-			if(newNeighborDistance<0) {
-				System.out.println("Break");
+			if(backwardsSettleNodesAux.containsKey(vid)) {
+				continue;
 			}
 			
-			DistanceEntry newEntry = new DistanceEntry(vid,	newNeighborDistance + backwardsRemovedNode.getDistance(), backwardsRemovedNode.getId());
+			//Change the neighbors.get(vid) by the new one
+			
+			CHNode w = graph.getNode(vid);
+			
+			tmpg = backwardsSettleNodes.get(backwardsRemovedNode.getId()) + neighbors.get(vid);
+			//TODO Double check this backwardHeuristic
+			DistanceEntry newEntry = new DistanceEntry(vid,	tmpg + (int) Math.round(backwardHeuristic(w)), backwardsRemovedNode.getId());
 
 			Edge edge;
 			int distance;
@@ -254,94 +262,90 @@ public class BidirectionalAStarCH {
 			if (!backwardsSettleNodes.containsKey(vid)) {
 
 				backwardsUnsettleNodes.offer(newEntry);
-				backwardsSettleNodes.put(newEntry.getId(), newEntry.getDistance());
+				backwardsSettleNodes.put(newEntry.getId(), tmpg);
 
 				distance = neighbors.get(vid);
 				edge = getEdge(backwardsRemovedNode.getId(), vid, distance, backwardDirection);
-
+				//TODO Verify this distance
 				backwardsParentNodes.put(vid, new RouteEntry(backwardsRemovedNode.getId(), distance, edge.getId(), edge.getLabel()));
 
+				verifyMeetingNodeBackwardSearch(vid, neighbors);
+				
 			} else {
 
-				int cost = backwardsSettleNodes.get(vid);
-				distance = neighbors.get(vid) + backwardsRemovedNode.getDistance();
-
-				if (cost > distance) {
+				if (tmpg < backwardsSettleNodes.get(vid)) {
 					backwardsUnsettleNodes.remove(newEntry);
 					backwardsUnsettleNodes.offer(newEntry);
 
 					backwardsSettleNodes.remove(newEntry.getId());
-					backwardsSettleNodes.put(newEntry.getId(), distance);
+					backwardsSettleNodes.put(newEntry.getId(), tmpg);
 
 					backwardsParentNodes.remove(vid);
 					distance = neighbors.get(vid);
 					edge = getEdge(backwardsRemovedNode.getId(), vid, distance, backwardDirection);
 					backwardsParentNodes.put(vid, new RouteEntry(backwardsRemovedNode.getId(), distance, edge.getId(), edge.getLabel()));
 
+					verifyMeetingNodeBackwardSearch(vid, neighbors);
+					
 				}
 			}
-			
-			verifyMeetingNodeBackwardSearch(vid, neighbors);
-			
 		}
 	}
 
 	private void verifyMeetingNodeBackwardSearch(long vid, Long2IntMap neighbors) {
 
-		if (forwardsSettleNodes.containsKey(vid) && (backwardsSettleNodes.get(backwardsRemovedNode.getId())	+ newNeighborDistance + forwardsSettleNodes.get(vid) < meetingNode.getDistance())) {
+		if (forwardsSettleNodesAux.containsKey(vid) && (tmpg + forwardsSettleNodes.get(vid) < meetingNode.getDistance())) {
 			meetingNode.setId(vid);
-			meetingNode.setDistance(backwardsSettleNodes.get(backwardsRemovedNode.getId()) + newNeighborDistance + forwardsSettleNodes.get(vid));
+			meetingNode.setDistance(tmpg + forwardsSettleNodes.get(vid));
 			meetingNode.setParent(backwardsRemovedNode.getId());
 		}
+		
+//		if (forwardsUnsettleNodesAux.containsKey(vid) && (backwardsSettleNodes.get(backwardsRemovedNode.getId()) + neighbors.get(vid) + forwardsUnsettleNodesAux.get(vid) < meetingNode.getDistance())) {
+//			meetingNode.setId(vid);
+//			meetingNode.setDistance(backwardsSettleNodes.get(backwardsRemovedNode.getId()) + neighbors.get(vid)	+ forwardsUnsettleNodesAux.get(vid));
+//			meetingNode.setParent(backwardsRemovedNode.getId());
+//		}
 
 	}
 	
-	private int forwardHeuristicS(Node vid) {
+	private double forwardHeuristic(Node vid) {
 
 		DistancePlaneProjection distance = new DistancePlaneProjection();
 		
-		return (int) distance.calcDist(vid.getLatitude(), vid.getLongitude(), target.getLatitude(), target.getLongitude())* 1000;
+		return (distance.calcDist(vid.getLatitude(), vid.getLongitude(), target.getLatitude(), target.getLongitude())/6371000)*6378137 * 100;
 		
 //		return DistanceUtils.distanceLatLong(vid, target);
 		
-	}
-	
-	private int forwardHeuristicT(Node vid) {
-
-		DistancePlaneProjection distance = new DistancePlaneProjection();
-		
-		return (int) distance.calcDist(source.getLatitude(), source.getLongitude(), vid.getLatitude(), vid.getLongitude())* 1000;
-		
-//		return DistanceUtils.distanceLatLong(source, vid);
+//		return Math.sqrt(  Math.pow(target.getLatitude() - vid.getLatitude(), 2) + Math.pow(target.getLongitude() - vid.getLongitude(), 2)   );
 		
 	}
 	
 	
-	private int backwardHeuristicS(Node vid) {
+	private double backwardHeuristic(Node vid) {
 
 		DistancePlaneProjection distance = new DistancePlaneProjection();
 		
-		return (int) distance.calcDist(vid.getLatitude(), vid.getLongitude(), source.getLatitude(), source.getLongitude())* 1000;
+		return (distance.calcDist(vid.getLatitude(), vid.getLongitude(), source.getLatitude(), source.getLongitude())/6371000)*6378137 * 100;
 		
 //		return DistanceUtils.distanceLatLong(vid, source);
 		
-	}
-	
-	private int backwardHeuristicT(Node vid) {
-
-		DistancePlaneProjection distance = new DistancePlaneProjection();
-		
-		return (int) distance.calcDist(target.getLatitude(), target.getLongitude(), vid.getLatitude(), vid.getLongitude()) * 1000;
-		
-//		return DistanceUtils.distanceLatLong(target, vid);
+//		return Math.sqrt(  Math.pow(source.getLatitude() - vid.getLatitude(), 2) + Math.pow(source.getLongitude() - vid.getLongitude(), 2)   );
 		
 	}
 	
-	private void initializeQueue(Node node, PriorityQueue<DistanceEntry> queue) {
+	private void initializeQueueForward(Node node, PriorityQueue<DistanceEntry> queue) {
 
 		int nodeId = convertToInt(node.getId());
 
-		queue.offer(new DistanceEntry(nodeId, 0, -1));
+		queue.offer(new DistanceEntry(nodeId, (int)Math.round(forwardHeuristic(source)), -1));
+
+	}
+	
+	private void initializeQueueBackward(Node node, PriorityQueue<DistanceEntry> queue) {
+
+		int nodeId = convertToInt(node.getId());
+
+		queue.offer(new DistanceEntry(nodeId, (int)Math.round(backwardHeuristic(target)), -1));
 
 	}
 
@@ -442,8 +446,8 @@ public class BidirectionalAStarCH {
 		this.setSource(source);
 		this.setTarget(target);
 
-		initializeQueue(source, forwardsUnsettleNodes);
-		initializeQueue(target, backwardsUnsettleNodes);
+		initializeQueueForward(source, forwardsUnsettleNodes);
+		initializeQueueBackward(target, backwardsUnsettleNodes);
 
 		while (!forwardsUnsettleNodes.isEmpty()) {
 
@@ -473,6 +477,17 @@ public class BidirectionalAStarCH {
 				"Path not found between (" + source.getLatitude() + "," + source.getLongitude() + ")");
 
 	}
+	
+	public boolean heuristicValidator(Edge edge) {
+		
+		if(edge.getDistance() + forwardHeuristic( graph.getNode(edge.getToNode()) ) >= forwardHeuristic( graph.getNode(edge.getFromNode()) ) ) {
+			return true;
+		} else {
+			return false;
+		}
+		
+	}
+	
 
 	public void setSource(Node source) {
 		this.source = source;

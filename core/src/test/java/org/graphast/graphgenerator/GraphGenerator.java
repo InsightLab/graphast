@@ -353,7 +353,7 @@ public class GraphGenerator {
 	}
 	
 	public CHGraph generateTokyoBiggerCH() {
-		String osmFile = this.getClass().getResource("/tokyoBigger.osm.pbf").getPath();
+		String osmFile = this.getClass().getResource("/tokyoBigger-latest.osm.pbf").getPath();
 		String graphHopperTokyoBiggerDir = Configuration.USER_HOME + "/graphhopper/test/tokyoBigger";
 		String graphastTokyoBiggerDir = Configuration.USER_HOME + "/graphast/test/tokyoBigger";
 

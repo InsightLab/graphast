@@ -21,7 +21,7 @@ public class DistanceUtils {
 	public static double distanceLatLong(double latitudeFrom, double longitudeFrom,
 			double latitudeTo, double longitudeTo) {
 
-		final double R = 6372.8 * 1000000; // Radius of the earth in mm
+		final double r = 6372.8 * 1000000; // Radius of the earth in mm
 
 	    double lat1 = latitudeFrom;
 		double lon1 = longitudeFrom;
@@ -35,7 +35,7 @@ public class DistanceUtils {
  
         double a = Math.pow(Math.sin(dLat / 2),2) + Math.pow(Math.sin(dLon / 2),2) * Math.cos(lat1) * Math.cos(lat2);
         double c = 2 * Math.asin(Math.sqrt(a));
-        return R * c;
+        return r * c;
 	    
 	}
 	/**
@@ -47,9 +47,9 @@ public class DistanceUtils {
 	 * @param toNode To point
 	 * @return the distance in millimeters
 	 */
-	public static int distanceLatLong(Node fromNode, Node toNode) {
+	public static long distanceLatLong(Node fromNode, Node toNode) {
 		
-	    final double R = 6372.8 * 1000000; // Radius of the earth in mm
+	    final long r = 6371000 * 1000; // Radius of the earth in mm
 
 	    double lat1 = fromNode.getLatitude();
 		double lon1 = fromNode.getLongitude();
@@ -63,7 +63,7 @@ public class DistanceUtils {
  
         double a = Math.pow(Math.sin(dLat / 2),2) + Math.pow(Math.sin(dLon / 2),2) * Math.cos(lat1) * Math.cos(lat2);
         double c = 2 * Math.asin(Math.sqrt(a));
-        return (int) Math.floor(R * c);
+        return (long) (r * c);
 	    
 	}
 
