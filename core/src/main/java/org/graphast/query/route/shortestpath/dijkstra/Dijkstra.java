@@ -19,6 +19,13 @@ import org.graphast.query.route.shortestpath.model.RouteEntry;
 import org.graphast.query.route.shortestpath.model.TimeEntry;
 import org.graphast.util.DateUtils;
 
+/**
+ * Abstract Class for Dijkstra Algorithm. The algorithm is subdivide in two main methods:
+ *  -expandVertex
+ *  -shortestPath
+ *  Both methods have small differences depending on how it is implemented Dijkstra.
+ *  Extends the class that has the pattern of the classes of shortestPath like AStar and Dijkstra 
+ */
 public abstract class Dijkstra extends AbstractShortestPathService {
 
 	//private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -51,6 +58,7 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 		return path;
 	}
 
+	/**the basic implementation of shortestPath method*/
 	public Path shortestPath(Node source, Node target, Date time) {
 		PriorityQueue<TimeEntry> queue = new PriorityQueue<TimeEntry>();
 		HashMap<Long, Integer> wasTraversed = new HashMap<Long, Integer>();
@@ -87,11 +95,13 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 	public abstract void expandVertex(Node target, TimeEntry removed, HashMap<Long, Integer> wasTraversed, 
 			PriorityQueue<TimeEntry> queue, HashMap<Long, RouteEntry> parents);
 	
+	/** shortestPath with no Time*/
 	@Override
 	public Path shortestPath(Node source, Node target) {
 		return shortestPath(source, target, null);
 	}
 
+	/** shortestPath with no Time*/
 	@Override
 	public Path shortestPath(long source, long target) {
 		return shortestPath(source, target, null);
