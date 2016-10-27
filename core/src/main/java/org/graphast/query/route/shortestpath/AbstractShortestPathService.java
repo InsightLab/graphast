@@ -5,6 +5,7 @@ import org.graphast.model.GraphBounds;
 
 import com.graphhopper.util.DistanceCalc;
 
+/**Abstract class to determinate the basic structure for any type of shortestPath algorithm*/
 public abstract class AbstractShortestPathService implements ShortestPathService{
 
 	protected Graph graph;
