@@ -4,4 +4,4 @@
 
 Visit www.graphast.org
 
-[Group Publications about Mobility, Trajectory, Traffic](https://github.com/ARiDa/graphast/wiki/Group-Publications-(Mobility,-Trajectory,-Traffic))
+[Group Publications about Mobility, Trajectory, Traffic](https://github.com/ARiDa/graphast/wiki/Group-Publications-about-Mobility,-Trajectory,-Traffic)
