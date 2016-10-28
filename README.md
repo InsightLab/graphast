@@ -4,6 +4,6 @@
 
 ### Visit www.graphast.org
 
-### [Group Publications about Mobility, Trajectory, Traffic](https://github.com/ARiDa/graphast/wiki/Group-Publications-about-Mobility,-Trajectory,-Traffic)
+### [Group Publications about Mobility, Trajectory, Traffic](https://github.com/ARiDa/graphast/wiki/publications)
 
 ### [Documentation](https://github.com/ARiDa/graphast/wiki)
