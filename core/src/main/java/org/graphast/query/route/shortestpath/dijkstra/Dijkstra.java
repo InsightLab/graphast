@@ -24,7 +24,7 @@ import org.graphast.util.DateUtils;
  *  -expandVertex
  *  -shortestPath
  *  Both methods have small differences depending on how it is implemented Dijkstra.
- *  Extends the class that has the pattern of the classes of shortestPath like AStar and Dijkstra 
+ *  Extends the class "AbstractShortestPathService" that has the pattern of the classes of shortestPath like AStar and Dijkstra 
  */
 public abstract class Dijkstra extends AbstractShortestPathService {
 
