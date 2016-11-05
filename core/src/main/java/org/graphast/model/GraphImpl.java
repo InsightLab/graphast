@@ -1151,13 +1151,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		NodeImpl node = (NodeImpl) n;
 
 		try {
-			if (nodeIndex.containsKey(BigArrays.index(
+			return nodeIndex.containsKey(BigArrays.index(
 					node.getLatitudeConvertedToInt(),
-					node.getLongitudeConvertedToInt()))) {
-				return true;
-			} else {
-				return false;
-			}
+					node.getLongitudeConvertedToInt()));
 		} catch (NullPointerException e) {
 			return false;
 		}
@@ -1168,11 +1164,7 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		int lat = latLongToInt(latitude);
 		int lon = latLongToInt(longitude);
 		try {
-			if (nodeIndex.containsKey(BigArrays.index(lat, lon))) {
-				return true;
-			} else {
-				return false;
-			}
+			return nodeIndex.containsKey(BigArrays.index(lat, lon));
 		} catch (NullPointerException e) {
 			return false;
 		}
