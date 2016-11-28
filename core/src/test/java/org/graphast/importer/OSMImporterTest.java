@@ -51,8 +51,8 @@ public class OSMImporterTest {
 	@Test
 	public void monacoPoIImporterTest() {
 		
-		assertEquals(161, monaco.getNode(140).getCategory());
-		assertEquals("Crémaillère", monaco.getNode(140).getLabel());
+		assertEquals(34, monaco.getNode(141).getCategory());
+		assertEquals("Pharmacie des Moulins", monaco.getNode(141).getLabel());
 		
 //		assertEquals(751, monaco.getNumberOfNodes());
 		
