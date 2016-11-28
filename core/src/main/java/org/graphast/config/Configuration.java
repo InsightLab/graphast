@@ -88,9 +88,6 @@ public class Configuration {
 
 			File graphastDir = new File(GRAPHAST_DIR);
 			graphastDir.mkdirs();
-			if (!graphastDir.exists()) {
-				graphastDir.createNewFile();
-			}
 			
 			File userConfigFile = new File(CONFIG_FILE);
 
