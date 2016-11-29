@@ -1,5 +1,10 @@
 package org.graphast.query.route.shortestpath.model;
 
+/**
+ * Class for represents a register of time.
+ * Record a time entry needs a travelTime and arrivalTime.
+ *
+ */
 public class TimeEntry extends EntryImpl implements Comparable<Object>{
 	
     private int travelTime;

@@ -1,5 +1,10 @@
 package org.graphast.query.route.shortestpath.model;
 
+/**
+ * Class use for reconstruct path in Dijkstra and AStar.
+ * Also Use to constructPath with class Path
+ * It's a little bit different from another entries in this package but the idea is the same.
+ */
 public class RouteEntry {
 
 	private long id;

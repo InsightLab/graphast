@@ -108,7 +108,7 @@ public class DijkstraGeneric {
         }
 	}
 	
-	/** The basic shortestPath with settle and unsettle structure (Better method to initiate tests with Dijkstra)*/
+	/** The basic shortestPath (find distances) with settle and unsettle structure (Better method to initiate tests with Dijkstra)*/
 	public HashMap<Long, Integer> shortestPath(long v){
 		PriorityQueue<QueueEntry> unsettledNodes = new PriorityQueue<QueueEntry>();
 	    Set<Long> settledNodes = new HashSet<Long>();

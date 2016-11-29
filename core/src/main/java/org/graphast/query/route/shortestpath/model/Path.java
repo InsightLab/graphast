@@ -16,6 +16,10 @@ import org.graphast.query.route.shortestpath.AbstractShortestPathService;
 import org.graphast.query.route.shortestpath.dijkstra.DijkstraLinearFunction;
 import org.graphast.util.DistanceUtils;
 
+/**
+ * Class to represent a path between nodes in graph
+ * It's return for basic structure of shortestPath method in DijkstraGeneric and AStar.
+ */
 public class Path {
 
 	private List<Point> geometry;
