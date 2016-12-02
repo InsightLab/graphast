@@ -20,6 +20,13 @@ import org.slf4j.LoggerFactory;
 
 import com.graphhopper.util.StopWatch;
 
+/**
+ * Abstract class with tests to be use for the shortestPath algorithms with linear function. (In this case, Dijkstra and AStar).
+ * 
+ * This class has tests examples and test with Monaco's graph.
+ * 
+ * ShortestPath in this class has source, target and time.
+ */
 public abstract class AbstractShortestPathLinearFunctionTest {
 	
 	private static Logger logger = LoggerFactory.getLogger(DijkstraLinearFunctionTest.class);

@@ -3,6 +3,10 @@ package org.graphast.query.route.shortestpath;
 import org.graphast.query.route.shortestpath.dijkstra.DijkstraLinearFunction;
 import org.junit.BeforeClass;
 
+/**
+ * Class that implements AbstractShortestPathTest idea with Dijkstra shortestPath algorithm.
+ * It's a simple setupService before all in AbstractShortestPathLinearFunctionTest that instantiate the services.
+ */
 public class DijkstraLinearFunctionTest extends AbstractShortestPathLinearFunctionTest {
 	
 	
