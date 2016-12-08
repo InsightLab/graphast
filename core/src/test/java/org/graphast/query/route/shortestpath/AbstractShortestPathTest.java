@@ -22,7 +22,6 @@ import com.graphhopper.util.StopWatch;
  * 
  * This class has tests examples and test with Monaco's graph.
  */
-
 public abstract class AbstractShortestPathTest {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());

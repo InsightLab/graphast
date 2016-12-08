@@ -37,6 +37,10 @@ import it.unimi.dsi.fastutil.objects.ObjectBigList;
 
 import java.io.Serializable;
 
+/**
+ * Implementation of Graph and GraphBounds interface 
+ *
+ */
 public class GraphImpl implements Graph, GraphBounds, Serializable {
 
 	/*
@@ -1649,7 +1653,7 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.graphast.model.GraphBounds#acessNeighborhood()
+	 * @see org.graphast.model.GraphBounds#accessNeighborhood()
 	 * 
 	 * method from GraphBounds interface
 	 */
