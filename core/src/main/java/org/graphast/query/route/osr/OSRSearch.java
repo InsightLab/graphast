@@ -180,10 +180,7 @@ public class OSRSearch {
 	}
 
 	private boolean isInQ(int id, int pos, HashMap<Integer, HashMap<Integer, Integer>> wasTraversed){
-		if(wasTraversed.containsKey(pos) && wasTraversed.get(pos).containsKey(id)){
-			return true;
-		}
-		return false;
+		return wasTraversed.containsKey(pos) && wasTraversed.get(pos).containsKey(id);
 	}
 
 	private boolean isInQ(int id, int pos, int newCost, HashMap<Integer, HashMap<Integer, Integer>> wasTraversed,

@@ -2,6 +2,12 @@ package org.graphast.query.route.shortestpath.model;
 
 import org.graphast.query.model.Entry;
 
+/**
+ * EntryImpl is a structure to represent an entry of something to evaluate and also has many different types.
+ * This class is the basic structure with id and parent. The types starting from entry in Graphast are:
+ * 	- DistanceEntry
+ *	- TimeEntry
+ */
 public class EntryImpl implements Entry{
 
 	private long id;
@@ -13,7 +19,7 @@ public class EntryImpl implements Entry{
 	}
 
 	/* (non-Javadoc)
-	 * @see org.graphast.query.route.shortestpath.Entry#equals(org.graphast.query.route.shortestpath.EntryImpl)
+	 * @see org.graphast.query.model.Entry#equals
 	 */
 	@Override
 	public boolean equals(EntryImpl o) {
@@ -21,7 +27,7 @@ public class EntryImpl implements Entry{
 	}
 
 	/* (non-Javadoc)
-	 * @see org.graphast.query.route.shortestpath.Entry#getId()
+	 * @see org.graphast.query.model.Entry#getId()
 	 */
 	@Override
 	public long getId() {
@@ -29,7 +35,7 @@ public class EntryImpl implements Entry{
 	}
 
 	/* (non-Javadoc)
-	 * @see org.graphast.query.route.shortestpath.Entry#setId(long)
+	 * @see org.graphast.query.model.Entry#setId(long)
 	 */
 	@Override
 	public void setId(long id) {
@@ -37,7 +43,7 @@ public class EntryImpl implements Entry{
 	}
 
 	/* (non-Javadoc)
-	 * @see org.graphast.query.route.shortestpath.Entry#getParent()
+	 * @see org.graphast.query.model.Entry#getParent()
 	 */
 	@Override
 	public long getParent() {
@@ -45,7 +51,7 @@ public class EntryImpl implements Entry{
 	}
 
 	/* (non-Javadoc)
-	 * @see org.graphast.query.route.shortestpath.Entry#setParent(long)
+	 * @see org.graphast.query.model.Entry#setParent(long)
 	 */
 	@Override
 	public void setParent(long parent) {

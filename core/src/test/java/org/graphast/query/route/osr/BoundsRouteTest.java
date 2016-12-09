@@ -12,7 +12,7 @@ public class BoundsRouteTest {
 	private static GraphBounds graphMonaco;
 
 	@BeforeClass
-	public static void setup(){
+	public static void setUp(){
 		graphMonaco = new GraphGenerator().generateMonaco();
 	}
 

@@ -264,7 +264,12 @@ public interface Graph {
 	 */
 	public Long2IntMap accessNeighborhood(Node v);
 	
-	
+	/**
+	 * This method returns a map containing the distances of neighbors, of a given node, being the key their id's
+	 * @param v A node
+	 * @param time edge's time cost
+	 * @return a HashMap containing the node's neighbors and the distances of neighbors
+	 */
 	public HashMap<Node, Integer> accessNeighborhood(Node v, int time);
 	
 	/**

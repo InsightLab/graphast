@@ -19,6 +19,17 @@ import org.graphast.model.Node;
 import org.graphast.query.model.Bound;
 import org.graphast.query.model.QueueEntry;
 
+/**
+ * Class with the generic form of Dijkstra Algorithm.
+ * This class has:
+ * -shortestPath method in many versions like(besides the basic):
+ *  	-POIs
+ *		-Categories
+ *  	-TS
+ * -expandVertex method(besides the basic):
+ * 		-upperBound
+ * 		-lowerBound
+ */
 public class DijkstraGeneric {
 	private GraphBounds graph;
 	
@@ -26,6 +37,14 @@ public class DijkstraGeneric {
 		this.graph = ga;
 	}
 	
+	/**This is the basic expandVertex method with unsettled and settle nodes structure(Better form to initiate tests)
+	 * 
+	 * @param e QueueEntry of a node with travel time 
+	 * @param settledNodes Set of settled node's id 
+	 * @param shortestDistances HashMap with node's id and shortestDistance 
+	 * @param unsettledNodes Set of unsettled node's id 
+	 * 
+	 * */
 	public void expandVertex(QueueEntry e, Set<Long> settledNodes, HashMap<Long, Integer> shortestDistances,
 			PriorityQueue<QueueEntry> unsettledNodes){
 		Long2IntMap adj = graph.accessNeighborhood(graph.getNode(e.getId()));
@@ -95,6 +114,12 @@ public class DijkstraGeneric {
         }
 	}
 	
+	/** The basic shortestPath (find distances) with settle and unsettled structure (Better method to initiate tests with Dijkstra)
+	 * 
+	 * @param v long id for a node
+	 * @return a HashMap with shortestDistances(int) from node v to all others nodes. (HashMap with Long and Integer) 
+	 * 
+	 * */
 	public HashMap<Long, Integer> shortestPath(long v){
 		PriorityQueue<QueueEntry> unsettledNodes = new PriorityQueue<QueueEntry>();
 	    Set<Long> settledNodes = new HashSet<Long>();

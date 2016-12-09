@@ -37,6 +37,10 @@ import it.unimi.dsi.fastutil.objects.ObjectBigList;
 
 import java.io.Serializable;
 
+/**
+ * Implementation of Graph and GraphBounds interface 
+ *
+ */
 public class GraphImpl implements Graph, GraphBounds, Serializable {
 
 	/*
@@ -1151,13 +1155,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		NodeImpl node = (NodeImpl) n;
 
 		try {
-			if (nodeIndex.containsKey(BigArrays.index(
+			return nodeIndex.containsKey(BigArrays.index(
 					node.getLatitudeConvertedToInt(),
-					node.getLongitudeConvertedToInt()))) {
-				return true;
-			} else {
-				return false;
-			}
+					node.getLongitudeConvertedToInt()));
 		} catch (NullPointerException e) {
 			return false;
 		}
@@ -1168,11 +1168,7 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		int lat = latLongToInt(latitude);
 		int lon = latLongToInt(longitude);
 		try {
-			if (nodeIndex.containsKey(BigArrays.index(lat, lon))) {
-				return true;
-			} else {
-				return false;
-			}
+			return nodeIndex.containsKey(BigArrays.index(lat, lon));
 		} catch (NullPointerException e) {
 			return false;
 		}
@@ -1598,6 +1594,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 	 * Métodos getPoiCost e getNodeCost eram idênticos então foram mantidos
 	 */
 
+	/**
+	 * method for create lowerBound edges based on graph's edges
+	 */
 	public void createEdgesLowerBounds() {
 		long numberOfEdges = getNumberOfEdges();
 		Edge edge; 
@@ -1608,6 +1607,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		}
 	}
 
+	/**
+	 * method for create upperBound edges based on graph's edges
+	 */
 	public void createEdgesUpperBounds() {
 
 		long numberOfEdges = getNumberOfEdges();
@@ -1619,6 +1621,10 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		}
 	}
 
+
+	/**
+	 * method for create lowerBound nodes based on graph's nodes
+	 */
 	public void createNodesLowerBounds() {
 		long numberOfNodes = getNumberOfNodes();
 		Node node; 
@@ -1629,6 +1635,9 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		}
 	}
 
+	/**
+	 * method for create upperBound nodes based on graph's nodes
+	 */
 	public void createNodesUpperBounds() {
 
 		long numberOfNodes = getNumberOfNodes();
@@ -1640,15 +1649,13 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		}
 	}
 
-	/**
-	 * This method return a list of nodes that are neighbors of a given node. 
-	 * This list contains node id and cost to reach it.
+
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param v Node which method is applied.
-	 * @param graphType The type of graph the will be used to retrieve costs needed. 0 = Regular Costs; 1 = Lower Bound Costs;
-	 * 					3 = Upper Bound Costs.
-	 * @param time	The time that will be used to get the time-dependent cost
-	 * @return	all neighbors for the given parameters
+	 * @see org.graphast.model.GraphBounds#accessNeighborhood()
+	 * 
+	 * method from GraphBounds interface
 	 */
 	public Long2IntMap accessNeighborhood(Node v, short graphType, int time){
 
@@ -1697,6 +1704,13 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.graphast.model.GraphBounds#createBounds()
+	 * 
+	 * method from GraphBounds interface
+	 */
 	@Override
 	public void createBounds() {
 		createEdgesUpperBounds();

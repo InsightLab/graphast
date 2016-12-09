@@ -82,7 +82,16 @@ public interface Edge {
 	
 	public boolean equals(Edge e);
 	
+	/**
+	 * Add point p to geometry's list of points 
+	 * @param p new Point for geometry
+	 */
 	public void addGeometryPoint(Point p);
+	
+	/**
+	 * Receive a list of geometry for this edge
+	 * @param geometry geometry's List of points
+	 */
 	public void setGeometry(List<Point> geometry);
 	
 }

@@ -12,6 +12,11 @@ import org.graphast.model.Node;
 import org.graphast.query.route.shortestpath.model.RouteEntry;
 import org.graphast.query.route.shortestpath.model.TimeEntry;
 
+/**
+ * Implementation of Dijkstra algorithm with constant weight
+ *
+ */
+
 public class DijkstraConstantWeight extends Dijkstra {
 
 	public DijkstraConstantWeight(Graph graph) {

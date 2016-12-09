@@ -299,11 +299,8 @@ public class NodeImpl implements Node {
 	}
 	
 	public boolean equals(Node n) {
-		if((n.getLatitude() == this.getLatitude() && (n.getLongitude() == this.getLongitude())
-				&& n.getCategory() == this.getCategory())) {
-			return true;
-		}
-		return false;
+		return (n.getLatitude() == this.getLatitude() && (n.getLongitude() == this.getLongitude())
+				&& n.getCategory() == this.getCategory());
 	}
 
 }

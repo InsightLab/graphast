@@ -298,11 +298,8 @@ public class EdgeImpl implements Edge {
 	}
 	
 	public boolean equals(Edge e) {
-		if((e.getFromNode() == this.getFromNode()) && (e.getToNode() == this.getToNode())
-				&& (e.getDistance() == this.getDistance())) {
-			return true;
-		}
-		return false;
+		return (e.getFromNode() == this.getFromNode()) && (e.getToNode() == this.getToNode())
+				&& (e.getDistance() == this.getDistance());
 	}
 	
 	public void addGeometryPoint(Point p) {

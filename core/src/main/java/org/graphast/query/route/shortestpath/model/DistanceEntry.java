@@ -1,5 +1,10 @@
 package org.graphast.query.route.shortestpath.model;
 
+/**
+ * Class for represents a register of distance.
+ * Record a distance entry needs a travelTime and arrivalTime.
+ *
+ */
 public class DistanceEntry extends EntryImpl implements Comparable<Object> {
 
     private int distance;

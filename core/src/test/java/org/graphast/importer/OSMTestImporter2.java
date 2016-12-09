@@ -21,7 +21,7 @@ public class OSMTestImporter2 {
 	private static Graph graph;
 	
 	@BeforeClass
-	public static void setup() {
+	public static void setUp() {
 		graphHopperDir = Configuration.USER_HOME + "/graphhopper/test/example";
 		graphastDir = Configuration.USER_HOME + "/graphast/test/example";
 

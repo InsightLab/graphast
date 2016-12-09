@@ -5,6 +5,7 @@ import java.util.Date;
 import org.graphast.model.Node;
 import org.graphast.query.route.shortestpath.model.Path;
 
+/**Interface for handle all types of entry for a shortestPath*/
 public interface ShortestPathService {
 	
 	public Path shortestPath(Node source, Node target);

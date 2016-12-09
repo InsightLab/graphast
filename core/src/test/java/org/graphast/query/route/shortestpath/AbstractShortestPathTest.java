@@ -17,6 +17,11 @@ import org.slf4j.LoggerFactory;
 
 import com.graphhopper.util.StopWatch;
 
+/**
+ * Abstract class with tests to be use for the shortestPath algorithms with constant weight. (In this case, Dijkstra and AStar).
+ * 
+ * This class has tests examples and test with Monaco's graph.
+ */
 public abstract class AbstractShortestPathTest {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -41,6 +46,10 @@ public abstract class AbstractShortestPathTest {
 		graphExample2 = new GraphGenerator().generateExample2();
 	}
 
+	/**
+	 * This method represents a execution of shortestPath in Monaco's graph.
+	 * Source and target node are chosen with Monaco's coordinates (not necessary coordinates in nodes or edges). 
+	 */
 	@Test
 	public void shortestPathMonacoTest() {
 		
@@ -70,6 +79,9 @@ public abstract class AbstractShortestPathTest {
 		assertEquals(63155, shortestPath.getTotalCost(), 0);
 	}
 
+	/**
+	 * Like shortestPathMonacoTest() above.
+	 */
 	@Test
 	public void shortestPathMonacoTest2() {
 		
@@ -122,6 +134,9 @@ public abstract class AbstractShortestPathTest {
 //		
 //	}
 
+	/**
+	 * Test shortestPath with a simple graphExample
+	 */
 	@Test
 	public void shortestPathExampleTest() {
 
@@ -170,6 +185,9 @@ public abstract class AbstractShortestPathTest {
 //
 //	}
 	
+	/**
+	 * Like shortestPathMonacoTest() above.
+	 */
 	@Test
 	public void shortestPathMonacoTest3() {
 
@@ -198,6 +216,9 @@ public abstract class AbstractShortestPathTest {
 
 	}
 	
+	/**
+	 * Like shortestPathMonacoTest() above, but the difference is because graphMonaco used is reverse.
+	 */
 	@Test
 	public void shortestPathGraphExampleReverseTest2() {
 
