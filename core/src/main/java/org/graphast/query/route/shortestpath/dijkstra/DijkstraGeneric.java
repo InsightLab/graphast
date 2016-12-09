@@ -40,7 +40,7 @@ public class DijkstraGeneric {
 	/**This is the basic expandVertex method with unsettled and settle nodes structure(Better form to initiate tests)
 	 * 
 	 * @param e QueueEntry of a node with travel time 
-	 * @param settleNodes Set of settled node's id 
+	 * @param settledNodes Set of settled node's id 
 	 * @param shortestDistances HashMap with node's id and shortestDistance 
 	 * @param unsettledNodes Set of unsettled node's id 
 	 * 
@@ -117,7 +117,7 @@ public class DijkstraGeneric {
 	/** The basic shortestPath (find distances) with settle and unsettled structure (Better method to initiate tests with Dijkstra)
 	 * 
 	 * @param v long id for a node
-	 * @return a HashMap with shortestDistances(int) from node v to all others nodes. (HashMap<Long, Integer>) 
+	 * @return a HashMap with shortestDistances(int) from node v to all others nodes. (HashMap with Long and Integer) 
 	 * 
 	 * */
 	public HashMap<Long, Integer> shortestPath(long v){
