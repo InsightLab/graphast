@@ -309,6 +309,8 @@ public interface Graph {
 	void setBBox(BBox bBox);
 
 	List<PoI> getPOIs();
+	
+	List<Node> getPOIsNodes();
 
 	List<PoI> getPOIs(Integer categoryId);
 

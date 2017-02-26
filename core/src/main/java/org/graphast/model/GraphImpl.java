@@ -1783,6 +1783,18 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		return getPOIs(null);
 	}
 	
+	@Override
+	public List<Node> getPOIsNodes() {
+		List<Node> result = new ArrayList<>();
+		for (long i = 0; i < this.getNumberOfNodes(); i++) {
+			Node n = this.getNode(i);
+			if (n.getCategory() >= 0) {
+				result.add(n);
+			}
+		}
+		return result;
+	}
+	
 	/* (non-Javadoc)
 	 * @see org.graphast.model.Graph#getPOIs(java.lang.Integer)
 	 */
@@ -1799,6 +1811,8 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		}
 		return result;
 	}
+	
+	
 
 	/* (non-Javadoc)
 	 * @see org.graphast.model.Graph#getPOICategories()
