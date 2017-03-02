@@ -102,8 +102,8 @@ public class DijkstraCH {
 			removed = queue.poll();
 			wasTraversed.put(removed.getId(), wasRemoved);
 
-			if(this.maxHopLimit < wasTraversed.size())
-				return null;
+//			if(this.maxHopLimit < wasTraversed.size())
+//				return null;
 			
 			if (removed.getId() == targetId) {
 				Path path = new Path();

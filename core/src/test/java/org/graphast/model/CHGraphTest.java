@@ -19,7 +19,7 @@ import com.graphhopper.util.StopWatch;
 public class CHGraphTest {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
-	
+
 	private static CHGraph graphHopperExample;
 	private static CHGraph graphHopperExampleWithPoIs;
 	private static CHGraph graphHopperExample2;
@@ -33,6 +33,7 @@ public class CHGraphTest {
 	private static CHGraph graphHopperTest;
 	private static CHGraph graphHopperTest2;
 
+	private static CHGraph graphExampleMonacoCH;
 
 	@BeforeClass
 	public static void setup() {
@@ -47,391 +48,388 @@ public class CHGraphTest {
 		graphHopperExample4WithPoIs = new GraphGenerator().generateGraphHopperExample4WithPoIs();
 		graphHopperExample5 = new GraphGenerator().generateGraphHopperExample5();
 		graphHopperExample5WithPoIs = new GraphGenerator().generateGraphHopperExample5WithPoIs();
-		
+
 		graphHopperTest = new GraphGenerator().generateGraphHopperTest();
 		graphHopperTest2 = new GraphGenerator().generateGraphHopperTest2();
-		
+
+		graphExampleMonacoCH = new GraphGenerator().generateMonacoCHWithPoI();
+
 	}
-	
+
+	// /*
+	// * This test uses a modified version of createExampleGraph() graph from
+	// GraphHopper
+	// * PrepareContractionHierarchiesTest.java class. This modified version
+	// have HyperPoI's
+	// * HyperEdges.
+	// */
+	// @Test
+	// public void graphHopperExampleWithPoIsTest() {
+	//
+	// int[] nearestNodesDistances = {2, 5};
+	//
+	// graphHopperExampleWithPoIs.prepareNodes();
+	//
+	// graphHopperExampleWithPoIs.contractNodes();
+	//
+	// DijkstraCH dj = new DijkstraCH(graphHopperExampleWithPoIs);
+	//
+	// StopWatch knnSW = new StopWatch();
+	//
+	// knnSW.start();
+	//
+	// List<Path> pathToNearestNeighbours =
+	// dj.shortestPath(graphHopperExampleWithPoIs.getNode(3), 2);
+	//
+	// knnSW.stop();
+	//
+	// logger.info("Execution Time of shortestPathMonacoTest(): {}ms",
+	// knnSW.getNanos());
+	//
+	// for (Path path : pathToNearestNeighbours) {
+	//
+	// logger.info("Contracted Path");
+	// logger.info("\t{}", path.getInstructions());
+	//
+	// logger.info("Uncontracted Path");
+	// for (CHEdge edge : path.uncontractPath(graphHopperExampleWithPoIs)) {
+	// logger.info("\t{}", edge.getLabel());
+	// }
+	//
+	// }
+	//
+	// for(int i=0; i<pathToNearestNeighbours.size(); i++) {
+	// assertEquals(nearestNodesDistances[i],
+	// pathToNearestNeighbours.get(i).getTotalDistance());
+	// }
+	//
+	// }
+	//
+	// /*
+	// * This test uses a modified version of testDirectedGraph() graph from
+	// GraphHopper
+	// * PrepareContractionHierarchiesTest.java class. This modified version
+	// have HyperPoI's
+	// * HyperEdges.
+	// */
+	// @Test
+	// public void graphHopperExample2WithPoIsTest() {
+	//
+	// int[] nearestNodesDistances = {2, 3};
+	//
+	// graphHopperExample2WithPoIs.prepareNodes();
+	//
+	// graphHopperExample2WithPoIs.contractNodes();
+	//
+	// DijkstraCH dj = new DijkstraCH(graphHopperExample2WithPoIs);
+	//
+	// StopWatch knnSW = new StopWatch();
+	// knnSW.start();
+	//
+	// List<Path> pathToNearestNeighbours =
+	// dj.shortestPath(graphHopperExample2WithPoIs.getNode(1), 2);
+	//
+	// knnSW.stop();
+	//
+	// logger.info("Execution Time of shortestPathMonacoTest(): {}ms",
+	// knnSW.getNanos());
+	//
+	// for (Path path : pathToNearestNeighbours) {
+	//
+	// logger.info("Contracted Path");
+	// logger.info("\t{}", path.getInstructions());
+	//
+	// logger.info("Uncontracted Path");
+	// for (CHEdge edge : path.uncontractPath(graphHopperExample2WithPoIs)) {
+	// logger.info("\t{}", edge.getLabel());
+	// }
+	//
+	// }
+	//
+	// for(int i=0; i<pathToNearestNeighbours.size(); i++) {
+	// assertEquals(nearestNodesDistances[i],
+	// pathToNearestNeighbours.get(i).getTotalDistance());
+	// }
+	//
+	// }
+	//
+	//
+	// @Test
+	// public void graphHopperExample3Test() {
+	//
+	//
+	// graphHopperExample3.prepareNodes();
+	//
+	// graphHopperExample3.contractNodes();
+	//
+	// System.out.println(graphHopperExample3);
+	//
+	// }
+	//
+	// /*
+	// * This test uses a modified version of testDirectedGraph3() graph from
+	// GraphHopper
+	// * PrepareContractionHierarchiesTest.java class. This modified version
+	// have HyperPoI's
+	// * HyperEdges.
+	// */
+	// @Test
+	// public void graphHopperExample3WithPoIsTest() {
+	//
+	// int[] nearestNodesDistances = {4, 8, 8};
+	//
+	// graphHopperExample3WithPoIs.prepareNodes();
+	//
+	// graphHopperExample3WithPoIs.contractNodes();
+	//
+	// System.out.println(graphHopperExample3WithPoIs);
+	//
+	// DijkstraCH dj = new DijkstraCH(graphHopperExample3WithPoIs);
+	//
+	// StopWatch knnSW = new StopWatch();
+	// knnSW.start();
+	//
+	// List<Path> pathToNearestNeighbours =
+	// dj.shortestPath(graphHopperExample3WithPoIs.getNode(0), 3);
+	//
+	// knnSW.stop();
+	//
+	// logger.info("Execution Time of shortestPathMonacoTest(): {}ms",
+	// knnSW.getNanos());
+	//
+	// for (Path path : pathToNearestNeighbours) {
+	//
+	// logger.info("Contracted Path");
+	// logger.info("\t{}", path.getInstructions());
+	//
+	// logger.info("Uncontracted Path");
+	// for (CHEdge edge : path.uncontractPath(graphHopperExample3WithPoIs)) {
+	// logger.info("\t{}", edge.getLabel());
+	// }
+	//
+	// }
+	//
+	// for(int i=0; i<pathToNearestNeighbours.size(); i++) {
+	// assertEquals(nearestNodesDistances[i],
+	// pathToNearestNeighbours.get(i).getTotalDistance());
+	// }
+	// }
+
 	/*
-	 * This test uses a modified version of createExampleGraph() graph from GraphHopper
-	 * PrepareContractionHierarchiesTest.java class. This modified version have HyperPoI's
-	 * HyperEdges.
-	 */
-	@Test
-	public void graphHopperExampleWithPoIsTest() {
-
-		int[] nearestNodesDistances = {2, 5};
-
-		graphHopperExampleWithPoIs.prepareNodes();
-		
-		graphHopperExampleWithPoIs.contractNodes();
-
-		DijkstraCH dj = new DijkstraCH(graphHopperExampleWithPoIs);
-
-		StopWatch knnSW = new StopWatch();
-		
-		knnSW.start();
-
-		List<Path> pathToNearestNeighbours = dj.shortestPath(graphHopperExampleWithPoIs.getNode(3), 2);
-
-		knnSW.stop();
-		
-		logger.info("Execution Time of shortestPathMonacoTest(): {}ms", knnSW.getNanos());
-
-		for (Path path : pathToNearestNeighbours) {
-
-			logger.info("Contracted Path");
-			logger.info("\t{}", path.getInstructions());
-			
-			logger.info("Uncontracted Path");
-			for (CHEdge edge : path.uncontractPath(graphHopperExampleWithPoIs)) {
-				logger.info("\t{}", edge.getLabel());
-			}
-
-		}
-		
-		for(int i=0; i<pathToNearestNeighbours.size(); i++) {
-			assertEquals(nearestNodesDistances[i], pathToNearestNeighbours.get(i).getTotalDistance());
-		}
-
-	}
-	
-	/*
-	 * This test uses a modified version of testDirectedGraph() graph from GraphHopper
-	 * PrepareContractionHierarchiesTest.java class. This modified version have HyperPoI's
-	 * HyperEdges.
-	 */
-	@Test
-	public void graphHopperExample2WithPoIsTest() {
-
-		int[] nearestNodesDistances = {2, 3};		
-
-		graphHopperExample2WithPoIs.prepareNodes();
-		
-		graphHopperExample2WithPoIs.contractNodes();
-
-		DijkstraCH dj = new DijkstraCH(graphHopperExample2WithPoIs);
-
-		StopWatch knnSW = new StopWatch();
-		knnSW.start();
-
-		List<Path> pathToNearestNeighbours = dj.shortestPath(graphHopperExample2WithPoIs.getNode(1), 2);
-
-		knnSW.stop();
-
-		logger.info("Execution Time of shortestPathMonacoTest(): {}ms", knnSW.getNanos());
-
-		for (Path path : pathToNearestNeighbours) {
-
-			logger.info("Contracted Path");
-			logger.info("\t{}", path.getInstructions());
-			
-			logger.info("Uncontracted Path");
-			for (CHEdge edge : path.uncontractPath(graphHopperExample2WithPoIs)) {
-				logger.info("\t{}", edge.getLabel());
-			}
-
-		}
-		
-		for(int i=0; i<pathToNearestNeighbours.size(); i++) {
-			assertEquals(nearestNodesDistances[i], pathToNearestNeighbours.get(i).getTotalDistance());
-		}
-
-	}
-	
-	
-	@Test
-	public void graphHopperExample3Test() {
-
-
-		graphHopperExample3.prepareNodes();
-		
-		graphHopperExample3.contractNodes();
-		
-		System.out.println(graphHopperExample3);
-
-	}
-	
-	/*
-	 * This test uses a modified version of testDirectedGraph3() graph from GraphHopper
-	 * PrepareContractionHierarchiesTest.java class. This modified version have HyperPoI's
-	 * HyperEdges.
-	 */
-	@Test
-	public void graphHopperExample3WithPoIsTest() {
-
-		int[] nearestNodesDistances = {4, 8, 8};
-
-		graphHopperExample3WithPoIs.prepareNodes();
-		
-		graphHopperExample3WithPoIs.contractNodes();
-		
-		System.out.println(graphHopperExample3WithPoIs);
-
-		DijkstraCH dj = new DijkstraCH(graphHopperExample3WithPoIs);
-
-		StopWatch knnSW = new StopWatch();
-		knnSW.start();
-
-		List<Path> pathToNearestNeighbours = dj.shortestPath(graphHopperExample3WithPoIs.getNode(0), 3);
-
-		knnSW.stop();
-
-		logger.info("Execution Time of shortestPathMonacoTest(): {}ms", knnSW.getNanos());
-
-		for (Path path : pathToNearestNeighbours) {
-
-			logger.info("Contracted Path");
-			logger.info("\t{}", path.getInstructions());
-			
-			logger.info("Uncontracted Path");
-			for (CHEdge edge : path.uncontractPath(graphHopperExample3WithPoIs)) {
-				logger.info("\t{}", edge.getLabel());
-			}
-
-		}
-		
-		for(int i=0; i<pathToNearestNeighbours.size(); i++) {
-			assertEquals(nearestNodesDistances[i], pathToNearestNeighbours.get(i).getTotalDistance());
-		}
-	}
-	
-	/*
-	 * This test uses a modified version of initRoundaboutGraph() graph from GraphHopper
-	 * PrepareContractionHierarchiesTest.java class. This modified version have HyperPoI's
-	 * HyperEdges.
+	 * This test uses a modified version of initRoundaboutGraph() graph from
+	 * GraphHopper PrepareContractionHierarchiesTest.java class. This modified
+	 * version have HyperPoI's HyperEdges.
 	 * 
 	 * TEST IS (not) WORKING!
 	 */
-//	@Test
-//	public void graphHopperExample4WithPoIsTest() {
-//
-//		int[] nearestNodesDistances = {3, 3, 7, 7};
-//		
-//		graphHopperExample4WithPoIs.prepareNodes();
-//		graphHopperExample4WithPoIs.contractNodes();
-//		System.out.println(graphHopperExample4WithPoIs);
-//		DijkstraCH dj = new DijkstraCH(graphHopperExample4WithPoIs);
-//
-//		StopWatch knnSW = new StopWatch();
-//		knnSW.start();
-//
-//		List<Path> pathToNearestNeighbours = dj.shortestPath(graphHopperExample4WithPoIs.getNode(1), 3);
-//
-//		knnSW.stop();
-//
-//		logger.info("Execution Time of shortestPathMonacoTest(): {}ms", knnSW.getNanos());
-//
-//		for (Path path : pathToNearestNeighbours) {
-//
-//			logger.info("Contracted Path");
-//			logger.info("\t{}", path.getInstructions());
-//			
-//			logger.info("Uncontracted Path");
-//			for (CHEdge edge : path.uncontractPath(graphHopperExample4WithPoIs)) {
-//				logger.info("\t{}", edge.getLabel());
-//			}
-//
-//		}
-//		
-//		for(int i=0; i<pathToNearestNeighbours.size(); i++) {
-//			assertEquals(nearestNodesDistances[i], pathToNearestNeighbours.get(i).getTotalDistance());
-//		}
-//
-//	}
-	
-//	@Test
-//	public void graphHopperTest() {
-//		
-//		
-//		graphHopperTest.prepareNodes();
-//		System.out.println(graphHopperTest);
-//		graphHopperTest.contractNodes();
-//		System.out.println(graphHopperTest);
-//		DijkstraCH dj = new DijkstraCH(graphHopperTest);
-//
-//		StopWatch knnSW = new StopWatch();
-//		knnSW.start();
-//
-//		List<Path> pathToNearestNeighbours = dj.shortestPath(graphHopperTest.getNode(0), 3);
-//
-//		knnSW.stop();
-//
-//		System.out.println(knnSW.getNanos());
-//
-//		for (Path path : pathToNearestNeighbours) {
-//
-//			System.out.println("Caminho contraído");
-//			System.out.println("\t" + path.getInstructions());
-//			
-//			System.out.println("Caminho descontraído");
-//			for (CHEdge edge : path.uncontractPath(graphHopperTest)) {
-//				System.out.println("\t" + edge.getLabel());
-//			}
-//
-//		}
-//		System.out.println("Terminou");
-//		
-//	}
-	
-//	@Test
-//	public void graphHopper2Test() {
-//		
-//		System.out.println(graphHopperTest2);
-//		
-//		graphHopperTest2.prepareNodes();
-//		graphHopperTest2.contractNodes();
-//		System.out.println(graphHopperTest2);
-//		DijkstraCH dj = new DijkstraCH(graphHopperTest2);
-//
-//		StopWatch knnSW = new StopWatch();
-//		knnSW.start();
-//
-//		List<Path> pathToNearestNeighbours = dj.shortestPath(graphHopperTest2.getNode(1), 3);
-//
-//		knnSW.stop();
-//
-//		System.out.println(knnSW.getNanos());
-//
-//		for (Path path : pathToNearestNeighbours) {
-//
-//			System.out.println("Caminho contraído");
-//			System.out.println("\t" + path.getInstructions());
-//			
-//			System.out.println("Caminho descontraído");
-//			for (CHEdge edge : path.uncontractPath(graphHopperTest2)) {
-//				System.out.println("\t" + edge.getLabel());
-//			}
-//
-//		}
-//		System.out.println("Terminou");
-//		
-//	}
+	// @Test
+	// public void graphHopperExample4WithPoIsTest() {
+	//
+	// int[] nearestNodesDistances = {3, 3, 7, 7};
+	//
+	// graphHopperExample4WithPoIs.prepareNodes();
+	// graphHopperExample4WithPoIs.contractNodes();
+	// System.out.println(graphHopperExample4WithPoIs);
+	// DijkstraCH dj = new DijkstraCH(graphHopperExample4WithPoIs);
+	//
+	// StopWatch knnSW = new StopWatch();
+	// knnSW.start();
+	//
+	// List<Path> pathToNearestNeighbours =
+	// dj.shortestPath(graphHopperExample4WithPoIs.getNode(1), 3);
+	//
+	// knnSW.stop();
+	//
+	// logger.info("Execution Time of shortestPathMonacoTest(): {}ms",
+	// knnSW.getNanos());
+	//
+	// for (Path path : pathToNearestNeighbours) {
+	//
+	// logger.info("Contracted Path");
+	// logger.info("\t{}", path.getInstructions());
+	//
+	// logger.info("Uncontracted Path");
+	// for (CHEdge edge : path.uncontractPath(graphHopperExample4WithPoIs)) {
+	// logger.info("\t{}", edge.getLabel());
+	// }
+	//
+	// }
+	//
+	// for(int i=0; i<pathToNearestNeighbours.size(); i++) {
+	// assertEquals(nearestNodesDistances[i],
+	// pathToNearestNeighbours.get(i).getTotalDistance());
+	// }
+	//
+	// }
 
-	
-	
-//	
-//	/*
-//	 * This test uses the testDirectedGraph() graph from GraphHopper
-//	 * PrepareContractionHierarchiesTest.java class. 
-//	 */
-//	@Test
-//	public void graphHopperExample5Test() {
-//
-//		int[] prepareNodesPriorities = {40, -40, -20, -20};
-//		int[] contractNodesPriorities = {40, -40, -20, -20};
-//		
-//		assertEquals(4, graphHopperExample5.getNumberOfNodes());
-//		assertEquals(8, graphHopperExample5.getNumberOfEdges());
-//
-//		graphHopperExample5.prepareNodes();
-//		
-//		for(int i=0; i<graphHopperExample5.getNumberOfNodes(); i++) {
-//			assertEquals(prepareNodesPriorities[i], graphHopperExample5.getNode(i).getPriority());
-//		}
-//		
-//		graphHopperExample5.contractNodes();
-//
-//		for(int i=0; i<graphHopperExample5.getNumberOfNodes(); i++) {
-//			assertEquals(contractNodesPriorities[i], graphHopperExample5.getNode(i).getPriority());
-//		}
-//
-//		assertEquals(4, graphHopperExample5.getNumberOfNodes());
-//		assertEquals(8, graphHopperExample5.getNumberOfEdges());
-//
-//	}
-//	
-//	/*
-//	 * This test uses a modified version of testDirectedGraph() graph from GraphHopper
-//	 * PrepareContractionHierarchiesTest.java class. This modified version have HyperPoI's
-//	 * HyperEdges.
-//	 */
-//	@Test
-//	public void graphHopperExample5WithPoIsTest() {
-//
-//		int[] prepareNodesPriorities = {192, -26, -20, -20, 252};
-//		int[] contractNodesPriorities = {192, -26, -20, -20, 252};
-//		int[] nearestNodesDistances = {14};		
-//		
-//		assertEquals(5, graphHopperExample5WithPoIs.getNumberOfNodes());
-//		assertEquals(13, graphHopperExample5WithPoIs.getNumberOfEdges());
-//
-//		graphHopperExample5WithPoIs.prepareNodes();
-//		
-//		for(int i=0; i<graphHopperExample5WithPoIs.getNumberOfNodes(); i++) {
-//			assertEquals(prepareNodesPriorities[i], graphHopperExample5WithPoIs.getNode(i).getPriority());
-//		}
-//		
-//		graphHopperExample5WithPoIs.contractNodes();
-//
-//		for(int i=0; i<graphHopperExample5WithPoIs.getNumberOfNodes(); i++) {
-//			assertEquals(contractNodesPriorities[i], graphHopperExample5WithPoIs.getNode(i).getPriority());
-//		}
-//
-//		assertEquals(5, graphHopperExample5WithPoIs.getNumberOfNodes());
-//		assertEquals(13, graphHopperExample5WithPoIs.getNumberOfEdges());
-//
-//		DijkstraCH dj = new DijkstraCH(graphHopperExample5WithPoIs);
-//
-//		StopWatch knnSW = new StopWatch();
-//		knnSW.start();
-//
-//		List<Path> pathToNearestNeighbours = dj.shortestPath(graphHopperExample5WithPoIs.getNode(3), 1);
-//
-//		knnSW.stop();
-//
-//		logger.info("Execution Time of shortestPathMonacoTest(): {}ms", knnSW.getNanos());
-//
-//		for (Path path : pathToNearestNeighbours) {
-//
-//			logger.info("Contracted Path");
-//			logger.info("\t{}", path.getInstructions());
-//			
-//			logger.info("Uncontracted Path");
-//			for (CHEdge edge : path.uncontractPath(graphHopperExample5WithPoIs)) {
-//				logger.info("\t{}", edge.getLabel());
-//			}
-//
-//		}
-//		
-//		for(int i=0; i<pathToNearestNeighbours.size(); i++) {
-//			assertEquals(nearestNodesDistances[i], pathToNearestNeighbours.get(i).getTotalDistance());
-//		}
-//
-//	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	// @Test
+	// public void graphHopperTest() {
+	//
+	//
+	// graphHopperTest.prepareNodes();
+	// System.out.println(graphHopperTest);
+	// graphHopperTest.contractNodes();
+	// System.out.println(graphHopperTest);
+	// DijkstraCH dj = new DijkstraCH(graphHopperTest);
+	//
+	// StopWatch knnSW = new StopWatch();
+	// knnSW.start();
+	//
+	// List<Path> pathToNearestNeighbours =
+	// dj.shortestPath(graphHopperTest.getNode(0), 3);
+	//
+	// knnSW.stop();
+	//
+	// System.out.println(knnSW.getNanos());
+	//
+	// for (Path path : pathToNearestNeighbours) {
+	//
+	// System.out.println("Caminho contraído");
+	// System.out.println("\t" + path.getInstructions());
+	//
+	// System.out.println("Caminho descontraído");
+	// for (CHEdge edge : path.uncontractPath(graphHopperTest)) {
+	// System.out.println("\t" + edge.getLabel());
+	// }
+	//
+	// }
+	// System.out.println("Terminou");
+	//
+	// }
 
+	// @Test
+	// public void graphHopper2Test() {
+	//
+	// System.out.println(graphHopperTest2);
+	//
+	// graphHopperTest2.prepareNodes();
+	// graphHopperTest2.contractNodes();
+	// System.out.println(graphHopperTest2);
+	// DijkstraCH dj = new DijkstraCH(graphHopperTest2);
+	//
+	// StopWatch knnSW = new StopWatch();
+	// knnSW.start();
+	//
+	// List<Path> pathToNearestNeighbours =
+	// dj.shortestPath(graphHopperTest2.getNode(1), 3);
+	//
+	// knnSW.stop();
+	//
+	// System.out.println(knnSW.getNanos());
+	//
+	// for (Path path : pathToNearestNeighbours) {
+	//
+	// System.out.println("Caminho contraído");
+	// System.out.println("\t" + path.getInstructions());
+	//
+	// System.out.println("Caminho descontraído");
+	// for (CHEdge edge : path.uncontractPath(graphHopperTest2)) {
+	// System.out.println("\t" + edge.getLabel());
+	// }
+	//
+	// }
+	// System.out.println("Terminou");
+	//
+	// }
 
+	//
+	// /*
+	// * This test uses the testDirectedGraph() graph from GraphHopper
+	// * PrepareContractionHierarchiesTest.java class.
+	// */
+	// @Test
+	// public void graphHopperExample5Test() {
+	//
+	// int[] prepareNodesPriorities = {40, -40, -20, -20};
+	// int[] contractNodesPriorities = {40, -40, -20, -20};
+	//
+	// assertEquals(4, graphHopperExample5.getNumberOfNodes());
+	// assertEquals(8, graphHopperExample5.getNumberOfEdges());
+	//
+	// graphHopperExample5.prepareNodes();
+	//
+	// for(int i=0; i<graphHopperExample5.getNumberOfNodes(); i++) {
+	// assertEquals(prepareNodesPriorities[i],
+	// graphHopperExample5.getNode(i).getPriority());
+	// }
+	//
+	// graphHopperExample5.contractNodes();
+	//
+	// for(int i=0; i<graphHopperExample5.getNumberOfNodes(); i++) {
+	// assertEquals(contractNodesPriorities[i],
+	// graphHopperExample5.getNode(i).getPriority());
+	// }
+	//
+	// assertEquals(4, graphHopperExample5.getNumberOfNodes());
+	// assertEquals(8, graphHopperExample5.getNumberOfEdges());
+	//
+	// }
+	//
+	// /*
+	// * This test uses a modified version of testDirectedGraph() graph from
+	// GraphHopper
+	// * PrepareContractionHierarchiesTest.java class. This modified version
+	// have HyperPoI's
+	// * HyperEdges.
+	// */
+	// @Test
+	// public void graphHopperExample5WithPoIsTest() {
+	//
+	// int[] prepareNodesPriorities = {192, -26, -20, -20, 252};
+	// int[] contractNodesPriorities = {192, -26, -20, -20, 252};
+	// int[] nearestNodesDistances = {14};
+	//
+	// assertEquals(5, graphHopperExample5WithPoIs.getNumberOfNodes());
+	// assertEquals(13, graphHopperExample5WithPoIs.getNumberOfEdges());
+	//
+	// graphHopperExample5WithPoIs.prepareNodes();
+	//
+	// for(int i=0; i<graphHopperExample5WithPoIs.getNumberOfNodes(); i++) {
+	// assertEquals(prepareNodesPriorities[i],
+	// graphHopperExample5WithPoIs.getNode(i).getPriority());
+	// }
+	//
+	// graphHopperExample5WithPoIs.contractNodes();
+	//
+	// for(int i=0; i<graphHopperExample5WithPoIs.getNumberOfNodes(); i++) {
+	// assertEquals(contractNodesPriorities[i],
+	// graphHopperExample5WithPoIs.getNode(i).getPriority());
+	// }
+	//
+	// assertEquals(5, graphHopperExample5WithPoIs.getNumberOfNodes());
+	// assertEquals(13, graphHopperExample5WithPoIs.getNumberOfEdges());
+	//
+	// DijkstraCH dj = new DijkstraCH(graphHopperExample5WithPoIs);
+	//
+	// StopWatch knnSW = new StopWatch();
+	// knnSW.start();
+	//
+	// List<Path> pathToNearestNeighbours =
+	// dj.shortestPath(graphHopperExample5WithPoIs.getNode(3), 1);
+	//
+	// knnSW.stop();
+	//
+	// logger.info("Execution Time of shortestPathMonacoTest(): {}ms",
+	// knnSW.getNanos());
+	//
+	// for (Path path : pathToNearestNeighbours) {
+	//
+	// logger.info("Contracted Path");
+	// logger.info("\t{}", path.getInstructions());
+	//
+	// logger.info("Uncontracted Path");
+	// for (CHEdge edge : path.uncontractPath(graphHopperExample5WithPoIs)) {
+	// logger.info("\t{}", edge.getLabel());
+	// }
+	//
+	// }
+	//
+	// for(int i=0; i<pathToNearestNeighbours.size(); i++) {
+	// assertEquals(nearestNodesDistances[i],
+	// pathToNearestNeighbours.get(i).getTotalDistance());
+	// }
+	//
+	// }
 
 	// Test OK!
 	// @Test
@@ -725,55 +723,57 @@ public class CHGraphTest {
 
 	// }
 
-	// @Test
-	// public void contractionHierarchyMonacoTest() {
-	//
-	// StopWatch preComputationSW = new StopWatch();
-	// preComputationSW.start();
-	// graphExampleMonacoCH.prepareNodes();
-	//// System.out.println(graphExampleMonacoCH.getNumberOfNodes());
-	//// System.out.println(graphExampleMonacoCH.getNumberOfEdges());
-	//
-	// graphExampleMonacoCH.contractNodes();
-	// preComputationSW.stop();
-	//
-	// System.out.println(preComputationSW);
-	//
-	//// for (int i = 0; i < graphExampleMonacoCH.getNumberOfNodes(); i++) {
-	//// CHNode n = graphExampleMonacoCH.getNode(i);
-	////
-	//// System.out.println(n.getId() + "," + n.getLevel() + "," +
-	// n.getPriority());
-	////
-	//// }
-	////
-	//// for (int i = 0; i < graphExampleMonacoCH.getNumberOfEdges(); i++) {
-	//// CHEdge e = graphExampleMonacoCH.getEdge(i);
-	////
-	//// System.out.println("EID: " + e.getId() + ", FROM: " + e.getFromNode() +
-	// ", TO: " + e.getToNode()
-	//// + ", Distance: " + e.getDistance() + ", isShortcut: " +
-	// e.isShortcut());
-	////
-	//// }
-	//
-	// DijkstraCH dj = new DijkstraCH(graphExampleMonacoCH);
-	//
-	// StopWatch knnSW = new StopWatch();
-	// knnSW.start();
-	//
-	// dj.shortestPath(graphExampleMonacoCH.getNode(177), 3);
-	//
-	// knnSW.stop();
-	//
-	// System.out.println(knnSW.getNanos());
-	//
-	// for (Path p : dj.shortestPath(graphExampleMonacoCH.getNode(177), 3)) {
-	//
-	// System.out.println(p.getInstructions());
-	//// p.uncontractPath(graphExampleMonacoCH);
-	// }
-	//
-	// }
+	@Test
+	public void contractionHierarchyMonacoTest() {
+
+		StopWatch preComputationSW = new StopWatch();
+		preComputationSW.start();
+		graphExampleMonacoCH.prepareNodes();
+		// System.out.println(graphExampleMonacoCH.getNumberOfNodes());
+		// System.out.println(graphExampleMonacoCH.getNumberOfEdges());
+
+		graphExampleMonacoCH.contractNodes();
+		preComputationSW.stop();
+
+		System.out.println(preComputationSW);
+
+		// for (int i = 0; i < graphExampleMonacoCH.getNumberOfNodes(); i++) {
+		// CHNode n = graphExampleMonacoCH.getNode(i);
+		//
+		// System.out.println(n.getId() + "," + n.getLevel() + "," +
+		// n.getPriority());
+		//
+		// }
+		//
+		// for (int i = 0; i < graphExampleMonacoCH.getNumberOfEdges(); i++) {
+		// CHEdge e = graphExampleMonacoCH.getEdge(i);
+		//
+		// System.out.println("EID: " + e.getId() + ", FROM: " + e.getFromNode()
+		// + ", TO: " + e.getToNode()
+		// + ", Distance: " + e.getDistance() + ", isShortcut: " +
+		// e.isShortcut());
+		//
+		// }
+
+		DijkstraCH dj = new DijkstraCH(graphExampleMonacoCH);
+
+		StopWatch knnSW = new StopWatch();
+		knnSW.start();
+
+//		dj.shortestPath(graphExampleMonacoCH.getNode(177), 3);
+		
+		dj.shortestPath(graphExampleMonacoCH.getNode(554), graphExampleMonacoCH.getNode(605), null, null);
+
+		knnSW.stop();
+
+		System.out.println(knnSW.getNanos());
+
+		for (Path p : dj.shortestPath(graphExampleMonacoCH.getNode(177), 3)) {
+
+			System.out.println(p.getInstructions());
+			// p.uncontractPath(graphExampleMonacoCH);
+		}
+
+	}
 
 }

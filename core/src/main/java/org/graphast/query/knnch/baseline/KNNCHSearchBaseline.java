@@ -2,6 +2,7 @@ package org.graphast.query.knnch.baseline;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
@@ -10,17 +11,26 @@ import org.graphast.model.contraction.CHGraph;
 import org.graphast.model.contraction.CHNode;
 import org.graphast.query.route.shortestpath.model.DistanceEntry;
 import org.graphast.query.route.shortestpath.model.Path;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class KNNCHSearch {
+import com.graphhopper.util.StopWatch;
+
+public class KNNCHSearchBaseline {
+
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private CHGraph graph;
 
 	private Queue<DistanceEntry> smallerDistancePoI = new PriorityQueue<>();
-	private Map<Long, BidirectionalDijkstraCHIterator> dijkstraHash = new HashMap<>();
+	private Map<Long, BidirectionalDijkstraCHBaselineIterator> dijkstraHash = new HashMap<>();
+
+	private Queue<DistanceEntry> nearestNeighbors = new PriorityQueue<>();
+
 	// TODO Criar metodos para adicionar pois na estrutura poisFound
 	private Map<Long, Path> poisFound = new HashMap<>();
 
-	public KNNCHSearch(CHGraph graph) {
+	public KNNCHSearchBaseline(CHGraph graph) {
 		this.graph = graph;
 	}
 
@@ -29,12 +39,16 @@ public class KNNCHSearch {
 		for (PoI poi : graph.getPOIs()) {
 			CHNode poiNode = (CHNode) graph.getNearestNode(poi.getLatitude(), poi.getLongitude());
 
-			BidirectionalDijkstraCHIterator dj = new BidirectionalDijkstraCHIterator(graph, source, poiNode,
-					smallerDistancePoI, dijkstraHash);
+			BidirectionalDijkstraCHBaselineIterator dj = new BidirectionalDijkstraCHBaselineIterator(graph, source,
+					poiNode, smallerDistancePoI, dijkstraHash, poisFound);
 
 			this.smallerDistancePoI.add(new DistanceEntry(poiNode.getId(), 0, -1));
 			dijkstraHash.put(poiNode.getId(), dj);
 		}
+
+		StopWatch knnSW = new StopWatch();
+
+		knnSW.start();
 
 		while (!dijkstraHash.isEmpty()) {
 
@@ -48,6 +62,24 @@ public class KNNCHSearch {
 			}
 
 		}
+
+		knnSW.stop();
+
+		logger.info("Execution Time of baseline kNN: {}ms", knnSW.getNanos());
+
+		retrieveKNN();
+
+	}
+
+	public void retrieveKNN() {
+
+		for (Entry<Long, Path> poi : poisFound.entrySet()) {
+
+			nearestNeighbors.add(new DistanceEntry(poi.getKey(), (int) poi.getValue().getTotalCost(), -1l));
+
+		}
+
+		System.out.println(nearestNeighbors);
 
 	}
 

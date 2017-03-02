@@ -151,6 +151,10 @@ public class BidirectionalDijkstraCH {
 		Long2IntMap neighbors = graph.accessNeighborhood(graph.getNode(forwardsRemovedNode.getId()));
 
 		for (long vid : neighbors.keySet()) {
+			
+			if (graph.getNode(vid).getLevel() < graph.getNode(forwardsRemovedNode.getId()).getLevel()) {
+				continue;
+			}
 
 			DistanceEntry newEntry = new DistanceEntry(vid,	neighbors.get(vid) + forwardsRemovedNode.getDistance(), forwardsRemovedNode.getId());
 
@@ -198,6 +202,8 @@ public class BidirectionalDijkstraCH {
 	
 	private void verifyMeetingNodeForwardSearch(long vid, Long2IntMap neighbors) {
 
+		System.out.println(backwardsSettleNodes.containsKey(vid));
+		
 		if (backwardsSettleNodes.containsKey(vid) && (forwardsSettleNodes.get(forwardsRemovedNode.getId()) + neighbors.get(vid) + backwardsSettleNodes.get(vid) < meetingNode.getDistance())) {
 			meetingNode.setId(vid);
 			meetingNode.setDistance(forwardsSettleNodes.get(forwardsRemovedNode.getId()) + neighbors.get(vid) + backwardsSettleNodes.get(vid));
@@ -217,6 +223,10 @@ public class BidirectionalDijkstraCH {
 		Long2IntMap neighbors = this.graph.accessIngoingNeighborhood(this.graph.getNode(backwardsRemovedNode.getId()));
 
 		for (long vid : neighbors.keySet()) {
+			
+			if (graph.getNode(vid).getLevel() > graph.getNode(backwardsRemovedNode.getId()).getLevel()) {
+				continue;
+			}
 
 			DistanceEntry newEntry = new DistanceEntry(vid,	neighbors.get(vid) + backwardsRemovedNode.getDistance(), backwardsRemovedNode.getId());
 
@@ -265,6 +275,8 @@ public class BidirectionalDijkstraCH {
 
 	private void verifyMeetingNodeBackwardSearch(long vid, Long2IntMap neighbors) {
 
+		System.out.println(forwardsSettleNodes.containsKey(vid));
+		
 		if (forwardsSettleNodes.containsKey(vid) && (backwardsSettleNodes.get(backwardsRemovedNode.getId())	+ neighbors.get(vid) + forwardsSettleNodes.get(vid) < meetingNode.getDistance())) {
 			meetingNode.setId(vid);
 			meetingNode.setDistance(backwardsSettleNodes.get(backwardsRemovedNode.getId()) + neighbors.get(vid)	+ forwardsSettleNodes.get(vid));

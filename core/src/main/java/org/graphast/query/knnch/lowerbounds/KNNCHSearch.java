@@ -12,8 +12,14 @@ import org.graphast.model.contraction.CHNode;
 import org.graphast.query.route.shortestpath.model.DistanceEntry;
 import org.graphast.query.route.shortestpath.model.Path;
 import org.graphast.util.DistanceUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.graphhopper.util.StopWatch;
 
 public class KNNCHSearch {
+
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private CHGraph graph;
 
@@ -79,6 +85,10 @@ public class KNNCHSearch {
 			nextCandidateNNLowerBound.setDistance(lowerBoundDistanceSourcePoIs.peek().getDistance());
 		}
 
+		StopWatch knnSW = new StopWatch();
+
+		knnSW.start();
+
 		while (!dijkstraHash.isEmpty()) {
 
 			System.out.println(smallerDistancePoI);
@@ -101,6 +111,10 @@ public class KNNCHSearch {
 			}
 
 		}
+
+		knnSW.stop();
+
+		logger.info("Execution Time of lower bound kNN: {}ms", knnSW.getNanos());
 
 	}
 

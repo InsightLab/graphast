@@ -288,7 +288,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 			
 		}
 
-		int priority = 10 * edgeDifference + originalEdgeCount + numberOfContractedNeighbors + hyperPoICoefficient;
+		int priority = 10 * edgeDifference + originalEdgeCount + numberOfContractedNeighbors;
 
 		return priority;
 

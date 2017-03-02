@@ -122,8 +122,18 @@ public class BidirectionalDijkstraCHIterator {
 			path.constructPath(target.getId(), resultParentNodes, graph);
 			System.out.println("Caminho para o PoI " + target.getId());
 			System.out.println("\t" + path);
+			System.out.println("Vizinho encontrado!");
 			return true;
 
+		}
+		
+		if (backwardsUnsettleNodes.isEmpty() && forwardsUnsettleNodes.isEmpty()) {
+
+			// smallerDistancePoI.add(new DistanceEntry(target.getId(),
+			// forwardsSmallerDistanceForThisIteration +
+			// backwardsSmallerDistanceForThisIteration, -1));
+			System.out.println("Caminho entre o nó " + this.source + " e o nó " + this.target + " não encontrado.");
+			return true;
 		}
 
 		forwardsRemovedNode = forwardsUnsettleNodes.poll();
@@ -167,6 +177,15 @@ public class BidirectionalDijkstraCHIterator {
 			return true;
 
 		}
+		
+		if (backwardsUnsettleNodes.isEmpty() && forwardsUnsettleNodes.isEmpty()) {
+
+			// smallerDistancePoI.add(new DistanceEntry(target.getId(),
+			// forwardsSmallerDistanceForThisIteration +
+			// backwardsSmallerDistanceForThisIteration, -1));
+			System.out.println("Caminho entre o nó " + this.source + " e o nó " + this.target + " não encontrado.");
+			return true;
+		}
 
 		backwardsRemovedNode = backwardsUnsettleNodes.poll();
 		backwardsSettleNodes.put(backwardsRemovedNode.getId(), backwardsRemovedNode.getDistance());
@@ -191,10 +210,7 @@ public class BidirectionalDijkstraCHIterator {
 		for (long vid : neighbors.keySet()) {
 
 			if (graph.getNode(vid).getLevel() < graph.getNode(forwardsRemovedNode.getId()).getLevel()) {
-				// if(graph.getNode(vid).getExternalId() !=
-				// graph.getNode(removed.getId()).getExternalId()) {
 				continue;
-				// }
 
 			}
 

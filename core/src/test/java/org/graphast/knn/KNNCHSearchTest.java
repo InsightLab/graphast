@@ -7,6 +7,7 @@ import org.graphast.geometry.PoI;
 import org.graphast.graphgenerator.GraphGenerator;
 import org.graphast.model.Node;
 import org.graphast.model.contraction.CHGraph;
+import org.graphast.query.knnch.baseline.KNNCHSearchBaseline;
 import org.graphast.query.knnch.lowerbounds.KNNCHSearch;
 import org.graphast.util.DistanceUtils;
 import org.junit.BeforeClass;
@@ -61,54 +62,63 @@ public class KNNCHSearchTest {
 		// graphHopperExample4WithPoIs.getNode(i).getLevel());
 		// }
 
+//		KNNCHSearchBaseline knnBaseline = new KNNCHSearchBaseline(graphMonacoWithPoI);
+//		knnBaseline.search(graphMonacoWithPoI.getNode(source), 4);
+		
 		KNNCHSearch knn = new KNNCHSearch(graphMonacoWithPoI);
-
-		knn.search(graphMonacoWithPoI.getNode(source), 4);
-
-	}
-
-	@Test
-	public void graphHopperExample4WithPoIsTest() {
-
-		Long source = 1l;
-
-		KNNCHSearch knn = new KNNCHSearch(graphHopperExample4WithPoIs);
-
-		knn.search(graphHopperExample4WithPoIs.getNode(source), 4);
+		knn.search(graphMonacoWithPoI.getNode(source), 50);
 
 	}
+
+//	@Test
+//	public void graphHopperExample4WithPoIsTest() {
 //
+//		Long source = 1l;
+//		
+//		KNNCHSearchBaseline knnBaseline = new KNNCHSearchBaseline(graphHopperExample4WithPoIs);
+//		knnBaseline.search(graphHopperExample4WithPoIs.getNode(source), 2);
+//
+//		KNNCHSearch knn = new KNNCHSearch(graphHopperExample4WithPoIs);
+//		knn.search(graphHopperExample4WithPoIs.getNode(source), 2);
+//
+//	}
+
 //	@Test
 //	public void graphHopperExample3WithPoIsTest() {
 //
 //		Long source = 2l;
+//		
+//		KNNCHSearchBaseline knnBaseline = new KNNCHSearchBaseline(graphHopperExample3WithPoIs);
+//		knnBaseline.search(graphHopperExample3WithPoIs.getNode(source), 3);
 //
 //		KNNCHSearch knn = new KNNCHSearch(graphHopperExample3WithPoIs);
-//
 //		knn.search(graphHopperExample3WithPoIs.getNode(source), 3);
 //
 //	}
 //
-//	//
+//	
 //	@Test
 //	public void graphHopperExample2WithPoIsTest() {
 //
 //		Long source = 3l;
 //
+//		KNNCHSearchBaseline knnBaseline = new KNNCHSearchBaseline(graphHopperExample2WithPoIs);
+//		knnBaseline.search(graphHopperExample2WithPoIs.getNode(source), 2);
+//		
 //		KNNCHSearch knn = new KNNCHSearch(graphHopperExample2WithPoIs);
-//
 //		knn.search(graphHopperExample2WithPoIs.getNode(source), 2);
 //
 //	}
 //
-//	//
 //	@Test
 //	public void graphHopperExampleWithPoIsTest() {
 //
 //		Long source = 3l;
+//		
+//		KNNCHSearchBaseline knnBaseline = new KNNCHSearchBaseline(graphHopperExampleWithPoIs);
+//		knnBaseline.search(graphHopperExampleWithPoIs.getNode(source), 2);
 //
 //		KNNCHSearch knn = new KNNCHSearch(graphHopperExampleWithPoIs);
-//
 //		knn.search(graphHopperExampleWithPoIs.getNode(source), 2);
 //
 //	}

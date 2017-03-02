@@ -11,8 +11,8 @@ public class AStarConstantWeightTest extends AbstractShortestPathTest{
 		
 		serviceMonaco = new AStarConstantWeight(graphMonaco);
 //		serviceSeattle = new AStarConstantWeight(graphSeattle);
-		serviceExample = new AStarConstantWeight(graphExample);
-		serviceGraphHopperExample = new DijkstraConstantWeight(graphHopperExample);
+//		serviceExample = new AStarConstantWeight(graphExample);
+//		serviceGraphHopperExample = new DijkstraConstantWeight(graphHopperExample);
 	
 	}
 
