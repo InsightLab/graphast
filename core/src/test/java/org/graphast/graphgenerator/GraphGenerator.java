@@ -2184,8 +2184,6 @@ public class GraphGenerator {
 //		edge = new CHEdgeImpl(1l, 3l, 1, 1, "Edge 45");//
 //		graph.addEdge(edge);
 		
-		graph.createHyperPOIS();
-
 		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
 		graph.setMaxLevel((int) graph.getNumberOfNodes() + 1);
 
@@ -2505,8 +2503,6 @@ public class GraphGenerator {
 //		edge = new CHEdgeImpl(21l, 32l, 1, 1, "Edge 65");
 //		graph.addEdge(edge);
 		
-		graph.createHyperPOIS();
-
 		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
 		graph.setMaxLevel((int) graph.getNumberOfNodes() + 1);
 
@@ -2620,8 +2616,6 @@ public class GraphGenerator {
 
 		edge = new CHEdgeImpl(3l, 0l, 10, 1, "Edge 7");
 		graph.addEdge(edge);
-
-		graph.createHyperPOIS();
 
 		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
 		graph.setMaxLevel((int) graph.getNumberOfNodes());
@@ -2789,8 +2783,6 @@ public class GraphGenerator {
 		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
 		graph.setMaxLevel((int) graph.getNumberOfNodes());
 
-		graph.createHyperPOIS();
-
 		graph.save();
 
 		return graph;
@@ -2952,8 +2944,6 @@ public class GraphGenerator {
 
 		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
 		graph.setMaxLevel((int) graph.getNumberOfNodes());
-
-		graph.createHyperPOIS();
 
 		graph.save();
 

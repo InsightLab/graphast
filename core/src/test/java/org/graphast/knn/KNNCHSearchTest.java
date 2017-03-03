@@ -56,17 +56,12 @@ public class KNNCHSearchTest {
 		// Calculate the distance from all PoIs to the source node.
 		Long source = graphMonacoWithPoI.getNodeId(43.72842465479131, 7.414896579419745);
 
-		// for (int i = 0; i < graphHopperExample4WithPoIs.getNumberOfNodes();
-		// i++) {
-		// System.out.println("Nó: " + i + ", Level: " +
-		// graphHopperExample4WithPoIs.getNode(i).getLevel());
-		// }
 
-//		KNNCHSearchBaseline knnBaseline = new KNNCHSearchBaseline(graphMonacoWithPoI);
-//		knnBaseline.search(graphMonacoWithPoI.getNode(source), 4);
+		KNNCHSearchBaseline knnBaseline = new KNNCHSearchBaseline(graphMonacoWithPoI);
+		knnBaseline.search(graphMonacoWithPoI.getNode(source), 40);
 		
-		KNNCHSearch knn = new KNNCHSearch(graphMonacoWithPoI);
-		knn.search(graphMonacoWithPoI.getNode(source), 50);
+//		KNNCHSearch knn = new KNNCHSearch(graphMonacoWithPoI);
+//		knn.search(graphMonacoWithPoI.getNode(source), 128);
 
 	}
 
@@ -82,7 +77,7 @@ public class KNNCHSearchTest {
 //		knn.search(graphHopperExample4WithPoIs.getNode(source), 2);
 //
 //	}
-
+//
 //	@Test
 //	public void graphHopperExample3WithPoIsTest() {
 //
@@ -95,7 +90,6 @@ public class KNNCHSearchTest {
 //		knn.search(graphHopperExample3WithPoIs.getNode(source), 3);
 //
 //	}
-//
 //	
 //	@Test
 //	public void graphHopperExample2WithPoIsTest() {

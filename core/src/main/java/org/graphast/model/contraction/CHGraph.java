@@ -68,8 +68,6 @@ public interface CHGraph extends Graph {
 	
 	public void contractNodes();
 	
-	public void createHyperPOIS();
-	
 	public Queue<CHNodeImpl> getNodePriorityQueue();
 	
 	
