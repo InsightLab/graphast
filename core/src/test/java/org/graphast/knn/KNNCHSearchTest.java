@@ -28,9 +28,9 @@ public class KNNCHSearchTest {
 	@BeforeClass
 	public static void setup() {
 
-		graphMonacoWithPoI = new GraphGenerator().generateMonacoCHWithPoI();
-		graphMonacoWithPoI.prepareNodes();
-		graphMonacoWithPoI.contractNodes();
+//		graphMonacoWithPoI = new GraphGenerator().generateMonacoCHWithPoI();
+//		graphMonacoWithPoI.prepareNodes();
+//		graphMonacoWithPoI.contractNodes();
 
 		graphHopperExampleWithPoIs = new GraphGenerator().generateGraphHopperExampleWithPoIs();
 		graphHopperExampleWithPoIs.prepareNodes();
@@ -50,71 +50,71 @@ public class KNNCHSearchTest {
 
 	}
 
+//	@Test
+//	public void graphMonacoWithPoITest() {
+//
+//		// Calculate the distance from all PoIs to the source node.
+//		Long source = graphMonacoWithPoI.getNodeId(43.72842465479131, 7.414896579419745);
+//
+//
+//		KNNCHSearchBaseline knnBaseline = new KNNCHSearchBaseline(graphMonacoWithPoI);
+//		knnBaseline.search(graphMonacoWithPoI.getNode(source), 40);
+//		
+////		KNNCHSearch knn = new KNNCHSearch(graphMonacoWithPoI);
+////		knn.search(graphMonacoWithPoI.getNode(source), 128);
+//
+//	}
+
 	@Test
-	public void graphMonacoWithPoITest() {
+	public void graphHopperExample4WithPoIsTest() {
 
-		// Calculate the distance from all PoIs to the source node.
-		Long source = graphMonacoWithPoI.getNodeId(43.72842465479131, 7.414896579419745);
-
-
-		KNNCHSearchBaseline knnBaseline = new KNNCHSearchBaseline(graphMonacoWithPoI);
-		knnBaseline.search(graphMonacoWithPoI.getNode(source), 40);
+		Long source = 1l;
 		
-//		KNNCHSearch knn = new KNNCHSearch(graphMonacoWithPoI);
-//		knn.search(graphMonacoWithPoI.getNode(source), 128);
+		KNNCHSearchBaseline knnBaseline = new KNNCHSearchBaseline(graphHopperExample4WithPoIs);
+		knnBaseline.search(graphHopperExample4WithPoIs.getNode(source), 2);
+
+		KNNCHSearch knn = new KNNCHSearch(graphHopperExample4WithPoIs);
+		knn.search(graphHopperExample4WithPoIs.getNode(source), 2);
 
 	}
 
-//	@Test
-//	public void graphHopperExample4WithPoIsTest() {
-//
-//		Long source = 1l;
-//		
-//		KNNCHSearchBaseline knnBaseline = new KNNCHSearchBaseline(graphHopperExample4WithPoIs);
-//		knnBaseline.search(graphHopperExample4WithPoIs.getNode(source), 2);
-//
-//		KNNCHSearch knn = new KNNCHSearch(graphHopperExample4WithPoIs);
-//		knn.search(graphHopperExample4WithPoIs.getNode(source), 2);
-//
-//	}
-//
-//	@Test
-//	public void graphHopperExample3WithPoIsTest() {
-//
-//		Long source = 2l;
-//		
-//		KNNCHSearchBaseline knnBaseline = new KNNCHSearchBaseline(graphHopperExample3WithPoIs);
-//		knnBaseline.search(graphHopperExample3WithPoIs.getNode(source), 3);
-//
-//		KNNCHSearch knn = new KNNCHSearch(graphHopperExample3WithPoIs);
-//		knn.search(graphHopperExample3WithPoIs.getNode(source), 3);
-//
-//	}
-//	
-//	@Test
-//	public void graphHopperExample2WithPoIsTest() {
-//
-//		Long source = 3l;
-//
-//		KNNCHSearchBaseline knnBaseline = new KNNCHSearchBaseline(graphHopperExample2WithPoIs);
-//		knnBaseline.search(graphHopperExample2WithPoIs.getNode(source), 2);
-//		
-//		KNNCHSearch knn = new KNNCHSearch(graphHopperExample2WithPoIs);
-//		knn.search(graphHopperExample2WithPoIs.getNode(source), 2);
-//
-//	}
-//
-//	@Test
-//	public void graphHopperExampleWithPoIsTest() {
-//
-//		Long source = 3l;
-//		
-//		KNNCHSearchBaseline knnBaseline = new KNNCHSearchBaseline(graphHopperExampleWithPoIs);
-//		knnBaseline.search(graphHopperExampleWithPoIs.getNode(source), 2);
-//
-//		KNNCHSearch knn = new KNNCHSearch(graphHopperExampleWithPoIs);
-//		knn.search(graphHopperExampleWithPoIs.getNode(source), 2);
-//
-//	}
+	@Test
+	public void graphHopperExample3WithPoIsTest() {
+
+		Long source = 2l;
+		
+		KNNCHSearchBaseline knnBaseline = new KNNCHSearchBaseline(graphHopperExample3WithPoIs);
+		knnBaseline.search(graphHopperExample3WithPoIs.getNode(source), 3);
+
+		KNNCHSearch knn = new KNNCHSearch(graphHopperExample3WithPoIs);
+		knn.search(graphHopperExample3WithPoIs.getNode(source), 3);
+
+	}
+	
+	@Test
+	public void graphHopperExample2WithPoIsTest() {
+
+		Long source = 3l;
+
+		KNNCHSearchBaseline knnBaseline = new KNNCHSearchBaseline(graphHopperExample2WithPoIs);
+		knnBaseline.search(graphHopperExample2WithPoIs.getNode(source), 2);
+		
+		KNNCHSearch knn = new KNNCHSearch(graphHopperExample2WithPoIs);
+		knn.search(graphHopperExample2WithPoIs.getNode(source), 2);
+
+	}
+
+	@Test
+	public void graphHopperExampleWithPoIsTest() {
+
+		Long source = 3l;
+		
+		KNNCHSearchBaseline knnBaseline = new KNNCHSearchBaseline(graphHopperExampleWithPoIs);
+		knnBaseline.search(graphHopperExampleWithPoIs.getNode(source), 2);
+
+		KNNCHSearch knn = new KNNCHSearch(graphHopperExampleWithPoIs);
+		knn.search(graphHopperExampleWithPoIs.getNode(source), 2);
+
+	}
 
 }

@@ -48,6 +48,15 @@ public class BidirectionalDijkstraTest {
 //		graphGermany = new GraphGenerator().generateGermanyCH();
 //		graphSpain = new GraphGenerator().generateSpainCH();
 		
+//		for (Long ingoingEdgeId : graphMonaco.getInEdges(298)) {
+//			System.out.println(graphMonaco.getNode(graphMonaco.getEdge(ingoingEdgeId).getFromNode()).getExternalId());
+//		}
+//		
+//		for (Long outgoingEdgeId : graphMonaco.getOutEdges(298)) {
+//			System.out.println(graphMonaco.getNode(graphMonaco.getEdge(ingoingEdgeId).getToNode()).getExternalId());
+//		}
+		
+		
 		graphMonaco.prepareNodes();
 		graphMonaco.contractNodes();
 		
@@ -368,11 +377,14 @@ public class BidirectionalDijkstraTest {
 		System.out.println("[REGULAR] Number of settle nodes: " + regularDijkstra.getNumberOfTotalSettleNodes());
 		
 		BidirectionalDijkstraCH bidirectionalDijkstra = new BidirectionalDijkstraCH(graphMonaco);
-		
+		graphMonaco.getNearestNode(43.73701238044379, 7.422027902797488);
 		StopWatch bidirectionalDijkstraSW = new StopWatch();
 		
+		System.out.println("Node 552: " + graphMonaco.getNode(552).getLatitude() + ", " + graphMonaco.getNode(552).getLongitude());
+		System.out.println("Node 484: " + graphMonaco.getNode(484).getLatitude() + ", " + graphMonaco.getNode(484).getLongitude());
+		
 		bidirectionalDijkstraSW.start();
-		Path bidirectionalDijkstraFinalPath = bidirectionalDijkstra.execute(graphMonaco.getNode(552), graphMonaco.getNode(484));
+		Path bidirectionalDijkstraFinalPath = bidirectionalDijkstra.execute(graphMonaco.getNode(552), graphMonaco.getNode(634));
 		bidirectionalDijkstraSW.stop();
 		
 		logger.info("[BIDIRECTIONAL] Execution Time of regularShortestPathMonacoTest(): {}ms", bidirectionalDijkstraSW.getNanos());

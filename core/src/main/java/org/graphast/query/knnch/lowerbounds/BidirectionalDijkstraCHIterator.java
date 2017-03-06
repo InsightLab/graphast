@@ -27,7 +27,6 @@ public class BidirectionalDijkstraCHIterator {
 	private CHNode source;
 	private CHNode target;
 	private Queue<DistanceEntry> smallerDistancePoI;
-	private Map<Long, BidirectionalDijkstraCHIterator> dijkstraHash;
 	
 	private int forwardsSmallerDistanceForThisIteration = 0;
 	private int backwardsSmallerDistanceForThisIteration = 0;
@@ -64,7 +63,6 @@ public class BidirectionalDijkstraCHIterator {
 		this.source = source;
 		this.target = target;
 		this.smallerDistancePoI = smallerDistancePoI;
-		this.dijkstraHash = dijkstraHash;
 
 		initializeQueue(source, forwardsUnsettleNodes);
 		initializeQueue(target, backwardsUnsettleNodes);

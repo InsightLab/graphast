@@ -460,33 +460,29 @@ public class BidirectionalDijkstraCHBaselineIterator {
 		if (!backwardsParentNodes.isEmpty()) {
 
 			if (backwardsParentNodes.get(meetingNode.getId()) == null) {
-				backwardsParentNodes.put(meetingNode.getId(), forwardsParentNodes.get(meetingNode.getId()));
-			}
 
-			RouteEntry nextBackwardsParent = new RouteEntry(meetingNode.getId(),
-					backwardsParentNodes.get(meetingNode.getId()).getCost(),
-					backwardsParentNodes.get(meetingNode.getId()).getEdgeId(),
-					backwardsParentNodes.get(meetingNode.getId()).getLabel());
+				// backwardsParentNodes.put(meetingNode.getId(),
+				// forwardsParentNodes.get(meetingNode.getId()));
+			} else {
 
-			if (resultListOfParents.containsKey(backwardsParentNodes.get(meetingNode.getId()).getId())) {
-				if (resultListOfParents.get(backwardsParentNodes.get(meetingNode.getId()).getId())
-						.getCost() > backwardsParentNodes.get(meetingNode.getId()).getCost()) {
+				RouteEntry nextBackwardsParent = new RouteEntry(meetingNode.getId(),
+						backwardsParentNodes.get(meetingNode.getId()).getCost(),
+						backwardsParentNodes.get(meetingNode.getId()).getEdgeId(),
+						backwardsParentNodes.get(meetingNode.getId()).getLabel());
 
-					resultListOfParents.put(backwardsParentNodes.get(meetingNode.getId()).getId(), nextBackwardsParent);
+				resultListOfParents.put(backwardsParentNodes.get(meetingNode.getId()).getId(), nextBackwardsParent);
+
+				long nextNodeId = backwardsParentNodes.get(meetingNode.getId()).getId();
+
+				while (backwardsParentNodes.get(nextNodeId) != null) {
+					nextBackwardsParent = new RouteEntry(nextNodeId, backwardsParentNodes.get(nextNodeId).getCost(),
+							backwardsParentNodes.get(nextNodeId).getEdgeId(),
+							backwardsParentNodes.get(nextNodeId).getLabel());
+					nextNodeId = backwardsParentNodes.get(nextNodeId).getId();
+
+					resultListOfParents.put(nextNodeId, nextBackwardsParent);
 
 				}
-			}
-
-			long nextNodeId = backwardsParentNodes.get(meetingNode.getId()).getId();
-
-			while (backwardsParentNodes.get(nextNodeId) != null) {
-				nextBackwardsParent = new RouteEntry(nextNodeId, backwardsParentNodes.get(nextNodeId).getCost(),
-						backwardsParentNodes.get(nextNodeId).getEdgeId(),
-						backwardsParentNodes.get(nextNodeId).getLabel());
-				nextNodeId = backwardsParentNodes.get(nextNodeId).getId();
-
-				resultListOfParents.put(nextNodeId, nextBackwardsParent);
-
 			}
 		}
 

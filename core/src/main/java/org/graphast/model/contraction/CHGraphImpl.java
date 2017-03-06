@@ -15,8 +15,6 @@ import org.graphast.config.Configuration;
 import org.graphast.model.Edge;
 import org.graphast.model.GraphImpl;
 import org.graphast.model.Node;
-import org.graphast.query.route.shortestpath.ShortestPathService;
-import org.graphast.query.route.shortestpath.dijkstra.DijkstraConstantWeight;
 import org.graphast.query.route.shortestpath.dijkstrach.DijkstraCH;
 import org.graphast.query.route.shortestpath.model.Path;
 import org.slf4j.Logger;
@@ -34,10 +32,10 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 	Map<Long, List<CHEdge>> possibleShortcuts = new HashMap<>();
 
 	MixAndMatchComparator orComparator;
-	
+
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
-	
-	private Queue<CHNodeImpl> nodePriorityQueue;
+
+	private Queue<CHNodeImpl> sortedNodesQueue;
 
 	private Map<Long, Integer> oldPriorities = new HashMap<>();
 
@@ -46,9 +44,6 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 	private int lastNodesLazyUpdatePercentage = 100;
 	private double nodesContractedPercentage = 100;
 	private int numberShortcutsCreated;
-	private long counter;
-	private double meanDegree;
-	private int maxHopLimit;
 	private final Random rand = new Random(123);
 	private int regularNodeHighestPriority = Integer.MIN_VALUE;
 	private int maxVisitedNodes;
@@ -56,7 +51,9 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 	private CHGraph reverseGraph;
 
 	private DijkstraCH shortestPath;
-	private int maximumEdgeCount, maxLevel, minLevelPoI;
+	private int maximumEdgeCount;
+	private int maxLevel;
+	private int minLevelPoI;
 
 	public CHGraphImpl() {
 		super();
@@ -67,15 +64,15 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 		nodesComplement = new IntBigArrayBigList();
 		edgesComplement = new IntBigArrayBigList();
-		
+
 		List<Comparator<CHNodeImpl>> comparators = new ArrayList<Comparator<CHNodeImpl>>();
-		//first sort on priority            
+		// first sort on priority
 		comparators.add(new HighPriorityComparator());
-		//then on time
+		// then on time
 		comparators.add(new IdComparator());
 		MixAndMatchComparator orComparator = new MixAndMatchComparator(comparators);
-		
-		nodePriorityQueue = new PriorityQueue<CHNodeImpl>(orComparator);
+
+		sortedNodesQueue = new PriorityQueue<CHNodeImpl>(orComparator);
 
 	}
 
@@ -99,7 +96,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 		nodesComplement.set(position, priority);
 		nodesComplement.set(position + 1, level);
-		
+
 		n.setPriority(priority);
 		n.setLevel(level);
 
@@ -205,151 +202,150 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 	@Override
 	public boolean prepareNodes() {
 
-		//TODO Por que inicializar assim?
+		// TODO Por que inicializar assim?
 		for (int i = 0; i < this.getNumberOfNodes(); i++) {
-
 			this.updateNodeInfo(this.getNode(i), maxLevel, 0);
-
 		}
 
-		//Calculating the priority for all nodes
+		// Calculating the priority for all nodes
 		for (int nodeId = 0; nodeId < this.getNumberOfNodes(); nodeId++) {
-			
-			logger.info("[PRIORITIZING] nodeID: {}", nodeId);
-			
+
+			// logger.info("[PRIORITIZING] nodeID: {}", nodeId);
+
 			int priority = calculatePriority(this.getNode(nodeId), false);
 
-			oldPriorities.put((long)nodeId, priority);
+			oldPriorities.put((long) nodeId, priority);
 
 			this.updateNodeInfo(this.getNode(nodeId), maxLevel, priority);
-			nodePriorityQueue.add((CHNodeImpl) this.getNode(nodeId));
+			sortedNodesQueue.add((CHNodeImpl) this.getNode(nodeId));
 
 		}
 
-		if (nodePriorityQueue.isEmpty()) {
-			
+		if (sortedNodesQueue.isEmpty())
 			return false;
-		
-		} else {
-		
-			return true;
-		
-		}
+
+		return true;
 
 	}
 
 	@Override
 	public int calculatePriority(Node n, boolean contract) {
 
-		//set of shortcuts that would be added if node n would be contracted next
+		// set of shortcuts that would be added if node n would be contracted
+		// next
 		findShortcut(n, contract);
 
 		int originalEdgeCount = 0;
-		
+
 		for (CHEdge e : possibleShortcuts.get(n.getId())) {
 			originalEdgeCount += e.getOriginalEdgeCounter();
 		}
-		
+
 		int degree = 0;
 
 		int numberOfContractedNeighbors = 0;
 
+		Set<Long> addedNode = new HashSet<>();
+
 		for (Long edgeId : this.getInEdges(n.getId())) {
-			
-			if(this.getNode(this.getEdge(edgeId).getFromNode()).getLevel()==maxLevel ) {
-				degree += 1;
+
+			if (addedNode.contains(this.getEdge(edgeId).getFromNode())) {
+				continue;
 			}
-			
+
+			if (this.getNode(this.getEdge(edgeId).getFromNode()).getLevel() == maxLevel) {
+				degree += 1;
+				addedNode.add(this.getEdge(edgeId).getFromNode());
+			}
+
 			if (this.getEdge(edgeId).isShortcut()) {
 				numberOfContractedNeighbors += 1;
 			}
-		
+
 		}
 
 		for (Long edgeId : this.getOutEdges(n.getId())) {
-			
-			if(this.getNode(this.getEdge(edgeId).getToNode()).getLevel()==maxLevel ) {
-				degree += 1;
+
+			if (addedNode.contains(this.getEdge(edgeId).getToNode())) {
+				continue;
 			}
-			
+			if (this.getNode(this.getEdge(edgeId).getToNode()).getLevel() == maxLevel) {
+				degree += 1;
+				addedNode.add(this.getEdge(edgeId).getFromNode());
+			}
+
 			if (this.getEdge(edgeId).isShortcut()) {
 				numberOfContractedNeighbors += 1;
-			} 
-		
+			}
+
 		}
 
 		int edgeDifference = possibleShortcuts.get(n.getId()).size() - degree;
 
 		int prioridade = 10 * edgeDifference + originalEdgeCount + numberOfContractedNeighbors;
-		this.getNode(this.getEdge(480).getFromNode()).getExternalId();
-		System.out.println("Nó " + n.getExternalId() + " tem prioridade " + prioridade);
-		
+		// this.getNode(this.getEdge(480).getFromNode()).getExternalId();
+		System.out.println(n.getExternalId() + ";" + prioridade);
+		// logger.info("Node {}. Priority {}", n.getExternalId(), prioridade);
+
 		return 10 * edgeDifference + originalEdgeCount + numberOfContractedNeighbors;
 
 	}
-	
+
 	public int calculatePriority(Node n, boolean contract, long contractedNodeId, long outsideEdgeId) {
 
 		findShortcut(n, contract);
 
 		int originalEdgeCount = 0;
-		
+
 		for (CHEdge e : possibleShortcuts.get(n.getId())) {
 			originalEdgeCount += e.getOriginalEdgeCounter();
 		}
-		
+
 		int degree = 0;
 		int numberOfContractedNeighbors = 0;
 
 		for (Long edgeId : this.getInEdges(n.getId())) {
-			
-			if(this.getNode(this.getEdge(edgeId).getFromNode()).getId() == contractedNodeId) {
-				if(this.getEdge(outsideEdgeId).isShortcut() && edgeId == outsideEdgeId) {
+
+			if (this.getNode(this.getEdge(edgeId).getFromNode()).getId() == contractedNodeId) {
+				if (this.getEdge(outsideEdgeId).isShortcut() && edgeId == outsideEdgeId) {
 					degree += 1;
-					System.out.println("\t\tedge: " + this.getEdge(edgeId).getId() + " " + this.getEdge(edgeId).getFromNode() + "-" + this.getEdge(edgeId).getToNode());
 				} else {
 					continue;
 				}
-				
+
 			} else {
-				if(this.getNode(this.getEdge(edgeId).getFromNode()).getLevel()==maxLevel) {
+				if (this.getNode(this.getEdge(edgeId).getFromNode()).getLevel() == maxLevel) {
 					degree += 1;
-					System.out.println("\t\tedge: " + this.getEdge(edgeId).getId() + " " + this.getEdge(edgeId).getFromNode() + "-" + this.getEdge(edgeId).getToNode());
 				}
 			}
-			
+
 			if (this.getEdge(edgeId).isShortcut()) {
 				numberOfContractedNeighbors += 1;
 			}
 		}
 
 		for (Long edgeId : this.getOutEdges(n.getId())) {
-//			System.out.println("[OUT]");
-			//TODO NOT SURE ABOUT THIS VERIFICATION
-			if(this.getNode(this.getEdge(edgeId).getToNode()).getId() == contractedNodeId) {
-				if(this.getEdge(outsideEdgeId).isShortcut() && edgeId == outsideEdgeId) {
+			// TODO NOT SURE ABOUT THIS VERIFICATION
+			if (this.getNode(this.getEdge(edgeId).getToNode()).getId() == contractedNodeId) {
+				if (this.getEdge(outsideEdgeId).isShortcut() && edgeId == outsideEdgeId) {
 					degree += 1;
-					System.out.println("\t\tedge: " + this.getEdge(edgeId).getId() + " " + this.getEdge(edgeId).getFromNode() + "-" + this.getEdge(edgeId).getToNode());
 				} else {
 					continue;
 				}
 			} else {
-				if(this.getNode(this.getEdge(edgeId).getToNode()).getLevel()==maxLevel ) {
-//				if(this.getNode(this.getEdge(edgeId).getToNode()).getLevel()==maxLevel || this.getEdge(edgeId).isShortcut() ) {
+				if (this.getNode(this.getEdge(edgeId).getToNode()).getLevel() == maxLevel) {
+					// if(this.getNode(this.getEdge(edgeId).getToNode()).getLevel()==maxLevel
+					// || this.getEdge(edgeId).isShortcut() ) {
 					degree += 1;
-					System.out.println("\t\tedge: " + this.getEdge(edgeId).getId() + " " + this.getEdge(edgeId).getFromNode() + "-" + this.getEdge(edgeId).getToNode());
 				}
 			}
-			
+
 			if (this.getEdge(edgeId).isShortcut()) {
-//				System.out.println("numberOfContractedNeighbors += 1");
-//				System.out.println("\t" + this.getEdge(edgeId));
 				numberOfContractedNeighbors += 1;
-			} 
+			}
 		}
 
 		int edgeDifference = possibleShortcuts.get(n.getId()).size() - degree;
-
 
 		int priority = 10 * edgeDifference + originalEdgeCount + numberOfContractedNeighbors;
 
@@ -359,108 +355,75 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 	// Consider the following "graph": u --> u --> w
 	public void findShortcut(Node n, boolean contract) {
-		//TODO double check if this verification is necessary
-		if(contract == false) {
-			meanDegree = 0;
-			maxHopLimit = 1;
-		} else {
-			maxHopLimit = Integer.MAX_VALUE;
-		}
-		
-		
-		boolean shortcutAdded = false;
-		
+
+
 		List<CHEdge> possibleLocalShortcut = new ArrayList<>();
-		
-		long tmpDegreeCounter = 0;
 
 		// Arestas chegando no nó N (equivalente aos outgoings do grafo
 		// reverso).
 		// Nó TO das arestas outgoings do grafo reverso serão os FROM do grafo
 		// original.
 		for (Long ingoingEdgeId : this.getInEdges(n.getId())) {
+			logger.info("fromNodeExternalID: {}",
+					this.getNode(this.getEdge(ingoingEdgeId).getFromNode()).getExternalId());
 
 			Long fromNodeId = this.getEdge(ingoingEdgeId).getFromNode();
-			logger.info("fromNodeID: {}", fromNodeId);
-			
-			double ingoingDistance = this.getEdge(ingoingEdgeId).getDistance();
+			double ingoingDistance = this.getIngoingLowestEdgeValue(n, fromNodeId);
 
+			// Accept only uncontracted nodes.
 			if (this.getNode(fromNodeId).getLevel() != maxLevel) {
 				logger.info("\tIgnored because the node {} is already contracted.", fromNodeId);
 				continue;
 			}
 
-			tmpDegreeCounter++;
-			
 			// Arestas outgoing do nó N. O nó TO será o nó final.
 			for (Long outgoingEdgeId : this.getOutEdges(n.getId())) {
+				logger.info("toNodeExternalID: {}",
+						this.getNode(this.getEdge(outgoingEdgeId).getToNode()).getExternalId());
 
 				Long toNodeId = this.getEdge(outgoingEdgeId).getToNode();
-				logger.info("toNodeID: {}", toNodeId);
+				double outgoingDistance = this.getOutgoingLowestEdgeValue(n, toNodeId);
 
-				// Se o toNodeId == fromNodeId, significa que estamos 
+				// Se o toNodeId == fromNodeId, significa que estamos
 				// saindo e chegando na mesma aresta, com um nó intermediário
-				// Se getNode(toNodeId).getLevel() != maxLevel quer dizer 
+				// Se getNode(toNodeId).getLevel() != maxLevel quer dizer
 				// que já analisamos esse nó!
-				if (this.getNode(toNodeId).getLevel() != maxLevel || toNodeId == fromNodeId) {
+				if (this.getNode(toNodeId).getLevel() != maxLevel || toNodeId.equals(fromNodeId)) {
 					logger.info("\tIgnored because the node {} is already contracted.", toNodeId);
 					continue;
-				}
-
-				// Essa comparação serve para sempre pegarmos a aresta com o
-				// menor valor quando temos mais de uma
-				// ligando o mesmo nó de origem ao mesmo nó de destino
-				for (Long comparisonEdgeId : this.getInEdges(n.getId())) {
-					if (this.getEdge(comparisonEdgeId).getFromNode() == fromNodeId && this.getEdge(comparisonEdgeId).getDistance() <= ingoingDistance) {
-						ingoingDistance = this.getEdge(comparisonEdgeId).getDistance();
-					}
-				}
-
-				double outgoingDistance = this.getEdge(outgoingEdgeId).getDistance();
-
-				// Essa comparação serve para sempre pegarmos a aresta com o
-				// menor valor quando temos mais de uma
-				// ligando o mesmo nó de origem ao mesmo nó de destino
-				for (Long comparisonEdgeId : this.getOutEdges(n.getId())) {
-					if (this.getEdge(comparisonEdgeId).getToNode() == toNodeId && this.getEdge(comparisonEdgeId).getDistance() <= outgoingDistance) {
-						outgoingDistance = this.getEdge(comparisonEdgeId).getDistance();
-					}
 				}
 
 				double shortestPathBeforeContraction = ingoingDistance + outgoingDistance;
 
 				shortestPath = new DijkstraCH(this);
-				
-				shortestPath.setMaxHopLimit((int) maxHopLimit);
 
 				Path path;
-				logger.info("\t\tSearching for a path between {} and {}, ignoring node {}.", fromNodeId, toNodeId, n.getId());
-				
+				logger.info("\t\tSearching for a path between {} and {}, ignoring node {}.", fromNodeId, toNodeId,
+						n.getId());
+
 				try {
-					//TODO esse shortest path esta considerando nos apenas com prioridades maiores?
-					path = shortestPath.shortestPath(this.getNode(fromNodeId), this.getNode(toNodeId), null, n);
+					path = shortestPath.shortestPath(this.getNode(fromNodeId), this.getNode(toNodeId), n);
 				} catch (Exception e) {
+//					logger.error("In findShortcut method: ", e);
 					path = null;
 				}
-				
-				if (path != null && path.getTotalDistance() <= shortestPathBeforeContraction)
-					// Witness path found! Continue the search for the next
-					// neighbor
-					continue;
 
-				// Shortcut must be created
-				int ingoingEdgeCounter = this.getEdge(ingoingEdgeId).getOriginalEdgeCounter();
-				int outgoingEdgeCounter = this.getEdge(outgoingEdgeId).getOriginalEdgeCounter();
+				// Shortcut must be created!
+				if ((path == null) || path.getTotalDistance() > shortestPathBeforeContraction) {
 
-				String newLabel = "Shortcut " + String.valueOf(fromNodeId) + "-" + String.valueOf(toNodeId);
-				logger.info("\t\t[SHORTCUT] FROM NODE {} TO NODE {}", fromNodeId, toNodeId);
-				CHEdge shortcut = new CHEdgeImpl(fromNodeId, toNodeId, (int) shortestPathBeforeContraction,
-						ingoingEdgeCounter + outgoingEdgeCounter, n.getId(), this.getEdge(ingoingEdgeId).getId(),
-						this.getEdge(outgoingEdgeId).getId(), newLabel, true);
+					// Shortcut must be created
+					int ingoingEdgeCounter = this.getEdge(ingoingEdgeId).getOriginalEdgeCounter();
+					int outgoingEdgeCounter = this.getEdge(outgoingEdgeId).getOriginalEdgeCounter();
 
+					String newLabel = "Shortcut " + fromNodeId + "-" + toNodeId;
+					logger.info("\t\t[SHORTCUT] FROM NODE {} TO NODE {}", fromNodeId, toNodeId);
+					CHEdge shortcut = new CHEdgeImpl(fromNodeId, toNodeId, (int) shortestPathBeforeContraction,
+							ingoingEdgeCounter + outgoingEdgeCounter, n.getId(), this.getEdge(ingoingEdgeId).getId(),
+							this.getEdge(outgoingEdgeId).getId(), newLabel, true);
 
-				possibleLocalShortcut.add(shortcut);
-				shortcutAdded = true;
+					possibleLocalShortcut.add(shortcut);
+
+				}
 
 			}
 
@@ -468,27 +431,21 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 		possibleShortcuts.put(n.getId(), possibleLocalShortcut);
 
-		if((contract == true) && (shortcutAdded == true)) {
-			meanDegree = (meanDegree * 2 + tmpDegreeCounter) / 3;
-			maxHopLimit = (int) meanDegree;
-		}
-
 	}
 
 	public void contractNodes() {
 
 		int level = 1;
 		// TODO Rename this variable counter!!
-		counter = 0;
-		int updateCounter = 0;
-		meanDegree = this.getNumberOfEdges() / this.getNumberOfNodes();
+		int counter = 0;
 
 		// preparation takes longer but queries are slightly faster with
 		// preparation
 		// => enable it but call not so often
 		boolean periodicUpdate = true;
 
-		long periodicUpdatesCount = Math.round(Math.max(10, nodePriorityQueue.size() / 100d * periodicUpdatesPercentage));
+		long periodicUpdatesCount = Math
+				.round(Math.max(10, sortedNodesQueue.size() / 100d * periodicUpdatesPercentage));
 
 		if (periodicUpdatesPercentage == 0) {
 			periodicUpdate = false;
@@ -497,12 +454,12 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 		// disable lazy updates for last x percentage of nodes as preparation is
 		// then a lot slower
 		// and query time does not really benefit
-		long lastNodesLazyUpdates = Math.round(nodePriorityQueue.size() / 100d * lastNodesLazyUpdatePercentage);
+		long lastNodesLazyUpdates = Math.round(sortedNodesQueue.size() / 100d * lastNodesLazyUpdatePercentage);
 
 		// according to paper "Polynomial-time Construction of Contraction
 		// Hierarchies for Multi-criteria Objectives" by Funke and Storandt
 		// we don't need to wait for all nodes to be contracted
-		long nodesToAvoidContract = Math.round((100 - nodesContractedPercentage) / 100 * nodePriorityQueue.size());
+		long nodesToAvoidContract = Math.round((100 - nodesContractedPercentage) / 100 * sortedNodesQueue.size());
 
 		// Recompute priority of uncontracted neighbors.
 		// Without neighbor updates preparation is faster but we need them
@@ -510,28 +467,28 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 		// decreases the shortcut number.
 		boolean neighborUpdate = true;
 
-		if (neighborUpdatePercentage == 0) {
+		if (neighborUpdatePercentage == 0)
 			neighborUpdate = false;
-		}
 
-		while (!nodePriorityQueue.isEmpty()) {
+		while (!sortedNodesQueue.isEmpty()) {
 
+			// If periodicUpdate = true, ALL nodes will have their priority
+			// updated
 			if (periodicUpdate && counter > 0 && counter % periodicUpdatesCount == 0) {
 
-				nodePriorityQueue.clear();
+				sortedNodesQueue.clear();
 
 				for (int nodeId = 0; nodeId < this.getNumberOfNodes(); nodeId++) {
 
 					if (this.getNode(nodeId).getLevel() != maxLevel)
 						continue;
-//					System.out.println("Linha 436");
 					int priority = calculatePriority(this.getNode(nodeId), true);
 
 					oldPriorities.put((long) nodeId, priority);
 					// TODO Change "maxLevel"to this.getNode(nodeId).getLevel()
 					// or the opposite?
 					this.updateNodeInfo(this.getNode(nodeId), this.getNode(nodeId).getLevel(), priority);
-					nodePriorityQueue.add((CHNodeImpl) this.getNode(nodeId));
+					sortedNodesQueue.add((CHNodeImpl) this.getNode(nodeId));
 
 					// oldPriorities.put((long)nodeId, priority);
 
@@ -544,8 +501,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 					// nodePriorityQueue.add((CHNodeImpl) node);
 
 				}
-				updateCounter++;
-				if (nodePriorityQueue.isEmpty())
+				if (sortedNodesQueue.isEmpty())
 					throw new IllegalStateException(
 							"Cannot prepare as no unprepared nodes where found. Called preparation twice?");
 
@@ -553,48 +509,49 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 			counter++;
 
-//			System.out.println("nodeId: " + nodePriorityQueue.peek().getId() + ", priority: "
-//					+ nodePriorityQueue.peek().getPriority());
+			CHNode polledNode = sortedNodesQueue.poll();
+			// logger.debug("[CONTRACTING] NodeID {}. Priority: {}",
+			// polledNode.getId(), polledNode.getPriority());
 
-			CHNode polledNode = nodePriorityQueue.poll();
-			System.out.println("[CONTRAINDO] NID: " + polledNode.getId() + " Prioridade: " + polledNode.getPriority());
-
-			if (!nodePriorityQueue.isEmpty() && nodePriorityQueue.size() < lastNodesLazyUpdates) {
+			if (!sortedNodesQueue.isEmpty() && sortedNodesQueue.size() < lastNodesLazyUpdates) {
 				int priority = calculatePriority(this.getNode(polledNode.getId()), true);
 
 				oldPriorities.put((long) polledNode.getId(), priority);
-//				System.out.println("\t[ATUALIZANDO VIZINHO - LAZY] NID: " + polledNode.getId() + " Prioridade: " + priority);
-				if (priority > nodePriorityQueue.peek().getPriority()) {
+				if (priority > sortedNodesQueue.peek().getPriority()) {
 					// current node got more important => insert as new value
 					// and contract it later
 					CHNode node = this.getNode(polledNode.getId());
 					node.setPriority(priority);
 					// TODO Double check this maxLevel setter. Is it necessary?
-					 node.setLevel(maxLevel);
-					 this.updateNodeInfo(node, maxLevel, priority);
+					node.setLevel(maxLevel);
+					this.updateNodeInfo(node, maxLevel, priority);
 
-					nodePriorityQueue.add((CHNodeImpl) node);
-					// System.out.println("Saiu");
+					sortedNodesQueue.add((CHNodeImpl) node);
 					continue;
 				}
 			}
 
-			// contract!
-			numberShortcutsCreated += this.addShortcuts(polledNode.getId());
-			System.out.println("\t\t\t\tNUMEBER OF SHORTCUTS CREATED: " + numberShortcutsCreated);
-//			System.out.println("#Shortcuts created: " + numberShortcutsCreated);
+			// Contracting a node
+			this.addShortcuts(polledNode.getId());
+			// logger.debug("\t\t\tNumber of shortcuts created: {}",
+			// numberShortcutsCreated);
+
 			this.updateNodeInfo(polledNode, level, polledNode.getPriority());
-			//TODO Double check if this setLevel is necessary, since we already have a updateNodeInfo before
+			// TODO Double check if this setLevel is necessary, since we already
+			// have a updateNodeInfo before
 			polledNode.setLevel(level);
-			// System.out.println(level);
+
 			level++;
 
-			if (nodePriorityQueue.size() < nodesToAvoidContract)
+			if (sortedNodesQueue.size() < nodesToAvoidContract)
 				// skipped nodes are already set to maxLevel
 				break;
 
 			for (Long edgeID : this.getInEdges(polledNode.getId())) {
-				System.out.println("\t\t\t[ARESTA] - " + this.getEdge(edgeID).getId() + " " + this.getEdge(edgeID).getFromNode() + "-" + this.getEdge(edgeID).getToNode());
+				// logger.debug("\t\t\tEdgeID: {}. FromNodeID: {}, ToNodeID:
+				// {}", this.getEdge(edgeID).getId(),
+				// this.getEdge(edgeID).getFromNode(),
+				// this.getEdge(edgeID).getToNode());
 				// Lemma 1
 				long nearestNeighborID = this.getEdge(edgeID).getFromNode();
 
@@ -606,104 +563,78 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 					int oldPrio = oldPriorities.get(nearestNeighborID);
 					int newPrio = calculatePriority(this.getNode(nearestNeighborID), true, polledNode.getId(), edgeID);
 					oldPriorities.replace(nearestNeighborID, newPrio);
-					System.out.println("\t[ATUALIZANDO VIZINHO - LAZY] NID: " + nearestNeighborID + " Prioridade: " + newPrio);
+					// logger.debug("\t[LAZY UPDATE] NodeID: {}, Priority: {}",
+					// nearestNeighborID, newPrio);
 
 					if (newPrio != oldPrio) {
 
 						// TODO High chances to be a wrong way to remove a node!
-						nodePriorityQueue.remove(this.getNode(nearestNeighborID));
+						sortedNodesQueue.remove(this.getNode(nearestNeighborID));
 						this.getNode(nearestNeighborID).setPriority(newPrio);
-						this.updateNodeInfo(this.getNode(nearestNeighborID), this.getNode(nearestNeighborID).getLevel(), newPrio);
-						nodePriorityQueue.add((CHNodeImpl) this.getNode(nearestNeighborID));
+						this.updateNodeInfo(this.getNode(nearestNeighborID), this.getNode(nearestNeighborID).getLevel(),
+								newPrio);
+						sortedNodesQueue.add((CHNodeImpl) this.getNode(nearestNeighborID));
 
 					}
 				}
 			}
-			
+
 			for (Long edgeID : this.getOutEdges(polledNode.getId())) {
 				// Lemma 1
 				long nearestNeighborID = this.getEdge(edgeID).getToNode();
-				System.out.println("\t\t\t[ARESTA] - " + this.getEdge(edgeID).getId() + " " + this.getEdge(edgeID).getFromNode() + "-" + this.getEdge(edgeID).getToNode());
+				// logger.debug("\t\t\tEdgeID: {}. FromNodeID: {}, ToNodeID:
+				// {}", this.getEdge(edgeID).getId(),
+				// this.getEdge(edgeID).getFromNode(),
+				// this.getEdge(edgeID).getToNode());
 
 				if (this.getNode(nearestNeighborID).getLevel() != maxLevel) {
 					continue;
 				}
 
 				if (neighborUpdate && rand.nextInt(100) < neighborUpdatePercentage) {
-					
+
 					int oldPrio = oldPriorities.get(nearestNeighborID);
 					int newPrio = calculatePriority(this.getNode(nearestNeighborID), true, polledNode.getId(), edgeID);
 					oldPriorities.replace(nearestNeighborID, newPrio);
-					System.out.println("\t[ATUALIZANDO VIZINHO - LAZY2] NID: " + nearestNeighborID + " Prioridade: " + newPrio);
+					// logger.debug("\t[LAZY UPDATE] NodeID: {}, Priority: {}",
+					// nearestNeighborID, newPrio);
 
 					if (newPrio != oldPrio) {
 
 						// TODO High chances to be a wrong way to remove a node!
-						nodePriorityQueue.remove(this.getNode(nearestNeighborID));
+						sortedNodesQueue.remove(this.getNode(nearestNeighborID));
 						this.getNode(nearestNeighborID).setPriority(newPrio);
-						this.updateNodeInfo(this.getNode(nearestNeighborID), this.getNode(nearestNeighborID).getLevel(), newPrio);
-						nodePriorityQueue.add((CHNodeImpl) this.getNode(nearestNeighborID));
+						this.updateNodeInfo(this.getNode(nearestNeighborID), this.getNode(nearestNeighborID).getLevel(),
+								newPrio);
+						sortedNodesQueue.add((CHNodeImpl) this.getNode(nearestNeighborID));
 
 					}
 				}
 			}
-			
+
 		}
 	}
 
-	/*
-	 * Adds a new shortcut to the graph or update other ones already in the
-	 * graph.
+	/**
+	 * Adds a new shortcut to the graph or update other ones already in the graph.
+	 * @param node
+	 * @return
 	 */
-
-	int addShortcuts(long node) {
+	private int addShortcuts(long node) {
 
 		possibleShortcuts.clear();
+
 		findShortcut(this.getNode(node), true);
+
 		int temporaryShortcutCounter = 0;
-		NEXT_SC: for (CHEdge shortcutEntry : possibleShortcuts.get(node)) {
+		for (CHEdge shortcutEntry : possibleShortcuts.get(node)) {
 
-			boolean updatedInGraph = false;
-
-			this.getOutEdges(shortcutEntry.getFromNode());
-
-			for (Long edgeID : this.getOutEdges(shortcutEntry.getFromNode())) {
-
-				CHEdge edge = this.getEdge(edgeID);
-
-				if (edge.isShortcut() && edge.getToNode() == shortcutEntry.getToNode()) {
-
-					if (shortcutEntry.getDistance() >= edge.getDistance()) {
-						continue NEXT_SC;
-					}
-
-					if (edge.getId() == shortcutEntry.getOutgoingSkippedEdge()
-							|| edge.getId() == shortcutEntry.getIngoingSkippedEdge()) {
-						throw new IllegalStateException();
-					}
-
-					edge.setDistance(shortcutEntry.getDistance());
-					edge.setIngoingSkippedEdge(shortcutEntry.getIngoingSkippedEdge());
-					edge.setOutgoingSkippedEdge(shortcutEntry.getOutgoingSkippedEdge());
-
-					edge.setOriginalEdgeCounter(shortcutEntry.getOriginalEdgeCounter());
-					updatedInGraph = true;
-					break;
-
-				}
-
-			}
+			// Check if we need to update some existing shortcuts in the graph
+			boolean updatedInGraph = this.updateShortcuts(shortcutEntry);
 
 			if (!updatedInGraph) {
 
-				String newLabel = "Shortcut " + String.valueOf(shortcutEntry.getFromNode()) + "-"
-						+ String.valueOf(shortcutEntry.getToNode());
-
-				// CHEdge shortcut = new CHEdgeImpl(fromNodeId, toNodeId, (int)
-				// shortestPathBeforeContraction,
-				// ingoingEdgeCounter + outgoingEdgeCounter, n.getId(),
-				// this.getEdge(ingoingEdgeId).getId(),
-				// this.getEdge(outgoingEdgeId).getId(), newLabel, true);
+				String newLabel = "Shortcut " + shortcutEntry.getFromNode() + "-" + shortcutEntry.getToNode();
 
 				CHEdge newShortcut = new CHEdgeImpl(shortcutEntry.getFromNode(), shortcutEntry.getToNode(),
 						shortcutEntry.getDistance(), shortcutEntry.getOriginalEdgeCounter(),
@@ -711,7 +642,6 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 						shortcutEntry.getIngoingSkippedEdge(), newLabel, true);
 
 				this.addEdge(newShortcut);
-//				System.out.println("\t" + newShortcut);
 				temporaryShortcutCounter++;
 
 			}
@@ -720,6 +650,33 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 		return temporaryShortcutCounter;
 
+	}
+
+	private boolean updateShortcuts(CHEdge shortcutEntry) {
+		for (Long edgeID : this.getOutEdges(shortcutEntry.getFromNode())) {
+
+			CHEdge edge = this.getEdge(edgeID);
+
+			if (edge.isShortcut() && edge.getToNode() == shortcutEntry.getToNode()) {
+
+				if (shortcutEntry.getDistance() >= edge.getDistance()) {
+					return false;
+				}
+
+				if (edge.getId() == shortcutEntry.getOutgoingSkippedEdge() || edge.getId() == shortcutEntry.getIngoingSkippedEdge()) {
+					throw new IllegalStateException();
+				}
+
+				edge.setDistance(shortcutEntry.getDistance());
+				edge.setIngoingSkippedEdge(shortcutEntry.getIngoingSkippedEdge());
+				edge.setOutgoingSkippedEdge(shortcutEntry.getOutgoingSkippedEdge());
+				edge.setOriginalEdgeCounter(shortcutEntry.getOriginalEdgeCounter());
+				
+				return true;
+
+			}
+		}
+		return false;
 	}
 
 	@Override
@@ -773,7 +730,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 	}
 
 	public void setNodePriorityQueue(Queue<CHNodeImpl> nodePriorityQueue) {
-		this.nodePriorityQueue = nodePriorityQueue;
+		this.sortedNodesQueue = nodePriorityQueue;
 	}
 
 	public void setShortestPath(DijkstraCH shortestPath) {
@@ -792,7 +749,6 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 			CHNode node = new CHNodeImpl(originalCHGraph.getNode(i).getExternalId(),
 					originalCHGraph.getNode(i).getLatitude(), originalCHGraph.getNode(i).getLongitude());
-			// System.out.println(node);
 			reverseCHGraph.addNode(node);
 
 		}
@@ -811,7 +767,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 	}
 
 	public Queue<CHNodeImpl> getNodePriorityQueue() {
-		return nodePriorityQueue;
+		return sortedNodesQueue;
 	}
 
 	@Override
@@ -843,6 +799,50 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 		}
 
 		return returnString;
+	}
+
+	/**
+	 * This method returns the lowest value of distance for the ingoing edges in
+	 * case that we have more than one edge connecting the same source and
+	 * destination nodes.
+	 * 
+	 * @param n
+	 *            baseNode that we will verify the ongoing edges.
+	 * @param fromNodeId
+	 * @return the lowest distance among all edges with the same fromNode and
+	 *         toNode.
+	 */
+	private int getIngoingLowestEdgeValue(Node n, long fromNodeId) {
+		int ingoingDistance = Integer.MAX_VALUE;
+		for (Long comparisonEdgeId : this.getInEdges(n.getId())) {
+			if (this.getEdge(comparisonEdgeId).getFromNode() == fromNodeId
+					&& this.getEdge(comparisonEdgeId).getDistance() <= ingoingDistance) {
+				ingoingDistance = this.getEdge(comparisonEdgeId).getDistance();
+			}
+		}
+		return ingoingDistance;
+	}
+
+	/**
+	 * This method returns the lowest value of distance for the outgoing edges
+	 * in case that we have more than one edge connecting the same source and
+	 * destination nodes.
+	 * 
+	 * @param n
+	 *            baseNode that we will verify the ongoing edges.
+	 * @param toNodeId
+	 * @return the lowest distance among all edges with the same fromNode and
+	 *         toNode.
+	 */
+	private int getOutgoingLowestEdgeValue(Node n, long toNodeId) {
+		int outgoingDistance = Integer.MAX_VALUE;
+		for (Long comparisonEdgeId : this.getOutEdges(n.getId())) {
+			if (this.getEdge(comparisonEdgeId).getToNode() == toNodeId
+					&& this.getEdge(comparisonEdgeId).getDistance() <= outgoingDistance) {
+				outgoingDistance = this.getEdge(comparisonEdgeId).getDistance();
+			}
+		}
+		return outgoingDistance;
 	}
 
 }
