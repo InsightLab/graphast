@@ -24,7 +24,10 @@ import org.graphast.model.contraction.CHNode;
 import org.graphast.model.contraction.CHNodeImpl;
 import org.graphast.query.route.shortestpath.dijkstra.DijkstraConstantWeight;
 
+import com.graphhopper.GraphHopper;
+import com.graphhopper.routing.util.Bike2WeightFlagEncoder;
 import com.graphhopper.routing.util.EncodingManager;
+import com.graphhopper.routing.util.FlagEncoder;
 import com.graphhopper.storage.GraphBuilder;
 import com.graphhopper.storage.GraphStorage;
 import com.graphhopper.storage.NodeAccess;
@@ -249,6 +252,51 @@ public class GraphGenerator {
 
 		graph.save();
 
+		return graph;
+	}
+	
+	public GraphBounds generateGraphhopperNativeExample() {
+		
+	    
+		String defaultGraphLoc = "/tmp/";
+	    
+		FlagEncoder encoder = new Bike2WeightFlagEncoder();
+        EncodingManager em = new EncodingManager(encoder);
+//	    EncodingManager encodingManager = new EncodingManager("car");
+	    GraphBuilder gb = new GraphBuilder(em).setLocation(defaultGraphLoc).setStore(false);
+	    GraphStorage graphStorage = gb.create();
+	    
+	    NodeAccess na = graphStorage.getNodeAccess();
+        na.setNode(0, 0, 2);
+        na.setNode(1, 0, 1);
+        na.setNode(2, 0, 4);
+        na.setNode(3, 0, 3);
+        na.setNode(4, 0, 5);
+        na.setNode(5, 1, 1);
+	    
+	    graphStorage.edge(0, 1, 1, true);
+        graphStorage.edge(0, 2, 1.4, false);
+        graphStorage.edge(2, 5, 1.4, false);
+        graphStorage.edge(1, 2, 1, true);
+        graphStorage.edge(1, 3, 3, true);
+        graphStorage.edge(2, 3, 1, true);
+        graphStorage.edge(4, 3, 1, true);
+        graphStorage.edge(2, 5, 1.4, true);
+        graphStorage.edge(3, 5, 1, true);
+        
+        GraphHopper gh = new GraphHopper();
+        gh.loadGraph(graphStorage);
+        
+//        GraphBounds graph = new OSMImporterImpl().execute(gh);
+        OSMImporterImpl osmImporter = new OSMImporterImpl();
+        String graphHopperTestDir = Configuration.USER_HOME + "/graphhopper/test/test";
+		String graphastTestDir = Configuration.USER_HOME + "/graphast/test/test";
+		osmImporter.setGraphastDir(graphastTestDir);
+		osmImporter.setGraphHopperDir(graphHopperTestDir);
+		
+        GraphBounds graph = osmImporter.execute(gh);
+		
+		graph.save();
 		return graph;
 	}
 	

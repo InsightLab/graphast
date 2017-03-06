@@ -762,17 +762,11 @@ public class CHGraphTest {
 
 //		dj.shortestPath(graphExampleMonacoCH.getNode(177), 3);
 		
-		dj.shortestPath(graphExampleMonacoCH.getNode(554), graphExampleMonacoCH.getNode(605), null, null);
+		dj.shortestPath(graphExampleMonacoCH.getNode(554), graphExampleMonacoCH.getNode(605), null);
 
 		knnSW.stop();
 
 		System.out.println(knnSW.getNanos());
-
-		for (Path p : dj.shortestPath(graphExampleMonacoCH.getNode(177), 3)) {
-
-			System.out.println(p.getInstructions());
-			// p.uncontractPath(graphExampleMonacoCH);
-		}
 
 	}
 

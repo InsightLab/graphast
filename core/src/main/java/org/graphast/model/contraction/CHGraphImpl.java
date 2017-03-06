@@ -355,7 +355,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 	// Consider the following "graph": u --> u --> w
 	public void findShortcut(Node n, boolean contract) {
-
+		logger.info("PROCURANDO ATALHOS PARA O NÓ {}. LAT: {} LON: {}", n.getExternalId(), n.getLatitude(), n.getLongitude());
 
 		List<CHEdge> possibleLocalShortcut = new ArrayList<>();
 
@@ -364,22 +364,27 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 		// Nó TO das arestas outgoings do grafo reverso serão os FROM do grafo
 		// original.
 		for (Long ingoingEdgeId : this.getInEdges(n.getId())) {
-			logger.info("fromNodeExternalID: {}",
-					this.getNode(this.getEdge(ingoingEdgeId).getFromNode()).getExternalId());
+			logger.info("fromNodeExternalID: {}. LAT: {} LON: {}",
+					this.getNode(this.getEdge(ingoingEdgeId).getFromNode()).getExternalId(),
+					this.getNode(this.getEdge(ingoingEdgeId).getFromNode()).getLatitude(),
+					this.getNode(this.getEdge(ingoingEdgeId).getFromNode()).getLongitude());
 
 			Long fromNodeId = this.getEdge(ingoingEdgeId).getFromNode();
 			double ingoingDistance = this.getIngoingLowestEdgeValue(n, fromNodeId);
 
 			// Accept only uncontracted nodes.
 			if (this.getNode(fromNodeId).getLevel() != maxLevel) {
-				logger.info("\tIgnored because the node {} is already contracted.", fromNodeId);
+				logger.info("\tIgnored because the node {} is already contracted.",
+						this.getNode(this.getEdge(ingoingEdgeId).getFromNode()).getExternalId());
 				continue;
 			}
 
 			// Arestas outgoing do nó N. O nó TO será o nó final.
 			for (Long outgoingEdgeId : this.getOutEdges(n.getId())) {
-				logger.info("toNodeExternalID: {}",
-						this.getNode(this.getEdge(outgoingEdgeId).getToNode()).getExternalId());
+				logger.info("\ttoNodeExternalID: {}. LAT: {} LON: {}",
+						this.getNode(this.getEdge(outgoingEdgeId).getToNode()).getExternalId(),
+						this.getNode(this.getEdge(outgoingEdgeId).getToNode()).getLatitude(),
+						this.getNode(this.getEdge(outgoingEdgeId).getToNode()).getLongitude());
 
 				Long toNodeId = this.getEdge(outgoingEdgeId).getToNode();
 				double outgoingDistance = this.getOutgoingLowestEdgeValue(n, toNodeId);
@@ -389,8 +394,19 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 				// Se getNode(toNodeId).getLevel() != maxLevel quer dizer
 				// que já analisamos esse nó!
 				if (this.getNode(toNodeId).getLevel() != maxLevel || toNodeId.equals(fromNodeId)) {
-					logger.info("\tIgnored because the node {} is already contracted.", toNodeId);
-					continue;
+
+					if (this.getNode(toNodeId).getLevel() != maxLevel) {
+
+						logger.info("\t\tIgnored because the node {} is already contracted.",
+								this.getNode(this.getEdge(outgoingEdgeId).getToNode()).getExternalId());
+						continue;
+					} else {
+						logger.info("\t\tIgnored because the source node {} is equal to the destination {}.",
+								this.getNode(this.getEdge(ingoingEdgeId).getFromNode()).getExternalId(),
+								this.getNode(this.getEdge(outgoingEdgeId).getToNode()).getExternalId());
+						continue;
+					}
+
 				}
 
 				double shortestPathBeforeContraction = ingoingDistance + outgoingDistance;
@@ -398,13 +414,14 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 				shortestPath = new DijkstraCH(this);
 
 				Path path;
-				logger.info("\t\tSearching for a path between {} and {}, ignoring node {}.", fromNodeId, toNodeId,
-						n.getId());
+				logger.info("\t\tSearching for a path between {} and {}, ignoring node {}.",
+						this.getNode(this.getEdge(ingoingEdgeId).getFromNode()).getExternalId(),
+						this.getNode(this.getEdge(outgoingEdgeId).getToNode()).getExternalId(), n.getExternalId());
 
 				try {
 					path = shortestPath.shortestPath(this.getNode(fromNodeId), this.getNode(toNodeId), n);
 				} catch (Exception e) {
-//					logger.error("In findShortcut method: ", e);
+					// logger.error("In findShortcut method: ", e);
 					path = null;
 				}
 
@@ -416,13 +433,19 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 					int outgoingEdgeCounter = this.getEdge(outgoingEdgeId).getOriginalEdgeCounter();
 
 					String newLabel = "Shortcut " + fromNodeId + "-" + toNodeId;
-					logger.info("\t\t[SHORTCUT] FROM NODE {} TO NODE {}", fromNodeId, toNodeId);
+					logger.info("\t\t\t[SHORTCUT] FROM NODE {} TO NODE {}",
+							this.getNode(this.getEdge(ingoingEdgeId).getFromNode()).getExternalId(),
+							this.getNode(this.getEdge(outgoingEdgeId).getToNode()).getExternalId());
 					CHEdge shortcut = new CHEdgeImpl(fromNodeId, toNodeId, (int) shortestPathBeforeContraction,
 							ingoingEdgeCounter + outgoingEdgeCounter, n.getId(), this.getEdge(ingoingEdgeId).getId(),
 							this.getEdge(outgoingEdgeId).getId(), newLabel, true);
 
 					possibleLocalShortcut.add(shortcut);
 
+				} else {
+					logger.info("\tShortcut between source node {} and destination node {} not created.",
+							this.getNode(this.getEdge(ingoingEdgeId).getFromNode()).getExternalId(),
+							this.getNode(this.getEdge(outgoingEdgeId).getToNode()).getExternalId());
 				}
 
 			}
@@ -439,7 +462,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 		// TODO Rename this variable counter!!
 		int counter = 0;
 
-		// preparation takes longer but queries are slightly faster with
+		// Preparation takes longer but queries are slightly faster with
 		// preparation
 		// => enable it but call not so often
 		boolean periodicUpdate = true;
@@ -451,13 +474,12 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 			periodicUpdate = false;
 		}
 
-		// disable lazy updates for last x percentage of nodes as preparation is
-		// then a lot slower
-		// and query time does not really benefit
+		// Disable lazy updates for last x percentage of nodes as preparation is
+		// then a lot slower and query time does not really benefit
 		long lastNodesLazyUpdates = Math.round(sortedNodesQueue.size() / 100d * lastNodesLazyUpdatePercentage);
 
-		// according to paper "Polynomial-time Construction of Contraction
-		// Hierarchies for Multi-criteria Objectives" by Funke and Storandt
+		// According to paper "Polynomial-time Construction of Contraction
+		// Hierarchies for Multi-criteria Objectives" by Funke and Storandt,
 		// we don't need to wait for all nodes to be contracted
 		long nodesToAvoidContract = Math.round((100 - nodesContractedPercentage) / 100 * sortedNodesQueue.size());
 
@@ -532,6 +554,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 			}
 
 			// Contracting a node
+
 			this.addShortcuts(polledNode.getId());
 			// logger.debug("\t\t\tNumber of shortcuts created: {}",
 			// numberShortcutsCreated);
@@ -616,7 +639,9 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 	}
 
 	/**
-	 * Adds a new shortcut to the graph or update other ones already in the graph.
+	 * Adds a new shortcut to the graph or update other ones already in the
+	 * graph.
+	 * 
 	 * @param node
 	 * @return
 	 */
@@ -647,7 +672,8 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 			}
 
 		}
-
+		// System.out.println("Para o nó " + this.getNode(node).getExternalId()
+		// + " foram criados " + temporaryShortcutCounter + " atalhos.");
 		return temporaryShortcutCounter;
 
 	}
@@ -663,7 +689,8 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 					return false;
 				}
 
-				if (edge.getId() == shortcutEntry.getOutgoingSkippedEdge() || edge.getId() == shortcutEntry.getIngoingSkippedEdge()) {
+				if (edge.getId() == shortcutEntry.getOutgoingSkippedEdge()
+						|| edge.getId() == shortcutEntry.getIngoingSkippedEdge()) {
 					throw new IllegalStateException();
 				}
 
@@ -671,7 +698,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 				edge.setIngoingSkippedEdge(shortcutEntry.getIngoingSkippedEdge());
 				edge.setOutgoingSkippedEdge(shortcutEntry.getOutgoingSkippedEdge());
 				edge.setOriginalEdgeCounter(shortcutEntry.getOriginalEdgeCounter());
-				
+
 				return true;
 
 			}
