@@ -25,11 +25,14 @@ import org.graphast.model.contraction.CHNodeImpl;
 import org.graphast.query.route.shortestpath.dijkstra.DijkstraConstantWeight;
 
 import com.graphhopper.GraphHopper;
+import com.graphhopper.routing.ch.PrepareContractionHierarchies;
 import com.graphhopper.routing.util.Bike2WeightFlagEncoder;
 import com.graphhopper.routing.util.EncodingManager;
 import com.graphhopper.routing.util.FlagEncoder;
+import com.graphhopper.routing.util.ShortestWeighting;
 import com.graphhopper.storage.GraphBuilder;
 import com.graphhopper.storage.GraphStorage;
+import com.graphhopper.storage.LevelGraphStorage;
 import com.graphhopper.storage.NodeAccess;
 import com.graphhopper.util.EdgeIteratorState;
 import com.graphhopper.util.Helper;
@@ -255,16 +258,16 @@ public class GraphGenerator {
 		return graph;
 	}
 	
-	public GraphBounds generateGraphhopperNativeExample() {
+	public CHGraph generateGraphhopperNativeExample() {
 		
-	    
 		String defaultGraphLoc = "/tmp/";
 	    
 		FlagEncoder encoder = new Bike2WeightFlagEncoder();
         EncodingManager em = new EncodingManager(encoder);
 //	    EncodingManager encodingManager = new EncodingManager("car");
 	    GraphBuilder gb = new GraphBuilder(em).setLocation(defaultGraphLoc).setStore(false);
-	    GraphStorage graphStorage = gb.create();
+//	    GraphStorage graphStorage = gb.create();
+	    LevelGraphStorage graphStorage = gb.levelGraphCreate();
 	    
 	    NodeAccess na = graphStorage.getNodeAccess();
         na.setNode(0, 0, 2);
@@ -283,9 +286,16 @@ public class GraphGenerator {
         graphStorage.edge(4, 3, 1, true);
         graphStorage.edge(2, 5, 1.4, true);
         graphStorage.edge(3, 5, 1, true);
+
+        EncodingManager encodingManager = new EncodingManager("car");
         
+        PrepareContractionHierarchies pch = new PrepareContractionHierarchies(encodingManager.getEncoder("car"), new ShortestWeighting());
+        pch.setGraph(graphStorage);
+        pch.doWork();
+        
+
         GraphHopper gh = new GraphHopper();
-        gh.loadGraph(graphStorage);
+        gh.loadGraph((LevelGraphStorage) pch.getG());
         
 //        GraphBounds graph = new OSMImporterImpl().execute(gh);
         OSMImporterImpl osmImporter = new OSMImporterImpl();
@@ -294,7 +304,8 @@ public class GraphGenerator {
 		osmImporter.setGraphastDir(graphastTestDir);
 		osmImporter.setGraphHopperDir(graphHopperTestDir);
 		
-        GraphBounds graph = osmImporter.execute(gh);
+		
+        CHGraph graph = osmImporter.executeCH(gh);
 		
 		graph.save();
 		return graph;

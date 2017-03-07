@@ -3,11 +3,11 @@ package org.graphast.graphgenerator;
 import java.io.IOException;
 
 import org.graphast.config.Configuration;
-import org.graphast.model.Edge;
 import org.graphast.model.Graph;
 import org.graphast.model.GraphBounds;
-import org.graphast.model.Node;
+import org.graphast.model.contraction.CHEdge;
 import org.graphast.model.contraction.CHGraph;
+import org.graphast.model.contraction.CHNode;
 import org.graphast.util.FileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -25,7 +25,7 @@ public class GraphGeneratorTest {
 	private static CHGraph graphExampleCH;
 	private static CHGraph graphExampleCHWithPoIs;
 
-	private static GraphBounds graphNativeGraphhopper;
+	private static CHGraph graphNativeGraphhopper;
 
 	@BeforeClass
 	public static void setup() throws NumberFormatException, IOException {
@@ -48,13 +48,13 @@ public class GraphGeneratorTest {
 	public void generateMonacoTest() {
 
 		for (int i = 0; i < graphNativeGraphhopper.getNumberOfNodes(); i++) {
-			Node testNode = graphNativeGraphhopper.getNode(i);
+			CHNode testNode = graphNativeGraphhopper.getNode(i);
 			System.out.println("nodeID: " + testNode.getExternalId() + ", Latitude: " + testNode.getLatitude() + ", Longitude: "
 					+ testNode.getLongitude() + ", isPoI: " + testNode.getCategory());
 		}
 
 		for (int i = 0; i < graphNativeGraphhopper.getNumberOfEdges(); i++) {
-			Edge testEdge = graphNativeGraphhopper.getEdge(i);
+			CHEdge testEdge = graphNativeGraphhopper.getEdge(i);
 			System.out.println("edgeID: " + testEdge.getExternalId() + ", From: " + graphNativeGraphhopper.getNode(testEdge.getFromNode()).getExternalId() + ", To: "
 					+ graphNativeGraphhopper.getNode(testEdge.getToNode()).getExternalId() + ", Distance: " + testEdge.getDistance());
 		}

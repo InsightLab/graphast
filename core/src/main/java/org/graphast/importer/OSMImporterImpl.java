@@ -320,13 +320,19 @@ public class OSMImporterImpl implements Importer {
 	
 	@Override
 	public CHGraph executeCH() {
+		
+		GraphHopper gh = OSMToGraphHopperReader.createGraph(osmFile, graphHopperDir, false, false);
+		return executeCH(gh);
+		
+	}
+	
+	public CHGraph executeCH(GraphHopper gh) {
 
 		logger.info("Initial date: {}", new Date());
 		double initialTime = System.currentTimeMillis();
 
 		CHGraph graph = new CHGraphImpl(graphastDir);
 
-		GraphHopper gh = OSMToGraphHopperReader.createGraph(osmFile, graphHopperDir, false, false);
 		GraphStorage gs = gh.getGraph();
 		EdgeIterator edgeIterator = gs.getAllEdges();
 
