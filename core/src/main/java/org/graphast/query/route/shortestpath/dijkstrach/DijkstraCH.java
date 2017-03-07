@@ -32,6 +32,8 @@ public class DijkstraCH {
 	private CHGraph graph;
 
 	private int maxHopLimit;
+	
+	private int limitVisitedNodes = Integer.MAX_VALUE;
 
 	public DijkstraCH(CHGraph graph) {
 		this.graph = graph;
@@ -107,13 +109,17 @@ public class DijkstraCH {
 			wasTraversed.put(removed.getId(), wasRemoved);
 			settleNodes++;
 
+			//TODO Double check if put the expandVertex here is correct.
+			expandVertex(removed, queue, parents, wasTraversed, skippedNode);
+			
 			if (removed.getId() == targetId) {
 				Path path = new Path();
 				path.constructPath(removed.getId(), parents, graph);
 				return path;
 			}
 
-			expandVertex(removed, queue, parents, wasTraversed, skippedNode);
+			if(settleNodes >= limitVisitedNodes)
+				return null;
 
 		}
 		throw new PathNotFoundException("Path not found between (" + source.getLatitude() + "," + source.getLongitude()
@@ -299,5 +305,11 @@ public class DijkstraCH {
 	public void setMaxHopLimit(int maxHopLimit) {
 		this.maxHopLimit = maxHopLimit;
 	}
+
+	public void setLimitVisitedNodes(int limitVisitedNodes) {
+		this.limitVisitedNodes = limitVisitedNodes;
+	}
+	
+	
 
 }

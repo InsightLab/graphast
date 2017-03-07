@@ -54,6 +54,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 	private int maximumEdgeCount;
 	private int maxLevel;
 	private int minLevelPoI;
+	private double meanDegree;
 
 	public CHGraphImpl() {
 		super();
@@ -242,21 +243,11 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 		}
 
 		int degree = 0;
-
 		int numberOfContractedNeighbors = 0;
-
-		Set<Long> addedNode = new HashSet<>();
 
 		for (Long edgeId : this.getInEdges(n.getId())) {
 
-			if (addedNode.contains(this.getEdge(edgeId).getFromNode())) {
-				continue;
-			}
-
-			if (this.getNode(this.getEdge(edgeId).getFromNode()).getLevel() == maxLevel) {
-				degree += 1;
-				addedNode.add(this.getEdge(edgeId).getFromNode());
-			}
+			degree += 1;
 
 			if (this.getEdge(edgeId).isShortcut()) {
 				numberOfContractedNeighbors += 1;
@@ -266,13 +257,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 		for (Long edgeId : this.getOutEdges(n.getId())) {
 
-			if (addedNode.contains(this.getEdge(edgeId).getToNode())) {
-				continue;
-			}
-			if (this.getNode(this.getEdge(edgeId).getToNode()).getLevel() == maxLevel) {
-				degree += 1;
-				addedNode.add(this.getEdge(edgeId).getFromNode());
-			}
+			degree += 1;
 
 			if (this.getEdge(edgeId).isShortcut()) {
 				numberOfContractedNeighbors += 1;
@@ -283,9 +268,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 		int edgeDifference = possibleShortcuts.get(n.getId()).size() - degree;
 
 		int prioridade = 10 * edgeDifference + originalEdgeCount + numberOfContractedNeighbors;
-		// this.getNode(this.getEdge(480).getFromNode()).getExternalId();
 		System.out.println(n.getExternalId() + ";" + prioridade);
-		// logger.info("Node {}. Priority {}", n.getExternalId(), prioridade);
 
 		return 10 * edgeDifference + originalEdgeCount + numberOfContractedNeighbors;
 
@@ -355,8 +338,10 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 	// Consider the following "graph": u --> u --> w
 	public void findShortcut(Node n, boolean contract) {
-		logger.info("PROCURANDO ATALHOS PARA O NÓ {}. LAT: {} LON: {}", n.getExternalId(), n.getLatitude(), n.getLongitude());
+		logger.info("PROCURANDO ATALHOS PARA O NÓ {}. LAT: {} LON: {}", n.getExternalId(), n.getLatitude(),
+				n.getLongitude());
 
+		int temporaryDegreeCounter = 0;
 		List<CHEdge> possibleLocalShortcut = new ArrayList<>();
 
 		// Arestas chegando no nó N (equivalente aos outgoings do grafo
@@ -378,6 +363,10 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 						this.getNode(this.getEdge(ingoingEdgeId).getFromNode()).getExternalId());
 				continue;
 			}
+
+			// TODO Try to increment the temporaryDegreeCounter for
+			// the outgoingEdges too.
+			temporaryDegreeCounter++;
 
 			// Arestas outgoing do nó N. O nó TO será o nó final.
 			for (Long outgoingEdgeId : this.getOutEdges(n.getId())) {
@@ -412,6 +401,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 				double shortestPathBeforeContraction = ingoingDistance + outgoingDistance;
 
 				shortestPath = new DijkstraCH(this);
+				shortestPath.setLimitVisitedNodes((int) meanDegree * 100);
 
 				Path path;
 				logger.info("\t\tSearching for a path between {} and {}, ignoring node {}.",
@@ -453,6 +443,10 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 		}
 
 		possibleShortcuts.put(n.getId(), possibleLocalShortcut);
+
+		if (contract) {
+			meanDegree = (meanDegree * 2 + temporaryDegreeCounter) / 3;
+		}
 
 	}
 

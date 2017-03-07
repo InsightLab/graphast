@@ -25,7 +25,8 @@ public class GraphGeneratorTest {
 	private static CHGraph graphExampleCH;
 	private static CHGraph graphExampleCHWithPoIs;
 
-	private static CHGraph graphNativeGraphhopper;
+	private static CHGraph graphhopperExample1;
+	private static CHGraph contractedGraphhopperExample1;
 
 	@BeforeClass
 	public static void setup() throws NumberFormatException, IOException {
@@ -41,22 +42,44 @@ public class GraphGeneratorTest {
 		// GraphGenerator().generateGraphHopperExampleWithPoIs();
 		// graphNativeGraphhopper = new
 		// GraphGenerator().generateGraphhopperNativeExample();
-		graphNativeGraphhopper = new GraphGenerator().generateGraphhopperNativeExample();
+		graphhopperExample1 = new GraphGenerator().generateGraphhopperExample1();
+		contractedGraphhopperExample1 = new GraphGenerator().generateContractedGraphhopperExample1();
 	}
 
 	@Test
-	public void generateMonacoTest() {
+	public void compareGraphhopperExample1() {
 
-		for (int i = 0; i < graphNativeGraphhopper.getNumberOfNodes(); i++) {
-			CHNode testNode = graphNativeGraphhopper.getNode(i);
-			System.out.println("nodeID: " + testNode.getExternalId() + ", Latitude: " + testNode.getLatitude() + ", Longitude: "
-					+ testNode.getLongitude() + ", isPoI: " + testNode.getCategory());
+		graphhopperExample1.prepareNodes();
+		graphhopperExample1.contractNodes();
+
+		System.out.println("Print the graph contracted by GRAPHAST!");
+		for (int i = 0; i < graphhopperExample1.getNumberOfNodes(); i++) {
+			CHNode testNode = graphhopperExample1.getNode(i);
+			System.out.println("nodeID: " + testNode.getExternalId() + ", Latitude: " + testNode.getLatitude()
+					+ ", Longitude: " + testNode.getLongitude() + ", isPoI: " + testNode.getCategory());
 		}
 
-		for (int i = 0; i < graphNativeGraphhopper.getNumberOfEdges(); i++) {
-			CHEdge testEdge = graphNativeGraphhopper.getEdge(i);
-			System.out.println("edgeID: " + testEdge.getExternalId() + ", From: " + graphNativeGraphhopper.getNode(testEdge.getFromNode()).getExternalId() + ", To: "
-					+ graphNativeGraphhopper.getNode(testEdge.getToNode()).getExternalId() + ", Distance: " + testEdge.getDistance());
+		for (int i = 0; i < graphhopperExample1.getNumberOfEdges(); i++) {
+			CHEdge testEdge = contractedGraphhopperExample1.getEdge(i);
+			System.out.println("edgeID: " + testEdge.getExternalId() + ", From: "
+					+ graphhopperExample1.getNode(testEdge.getFromNode()).getExternalId() + ", To: "
+					+ graphhopperExample1.getNode(testEdge.getToNode()).getExternalId() + ", Distance: "
+					+ testEdge.getDistance() + ", isShortcut: " + testEdge.isShortcut());
+		}
+
+		System.out.println("Print the graph contracted by GRAPHHOPPER!");
+		for (int i = 0; i < contractedGraphhopperExample1.getNumberOfNodes(); i++) {
+			CHNode testNode = contractedGraphhopperExample1.getNode(i);
+			System.out.println("nodeID: " + testNode.getExternalId() + ", Latitude: " + testNode.getLatitude()
+					+ ", Longitude: " + testNode.getLongitude() + ", isPoI: " + testNode.getCategory());
+		}
+
+		for (int i = 0; i < contractedGraphhopperExample1.getNumberOfEdges(); i++) {
+			CHEdge testEdge = contractedGraphhopperExample1.getEdge(i);
+			System.out.println("edgeID: " + testEdge.getExternalId() + ", From: "
+					+ contractedGraphhopperExample1.getNode(testEdge.getFromNode()).getExternalId() + ", To: "
+					+ contractedGraphhopperExample1.getNode(testEdge.getToNode()).getExternalId() + ", Distance: "
+					+ testEdge.getDistance());
 		}
 
 	}

@@ -34,7 +34,9 @@ import com.graphhopper.storage.GraphBuilder;
 import com.graphhopper.storage.GraphStorage;
 import com.graphhopper.storage.LevelGraphStorage;
 import com.graphhopper.storage.NodeAccess;
+import com.graphhopper.util.EdgeIterator;
 import com.graphhopper.util.EdgeIteratorState;
+import com.graphhopper.util.GHUtility;
 import com.graphhopper.util.Helper;
 
 public class GraphGenerator {
@@ -240,77 +242,131 @@ public class GraphGenerator {
 
 		CHGraph graph = new OSMImporterImpl(osmFile, graphHopperMonacoDir, graphastMonacoDir).executeCH();
 
-//		POIImporter.importPoIList(graph, "src/test/resources/monaco-latest.csv");
-//
-//		System.out.println("#nodes: " + graph.getNumberOfNodes());
-//		System.out.println("#edges: " + graph.getNumberOfEdges());
+		// POIImporter.importPoIList(graph,
+		// "src/test/resources/monaco-latest.csv");
+		//
+		// System.out.println("#nodes: " + graph.getNumberOfNodes());
+		// System.out.println("#edges: " + graph.getNumberOfEdges());
 
-//		graph.createHyperPOIS();
+		// graph.createHyperPOIS();
 
-//		System.out.println("#nodes: " + graph.getNumberOfNodes());
-//		System.out.println("#edges: " + graph.getNumberOfEdges());
-//
-//		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
-//		graph.setMaxLevel((int) (graph.getNumberOfNodes() + 1));
+		// System.out.println("#nodes: " + graph.getNumberOfNodes());
+		// System.out.println("#edges: " + graph.getNumberOfEdges());
+		//
+		// graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
+		// graph.setMaxLevel((int) (graph.getNumberOfNodes() + 1));
 
 		graph.save();
 
 		return graph;
 	}
-	
-	public CHGraph generateGraphhopperNativeExample() {
-		
-		String defaultGraphLoc = "/tmp/";
-	    
-		FlagEncoder encoder = new Bike2WeightFlagEncoder();
-        EncodingManager em = new EncodingManager(encoder);
-//	    EncodingManager encodingManager = new EncodingManager("car");
-	    GraphBuilder gb = new GraphBuilder(em).setLocation(defaultGraphLoc).setStore(false);
-//	    GraphStorage graphStorage = gb.create();
-	    LevelGraphStorage graphStorage = gb.levelGraphCreate();
-	    
-	    NodeAccess na = graphStorage.getNodeAccess();
-        na.setNode(0, 0, 2);
-        na.setNode(1, 0, 1);
-        na.setNode(2, 0, 4);
-        na.setNode(3, 0, 3);
-        na.setNode(4, 0, 5);
-        na.setNode(5, 1, 1);
-	    
-	    graphStorage.edge(0, 1, 1, true);
-        graphStorage.edge(0, 2, 1.4, false);
-        graphStorage.edge(2, 5, 1.4, false);
-        graphStorage.edge(1, 2, 1, true);
-        graphStorage.edge(1, 3, 3, true);
-        graphStorage.edge(2, 3, 1, true);
-        graphStorage.edge(4, 3, 1, true);
-        graphStorage.edge(2, 5, 1.4, true);
-        graphStorage.edge(3, 5, 1, true);
 
-        EncodingManager encodingManager = new EncodingManager("car");
-        
-        PrepareContractionHierarchies pch = new PrepareContractionHierarchies(encodingManager.getEncoder("car"), new ShortestWeighting());
-        pch.setGraph(graphStorage);
-        pch.doWork();
-        
+	// generateToyGraphhopperGraph1
+	public CHGraph generateContractedGraphhopperExample1() {
 
-        GraphHopper gh = new GraphHopper();
-        gh.loadGraph((LevelGraphStorage) pch.getG());
-        
-//        GraphBounds graph = new OSMImporterImpl().execute(gh);
-        OSMImporterImpl osmImporter = new OSMImporterImpl();
-        String graphHopperTestDir = Configuration.USER_HOME + "/graphhopper/test/test";
-		String graphastTestDir = Configuration.USER_HOME + "/graphast/test/test";
+		EncodingManager encodingManager = new EncodingManager("car");
+		GraphBuilder gb = new GraphBuilder(encodingManager);
+		LevelGraphStorage graphStorage = gb.levelGraphCreate();
+
+		NodeAccess na = graphStorage.getNodeAccess();
+		na.setNode(0, 0, 2);
+		na.setNode(1, 0, 1);
+		na.setNode(2, 0, 4);
+		na.setNode(3, 0, 3);
+		na.setNode(4, 0, 5);
+		na.setNode(5, 1, 1);
+
+		graphStorage.edge(0, 1, 1, false);
+		graphStorage.edge(1, 0, 1, false);
+		graphStorage.edge(0, 2, 1, false);
+		graphStorage.edge(2, 0, 1, false);
+		graphStorage.edge(0, 4, 3, false);
+		graphStorage.edge(4, 0, 3, false);
+		graphStorage.edge(1, 2, 2, false);
+		graphStorage.edge(2, 1, 2, false);
+		graphStorage.edge(2, 3, 1, false);
+		graphStorage.edge(3, 2, 1, false);
+		graphStorage.edge(4, 3, 2, false);
+		graphStorage.edge(3, 4, 2, false);
+		graphStorage.edge(5, 1, 2, false);
+		graphStorage.edge(1, 5, 2, false);
+
+		// this.printGraphhopperGraph(graphStorage.getAllEdges());
+
+		PrepareContractionHierarchies pch = new PrepareContractionHierarchies(encodingManager.getEncoder("car"),
+				new ShortestWeighting());
+		pch.setGraph(graphStorage);
+		pch.doWork();
+
+		// this.printGraphhopperGraph(graphStorage.getAllEdges());
+
+		GraphHopper gh = new GraphHopper();
+		gh.loadGraph((LevelGraphStorage) pch.getG());
+
+		// TODO Change the location and use config.properties
+		String graphHopperTestDir = Configuration.USER_HOME + "/graphhopper/test/contractedGraphhopperExample1";
+		String graphastTestDir = Configuration.USER_HOME + "/graphast/test/contractedGraphhopperExample1";
+
+		// Object that will perform the importation from graphHopper to Graphast
+		OSMImporterImpl osmImporter = new OSMImporterImpl();
 		osmImporter.setGraphastDir(graphastTestDir);
 		osmImporter.setGraphHopperDir(graphHopperTestDir);
-		
-		
-        CHGraph graph = osmImporter.executeCH(gh);
-		
+
+		CHGraph graph = osmImporter.executeCH(gh);
+
 		graph.save();
 		return graph;
 	}
-	
+
+	public CHGraph generateGraphhopperExample1() {
+
+		EncodingManager encodingManager = new EncodingManager("car");
+		GraphBuilder gb = new GraphBuilder(encodingManager);
+		LevelGraphStorage graphStorage = gb.levelGraphCreate();
+
+		NodeAccess na = graphStorage.getNodeAccess();
+		na.setNode(0, 0, 2);
+		na.setNode(1, 0, 1);
+		na.setNode(2, 0, 4);
+		na.setNode(3, 0, 3);
+		na.setNode(4, 0, 5);
+		na.setNode(5, 1, 1);
+
+		graphStorage.edge(0, 1, 1, false);
+		graphStorage.edge(1, 0, 1, false);
+		graphStorage.edge(0, 2, 1, false);
+		graphStorage.edge(2, 0, 1, false);
+		graphStorage.edge(0, 4, 3, false);
+		graphStorage.edge(4, 0, 3, false);
+		graphStorage.edge(1, 2, 2, false);
+		graphStorage.edge(2, 1, 2, false);
+		graphStorage.edge(2, 3, 1, false);
+		graphStorage.edge(3, 2, 1, false);
+		graphStorage.edge(4, 3, 2, false);
+		graphStorage.edge(3, 4, 2, false);
+		graphStorage.edge(5, 1, 2, false);
+		graphStorage.edge(1, 5, 2, false);
+
+		// this.printGraphhopperGraph(graphStorage.getAllEdges());
+
+		GraphHopper gh = new GraphHopper();
+		gh.loadGraph(graphStorage);
+
+		// TODO Change the location and use config.properties
+		String graphHopperTestDir = Configuration.USER_HOME + "/graphhopper/test/graphhopperExample1";
+		String graphastTestDir = Configuration.USER_HOME + "/graphast/test/graphhopperExample1";
+
+		// Object that will perform the importation from graphHopper to Graphast
+		OSMImporterImpl osmImporter = new OSMImporterImpl();
+		osmImporter.setGraphastDir(graphastTestDir);
+		osmImporter.setGraphHopperDir(graphHopperTestDir);
+
+		CHGraph graph = osmImporter.executeCH(gh);
+
+		graph.save();
+		return graph;
+	}
+
 	public CHGraph generateMonacoCHWithPoI() {
 		String osmFile = this.getClass().getResource("/monaco-latest.osm.pbf").getPath();
 		String graphHopperMonacoDir = Configuration.USER_HOME + "/graphhopper/test/monaco";
@@ -320,22 +376,22 @@ public class GraphGenerator {
 
 		POIImporter.importPoIList(graph, "src/test/resources/monaco-latest.csv");
 
-//		System.out.println("#nodes: " + graph.getNumberOfNodes());
-//		System.out.println("#edges: " + graph.getNumberOfEdges());
+		// System.out.println("#nodes: " + graph.getNumberOfNodes());
+		// System.out.println("#edges: " + graph.getNumberOfEdges());
 
-//		graph.createHyperPOIS();
+		// graph.createHyperPOIS();
 
-//		System.out.println("#nodes: " + graph.getNumberOfNodes());
-//		System.out.println("#edges: " + graph.getNumberOfEdges());
-//
-//		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
-//		graph.setMaxLevel((int) (graph.getNumberOfNodes() + 1));
+		// System.out.println("#nodes: " + graph.getNumberOfNodes());
+		// System.out.println("#edges: " + graph.getNumberOfEdges());
+		//
+		// graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
+		// graph.setMaxLevel((int) (graph.getNumberOfNodes() + 1));
 
 		graph.save();
 
 		return graph;
 	}
-	
+
 	public CHGraph generateSeattleCH() {
 		String osmFile = this.getClass().getResource("/seattle-latest.osm.pbf").getPath();
 		String graphHopperSeattleDir = Configuration.USER_HOME + "/graphhopper/test/seattle";
@@ -343,24 +399,25 @@ public class GraphGenerator {
 
 		CHGraph graph = new OSMImporterImpl(osmFile, graphHopperSeattleDir, graphastSeattleDir).executeCH();
 
-//		POIImporter.importPoIList(graph, "src/test/resources/monaco-latest.csv");
+		// POIImporter.importPoIList(graph,
+		// "src/test/resources/monaco-latest.csv");
 
-//		System.out.println("#nodes: " + graph.getNumberOfNodes());
-//		System.out.println("#edges: " + graph.getNumberOfEdges());
+		// System.out.println("#nodes: " + graph.getNumberOfNodes());
+		// System.out.println("#edges: " + graph.getNumberOfEdges());
 
-//		graph.createHyperPOIS();
+		// graph.createHyperPOIS();
 
-//		System.out.println("#nodes: " + graph.getNumberOfNodes());
-//		System.out.println("#edges: " + graph.getNumberOfEdges());
+		// System.out.println("#nodes: " + graph.getNumberOfNodes());
+		// System.out.println("#edges: " + graph.getNumberOfEdges());
 
-//		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
-//		graph.setMaxLevel((int) (graph.getNumberOfNodes() + 1));
+		// graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
+		// graph.setMaxLevel((int) (graph.getNumberOfNodes() + 1));
 
 		graph.save();
 
 		return graph;
 	}
-	
+
 	public CHGraph generateGreeceCH() {
 		String osmFile = this.getClass().getResource("/greece-latest.osm.pbf").getPath();
 		String graphHopperGreeceDir = Configuration.USER_HOME + "/graphhopper/test/greece";
@@ -368,24 +425,25 @@ public class GraphGenerator {
 
 		CHGraph graph = new OSMImporterImpl(osmFile, graphHopperGreeceDir, graphastGreeceDir).executeCH();
 
-//		POIImporter.importPoIList(graph, "src/test/resources/monaco-latest.csv");
+		// POIImporter.importPoIList(graph,
+		// "src/test/resources/monaco-latest.csv");
 
-//		System.out.println("#nodes: " + graph.getNumberOfNodes());
-//		System.out.println("#edges: " + graph.getNumberOfEdges());
+		// System.out.println("#nodes: " + graph.getNumberOfNodes());
+		// System.out.println("#edges: " + graph.getNumberOfEdges());
 
-//		graph.createHyperPOIS();
+		// graph.createHyperPOIS();
 
-//		System.out.println("#nodes: " + graph.getNumberOfNodes());
-//		System.out.println("#edges: " + graph.getNumberOfEdges());
+		// System.out.println("#nodes: " + graph.getNumberOfNodes());
+		// System.out.println("#edges: " + graph.getNumberOfEdges());
 
-//		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
-//		graph.setMaxLevel((int) (graph.getNumberOfNodes() + 1));
+		// graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
+		// graph.setMaxLevel((int) (graph.getNumberOfNodes() + 1));
 
 		graph.save();
 
 		return graph;
 	}
-	
+
 	public CHGraph generateGermanyCH() {
 		String osmFile = this.getClass().getResource("/germany-latest.osm.pbf").getPath();
 		String graphHopperGermanyDir = Configuration.USER_HOME + "/graphhopper/test/germany";
@@ -393,18 +451,19 @@ public class GraphGenerator {
 
 		CHGraph graph = new OSMImporterImpl(osmFile, graphHopperGermanyDir, graphastGermanyDir).executeCH();
 
-//		POIImporter.importPoIList(graph, "src/test/resources/monaco-latest.csv");
-//
-//		System.out.println("#nodes: " + graph.getNumberOfNodes());
-//		System.out.println("#edges: " + graph.getNumberOfEdges());
+		// POIImporter.importPoIList(graph,
+		// "src/test/resources/monaco-latest.csv");
+		//
+		// System.out.println("#nodes: " + graph.getNumberOfNodes());
+		// System.out.println("#edges: " + graph.getNumberOfEdges());
 
-//		graph.createHyperPOIS();
+		// graph.createHyperPOIS();
 
-//		System.out.println("#nodes: " + graph.getNumberOfNodes());
-//		System.out.println("#edges: " + graph.getNumberOfEdges());
-//
-//		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
-//		graph.setMaxLevel((int) (graph.getNumberOfNodes() + 1));
+		// System.out.println("#nodes: " + graph.getNumberOfNodes());
+		// System.out.println("#edges: " + graph.getNumberOfEdges());
+		//
+		// graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
+		// graph.setMaxLevel((int) (graph.getNumberOfNodes() + 1));
 
 		graph.save();
 
@@ -418,24 +477,25 @@ public class GraphGenerator {
 
 		CHGraph graph = new OSMImporterImpl(osmFile, graphHopperSpainDir, graphastSpainDir).executeCH();
 
-//		POIImporter.importPoIList(graph, "src/test/resources/monaco-latest.csv");
-//
-//		System.out.println("#nodes: " + graph.getNumberOfNodes());
-//		System.out.println("#edges: " + graph.getNumberOfEdges());
+		// POIImporter.importPoIList(graph,
+		// "src/test/resources/monaco-latest.csv");
+		//
+		// System.out.println("#nodes: " + graph.getNumberOfNodes());
+		// System.out.println("#edges: " + graph.getNumberOfEdges());
 
-//		graph.createHyperPOIS();
+		// graph.createHyperPOIS();
 
-//		System.out.println("#nodes: " + graph.getNumberOfNodes());
-//		System.out.println("#edges: " + graph.getNumberOfEdges());
-//
-//		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
-//		graph.setMaxLevel((int) (graph.getNumberOfNodes() + 1));
+		// System.out.println("#nodes: " + graph.getNumberOfNodes());
+		// System.out.println("#edges: " + graph.getNumberOfEdges());
+		//
+		// graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
+		// graph.setMaxLevel((int) (graph.getNumberOfNodes() + 1));
 
 		graph.save();
 
 		return graph;
 	}
-	
+
 	public CHGraph generateTokyoBiggerCH() {
 		String osmFile = this.getClass().getResource("/tokyoBigger.osm.pbf").getPath();
 		String graphHopperTokyoBiggerDir = Configuration.USER_HOME + "/graphhopper/test/tokyoBigger";
@@ -443,24 +503,25 @@ public class GraphGenerator {
 
 		CHGraph graph = new OSMImporterImpl(osmFile, graphHopperTokyoBiggerDir, graphastTokyoBiggerDir).executeCH();
 
-//		POIImporter.importPoIList(graph, "src/test/resources/monaco-latest.csv");
+		// POIImporter.importPoIList(graph,
+		// "src/test/resources/monaco-latest.csv");
 
-//		System.out.println("#nodes: " + graph.getNumberOfNodes());
-//		System.out.println("#edges: " + graph.getNumberOfEdges());
+		// System.out.println("#nodes: " + graph.getNumberOfNodes());
+		// System.out.println("#edges: " + graph.getNumberOfEdges());
 
-//		graph.createHyperPOIS();
+		// graph.createHyperPOIS();
 
-//		System.out.println("#nodes: " + graph.getNumberOfNodes());
-//		System.out.println("#edges: " + graph.getNumberOfEdges());
+		// System.out.println("#nodes: " + graph.getNumberOfNodes());
+		// System.out.println("#edges: " + graph.getNumberOfEdges());
 
-//		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
-//		graph.setMaxLevel((int) (graph.getNumberOfNodes() + 1));
+		// graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
+		// graph.setMaxLevel((int) (graph.getNumberOfNodes() + 1));
 
 		graph.save();
 
 		return graph;
 	}
-	
+
 	public GraphBounds generateSeattle() throws NumberFormatException, IOException {
 
 		String osmFile = this.getClass().getResource("/seattle.osm.pbf").getPath();
@@ -823,8 +884,8 @@ public class GraphGenerator {
 	}
 
 	/**
-	 * Method to generate a graph based on the MIT example
-	 * found here: http://goo.gl/IlFPbo 
+	 * Method to generate a graph based on the MIT example found here:
+	 * http://goo.gl/IlFPbo
 	 * 
 	 * (Lecture 18: Shortest Paths IV - Speeding up Dijkstra)
 	 * 
@@ -839,31 +900,31 @@ public class GraphGenerator {
 
 		node = new CHNodeImpl(0l, 10, 10);
 		graph.addNode(node);
-		
+
 		node = new CHNodeImpl(1l, 20, 20);
 		graph.addNode(node);
-		
+
 		node = new CHNodeImpl(2l, 30, 0);
 		graph.addNode(node);
-		
+
 		node = new CHNodeImpl(3l, 40, 20);
 		graph.addNode(node);
-		
+
 		node = new CHNodeImpl(4l, 50, 10);
 		graph.addNode(node);
 
 		edge = new CHEdgeImpl(0l, 1l, 3, 1, "Edge 0 to 1");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(0l, 2l, 5, 1, "Edge 0 to 2");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(1l, 3l, 3, 1, "Edge 1 to 3");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(2l, 4l, 5, 1, "Edge 2 to 4");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(3l, 4l, 3, 1, "Edge 3 to 4");
 		graph.addEdge(edge);
 
@@ -872,8 +933,7 @@ public class GraphGenerator {
 		return graph;
 
 	}
-	
-	
+
 	/**
 	 * Method to generate a graph based on a second MIT example.
 	 * 
@@ -888,76 +948,76 @@ public class GraphGenerator {
 
 		node = new CHNodeImpl(0l, 10, 10);
 		graph.addNode(node);
-		
+
 		node = new CHNodeImpl(1l, 20, 20);
 		graph.addNode(node);
-		
+
 		node = new CHNodeImpl(2l, 30, 30);
 		graph.addNode(node);
-		
+
 		node = new CHNodeImpl(3l, 40, 40);
 		graph.addNode(node);
-		
+
 		node = new CHNodeImpl(4l, 50, 50);
 		graph.addNode(node);
-		
+
 		node = new CHNodeImpl(5l, 60, 60);
 		graph.addNode(node);
-		
+
 		node = new CHNodeImpl(6l, 70, 70);
 		graph.addNode(node);
-		
+
 		node = new CHNodeImpl(7l, 80, 80);
 		graph.addNode(node);
-		
+
 		node = new CHNodeImpl(8l, 90, 90);
 		graph.addNode(node);
 
 		edge = new CHEdgeImpl(0l, 1l, 4, 1, "Edge 0 to 1");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(0l, 2l, 7, 1, "Edge 0 to 2");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(0l, 3l, 5, 1, "Edge 0 to 3");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(1l, 5l, 9, 1, "Edge 1 to 5");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(2l, 4l, 4, 1, "Edge 2 to 4");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(2l, 6l, 6, 1, "Edge 2 to 6");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(3l, 4l, 3, 1, "Edge 3 to 4");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(4l, 5l, 12, 1, "Edge 4 to 5");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(4l, 6l, 2, 1, "Edge 4 to 6");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(4l, 7l, 5, 1, "Edge 4 to 7");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(5l, 8l, 13, 1, "Edge 5 to 8");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(6l, 8l, 9, 1, "Edge 6 to 8");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(7l, 8l, 3, 1, "Edge 7 to 8");
 		graph.addEdge(edge);
-		
+
 		graph.save();
 
 		return graph;
 
 	}
-	
+
 	public CHGraph generateMITExample3() {
 
 		CHGraph graph = new CHGraphImpl(Configuration.USER_HOME + "/graphast/test/graphMITExample3");
@@ -967,52 +1027,52 @@ public class GraphGenerator {
 
 		node = new CHNodeImpl(0l, 10, 10);
 		graph.addNode(node);
-		
+
 		node = new CHNodeImpl(1l, 20, 20);
 		graph.addNode(node);
-		
+
 		node = new CHNodeImpl(2l, 30, 30);
 		graph.addNode(node);
-		
+
 		node = new CHNodeImpl(3l, 40, 40);
 		graph.addNode(node);
-		
+
 		node = new CHNodeImpl(4l, 50, 50);
 		graph.addNode(node);
-		
+
 		node = new CHNodeImpl(5l, 60, 60);
 		graph.addNode(node);
-		
+
 		node = new CHNodeImpl(6l, 70, 70);
 		graph.addNode(node);
-		
+
 		node = new CHNodeImpl(7l, 80, 80);
 		graph.addNode(node);
 
 		edge = new CHEdgeImpl(0l, 1l, 2, 1, "Edge 0 to 1");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(0l, 2l, 3, 1, "Edge 0 to 2");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(0l, 4l, 5, 1, "Edge 0 to 4");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(1l, 3l, 2, 1, "Edge 1 to 3");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(2l, 5l, 3, 1, "Edge 2 to 5");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(3l, 6l, 2, 1, "Edge 3 to 6");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(4l, 7l, 5, 1, "Edge 4 to 7");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(5l, 7l, 3, 1, "Edge 5 to 7");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(6l, 7l, 2, 1, "Edge 6 to 7");
 		graph.addEdge(edge);
 
@@ -1021,10 +1081,10 @@ public class GraphGenerator {
 		return graph;
 
 	}
-	
+
 	/**
-	 * Modified graph from generateMITExample to test the
-	 * Bidirectional A* algorithm
+	 * Modified graph from generateMITExample to test the Bidirectional A*
+	 * algorithm
 	 * 
 	 * @return graph The graph generated
 	 */
@@ -1037,31 +1097,31 @@ public class GraphGenerator {
 
 		node = new CHNodeImpl(0l, 100, 100);
 		graph.addNode(node);
-		
+
 		node = new CHNodeImpl(1l, 100, 130);
 		graph.addNode(node);
-		
+
 		node = new CHNodeImpl(2l, 121.79449, 145);
 		graph.addNode(node);
-		
+
 		node = new CHNodeImpl(3l, 100, 160);
 		graph.addNode(node);
-		
+
 		node = new CHNodeImpl(4l, 100, 190);
 		graph.addNode(node);
 
 		edge = new CHEdgeImpl(0l, 1l, 30, 1, "Edge 0 to 1");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(0l, 2l, 50, 1, "Edge 0 to 2");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(1l, 3l, 30, 1, "Edge 1 to 3");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(2l, 4l, 50, 1, "Edge 2 to 4");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(3l, 4l, 30, 1, "Edge 3 to 4");
 		graph.addEdge(edge);
 
@@ -1070,7 +1130,7 @@ public class GraphGenerator {
 		return graph;
 
 	}
-	
+
 	/*
 	 * Based on the createExampleGraph() graph from GraphHopper
 	 * PrepareContractionHierarchiesTest.java class.
@@ -1150,11 +1210,11 @@ public class GraphGenerator {
 		return graph;
 
 	}
-	
+
 	/*
-	 * This test uses a modified version of createExampleGraph() graph from GraphHopper
-	 * PrepareContractionHierarchiesTest.java class. This modified version have HyperPoI's
-	 * HyperEdges.
+	 * This test uses a modified version of createExampleGraph() graph from
+	 * GraphHopper PrepareContractionHierarchiesTest.java class. This modified
+	 * version have HyperPoI's HyperEdges.
 	 */
 	public CHGraph generateGraphHopperExampleWithPoIs() {
 
@@ -1223,8 +1283,8 @@ public class GraphGenerator {
 		edge = new CHEdgeImpl(1l, 5l, 2, 1, "Edge 13");
 		graph.addEdge(edge);
 
-//		graph.createHyperPOIS();
-		
+		// graph.createHyperPOIS();
+
 		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
 		graph.setMaxLevel((int) graph.getNumberOfNodes());
 
@@ -1233,116 +1293,116 @@ public class GraphGenerator {
 		return graph;
 
 	}
-	
+
 	/*
 	 * Based on the testDirectedGraph() graph from GraphHopper
 	 * PrepareContractionHierarchiesTest.java class.
 	 */
-		public CHGraph generateGraphHopperExample2() {
+	public CHGraph generateGraphHopperExample2() {
 
-			CHGraph graph = new CHGraphImpl(Configuration.USER_HOME + "/graphast/test/graphHopperExample2");
+		CHGraph graph = new CHGraphImpl(Configuration.USER_HOME + "/graphast/test/graphHopperExample2");
 
-			CHEdge edge;
-			CHNode node;
+		CHEdge edge;
+		CHNode node;
 
-			node = new CHNodeImpl(0l, 30, 10);
-			graph.addNode(node);
+		node = new CHNodeImpl(0l, 30, 10);
+		graph.addNode(node);
 
-			node = new CHNodeImpl(1l, 0, 5);
-			graph.addNode(node);
+		node = new CHNodeImpl(1l, 0, 5);
+		graph.addNode(node);
 
-			node = new CHNodeImpl(2l, 20, 10);
-			graph.addNode(node);
+		node = new CHNodeImpl(2l, 20, 10);
+		graph.addNode(node);
 
-			node = new CHNodeImpl(3l, 10, 10);
-			graph.addNode(node);
+		node = new CHNodeImpl(3l, 10, 10);
+		graph.addNode(node);
 
-			// TODO Create a constructor without the originalEdgeCounter
-			edge = new CHEdgeImpl(3l, 2l, 3, 1, "Edge 0");
-			graph.addEdge(edge);
-			
-			edge = new CHEdgeImpl(2l, 3l, 10, 1, "Edge 1");
-			graph.addEdge(edge);
-			
-			edge = new CHEdgeImpl(0l, 2l, 1, 1, "Edge 2");
-			graph.addEdge(edge);
+		// TODO Create a constructor without the originalEdgeCounter
+		edge = new CHEdgeImpl(3l, 2l, 3, 1, "Edge 0");
+		graph.addEdge(edge);
 
-			edge = new CHEdgeImpl(3l, 0l, 1, 1, "Edge 3");
-			graph.addEdge(edge);
+		edge = new CHEdgeImpl(2l, 3l, 10, 1, "Edge 1");
+		graph.addEdge(edge);
 
-			edge = new CHEdgeImpl(1l, 3l, 1, 1, "Edge 4");
-			graph.addEdge(edge);
-			
-			edge = new CHEdgeImpl(2l, 1l, 1, 1, "Edge 5");
-			graph.addEdge(edge);
+		edge = new CHEdgeImpl(0l, 2l, 1, 1, "Edge 2");
+		graph.addEdge(edge);
 
-			graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
-			graph.setMaxLevel((int) graph.getNumberOfNodes());
+		edge = new CHEdgeImpl(3l, 0l, 1, 1, "Edge 3");
+		graph.addEdge(edge);
 
-			graph.save();
+		edge = new CHEdgeImpl(1l, 3l, 1, 1, "Edge 4");
+		graph.addEdge(edge);
 
-			return graph;
+		edge = new CHEdgeImpl(2l, 1l, 1, 1, "Edge 5");
+		graph.addEdge(edge);
 
-		}
+		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
+		graph.setMaxLevel((int) graph.getNumberOfNodes());
 
-		/*
-		 * This test uses a modified version of testDirectedGraph() graph from GraphHopper
-		 * PrepareContractionHierarchiesTest.java class. This modified version have HyperPoI's
-		 * HyperEdges.
-		 */
-		public CHGraph generateGraphHopperExample2WithPoIs() {
+		graph.save();
 
-			CHGraph graph = new CHGraphImpl(Configuration.USER_HOME + "/graphast/test/graphHopperExample2WithPoIs");
+		return graph;
 
-			CHEdge edge;
-			CHNode node;
+	}
 
-			node = new CHNodeImpl(0l, 30, 10, 1);
-			graph.addNode(node);
+	/*
+	 * This test uses a modified version of testDirectedGraph() graph from
+	 * GraphHopper PrepareContractionHierarchiesTest.java class. This modified
+	 * version have HyperPoI's HyperEdges.
+	 */
+	public CHGraph generateGraphHopperExample2WithPoIs() {
 
-			node = new CHNodeImpl(1l, 0, 5);
-			graph.addNode(node);
+		CHGraph graph = new CHGraphImpl(Configuration.USER_HOME + "/graphast/test/graphHopperExample2WithPoIs");
 
-			node = new CHNodeImpl(2l, 20, 10, 1);
-			graph.addNode(node);
+		CHEdge edge;
+		CHNode node;
 
-			node = new CHNodeImpl(3l, 10, 10);
-			graph.addNode(node);
+		node = new CHNodeImpl(0l, 30, 10, 1);
+		graph.addNode(node);
 
-			// TODO Create a constructor without the originalEdgeCounter
-			edge = new CHEdgeImpl(0l, 2l, 1, 1, "Edge 0");
-			graph.addEdge(edge);
+		node = new CHNodeImpl(1l, 0, 5);
+		graph.addNode(node);
 
-			edge = new CHEdgeImpl(3l, 0l, 1, 1, "Edge 1");
-			graph.addEdge(edge);
+		node = new CHNodeImpl(2l, 20, 10, 1);
+		graph.addNode(node);
 
-			edge = new CHEdgeImpl(2l, 1l, 1, 1, "Edge 2");
-			graph.addEdge(edge);
+		node = new CHNodeImpl(3l, 10, 10);
+		graph.addNode(node);
 
-			edge = new CHEdgeImpl(1l, 3l, 1, 1, "Edge 3");
-			graph.addEdge(edge);
+		// TODO Create a constructor without the originalEdgeCounter
+		edge = new CHEdgeImpl(0l, 2l, 1, 1, "Edge 0");
+		graph.addEdge(edge);
 
-			edge = new CHEdgeImpl(2l, 3l, 10, 1, "Edge 4");
-			graph.addEdge(edge);
+		edge = new CHEdgeImpl(3l, 0l, 1, 1, "Edge 1");
+		graph.addEdge(edge);
 
-			edge = new CHEdgeImpl(3l, 2l, 3, 1, "Edge 5");
-			graph.addEdge(edge);
+		edge = new CHEdgeImpl(2l, 1l, 1, 1, "Edge 2");
+		graph.addEdge(edge);
 
-//			graph.createHyperPOIS();
+		edge = new CHEdgeImpl(1l, 3l, 1, 1, "Edge 3");
+		graph.addEdge(edge);
 
-			graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
-			graph.setMaxLevel((int) graph.getNumberOfNodes());
+		edge = new CHEdgeImpl(2l, 3l, 10, 1, "Edge 4");
+		graph.addEdge(edge);
 
-			graph.save();
+		edge = new CHEdgeImpl(3l, 2l, 3, 1, "Edge 5");
+		graph.addEdge(edge);
 
-			return graph;
+		// graph.createHyperPOIS();
 
-		}
-	
-		/*
-		 * Based on the testDirectedGraph3() graph from GraphHopper
-		 * PrepareContractionHierarchiesTest.java class.
-		 */
+		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
+		graph.setMaxLevel((int) graph.getNumberOfNodes());
+
+		graph.save();
+
+		return graph;
+
+	}
+
+	/*
+	 * Based on the testDirectedGraph3() graph from GraphHopper
+	 * PrepareContractionHierarchiesTest.java class.
+	 */
 	public CHGraph generateGraphHopperExample3() {
 
 		CHGraph graph = new CHGraphImpl(Configuration.USER_HOME + "/graphast/test/graphHopperExample3");
@@ -1447,9 +1507,9 @@ public class GraphGenerator {
 	}
 
 	/*
-	 * This test uses a modified version of testDirectedGraph3() graph from GraphHopper
-	 * PrepareContractionHierarchiesTest.java class. This modified version have HyperPoI's
-	 * HyperEdges.
+	 * This test uses a modified version of testDirectedGraph3() graph from
+	 * GraphHopper PrepareContractionHierarchiesTest.java class. This modified
+	 * version have HyperPoI's HyperEdges.
 	 */
 	public CHGraph generateGraphHopperExample3WithPoIs() {
 
@@ -1545,7 +1605,7 @@ public class GraphGenerator {
 		edge = new CHEdgeImpl(7l, 3l, 2, 1, "Edge 18");
 		graph.addEdge(edge);
 
-//		graph.createHyperPOIS();
+		// graph.createHyperPOIS();
 
 		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
 		graph.setMaxLevel((int) (graph.getNumberOfNodes() + 1));
@@ -1666,10 +1726,10 @@ public class GraphGenerator {
 		// TODO Create a constructor without the originalEdgeCounter
 		edge = new CHEdgeImpl(16l, 0l, 1, 1, "Edge 0");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(0l, 16l, 1, 1, "Edge 1");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(0l, 9l, 1, 1, "Edge 2");
 		graph.addEdge(edge);
 
@@ -1681,7 +1741,7 @@ public class GraphGenerator {
 
 		edge = new CHEdgeImpl(17l, 0l, 1, 1, "Edge 5");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(9l, 10l, 1, 1, "Edge 6");
 		graph.addEdge(edge);
 
@@ -1699,7 +1759,7 @@ public class GraphGenerator {
 
 		edge = new CHEdgeImpl(28l, 11l, 1, 1, "Edge 11");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(28l, 29l, 1, 1, "Edge 12");
 		graph.addEdge(edge);
 
@@ -1717,7 +1777,7 @@ public class GraphGenerator {
 
 		edge = new CHEdgeImpl(31l, 30l, 1, 1, "Edge 17");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(31l, 4l, 1, 1, "Edge 18");
 		graph.addEdge(edge);
 
@@ -1747,37 +1807,37 @@ public class GraphGenerator {
 
 		edge = new CHEdgeImpl(18l, 14l, 1, 1, "Edge 27");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(18l, 19l, 1, 1, "Edge 28");
 		graph.addEdge(edge);
 
 		edge = new CHEdgeImpl(19l, 18l, 1, 1, "Edge 29");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(19l, 20l, 1, 1, "Edge 30");
 		graph.addEdge(edge);
 
 		edge = new CHEdgeImpl(20l, 19l, 1, 1, "Edge 31");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(20l, 15l, 1, 1, "Edge 32");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(15l, 20l, 1, 1, "Edge 33");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(19l, 21l, 1, 1, "Edge 34");
 		graph.addEdge(edge);
 
 		edge = new CHEdgeImpl(21l, 19l, 1, 1, "Edge 35");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(21l, 16l, 1, 1, "Edge 36");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(16l, 21l, 1, 1, "Edge 37");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(1l, 2l, 1, 1, "Edge 38");
 		graph.addEdge(edge);
 
@@ -1801,16 +1861,16 @@ public class GraphGenerator {
 
 		edge = new CHEdgeImpl(5l, 6l, 1, 1, "Edge 45");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(6l, 7l, 1, 1, "Edge 46");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(7l, 13l, 1, 1, "Edge 47");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(13l, 12l, 1, 1, "Edge 48");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(12l, 4l, 1, 1, "Edge 49");
 		graph.addEdge(edge);
 
@@ -1819,37 +1879,37 @@ public class GraphGenerator {
 
 		edge = new CHEdgeImpl(8l, 7l, 1, 1, "Edge 51");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(8l, 22l, 1, 1, "Edge 52");
 		graph.addEdge(edge);
 
 		edge = new CHEdgeImpl(22l, 8l, 1, 1, "Edge 53");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(22l, 23l, 1, 1, "Edge 54");
 		graph.addEdge(edge);
 
 		edge = new CHEdgeImpl(23l, 22l, 1, 1, "Edge 55");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(23l, 24l, 1, 1, "Edge 56");
 		graph.addEdge(edge);
 
 		edge = new CHEdgeImpl(24l, 23l, 1, 1, "Edge 57");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(24l, 25l, 1, 1, "Edge 58");
 		graph.addEdge(edge);
 
 		edge = new CHEdgeImpl(25l, 24l, 1, 1, "Edge 59");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(25l, 27l, 1, 1, "Edge 60");
 		graph.addEdge(edge);
 
 		edge = new CHEdgeImpl(27l, 25l, 1, 1, "Edge 61");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(27l, 5l, 1, 1, "Edge 62");
 		graph.addEdge(edge);
 
@@ -1872,9 +1932,9 @@ public class GraphGenerator {
 	}
 
 	/*
-	 * This test uses a modified version of initRoundaboutGraph() graph from GraphHopper
-	 * PrepareContractionHierarchiesTest.java class. This modified version have HyperPoI's
-	 * HyperEdges.
+	 * This test uses a modified version of initRoundaboutGraph() graph from
+	 * GraphHopper PrepareContractionHierarchiesTest.java class. This modified
+	 * version have HyperPoI's HyperEdges.
 	 */
 	public CHGraph generateGraphHopperExample4WithPoIs() {
 
@@ -1982,10 +2042,10 @@ public class GraphGenerator {
 		// TODO Create a constructor without the originalEdgeCounter
 		edge = new CHEdgeImpl(0l, 16l, 20, 1, "Edge 0");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(16l, 0l, 20, 1, "Edge 1");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(0l, 9l, 10, 1, "Edge 2");
 		graph.addEdge(edge);
 
@@ -1997,7 +2057,7 @@ public class GraphGenerator {
 
 		edge = new CHEdgeImpl(17l, 0l, 10, 1, "Edge 5");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(9l, 10l, 10, 1, "Edge 6");
 		graph.addEdge(edge);
 
@@ -2015,7 +2075,7 @@ public class GraphGenerator {
 
 		edge = new CHEdgeImpl(28l, 11l, 20, 1, "Edge 11");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(28l, 29l, 10, 1, "Edge 12");
 		graph.addEdge(edge);
 
@@ -2033,7 +2093,7 @@ public class GraphGenerator {
 
 		edge = new CHEdgeImpl(31l, 30l, 10, 1, "Edge 17");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(31l, 4l, 22, 1, "Edge 18");
 		graph.addEdge(edge);
 
@@ -2063,37 +2123,37 @@ public class GraphGenerator {
 
 		edge = new CHEdgeImpl(18l, 14l, 10, 1, "Edge 27");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(18l, 19l, 10, 1, "Edge 28");
 		graph.addEdge(edge);
 
 		edge = new CHEdgeImpl(19l, 18l, 10, 1, "Edge 29");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(19l, 20l, 14, 1, "Edge 30");
 		graph.addEdge(edge);
 
 		edge = new CHEdgeImpl(20l, 19l, 14, 1, "Edge 31");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(20l, 15l, 22, 1, "Edge 32");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(15l, 20l, 22, 1, "Edge 33");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(19l, 21l, 10, 1, "Edge 34");
 		graph.addEdge(edge);
 
 		edge = new CHEdgeImpl(21l, 19l, 10, 1, "Edge 35");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(21l, 16l, 51, 1, "Edge 36");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(16l, 21l, 51, 1, "Edge 37");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(1l, 2l, 10, 1, "Edge 38");
 		graph.addEdge(edge);
 
@@ -2117,16 +2177,16 @@ public class GraphGenerator {
 
 		edge = new CHEdgeImpl(5l, 6l, 10, 1, "Edge 45");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(6l, 7l, 14, 1, "Edge 46");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(7l, 13l, 14, 1, "Edge 47");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(13l, 12l, 10, 1, "Edge 48");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(12l, 4l, 14, 1, "Edge 49");
 		graph.addEdge(edge);
 
@@ -2135,37 +2195,37 @@ public class GraphGenerator {
 
 		edge = new CHEdgeImpl(8l, 7l, 10, 1, "Edge 51");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(8l, 22l, 10, 1, "Edge 52");
 		graph.addEdge(edge);
 
 		edge = new CHEdgeImpl(22l, 8l, 10, 1, "Edge 53");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(22l, 23l, 10, 1, "Edge 54");
 		graph.addEdge(edge);
 
 		edge = new CHEdgeImpl(23l, 22l, 10, 1, "Edge 55");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(23l, 24l, 10, 1, "Edge 56");
 		graph.addEdge(edge);
 
 		edge = new CHEdgeImpl(24l, 23l, 10, 1, "Edge 57");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(24l, 25l, 20, 1, "Edge 58");
 		graph.addEdge(edge);
 
 		edge = new CHEdgeImpl(25l, 24l, 20, 1, "Edge 59");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(25l, 27l, 10, 1, "Edge 60");
 		graph.addEdge(edge);
 
 		edge = new CHEdgeImpl(27l, 25l, 10, 1, "Edge 61");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(27l, 5l, 14, 1, "Edge 62");
 		graph.addEdge(edge);
 
@@ -2177,8 +2237,8 @@ public class GraphGenerator {
 
 		edge = new CHEdgeImpl(26l, 25l, 22, 1, "Edge 65");
 		graph.addEdge(edge);
-		
-//		graph.createHyperPOIS();
+
+		// graph.createHyperPOIS();
 
 		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
 		graph.setMaxLevel((int) graph.getNumberOfNodes() + 1);
@@ -2211,14 +2271,14 @@ public class GraphGenerator {
 		node = new CHNodeImpl(4l, 10, -20, 1);
 		graph.addNode(node);
 
-		// TODO Create a constructor without the originalEdgeCounter		
+		// TODO Create a constructor without the originalEdgeCounter
 
 		edge = new CHEdgeImpl(4l, 0l, 1, 1, "Edge 20");
 		graph.addEdge(edge);
 
 		edge = new CHEdgeImpl(0l, 4l, 1, 1, "Edge 21");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(0l, 1l, 1, 1, "Edge 38");
 		graph.addEdge(edge);
 
@@ -2227,22 +2287,22 @@ public class GraphGenerator {
 
 		edge = new CHEdgeImpl(1l, 2l, 1, 1, "Edge 40");
 		graph.addEdge(edge);
-		
-//		edge = new CHEdgeImpl(2l, 1l, 1, 1, "Edge 40"); //
-//		graph.addEdge(edge);
+
+		// edge = new CHEdgeImpl(2l, 1l, 1, 1, "Edge 40"); //
+		// graph.addEdge(edge);
 
 		edge = new CHEdgeImpl(2l, 3l, 1, 1, "Edge 44");
 		graph.addEdge(edge);
-		
-//		edge = new CHEdgeImpl(3l, 2l, 1, 1, "Edge 44");//
-//		graph.addEdge(edge);
+
+		// edge = new CHEdgeImpl(3l, 2l, 1, 1, "Edge 44");//
+		// graph.addEdge(edge);
 
 		edge = new CHEdgeImpl(3l, 1l, 1, 1, "Edge 45");
 		graph.addEdge(edge);
-		
-//		edge = new CHEdgeImpl(1l, 3l, 1, 1, "Edge 45");//
-//		graph.addEdge(edge);
-		
+
+		// edge = new CHEdgeImpl(1l, 3l, 1, 1, "Edge 45");//
+		// graph.addEdge(edge);
+
 		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
 		graph.setMaxLevel((int) graph.getNumberOfNodes() + 1);
 
@@ -2250,7 +2310,7 @@ public class GraphGenerator {
 
 		return graph;
 	}
-	
+
 	public CHGraph generateGraphHopperTest2() {
 
 		CHGraph graph = new CHGraphImpl(Configuration.USER_HOME + "/graphast/test/graphHopperTest2");
@@ -2353,17 +2413,17 @@ public class GraphGenerator {
 
 		node = new CHNodeImpl(31l, 50, 30);
 		graph.addNode(node);
-		
+
 		node = new CHNodeImpl(32l, -10, -10);
 		graph.addNode(node);
 
 		// TODO Create a constructor without the originalEdgeCounter
 		edge = new CHEdgeImpl(0l, 16l, 1, 1, "Edge 0");
 		graph.addEdge(edge);
-		
-//		edge = new CHEdgeImpl(16l, 0l, 1, 1, "Edge 1");
-//		graph.addEdge(edge);
-		
+
+		// edge = new CHEdgeImpl(16l, 0l, 1, 1, "Edge 1");
+		// graph.addEdge(edge);
+
 		edge = new CHEdgeImpl(0l, 9l, 1, 1, "Edge 2");
 		graph.addEdge(edge);
 
@@ -2375,7 +2435,7 @@ public class GraphGenerator {
 
 		edge = new CHEdgeImpl(17l, 0l, 1, 1, "Edge 5");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(9l, 10l, 1, 1, "Edge 6");
 		graph.addEdge(edge);
 
@@ -2393,7 +2453,7 @@ public class GraphGenerator {
 
 		edge = new CHEdgeImpl(28l, 11l, 1, 1, "Edge 11");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(28l, 29l, 1, 1, "Edge 12");
 		graph.addEdge(edge);
 
@@ -2411,7 +2471,7 @@ public class GraphGenerator {
 
 		edge = new CHEdgeImpl(31l, 30l, 1, 1, "Edge 17");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(31l, 4l, 1, 1, "Edge 18");
 		graph.addEdge(edge);
 
@@ -2441,31 +2501,31 @@ public class GraphGenerator {
 
 		edge = new CHEdgeImpl(18l, 14l, 1, 1, "Edge 27");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(18l, 19l, 1, 1, "Edge 28");
 		graph.addEdge(edge);
 
 		edge = new CHEdgeImpl(19l, 18l, 1, 1, "Edge 29");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(19l, 20l, 1, 1, "Edge 30");
 		graph.addEdge(edge);
 
 		edge = new CHEdgeImpl(20l, 19l, 1, 1, "Edge 31");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(20l, 15l, 1, 1, "Edge 32");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(15l, 20l, 1, 1, "Edge 33");
 		graph.addEdge(edge);
-		
-//		edge = new CHEdgeImpl(19l, 21l, 1, 1, "Edge 34");
-//		graph.addEdge(edge);
+
+		// edge = new CHEdgeImpl(19l, 21l, 1, 1, "Edge 34");
+		// graph.addEdge(edge);
 
 		edge = new CHEdgeImpl(21l, 19l, 1, 1, "Edge 35");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(1l, 2l, 1, 1, "Edge 38");
 		graph.addEdge(edge);
 
@@ -2489,16 +2549,16 @@ public class GraphGenerator {
 
 		edge = new CHEdgeImpl(5l, 6l, 1, 1, "Edge 45");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(6l, 7l, 1, 1, "Edge 46");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(7l, 13l, 1, 1, "Edge 47");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(13l, 12l, 1, 1, "Edge 48");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(12l, 4l, 1, 1, "Edge 49");
 		graph.addEdge(edge);
 
@@ -2507,37 +2567,37 @@ public class GraphGenerator {
 
 		edge = new CHEdgeImpl(8l, 7l, 1, 1, "Edge 51");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(8l, 22l, 1, 1, "Edge 52");
 		graph.addEdge(edge);
 
 		edge = new CHEdgeImpl(22l, 8l, 1, 1, "Edge 53");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(22l, 23l, 1, 1, "Edge 54");
 		graph.addEdge(edge);
 
 		edge = new CHEdgeImpl(23l, 22l, 1, 1, "Edge 55");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(23l, 24l, 1, 1, "Edge 56");
 		graph.addEdge(edge);
 
 		edge = new CHEdgeImpl(24l, 23l, 1, 1, "Edge 57");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(24l, 25l, 1, 1, "Edge 58");
 		graph.addEdge(edge);
 
 		edge = new CHEdgeImpl(25l, 24l, 1, 1, "Edge 59");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(25l, 27l, 1, 1, "Edge 60");
 		graph.addEdge(edge);
 
 		edge = new CHEdgeImpl(27l, 25l, 1, 1, "Edge 61");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(27l, 5l, 1, 1, "Edge 62");
 		graph.addEdge(edge);
 
@@ -2549,19 +2609,19 @@ public class GraphGenerator {
 
 		edge = new CHEdgeImpl(26l, 25l, 1, 1, "Edge 65");
 		graph.addEdge(edge);
-		
-//		edge = new CHEdgeImpl(32l, 16l, 1, 1, "Edge 65");
-//		graph.addEdge(edge);
-		
+
+		// edge = new CHEdgeImpl(32l, 16l, 1, 1, "Edge 65");
+		// graph.addEdge(edge);
+
 		edge = new CHEdgeImpl(16l, 32l, 1, 1, "Edge 65");
 		graph.addEdge(edge);
-		
+
 		edge = new CHEdgeImpl(32l, 21l, 1, 1, "Edge 65");
 		graph.addEdge(edge);
-		
-//		edge = new CHEdgeImpl(21l, 32l, 1, 1, "Edge 65");
-//		graph.addEdge(edge);
-		
+
+		// edge = new CHEdgeImpl(21l, 32l, 1, 1, "Edge 65");
+		// graph.addEdge(edge);
+
 		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
 		graph.setMaxLevel((int) graph.getNumberOfNodes() + 1);
 
@@ -2569,7 +2629,7 @@ public class GraphGenerator {
 
 		return graph;
 	}
-	
+
 	/*
 	 * Based on the testCircleBug() graph from GraphHopper
 	 * PrepareContractionHierarchiesTest.java class.
@@ -2628,9 +2688,9 @@ public class GraphGenerator {
 	}
 
 	/*
-	 * This test uses a modified version of testCircleBug() graph from GraphHopper
-	 * PrepareContractionHierarchiesTest.java class. This modified version have HyperPoI's
-	 * HyperEdges.
+	 * This test uses a modified version of testCircleBug() graph from
+	 * GraphHopper PrepareContractionHierarchiesTest.java class. This modified
+	 * version have HyperPoI's HyperEdges.
 	 */
 	public CHGraph generateGraphHopperExample5WithPoIs() {
 
@@ -2684,16 +2744,7 @@ public class GraphGenerator {
 		return graph;
 
 	}
-	
-	
-	
-	
-	
 
-	
-	
-	
-	
 	public CHGraph generateGraphHopperExample40() {
 
 		CHGraph graph = new CHGraphImpl(Configuration.USER_HOME + "/graphast/test/graphHopperExample40");
@@ -2847,8 +2898,6 @@ public class GraphGenerator {
 		return graph;
 
 	}
-
-	
 
 	public CHGraph generateGraphHopperExample6() {
 
@@ -3008,6 +3057,19 @@ public class GraphGenerator {
 
 		return graph;
 
+	}
+
+	public void printGraphhopperGraph(EdgeIterator edgeIterator) {
+		while (edgeIterator.next()) {
+
+			int externalFromNodeId = edgeIterator.getBaseNode();
+			int externalToNodeId = edgeIterator.getAdjNode();
+			int externalEdgeId = edgeIterator.getEdge();
+
+			System.out.println("externalEdgeId: " + externalEdgeId + " externalFromNodeId: " + externalFromNodeId
+					+ " externalToNodeId: " + externalToNodeId);
+
+		}
 	}
 
 }
