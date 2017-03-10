@@ -108,13 +108,13 @@ public class DijkstraCH {
 			removed = queue.poll();
 			wasTraversed.put(removed.getId(), wasRemoved);
 			settleNodes++;
-
+			
 			//TODO Double check if put the expandVertex here is correct.
 			expandVertex(removed, queue, parents, wasTraversed, skippedNode);
 			
-			if (removed.getId() == targetId) {
+			if (queue.peek().getId() == targetId) {
 				Path path = new Path();
-				path.constructPath(removed.getId(), parents, graph);
+				path.constructPath(queue.peek().getId(), parents, graph);
 				return path;
 			}
 

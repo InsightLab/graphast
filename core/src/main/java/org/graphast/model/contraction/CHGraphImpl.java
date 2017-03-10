@@ -39,9 +39,9 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 	private Map<Long, Integer> oldPriorities = new HashMap<>();
 
-	private int neighborUpdatePercentage = 100;
-	private int periodicUpdatesPercentage = 100;
-	private int lastNodesLazyUpdatePercentage = 100;
+	private int neighborUpdatePercentage = 20;
+	private int periodicUpdatesPercentage = 20;
+	private int lastNodesLazyUpdatePercentage = 10;
 	private double nodesContractedPercentage = 100;
 	private int numberShortcutsCreated;
 	private final Random rand = new Random(123);
@@ -452,6 +452,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 	public void contractNodes() {
 
+		meanDegree = this.getNumberOfEdges() / this.getNumberOfNodes();
 		int level = 1;
 		// TODO Rename this variable counter!!
 		int counter = 0;
@@ -461,8 +462,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 		// => enable it but call not so often
 		boolean periodicUpdate = true;
 
-		long periodicUpdatesCount = Math
-				.round(Math.max(10, sortedNodesQueue.size() / 100d * periodicUpdatesPercentage));
+		long periodicUpdatesCount = Math.round(Math.max(10, sortedNodesQueue.size() / 100d * periodicUpdatesPercentage));
 
 		if (periodicUpdatesPercentage == 0) {
 			periodicUpdate = false;
@@ -470,8 +470,10 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 		// Disable lazy updates for last x percentage of nodes as preparation is
 		// then a lot slower and query time does not really benefit
-		long lastNodesLazyUpdates = Math.round(sortedNodesQueue.size() / 100d * lastNodesLazyUpdatePercentage);
-
+		long lastNodesLazyUpdates = lastNodesLazyUpdatePercentage == 0
+                ? 0l
+                : Math.round(sortedNodesQueue.size() / 100d * lastNodesLazyUpdatePercentage);
+		
 		// According to paper "Polynomial-time Construction of Contraction
 		// Hierarchies for Multi-criteria Objectives" by Funke and Storandt,
 		// we don't need to wait for all nodes to be contracted
@@ -496,25 +498,15 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 				for (int nodeId = 0; nodeId < this.getNumberOfNodes(); nodeId++) {
 
-					if (this.getNode(nodeId).getLevel() != maxLevel)
+					if (this.getNode(nodeId).getLevel() != 0)
 						continue;
-					int priority = calculatePriority(this.getNode(nodeId), true);
+					
+					oldPriorities.put((long) nodeId, calculatePriority(this.getNode(nodeId), true));
+					int priority = oldPriorities.get((long) nodeId);
 
-					oldPriorities.put((long) nodeId, priority);
-					// TODO Change "maxLevel"to this.getNode(nodeId).getLevel()
-					// or the opposite?
+					//TODO Double check this
 					this.updateNodeInfo(this.getNode(nodeId), this.getNode(nodeId).getLevel(), priority);
 					sortedNodesQueue.add((CHNodeImpl) this.getNode(nodeId));
-
-					// oldPriorities.put((long)nodeId, priority);
-
-					// CHNode node = this.getNode(nodeId);
-					// node.setPriority(priority);
-					// //TODO Double check this maxLevel setter. Is it
-					// necessary?
-					// node.setLevel(maxLevel);
-
-					// nodePriorityQueue.add((CHNodeImpl) node);
 
 				}
 				if (sortedNodesQueue.isEmpty())
@@ -524,23 +516,24 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 			}
 
 			counter++;
-
 			CHNode polledNode = sortedNodesQueue.poll();
 			// logger.debug("[CONTRACTING] NodeID {}. Priority: {}",
 			// polledNode.getId(), polledNode.getPriority());
 
-			if (!sortedNodesQueue.isEmpty() && sortedNodesQueue.size() < lastNodesLazyUpdates) {
-				int priority = calculatePriority(this.getNode(polledNode.getId()), true);
+//			if (!sortedNodesQueue.isEmpty() && sortedNodesQueue.size() < lastNodesLazyUpdates) {
+			if (sortedNodesQueue.size() < lastNodesLazyUpdates) {
+				
+				oldPriorities.put(polledNode.getId(), calculatePriority(this.getNode(polledNode.getId()), true));
+				int priority = oldPriorities.get(polledNode.getId());
 
-				oldPriorities.put((long) polledNode.getId(), priority);
-				if (priority > sortedNodesQueue.peek().getPriority()) {
+				if (!sortedNodesQueue.isEmpty() && priority > sortedNodesQueue.peek().getPriority()) {
 					// current node got more important => insert as new value
 					// and contract it later
 					CHNode node = this.getNode(polledNode.getId());
 					node.setPriority(priority);
 					// TODO Double check this maxLevel setter. Is it necessary?
-					node.setLevel(maxLevel);
-					this.updateNodeInfo(node, maxLevel, priority);
+//					node.setLevel(maxLevel);
+//					this.updateNodeInfo(node, maxLevel, priority);
 
 					sortedNodesQueue.add((CHNodeImpl) node);
 					continue;
@@ -556,13 +549,20 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 			this.updateNodeInfo(polledNode, level, polledNode.getPriority());
 			// TODO Double check if this setLevel is necessary, since we already
 			// have a updateNodeInfo before
-			polledNode.setLevel(level);
+//			polledNode.setLevel(level);
 
 			level++;
 
-			if (sortedNodesQueue.size() < nodesToAvoidContract)
+			if (sortedNodesQueue.size() < nodesToAvoidContract) {
+			
+				while(!sortedNodesQueue.isEmpty()) {
+					polledNode = sortedNodesQueue.poll();
+					polledNode.setLevel(level);
+				}
 				// skipped nodes are already set to maxLevel
 				break;
+				
+			}
 
 			for (Long edgeID : this.getInEdges(polledNode.getId())) {
 				// logger.debug("\t\t\tEdgeID: {}. FromNodeID: {}, ToNodeID:
@@ -572,12 +572,13 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 				// Lemma 1
 				long nearestNeighborID = this.getEdge(edgeID).getFromNode();
 
-				if (this.getNode(nearestNeighborID).getLevel() != maxLevel) {
+				if (this.getNode(nearestNeighborID).getLevel() != 0) {
 					continue;
 				}
 
 				if (neighborUpdate && rand.nextInt(100) < neighborUpdatePercentage) {
 					int oldPrio = oldPriorities.get(nearestNeighborID);
+					//TODO Double check this priority calculation
 					int newPrio = calculatePriority(this.getNode(nearestNeighborID), true, polledNode.getId(), edgeID);
 					oldPriorities.replace(nearestNeighborID, newPrio);
 					// logger.debug("\t[LAZY UPDATE] NodeID: {}, Priority: {}",
@@ -604,13 +605,14 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 				// this.getEdge(edgeID).getFromNode(),
 				// this.getEdge(edgeID).getToNode());
 
-				if (this.getNode(nearestNeighborID).getLevel() != maxLevel) {
+				if (this.getNode(nearestNeighborID).getLevel() != 0) {
 					continue;
 				}
 
 				if (neighborUpdate && rand.nextInt(100) < neighborUpdatePercentage) {
 
 					int oldPrio = oldPriorities.get(nearestNeighborID);
+					//TODO Double check this priority calculation
 					int newPrio = calculatePriority(this.getNode(nearestNeighborID), true, polledNode.getId(), edgeID);
 					oldPriorities.replace(nearestNeighborID, newPrio);
 					// logger.debug("\t[LAZY UPDATE] NodeID: {}, Priority: {}",
