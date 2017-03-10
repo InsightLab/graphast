@@ -92,7 +92,7 @@ public class DijkstraCH {
 	// source.getLongitude() + ")");
 	// }
 
-	public Path shortestPath(Node source, Node target, Node skippedNode) {
+	public Path shortestPath(Node source, Node target, CHNode skippedNode) {
 
 		PriorityQueue<DistanceEntry> queue = new PriorityQueue<>();
 		HashMap<Long, Integer> wasTraversed = new HashMap<>();
@@ -243,15 +243,21 @@ public class DijkstraCH {
 	}
 
 	public void expandVertex(DistanceEntry removed, PriorityQueue<DistanceEntry> queue, Map<Long, RouteEntry> parents,
-			Map<Long, Integer> wasTraversed, Node skippedNode) {
+			Map<Long, Integer> wasTraversed, CHNode skippedNode) {
 
 		Long2IntMap neighbors = graph.accessNeighborhood(graph.getNode(removed.getId()));
 
 		for (long vid : neighbors.keySet()) {
 
-			if (vid == skippedNode.getId()) {
+			//TODO <= or < ?
+			if (vid == skippedNode.getId() || graph.getNode(vid).getLevel() < skippedNode.getLevel()) {
 				continue;
 			}
+			
+//			if (vid == skippedNode.getId()) {
+//				continue;
+//			}
+			
 
 			DistanceEntry newEntry = new DistanceEntry(vid, neighbors.get(vid) + removed.getDistance(),
 					removed.getId());

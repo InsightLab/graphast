@@ -3,13 +3,11 @@ package org.graphast.model.contraction;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Random;
-import java.util.Set;
 
 import org.graphast.config.Configuration;
 import org.graphast.model.Edge;
@@ -46,14 +44,11 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 	private int numberShortcutsCreated;
 	private final Random rand = new Random(123);
 	private int regularNodeHighestPriority = Integer.MIN_VALUE;
-	private int maxVisitedNodes;
 
 	private CHGraph reverseGraph;
 
 	private DijkstraCH shortestPath;
 	private int maximumEdgeCount;
-	private int maxLevel;
-	private int minLevelPoI;
 	private double meanDegree;
 
 	public CHGraphImpl() {
@@ -204,9 +199,9 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 	public boolean prepareNodes() {
 
 		// TODO Por que inicializar assim?
-		for (int i = 0; i < this.getNumberOfNodes(); i++) {
-			this.updateNodeInfo(this.getNode(i), maxLevel, 0);
-		}
+//		for (int i = 0; i < this.getNumberOfNodes(); i++) {
+//			this.updateNodeInfo(this.getNode(i), maxLevel, 0);
+//		}
 
 		// Calculating the priority for all nodes
 		for (int nodeId = 0; nodeId < this.getNumberOfNodes(); nodeId++) {
@@ -217,7 +212,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 			oldPriorities.put((long) nodeId, priority);
 
-			this.updateNodeInfo(this.getNode(nodeId), maxLevel, priority);
+			this.updateNodeInfo(this.getNode(nodeId), 0, priority);
 			sortedNodesQueue.add((CHNodeImpl) this.getNode(nodeId));
 
 		}
@@ -230,7 +225,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 	}
 
 	@Override
-	public int calculatePriority(Node n, boolean contract) {
+	public int calculatePriority(CHNode n, boolean contract) {
 
 		// set of shortcuts that would be added if node n would be contracted
 		// next
@@ -274,7 +269,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 	}
 
-	public int calculatePriority(Node n, boolean contract, long contractedNodeId, long outsideEdgeId) {
+	public int calculatePriority(CHNode n, boolean contract, long contractedNodeId, long outsideEdgeId) {
 
 		findShortcut(n, contract);
 
@@ -297,7 +292,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 				}
 
 			} else {
-				if (this.getNode(this.getEdge(edgeId).getFromNode()).getLevel() == maxLevel) {
+				if (this.getNode(this.getEdge(edgeId).getFromNode()).getLevel() == 0) {
 					degree += 1;
 				}
 			}
@@ -316,7 +311,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 					continue;
 				}
 			} else {
-				if (this.getNode(this.getEdge(edgeId).getToNode()).getLevel() == maxLevel) {
+				if (this.getNode(this.getEdge(edgeId).getToNode()).getLevel() == 0) {
 					// if(this.getNode(this.getEdge(edgeId).getToNode()).getLevel()==maxLevel
 					// || this.getEdge(edgeId).isShortcut() ) {
 					degree += 1;
@@ -337,7 +332,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 	}
 
 	// Consider the following "graph": u --> u --> w
-	public void findShortcut(Node n, boolean contract) {
+	public void findShortcut(CHNode n, boolean contract) {
 		logger.info("PROCURANDO ATALHOS PARA O NÓ {}. LAT: {} LON: {}", n.getExternalId(), n.getLatitude(),
 				n.getLongitude());
 
@@ -358,7 +353,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 			double ingoingDistance = this.getIngoingLowestEdgeValue(n, fromNodeId);
 
 			// Accept only uncontracted nodes.
-			if (this.getNode(fromNodeId).getLevel() != maxLevel) {
+			if (this.getNode(fromNodeId).getLevel() != 0) {
 				logger.info("\tIgnored because the node {} is already contracted.",
 						this.getNode(this.getEdge(ingoingEdgeId).getFromNode()).getExternalId());
 				continue;
@@ -382,13 +377,13 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 				// saindo e chegando na mesma aresta, com um nó intermediário
 				// Se getNode(toNodeId).getLevel() != maxLevel quer dizer
 				// que já analisamos esse nó!
-				if (this.getNode(toNodeId).getLevel() != maxLevel || toNodeId.equals(fromNodeId)) {
+				if (this.getNode(toNodeId).getLevel() != 0 || toNodeId.equals(fromNodeId)) {
 
-					if (this.getNode(toNodeId).getLevel() != maxLevel) {
+					if (this.getNode(toNodeId).getLevel() != 0) {
 
 						logger.info("\t\tIgnored because the node {} is already contracted.",
 								this.getNode(this.getEdge(outgoingEdgeId).getToNode()).getExternalId());
-						continue;
+//						continue;
 					} else {
 						logger.info("\t\tIgnored because the source node {} is equal to the destination {}.",
 								this.getNode(this.getEdge(ingoingEdgeId).getFromNode()).getExternalId(),
@@ -517,6 +512,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 			counter++;
 			CHNode polledNode = sortedNodesQueue.poll();
+			System.out.println("NODE BEING CONTRACTED: " + polledNode.getExternalId());
 			// logger.debug("[CONTRACTING] NodeID {}. Priority: {}",
 			// polledNode.getId(), polledNode.getPriority());
 
@@ -726,14 +722,6 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 	public void setMaximumEdgeCount(int maximumEdgeCount) {
 		this.maximumEdgeCount = maximumEdgeCount;
-	}
-
-	public int getMaxLevel() {
-		return maxLevel;
-	}
-
-	public void setMaxLevel(int maxLevel) {
-		this.maxLevel = maxLevel;
 	}
 
 	public void setReverseGraph(CHGraph reverseGraph) {

@@ -38,9 +38,9 @@ public interface CHGraph extends Graph {
 
     boolean isShortcut( int edgeId );
 
-    public void findShortcut(Node n, boolean contract);
+    public void findShortcut(CHNode n, boolean contract);
 
-    public int calculatePriority(Node n, boolean contract);
+    public int calculatePriority(CHNode n, boolean contract);
     
 	public void setReverseGraph(CHGraph reverseGraph);
 	
@@ -48,10 +48,6 @@ public interface CHGraph extends Graph {
 
 	public void setMaximumEdgeCount(int maximumEdgeCount);
 
-	public int getMaxLevel();
-
-	public void setMaxLevel(int maxLevel);
-	
 	public CHGraph getReverseGraph();
 	
 	public void setNodesComplement(IntBigArrayBigList nodesComplement);

@@ -1203,7 +1203,6 @@ public class GraphGenerator {
 		graph.addEdge(edge);
 
 		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
-		graph.setMaxLevel((int) graph.getNumberOfNodes());
 
 		graph.save();
 
@@ -1286,7 +1285,6 @@ public class GraphGenerator {
 		// graph.createHyperPOIS();
 
 		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
-		graph.setMaxLevel((int) graph.getNumberOfNodes());
 
 		graph.save();
 
@@ -1337,7 +1335,6 @@ public class GraphGenerator {
 		graph.addEdge(edge);
 
 		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
-		graph.setMaxLevel((int) graph.getNumberOfNodes());
 
 		graph.save();
 
@@ -1391,7 +1388,6 @@ public class GraphGenerator {
 		// graph.createHyperPOIS();
 
 		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
-		graph.setMaxLevel((int) graph.getNumberOfNodes());
 
 		graph.save();
 
@@ -1498,7 +1494,6 @@ public class GraphGenerator {
 		graph.addEdge(edge);
 
 		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
-		graph.setMaxLevel((int) graph.getNumberOfNodes());
 
 		graph.save();
 
@@ -1608,7 +1603,6 @@ public class GraphGenerator {
 		// graph.createHyperPOIS();
 
 		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
-		graph.setMaxLevel((int) (graph.getNumberOfNodes() + 1));
 
 		graph.save();
 
@@ -1923,7 +1917,6 @@ public class GraphGenerator {
 		graph.addEdge(edge);
 
 		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
-		graph.setMaxLevel((int) graph.getNumberOfNodes());
 
 		graph.save();
 
@@ -2241,7 +2234,6 @@ public class GraphGenerator {
 		// graph.createHyperPOIS();
 
 		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
-		graph.setMaxLevel((int) graph.getNumberOfNodes() + 1);
 
 		graph.save();
 
@@ -2304,7 +2296,6 @@ public class GraphGenerator {
 		// graph.addEdge(edge);
 
 		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
-		graph.setMaxLevel((int) graph.getNumberOfNodes() + 1);
 
 		graph.save();
 
@@ -2623,7 +2614,6 @@ public class GraphGenerator {
 		// graph.addEdge(edge);
 
 		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
-		graph.setMaxLevel((int) graph.getNumberOfNodes() + 1);
 
 		graph.save();
 
@@ -2679,7 +2669,6 @@ public class GraphGenerator {
 		graph.addEdge(edge);
 
 		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
-		graph.setMaxLevel((int) graph.getNumberOfNodes());
 
 		graph.save();
 
@@ -2737,7 +2726,6 @@ public class GraphGenerator {
 		graph.addEdge(edge);
 
 		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
-		graph.setMaxLevel((int) graph.getNumberOfNodes());
 
 		graph.save();
 
@@ -2814,7 +2802,6 @@ public class GraphGenerator {
 		graph.addEdge(edge);
 
 		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
-		graph.setMaxLevel((int) graph.getNumberOfNodes());
 
 		graph.save();
 
@@ -2891,7 +2878,6 @@ public class GraphGenerator {
 		graph.addEdge(edge);
 
 		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
-		graph.setMaxLevel((int) graph.getNumberOfNodes());
 
 		graph.save();
 
@@ -2971,7 +2957,6 @@ public class GraphGenerator {
 		graph.addEdge(edge);
 
 		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
-		graph.setMaxLevel((int) graph.getNumberOfNodes());
 
 		graph.save();
 
@@ -3051,7 +3036,6 @@ public class GraphGenerator {
 		graph.addEdge(edge);
 
 		graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
-		graph.setMaxLevel((int) graph.getNumberOfNodes());
 
 		graph.save();
 
