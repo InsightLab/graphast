@@ -250,7 +250,7 @@ public class DijkstraCH {
 		for (long vid : neighbors.keySet()) {
 
 			//TODO <= or < ?
-			if (vid == skippedNode.getId() || graph.getNode(vid).getLevel() < skippedNode.getLevel()) {
+			if (vid == skippedNode.getId()) {
 				continue;
 			}
 			

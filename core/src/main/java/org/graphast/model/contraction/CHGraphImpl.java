@@ -383,7 +383,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 						logger.info("\t\tIgnored because the node {} is already contracted.",
 								this.getNode(this.getEdge(outgoingEdgeId).getToNode()).getExternalId());
-//						continue;
+						continue;
 					} else {
 						logger.info("\t\tIgnored because the source node {} is equal to the destination {}.",
 								this.getNode(this.getEdge(ingoingEdgeId).getFromNode()).getExternalId(),
@@ -628,6 +628,8 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 			}
 
 		}
+		
+		this.save();
 	}
 
 	/**

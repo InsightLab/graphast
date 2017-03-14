@@ -8,6 +8,8 @@ import org.graphast.model.GraphBounds;
 import org.graphast.model.contraction.CHEdge;
 import org.graphast.model.contraction.CHGraph;
 import org.graphast.model.contraction.CHNode;
+import org.graphast.query.route.shortestpath.dijkstrach.BidirectionalDijkstraCH;
+import org.graphast.query.route.shortestpath.model.Path;
 import org.graphast.util.FileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -56,7 +58,7 @@ public class GraphGeneratorTest {
 		for (int i = 0; i < graphhopperExample1.getNumberOfNodes(); i++) {
 			CHNode testNode = graphhopperExample1.getNode(i);
 			System.out.println("nodeID: " + testNode.getExternalId() + ", Latitude: " + testNode.getLatitude()
-					+ ", Longitude: " + testNode.getLongitude() + ", isPoI: " + testNode.getCategory());
+					+ ", Longitude: " + testNode.getLongitude() + ", Level: " + testNode.getLevel());
 		}
 
 		for (int i = 0; i < graphhopperExample1.getNumberOfEdges(); i++) {
@@ -81,6 +83,15 @@ public class GraphGeneratorTest {
 					+ contractedGraphhopperExample1.getNode(testEdge.getToNode()).getExternalId() + ", Distance: "
 					+ testEdge.getDistance());
 		}
+		
+		
+		BidirectionalDijkstraCH bidirectionalDijkstra = new BidirectionalDijkstraCH(graphhopperExample1);
+		
+		Path bidirectionalDijkstraFinalPath = bidirectionalDijkstra.execute(graphhopperExample1.getNode(2), graphhopperExample1.getNode(5));
+		
+		
+		System.out.println("Distancia: " + bidirectionalDijkstraFinalPath.getTotalCost());
+		
 
 	}
 
