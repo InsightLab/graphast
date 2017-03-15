@@ -74,8 +74,8 @@ public class BidirectionalDijkstraTest {
 					+ graphMonaco.getNode(graphMonaco.getEdge(outgoingEdgeId).getToNode()).getLongitude());
 		}
 
-		graphMonaco.prepareNodes();
-		graphMonaco.contractNodes();
+//		graphMonaco.prepareNodes();
+//		graphMonaco.contractNodes();
 
 	}
 
@@ -437,8 +437,7 @@ public class BidirectionalDijkstraTest {
 
 		regularDijkstraSW.start();
 
-		Path regularDijkstraFinalPath = regularDijkstra.shortestPath(graphMonaco.getNode(552),
-				graphMonaco.getNode(484));
+		Path regularDijkstraFinalPath = regularDijkstra.shortestPath(graphMonaco.getNode(552), graphMonaco.getNode(634));
 
 		regularDijkstraSW.stop();
 
@@ -461,8 +460,7 @@ public class BidirectionalDijkstraTest {
 				"Node 484: " + graphMonaco.getNode(484).getLatitude() + ", " + graphMonaco.getNode(484).getLongitude());
 
 		bidirectionalDijkstraSW.start();
-		Path bidirectionalDijkstraFinalPath = bidirectionalDijkstra.execute(graphMonaco.getNode(552),
-				graphMonaco.getNode(634));
+		Path bidirectionalDijkstraFinalPath = bidirectionalDijkstra.execute(graphMonaco.getNode(552), graphMonaco.getNode(634));
 		bidirectionalDijkstraSW.stop();
 
 		logger.info("[BIDIRECTIONAL] Execution Time of regularShortestPathMonacoTest(): {}ms",

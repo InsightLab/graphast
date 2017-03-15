@@ -335,9 +335,10 @@ public class OSMImporterImpl implements Importer {
 
 		GraphStorage gs = gh.getGraph();
 		EdgeIterator edgeIterator = gs.getAllEdges();
-
+		
 		Int2LongOpenHashMap hashExternalIdToId = new Int2LongOpenHashMap();
 		int count = 0;
+		int count2= 0;
 		int countInvalidDirection = 0;
 		int countBidirectional = 0;
 		int countOneWay = 0;
@@ -388,6 +389,7 @@ public class OSMImporterImpl implements Importer {
 			}
 			
 			if(fromNodeId == toNodeId) {
+				count2++;
 				logger.info("Edge not created, because fromNodeId({}) == toNodeId({})", fromNodeId, toNodeId);
 				continue;
 			}
@@ -420,7 +422,7 @@ public class OSMImporterImpl implements Importer {
 			}
 		}
 
-		logger.info("Number of Nodes: {}", graph.getNumberOfNodes());
+		logger.info("Number of Nodes: {}", graph.getNumberOfNodes()); 
 		logger.info("Number of Edges: {}", graph.getNumberOfEdges());
 		logger.info("Count: {}", count);
 		logger.info("Number of invalid direction in original edges: {}", countInvalidDirection);
