@@ -366,7 +366,7 @@ public class GraphGenerator {
 		graph.save();
 		return graph;
 	}
-
+	
 	public CHGraph generateMonacoCHWithPoI() {
 		String osmFile = this.getClass().getResource("/monaco-latest.osm.pbf").getPath();
 		String graphHopperMonacoDir = Configuration.USER_HOME + "/graphhopper/test/monaco";

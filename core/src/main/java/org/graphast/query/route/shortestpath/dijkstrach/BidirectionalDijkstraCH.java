@@ -78,6 +78,9 @@ public class BidirectionalDijkstraCH {
 
 		forwardsRemovedNode = forwardsUnsettleNodes.peek();
 		backwardsRemovedNode = backwardsUnsettleNodes.peek();
+		
+		forwardsParentNodes.put(source.getId(), new RouteEntry(-1, 0, -1, null));
+		backwardsParentNodes.put(target.getId(), new RouteEntry(-1, 0, -1, null));
 
 		while (!forwardsUnsettleNodes.isEmpty() || !backwardsUnsettleNodes.isEmpty()) {
 
@@ -188,9 +191,11 @@ public class BidirectionalDijkstraCH {
 
 		Long2IntMap neighbors = graph.accessNeighborhood(graph.getNode(forwardsRemovedNode.getId()));
 		
+		verifyMeetingNodeForwardSearch(forwardsRemovedNode.getId(), neighbors, true);
+		
 		for (long vid : neighbors.keySet()) {
 
-			verifyMeetingNodeForwardSearch(vid, neighbors);
+			
 			
 			if (graph.getNode(vid).getLevel() < graph.getNode(forwardsRemovedNode.getId()).getLevel()) {
 				System.out.println("\t Vizinho não considerado: " + vid);
@@ -239,18 +244,31 @@ public class BidirectionalDijkstraCH {
 				}
 			}
 
+			verifyMeetingNodeForwardSearch(vid, neighbors, false);
+			
 		}
 	}
 
-	private void verifyMeetingNodeForwardSearch(long vid, Long2IntMap neighbors) {
+	private void verifyMeetingNodeForwardSearch(long vid, Long2IntMap neighbors, boolean test) {
 
-		if (backwardsSettleNodes.containsKey(vid) && (forwardsSettleNodes.get(forwardsRemovedNode.getId())
-				+ neighbors.get(vid) + backwardsSettleNodes.get(vid) < meetingNode.getDistance())) {
-			meetingNode.setId(vid);
-			meetingNode.setDistance(forwardsSettleNodes.get(forwardsRemovedNode.getId()) + neighbors.get(vid)
-					+ backwardsSettleNodes.get(vid));
-			meetingNode.setParent(forwardsRemovedNode.getId());
+		if(test) {
+			if (backwardsSettleNodes.containsKey(vid) && (forwardsSettleNodes.get(forwardsRemovedNode.getId())
+					 + backwardsSettleNodes.get(vid) < meetingNode.getDistance())) {
+				meetingNode.setId(vid);
+				meetingNode.setDistance(forwardsSettleNodes.get(forwardsRemovedNode.getId()) + backwardsSettleNodes.get(vid));
+				meetingNode.setParent(forwardsRemovedNode.getId());
+			}
+		} else {
+			if (backwardsSettleNodes.containsKey(vid) && (forwardsSettleNodes.get(forwardsRemovedNode.getId())
+					+ neighbors.get(vid) + backwardsSettleNodes.get(vid) < meetingNode.getDistance())) {
+				meetingNode.setId(vid);
+				meetingNode.setDistance(forwardsSettleNodes.get(forwardsRemovedNode.getId()) + neighbors.get(vid)
+						+ backwardsSettleNodes.get(vid));
+				meetingNode.setParent(forwardsRemovedNode.getId());
+			}
 		}
+		
+		
 
 	}
 
@@ -258,11 +276,11 @@ public class BidirectionalDijkstraCH {
 
 		Long2IntMap neighbors = this.graph.accessIngoingNeighborhood(this.graph.getNode(backwardsRemovedNode.getId()));
 
-		
+		verifyMeetingNodeBackwardSearch(backwardsRemovedNode.getId(), neighbors, true);
 		
 		for (long vid : neighbors.keySet()) {
 
-			verifyMeetingNodeBackwardSearch(vid, neighbors);
+			
 			
 			if (graph.getNode(vid).getLevel() < graph.getNode(backwardsRemovedNode.getId()).getLevel()) {
 //				verifyMeetingNodeBackwardSearch(vid, neighbors);
@@ -312,18 +330,31 @@ public class BidirectionalDijkstraCH {
 				}
 			}
 
+			verifyMeetingNodeBackwardSearch(vid, neighbors, false);
+			
 		}
 	}
 
-	private void verifyMeetingNodeBackwardSearch(long vid, Long2IntMap neighbors) {
+	private void verifyMeetingNodeBackwardSearch(long vid, Long2IntMap neighbors, boolean test) {
 
-		if (forwardsSettleNodes.containsKey(vid) && (backwardsSettleNodes.get(backwardsRemovedNode.getId())
-				+ neighbors.get(vid) + forwardsSettleNodes.get(vid) < meetingNode.getDistance())) {
-			meetingNode.setId(vid);
-			meetingNode.setDistance(backwardsSettleNodes.get(backwardsRemovedNode.getId()) + neighbors.get(vid)
-					+ forwardsSettleNodes.get(vid));
-			meetingNode.setParent(backwardsRemovedNode.getId());
+		if(test) {
+			if (forwardsSettleNodes.containsKey(vid) && (backwardsSettleNodes.get(backwardsRemovedNode.getId())
+					+  forwardsSettleNodes.get(vid) < meetingNode.getDistance())) {
+				meetingNode.setId(vid);
+				meetingNode.setDistance(backwardsSettleNodes.get(backwardsRemovedNode.getId()) + forwardsSettleNodes.get(vid));
+				meetingNode.setParent(backwardsRemovedNode.getId());
+			}
+		} else {
+			if (forwardsSettleNodes.containsKey(vid) && (backwardsSettleNodes.get(backwardsRemovedNode.getId())
+					+ neighbors.get(vid) + forwardsSettleNodes.get(vid) < meetingNode.getDistance())) {
+				meetingNode.setId(vid);
+				meetingNode.setDistance(backwardsSettleNodes.get(backwardsRemovedNode.getId()) + neighbors.get(vid)
+						+ forwardsSettleNodes.get(vid));
+				meetingNode.setParent(backwardsRemovedNode.getId());
+			}
 		}
+		
+		
 
 	}
 
@@ -340,50 +371,73 @@ public class BidirectionalDijkstraCH {
 
 	HashMap<Long, RouteEntry> resultListOfParents = new HashMap<>();
 
-	if(forwardsParentNodes.isEmpty()) {
-//		RouteEntry nextForwardParent = new RouteEntry(source.getId(), 0, -1, null);
+	long currrentNodeId = meetingNode.getId();
+	RouteEntry nextParent = forwardsParentNodes.get(currrentNodeId);
+	resultListOfParents.put(currrentNodeId, nextParent);
+	currrentNodeId = nextParent.getId();
+	
+	while(forwardsParentNodes.get(currrentNodeId) != null) {
+		nextParent = forwardsParentNodes.get(currrentNodeId);
+		resultListOfParents.put(currrentNodeId, nextParent);
+		currrentNodeId = nextParent.getId();
+	}
+	
+	currrentNodeId = meetingNode.getId();
+	
+	while(backwardsParentNodes.get(currrentNodeId) != null) {
+		nextParent = backwardsParentNodes.get(currrentNodeId);
+		resultListOfParents.put(nextParent.getId(), new RouteEntry(currrentNodeId, nextParent.getCost(), nextParent.getEdgeId(), nextParent.getLabel()));
+		currrentNodeId = nextParent.getId();
+	}
+	
+	
+	
+	
+	
+//	if(forwardsParentNodes.isEmpty()) {
+////		RouteEntry nextForwardParent = new RouteEntry(source.getId(), 0, -1, null);
+////		resultListOfParents.put(meetingNode.getId(), nextForwardParent);
+//	} else {
+//		RouteEntry nextForwardParent = forwardsParentNodes.get(meetingNode.getId());
+//
 //		resultListOfParents.put(meetingNode.getId(), nextForwardParent);
-	} else {
-		RouteEntry nextForwardParent = forwardsParentNodes.get(meetingNode.getId());
-
-		resultListOfParents.put(meetingNode.getId(), nextForwardParent);
-
-		while (forwardsParentNodes.get(nextForwardParent.getId()) != null) {
-
-			resultListOfParents.put(nextForwardParent.getId(), forwardsParentNodes.get(nextForwardParent.getId()));
-
-			nextForwardParent = forwardsParentNodes.get(nextForwardParent.getId());
-
-		}
-
-	}
-
-	if(backwardsParentNodes.isEmpty()) {
-//		RouteEntry nextBackwardsParent = new RouteEntry(meetingNode.getId(), 0, -1, null);
-//		resultListOfParents.put(target.getId(), nextBackwardsParent);
-		
-	} else {
-
-		RouteEntry nextBackwardsParent = new RouteEntry(meetingNode.getId(),
-					backwardsParentNodes.get(meetingNode.getId()).getCost(),
-					backwardsParentNodes.get(meetingNode.getId()).getEdgeId(),
-					backwardsParentNodes.get(meetingNode.getId()).getLabel());
-
-		resultListOfParents.put(backwardsParentNodes.get(meetingNode.getId()).getId(), nextBackwardsParent);
-
-		long nextNodeId = backwardsParentNodes.get(meetingNode.getId()).getId();
-
-		while (backwardsParentNodes.get(nextNodeId) != null) {
-			nextBackwardsParent = new RouteEntry(nextNodeId, backwardsParentNodes.get(nextNodeId).getCost(),
-					backwardsParentNodes.get(nextNodeId).getEdgeId(),
-					backwardsParentNodes.get(nextNodeId).getLabel());
-			nextNodeId = backwardsParentNodes.get(nextNodeId).getId();
-
-			resultListOfParents.put(nextNodeId, nextBackwardsParent);
-
-		}
-
-	}
+//
+//		while (forwardsParentNodes.get(nextForwardParent.getId()) != null) {
+//
+//			resultListOfParents.put(nextForwardParent.getId(), forwardsParentNodes.get(nextForwardParent.getId()));
+//
+//			nextForwardParent = forwardsParentNodes.get(nextForwardParent.getId());
+//
+//		}
+//
+//	}
+//
+//	if(backwardsParentNodes.isEmpty()) {
+////		RouteEntry nextBackwardsParent = new RouteEntry(meetingNode.getId(), 0, -1, null);
+////		resultListOfParents.put(target.getId(), nextBackwardsParent);
+//		
+//	} else {
+//
+//		RouteEntry nextBackwardsParent = new RouteEntry(meetingNode.getId(),
+//					backwardsParentNodes.get(meetingNode.getId()).getCost(),
+//					backwardsParentNodes.get(meetingNode.getId()).getEdgeId(),
+//					backwardsParentNodes.get(meetingNode.getId()).getLabel());
+//
+//		resultListOfParents.put(backwardsParentNodes.get(meetingNode.getId()).getId(), nextBackwardsParent);
+//
+//		long nextNodeId = backwardsParentNodes.get(meetingNode.getId()).getId();
+//
+//		while (backwardsParentNodes.get(nextNodeId) != null) {
+//			nextBackwardsParent = new RouteEntry(nextNodeId, backwardsParentNodes.get(nextNodeId).getCost(),
+//					backwardsParentNodes.get(nextNodeId).getEdgeId(),
+//					backwardsParentNodes.get(nextNodeId).getLabel());
+//			nextNodeId = backwardsParentNodes.get(nextNodeId).getId();
+//
+//			resultListOfParents.put(nextNodeId, nextBackwardsParent);
+//
+//		}
+//
+//	}
 
 	return resultListOfParents;
 

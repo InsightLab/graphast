@@ -29,6 +29,7 @@ public class GraphGeneratorTest {
 
 	private static CHGraph graphhopperExample1;
 	private static CHGraph contractedGraphhopperExample1;
+	private static CHGraph graphMITExample;
 
 	@BeforeClass
 	public static void setup() throws NumberFormatException, IOException {
@@ -44,6 +45,9 @@ public class GraphGeneratorTest {
 		// GraphGenerator().generateGraphHopperExampleWithPoIs();
 		// graphNativeGraphhopper = new
 		// GraphGenerator().generateGraphhopperNativeExample();
+		
+		
+		graphMITExample = new GraphGenerator().generateMITExample();
 		graphhopperExample1 = new GraphGenerator().generateGraphhopperExample1();
 		contractedGraphhopperExample1 = new GraphGenerator().generateContractedGraphhopperExample1();
 	}
@@ -87,10 +91,18 @@ public class GraphGeneratorTest {
 		
 		BidirectionalDijkstraCH bidirectionalDijkstra = new BidirectionalDijkstraCH(graphhopperExample1);
 		
-		Path bidirectionalDijkstraFinalPath = bidirectionalDijkstra.execute(graphhopperExample1.getNode(1), graphhopperExample1.getNode(0));
-		
+		Path bidirectionalDijkstraFinalPath = bidirectionalDijkstra.execute(graphhopperExample1.getNode(5), graphhopperExample1.getNode(4));
 		
 		System.out.println("Distancia: " + bidirectionalDijkstraFinalPath.getTotalCost());
+		
+		
+		
+		BidirectionalDijkstraCH bidirectionalDijkstra2 = new BidirectionalDijkstraCH(graphMITExample);
+		
+		Path bidirectionalDijkstraFinalPath2 = bidirectionalDijkstra2.execute(graphMITExample.getNode(0), graphMITExample.getNode(4));
+		
+		System.out.println("Distancia: " + bidirectionalDijkstraFinalPath2.getTotalCost());
+		
 		
 
 	}
