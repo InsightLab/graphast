@@ -27,9 +27,6 @@ public class BidirectionalDijkstraCH {
 	Node source;
 	Node target;
 
-	int forwardSearchExpanded = 0;
-	int backwardSearchExpanded = 0;
-	
 	Path path;
 
 	PriorityQueue<DistanceEntry> forwardsUnsettleNodes = new PriorityQueue<>();
@@ -145,13 +142,6 @@ public class BidirectionalDijkstraCH {
 		forwardsSettleNodes.put(forwardsRemovedNode.getId(), forwardsRemovedNode.getDistance());
 		numberOfForwardSettleNodes++;
 		
-		if(forwardsRemovedNode.getId() == target.getId() && backwardSearchExpanded == 2) {
-			meetingNode.setId(target.getId());
-			meetingNode.setDistance(forwardsRemovedNode.getDistance());
-			meetingNode.setParent(forwardsRemovedNode.getParent());
-		}
-		
-
 		System.out.println("Nó sendo analizado: " + forwardsRemovedNode.getId());
 
 		expandVertexForward();
@@ -190,12 +180,6 @@ public class BidirectionalDijkstraCH {
 		backwardsSettleNodes.put(backwardsRemovedNode.getId(), backwardsRemovedNode.getDistance());
 		numberOfBackwardSettleNodes++;
 
-		if(backwardsRemovedNode.getId() == target.getId() && forwardSearchExpanded == 2) {
-			meetingNode.setId(source.getId());
-			meetingNode.setDistance(backwardsRemovedNode.getDistance());
-			meetingNode.setParent(backwardsRemovedNode.getParent());
-		}
-		
 		expandVertexBackward();
 
 	}
@@ -206,12 +190,13 @@ public class BidirectionalDijkstraCH {
 		
 		for (long vid : neighbors.keySet()) {
 
+			verifyMeetingNodeForwardSearch(vid, neighbors);
+			
 			if (graph.getNode(vid).getLevel() < graph.getNode(forwardsRemovedNode.getId()).getLevel()) {
 				System.out.println("\t Vizinho não considerado: " + vid);
-				forwardSearchExpanded = 2;
 				continue;
 			}
-			forwardSearchExpanded = 1;
+
 			System.out.println("\t Vizinho considerado: " + vid);
 			DistanceEntry newEntry = new DistanceEntry(vid, neighbors.get(vid) + forwardsRemovedNode.getDistance(),
 					forwardsRemovedNode.getId());
@@ -254,8 +239,6 @@ public class BidirectionalDijkstraCH {
 				}
 			}
 
-			verifyMeetingNodeForwardSearch(vid, neighbors);
-			
 		}
 	}
 
@@ -275,16 +258,18 @@ public class BidirectionalDijkstraCH {
 
 		Long2IntMap neighbors = this.graph.accessIngoingNeighborhood(this.graph.getNode(backwardsRemovedNode.getId()));
 
+		
+		
 		for (long vid : neighbors.keySet()) {
 
+			verifyMeetingNodeBackwardSearch(vid, neighbors);
+			
 			if (graph.getNode(vid).getLevel() < graph.getNode(backwardsRemovedNode.getId()).getLevel()) {
 //				verifyMeetingNodeBackwardSearch(vid, neighbors);
 				System.out.println("\t Vizinho não considerado: " + vid);
-				backwardSearchExpanded = 2;
 				continue;
 			}
 
-			backwardSearchExpanded = 1;
 			DistanceEntry newEntry = new DistanceEntry(vid, neighbors.get(vid) + backwardsRemovedNode.getDistance(),
 					backwardsRemovedNode.getId());
 
@@ -326,8 +311,6 @@ public class BidirectionalDijkstraCH {
 
 				}
 			}
-
-			verifyMeetingNodeBackwardSearch(vid, neighbors);
 
 		}
 	}

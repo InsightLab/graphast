@@ -87,7 +87,7 @@ public class GraphGeneratorTest {
 		
 		BidirectionalDijkstraCH bidirectionalDijkstra = new BidirectionalDijkstraCH(graphhopperExample1);
 		
-		Path bidirectionalDijkstraFinalPath = bidirectionalDijkstra.execute(graphhopperExample1.getNode(2), graphhopperExample1.getNode(5));
+		Path bidirectionalDijkstraFinalPath = bidirectionalDijkstra.execute(graphhopperExample1.getNode(1), graphhopperExample1.getNode(0));
 		
 		
 		System.out.println("Distancia: " + bidirectionalDijkstraFinalPath.getTotalCost());
