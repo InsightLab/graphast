@@ -100,23 +100,18 @@ public class GraphGeneratorTest {
 		
 		
 		
-		BidirectionalDijkstraCH bidirectionalDijkstra2 = new BidirectionalDijkstraCH(graphMITExample);
-		
-		Path bidirectionalDijkstraFinalPath2 = bidirectionalDijkstra2.execute(graphMITExample.getNode(0), graphMITExample.getNode(4));
-		
-		System.out.println("Distancia: " + bidirectionalDijkstraFinalPath2.getTotalCost());
-		
-		
-		
-		
-		
-		
-		
-		BidirectionalDijkstraCH bidirectionalDijkstra3 = new BidirectionalDijkstraCH(graphHopperExample4);
-		
-		Path bidirectionalDijkstraFinalPath3 = bidirectionalDijkstra3.execute(graphHopperExample4.getNode(1), graphHopperExample4.getNode(26));
-		
-		System.out.println("Distancia: " + bidirectionalDijkstraFinalPath3.getTotalCost());
+//		BidirectionalDijkstraCH bidirectionalDijkstra2 = new BidirectionalDijkstraCH(graphMITExample);
+//		
+//		Path bidirectionalDijkstraFinalPath2 = bidirectionalDijkstra2.execute(graphMITExample.getNode(0), graphMITExample.getNode(4));
+//		
+//		System.out.println("Distancia: " + bidirectionalDijkstraFinalPath2.getTotalCost());
+//
+//		
+//		BidirectionalDijkstraCH bidirectionalDijkstra3 = new BidirectionalDijkstraCH(graphHopperExample4);
+//		
+//		Path bidirectionalDijkstraFinalPath3 = bidirectionalDijkstra3.execute(graphHopperExample4.getNode(1), graphHopperExample4.getNode(26));
+//		
+//		System.out.println("Distancia: " + bidirectionalDijkstraFinalPath3.getTotalCost());
 		
 
 	}

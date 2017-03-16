@@ -260,6 +260,32 @@ public class GraphGenerator {
 
 		return graph;
 	}
+	
+	public CHGraph generateTinyMonacoCH() {
+		String osmFile = this.getClass().getResource("/tiny-monaco.osm.pbf").getPath();
+		String graphHopperTinyMonacoDir = Configuration.USER_HOME + "/graphhopper/test/tiny-monaco";
+		String graphastTinyMonacoDir = Configuration.USER_HOME + "/graphast/test/tiny-monaco";
+
+		CHGraph graph = new OSMImporterImpl(osmFile, graphHopperTinyMonacoDir, graphastTinyMonacoDir).executeCH();
+
+		// POIImporter.importPoIList(graph,
+		// "src/test/resources/monaco-latest.csv");
+		//
+		// System.out.println("#nodes: " + graph.getNumberOfNodes());
+		// System.out.println("#edges: " + graph.getNumberOfEdges());
+
+		// graph.createHyperPOIS();
+
+		// System.out.println("#nodes: " + graph.getNumberOfNodes());
+		// System.out.println("#edges: " + graph.getNumberOfEdges());
+		//
+		// graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
+		// graph.setMaxLevel((int) (graph.getNumberOfNodes() + 1));
+
+		graph.save();
+
+		return graph;
+	}
 
 	// generateToyGraphhopperGraph1
 	public CHGraph generateContractedGraphhopperExample1() {
