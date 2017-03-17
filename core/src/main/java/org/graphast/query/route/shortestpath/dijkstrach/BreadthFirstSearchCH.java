@@ -28,10 +28,10 @@ public class BreadthFirstSearchCH {
 
 	Queue<Long> forwardUnsettleNodes = new LinkedList<>();
 	Queue<Long> backwardUnsettleNodes = new LinkedList<>();
-	
+
 	Queue<Long> forwardsSettleNodes = new LinkedList<>();
 	Queue<Long> backwardsSettleNodes = new LinkedList<>();
-	
+
 	Node source;
 	Node target;
 
@@ -39,8 +39,6 @@ public class BreadthFirstSearchCH {
 
 	HashMap<Long, Integer> forwardsUnsettleNodesAux = new HashMap<>();
 	HashMap<Long, Integer> backwardsUnsettleNodesAux = new HashMap<>();
-
-	
 
 	HashMap<Long, RouteEntry> forwardsParentNodes = new HashMap<>();
 	HashMap<Long, RouteEntry> backwardsParentNodes = new HashMap<>();
@@ -61,58 +59,106 @@ public class BreadthFirstSearchCH {
 
 	}
 
-	private void forwardSearch() {
+	public void executeNaiveBFS(Node source, Node target) {
 
-		// Stopping criteria of Bidirectional search
-		if (meetingNode != -1) {
-			System.out.println("Caminho encontrado!");
-			return;
+		this.setSource(source);
+		this.setTarget(target);
+
+		forwardUnsettleNodes.add(source.getId());
+		backwardUnsettleNodes.add(target.getId());
+
+		boolean doForwardSearch = true;
+		boolean pathFound = false;
+		while (!forwardUnsettleNodes.isEmpty() || !backwardUnsettleNodes.isEmpty()) {
+
+			// Condition to alternate between forward and backward search
+			if (forwardUnsettleNodes.isEmpty()) {
+				if (backwardSearch()) {
+					pathFound = true;
+					break;
+				}
+			} else if (backwardUnsettleNodes.isEmpty()) {
+				if (forwardSearch()) {
+					pathFound = true;
+					break;
+				}
+			} else {
+				if (doForwardSearch) {
+					if (forwardSearch()) {
+						pathFound = true;
+						break;
+					}
+					doForwardSearch = false;
+				} else {
+					if (backwardSearch()) {
+						pathFound = true;
+						break;
+					}
+					doForwardSearch = true;
+				}
+			}
 		}
+		if (!pathFound) {
+			System.out.println("Caminho não encontrado!");
+		}
+	}
+
+	private boolean forwardSearch() {
 
 		forwardsRemovedNode = forwardUnsettleNodes.poll();
 		forwardsSettleNodes.add(forwardsRemovedNode);
 		numberOfForwardSettleNodes++;
-		
+
 		System.out.println("Nó sendo analizado: " + forwardsRemovedNode);
 
 		expandVertexForward();
 
-	}
-
-	private void backwardSearch() {
-		
 		// Stopping criteria of Bidirectional search
 		if (meetingNode != -1) {
 			System.out.println("Caminho encontrado!");
-			return;
+			return true;
 		}
-		
+
+		return false;
+
+	}
+
+	private boolean backwardSearch() {
+
 		backwardsRemovedNode = backwardUnsettleNodes.poll();
 		backwardsSettleNodes.add(backwardsRemovedNode);
 		numberOfBackwardSettleNodes++;
 
 		System.out.println("Nó sendo analizado: " + backwardsRemovedNode);
-		
+
 		expandVertexBackward();
+
+		// Stopping criteria of Bidirectional search
+		if (meetingNode != -1) {
+			System.out.println("Caminho encontrado!");
+			return true;
+		}
+
+		return false;
 
 	}
 
 	private void expandVertexForward() {
 
 		Long2IntMap neighbors = graph.accessNeighborhood(graph.getNode(forwardsRemovedNode));
-		
+
 		verifyMeetingNodeForwardSearch(forwardsRemovedNode);
-		
+
 		for (long vid : neighbors.keySet()) {
 
 			if (graph.getNode(vid).getLevel() < graph.getNode(forwardsRemovedNode).getLevel()) {
 				System.out.println("\t Vizinho não considerado: " + vid);
 				continue;
 			}
-			
+
 			System.out.println("\t Vizinho considerado: " + vid);
 			forwardUnsettleNodes.add(vid);
-			
+
 		}
 	}
 
@@ -120,7 +166,7 @@ public class BreadthFirstSearchCH {
 
 		if (backwardsSettleNodes.contains(vid)) {
 			meetingNode = (int) vid;
-			System.out.println("Meeting node encontrado na busca forward");
+			System.out.println("Meeting node encontrado na busca forward: " + meetingNode);
 		}
 
 	}
@@ -130,14 +176,14 @@ public class BreadthFirstSearchCH {
 		Long2IntMap neighbors = this.graph.accessIngoingNeighborhood(this.graph.getNode(backwardsRemovedNode));
 
 		verifyMeetingNodeBackwardSearch(backwardsRemovedNode);
-		
+
 		for (long vid : neighbors.keySet()) {
-			
+
 			if (graph.getNode(vid).getLevel() < graph.getNode(backwardsRemovedNode).getLevel()) {
 				System.out.println("\t Vizinho não considerado: " + vid);
 				continue;
 			}
-			
+
 			System.out.println("\t Vizinho considerado: " + vid);
 			backwardUnsettleNodes.add(vid);
 
@@ -148,7 +194,7 @@ public class BreadthFirstSearchCH {
 
 		if (forwardsSettleNodes.contains(vid)) {
 			meetingNode = (int) vid;
-			System.out.println("Meeting node encontrado na busca backward");
+			System.out.println("Meeting node encontrado na busca backward: " + meetingNode);
 		}
 
 	}
@@ -172,38 +218,5 @@ public class BreadthFirstSearchCH {
 	public int getNumberOfRegularSearches() {
 		return numberOfRegularSearches;
 	}
-	
-	
-	
-	public Path executeNaiveBFS(Node source, Node target) {
-		
-		this.setSource(source);
-		this.setTarget(target);
-		
-		forwardUnsettleNodes.add(source.getId());
-		backwardUnsettleNodes.add(target.getId());
-
-		boolean doForwardSearch = true;
-
-		while (!forwardUnsettleNodes.isEmpty() || !backwardUnsettleNodes.isEmpty()) {
-
-			// Condition to alternate between forward and backward search
-			if(doForwardSearch) {
-				forwardSearch();
-				doForwardSearch = false;
-			} else {
-				backwardSearch();
-				doForwardSearch = true;
-			}
-			
-		}
-
-		throw new PathNotFoundException("Path not found between (" + source.getLatitude() + "," + source.getLongitude()
-		+ ") and (" + target.getLatitude() + "," + target.getLongitude() + ")");
-	}
-	
-	
-	
-	
 
 }

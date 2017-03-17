@@ -1,7 +1,5 @@
 package org.graphast.query.route.shortestpath;
 
-import static org.junit.Assert.assertEquals;
-
 import org.graphast.graphgenerator.GraphGenerator;
 import org.graphast.model.contraction.CHGraph;
 import org.graphast.query.route.shortestpath.dijkstra.Dijkstra;
@@ -13,8 +11,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.graphhopper.util.StopWatch;
 
 public class BidirectionalDijkstraTest {
 
@@ -58,43 +54,43 @@ public class BidirectionalDijkstraTest {
 	@Test
 	public void graphTest() {
 
-		CHGraph testGraph = graphHopperExample;
+		CHGraph testGraph = graphMonaco;
 		
 		testGraph.prepareNodes();
 		testGraph.contractNodes();
 
-		for(int i=0; i<testGraph.getNumberOfNodes(); i++) {
-			for(int j=0; j<testGraph.getNumberOfNodes(); j++) {
-				
-				if(i==j) continue;
-				
-				Dijkstra regularDijkstra = new DijkstraConstantWeight(testGraph);
-				
-				try {
-					Path regularDijkstraFinalPath = regularDijkstra.shortestPath(testGraph.getNode(i), testGraph.getNode(j));
-					System.out.println("[REGULAR DIJKSTRA] Path distance between " + i + " and " + j + ": " + regularDijkstraFinalPath.getTotalDistance());
-				} catch (Exception e) {
-					System.out.println("[REGULAR DIJKSTRA] Path NOT FOUND between " + i + " and " + j);
-				}
-			}
-		}
-		
-		for(int i=0; i<testGraph.getNumberOfNodes(); i++) {
-			for(int j=0; j<testGraph.getNumberOfNodes(); j++) {
-				
-				if(i==j) continue;
-				
-				BidirectionalDijkstraCH bidirectionalDijkstra = new BidirectionalDijkstraCH(testGraph);
-				
-				try {
-					Path bidirectionalDijkstraFinalPath = bidirectionalDijkstra.execute(testGraph.getNode(i), testGraph.getNode(j));
-					System.out.println("[BIDIRECTIONAL DIJKSTRA] Path distance between " + i + " and " + j + ": " + bidirectionalDijkstraFinalPath.getTotalDistance());
-				} catch (Exception e) {
-					System.out.println("[BIDIRECTIONAL DIJKSTRA] Path NOT FOUND between " + i + " and " + j);
-				}
-			}
-		}
-		
+//		for(int i=0; i<testGraph.getNumberOfNodes(); i++) {
+//			for(int j=0; j<testGraph.getNumberOfNodes(); j++) {
+//				
+//				if(i==j) continue;
+//				
+//				Dijkstra regularDijkstra = new DijkstraConstantWeight(testGraph);
+//				
+//				try {
+//					Path regularDijkstraFinalPath = regularDijkstra.shortestPath(testGraph.getNode(i), testGraph.getNode(j));
+//					System.out.println("[REGULAR DIJKSTRA] Path distance between " + i + " and " + j + ": " + regularDijkstraFinalPath.getTotalDistance());
+//				} catch (Exception e) {
+//					System.out.println("[REGULAR DIJKSTRA] Path NOT FOUND between " + i + " and " + j);
+//				}
+//			}
+//		}
+//		
+//		for(int i=0; i<testGraph.getNumberOfNodes(); i++) {
+//			for(int j=0; j<testGraph.getNumberOfNodes(); j++) {
+//				
+//				if(i==j) continue;
+//				
+//				BidirectionalDijkstraCH bidirectionalDijkstra = new BidirectionalDijkstraCH(testGraph);
+//				
+//				try {
+//					Path bidirectionalDijkstraFinalPath = bidirectionalDijkstra.execute(testGraph.getNode(i), testGraph.getNode(j));
+//					System.out.println("[BIDIRECTIONAL DIJKSTRA] Path distance between " + i + " and " + j + ": " + bidirectionalDijkstraFinalPath.getTotalDistance());
+//				} catch (Exception e) {
+//					System.out.println("[BIDIRECTIONAL DIJKSTRA] Path NOT FOUND between " + i + " and " + j);
+//				}
+//			}
+//		}
+//		
 		for(int i=0; i<testGraph.getNumberOfNodes(); i++) {
 			for(int j=0; j<testGraph.getNumberOfNodes(); j++) {
 				
@@ -111,14 +107,16 @@ public class BidirectionalDijkstraTest {
 			}
 		}
 		
-//		BidirectionalDijkstraCH bidirectionalDijkstra = new BidirectionalDijkstraCH(testGraph);
+//		BreadthFirstSearchCH breadFirstSearch = new BreadthFirstSearchCH(testGraph);
 //		
 //		long i = testGraph.getNearestNode(43.72842465479131, 7.414896579419745).getId();
 //		long j = testGraph.getNearestNode(43.727428512143234, 7.422287369272576).getId();
 //		
+//		breadFirstSearch.executeNaiveBFS(testGraph.getNode(i), testGraph.getNode(j));
+//		
 //		try {
-//			Path bidirectionalDijkstraFinalPath = bidirectionalDijkstra.execute(testGraph.getNode(i), testGraph.getNode(j));
-//			System.out.println("[BIDIRECTIONAL DIJKSTRA] Path distance between " + i + " and " + j + ": " + bidirectionalDijkstraFinalPath.getTotalDistance());
+//			breadFirstSearch.executeNaiveBFS(testGraph.getNode(i), testGraph.getNode(j));
+//			System.out.println("[BIDIRECTIONAL DIJKSTRA] Path distance between " + i + " and " + j + ": ");
 //		} catch (Exception e) {
 //			System.out.println("[BIDIRECTIONAL DIJKSTRA] Path NOT FOUND between " + i + " and " + j);
 //		}
