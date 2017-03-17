@@ -42,7 +42,15 @@ public class CHNodeImpl extends NodeImpl implements CHNode, Comparable<CHNodeImp
 	public int compareTo(CHNodeImpl np) {
 
 //		return Integer.valueOf(np.priority).compareTo(priority);
-		return Integer.valueOf(priority).compareTo(np.priority);
+		
+		int test = Integer.valueOf(priority).compareTo(np.priority);
+		
+		if(test == 0) {
+//			return Long.compare(this.getId(), np.getId());
+			return Long.compare(this.getExternalId(), np.getExternalId());
+		}
+		
+		return test;
 
 	}
 

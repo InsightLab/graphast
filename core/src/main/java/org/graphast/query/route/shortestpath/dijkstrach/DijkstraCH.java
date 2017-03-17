@@ -112,6 +112,7 @@ public class DijkstraCH {
 			//TODO Double check if put the expandVertex here is correct.
 			expandVertex(removed, queue, parents, wasTraversed, skippedNode);
 			
+//			if(wasTraversed.containsKey(targetId) && wasTraversed.get(targetId)==-1) {
 			if (queue.peek().getId() == targetId) {
 				Path path = new Path();
 				path.constructPath(queue.peek().getId(), parents, graph);

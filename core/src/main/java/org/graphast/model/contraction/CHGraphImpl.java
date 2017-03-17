@@ -512,7 +512,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 			counter++;
 			CHNode polledNode = sortedNodesQueue.poll();
-			System.out.println("NODE BEING CONTRACTED: " + polledNode.getExternalId());
+			System.out.println("NODE BEING CONTRACTED: " + polledNode.getExternalId() + ". Priority: " + polledNode.getPriority());
 			// logger.debug("[CONTRACTING] NodeID {}. Priority: {}",
 			// polledNode.getId(), polledNode.getPriority());
 

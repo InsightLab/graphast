@@ -90,36 +90,34 @@ public class BidirectionalDijkstraTest {
 //				}
 //			}
 //		}
-//		
-		for(int i=0; i<testGraph.getNumberOfNodes(); i++) {
-			for(int j=0; j<testGraph.getNumberOfNodes(); j++) {
-				
-				if(i==j) continue;
-				
-				BreadthFirstSearchCH breadFirstSearch = new BreadthFirstSearchCH(testGraph);
-				
-				try {
-					breadFirstSearch.executeNaiveBFS(testGraph.getNode(i), testGraph.getNode(j));
-					System.out.println("[BREADTH-FIRST SEARCH] Path FOUND between " + i + " and " + j);
-				} catch (Exception e) {
-					System.out.println("[BREADTH-FIRST SEARCH] Path NOT FOUND between " + i + " and " + j);
-				}
-			}
-		}
 		
-//		BreadthFirstSearchCH breadFirstSearch = new BreadthFirstSearchCH(testGraph);
-//		
+//		for(int i=0; i<testGraph.getNumberOfNodes(); i++) {
+//			for(int j=0; j<testGraph.getNumberOfNodes(); j++) {
+//				
+//				if(i==j) continue;
+//				
+//				BreadthFirstSearchCH breadFirstSearch = new BreadthFirstSearchCH(testGraph);
+//				
+//				try {
+//					breadFirstSearch.executeNaiveBFS(testGraph.getNode(i), testGraph.getNode(j));
+//					System.out.println("[BREADTH-FIRST SEARCH] Path FOUND between " + i + " and " + j);
+//				} catch (Exception e) {
+//					System.out.println("[BREADTH-FIRST SEARCH] Path NOT FOUND between " + i + " and " + j);
+//				}
+//			}
+//		}
+		
+		BidirectionalDijkstraCH bidirectionalDijkstra = new BidirectionalDijkstraCH(testGraph);
+		
 //		long i = testGraph.getNearestNode(43.72842465479131, 7.414896579419745).getId();
 //		long j = testGraph.getNearestNode(43.727428512143234, 7.422287369272576).getId();
-//		
-//		breadFirstSearch.executeNaiveBFS(testGraph.getNode(i), testGraph.getNode(j));
-//		
-//		try {
-//			breadFirstSearch.executeNaiveBFS(testGraph.getNode(i), testGraph.getNode(j));
-//			System.out.println("[BIDIRECTIONAL DIJKSTRA] Path distance between " + i + " and " + j + ": ");
-//		} catch (Exception e) {
-//			System.out.println("[BIDIRECTIONAL DIJKSTRA] Path NOT FOUND between " + i + " and " + j);
-//		}
+		
+		try {
+			Path bidirectionalDijkstraFinalPath = bidirectionalDijkstra.execute(testGraph.getNode(552), testGraph.getNode(748));
+			System.out.println("[BIDIRECTIONAL DIJKSTRA] Path distance between " + 552 + " and " + 276 + ": ");
+		} catch (Exception e) {
+			System.out.println("[BIDIRECTIONAL DIJKSTRA] Path NOT FOUND between " + 552 + " and " + 276);
+		}
 		
 	}
 	

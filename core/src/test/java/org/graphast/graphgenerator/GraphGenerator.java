@@ -260,7 +260,7 @@ public class GraphGenerator {
 
 		return graph;
 	}
-	
+
 	public CHGraph generateTinyMonacoCH() {
 		String osmFile = this.getClass().getResource("/tiny-monaco.osm.pbf").getPath();
 		String graphHopperTinyMonacoDir = Configuration.USER_HOME + "/graphhopper/test/tiny-monaco";
@@ -344,6 +344,146 @@ public class GraphGenerator {
 		return graph;
 	}
 
+	// generateToyGraphhopperGraph1
+	public CHGraph generateContractedGraphhopperExample4() {
+
+		EncodingManager encodingManager = new EncodingManager("car");
+		GraphBuilder gb = new GraphBuilder(encodingManager);
+		LevelGraphStorage graphStorage = gb.levelGraphCreate();
+
+		NodeAccess na = graphStorage.getNodeAccess();
+		na.setNode(0, 0, 2);
+		na.setNode(1, 0, 1);
+		na.setNode(2, 0, 4);
+		na.setNode(3, 0, 3);
+		na.setNode(4, 0, 5);
+		na.setNode(5, 1, 1);
+		na.setNode(6, 0, 2);
+		na.setNode(7, 0, 1);
+		na.setNode(8, 0, 4);
+		na.setNode(9, 0, 3);
+		na.setNode(10, 0, 5);
+		na.setNode(11, 0, 2);
+		na.setNode(12, 0, 1);
+		na.setNode(13, 0, 4);
+		na.setNode(14, 0, 3);
+		na.setNode(15, 0, 5);
+		na.setNode(16, 1, 1);
+		na.setNode(17, 0, 2);
+		na.setNode(18, 0, 1);
+		na.setNode(19, 0, 4);
+		na.setNode(20, 0, 3);
+		na.setNode(21, 0, 5);
+		na.setNode(22, 0, 2);
+		na.setNode(23, 0, 1);
+		na.setNode(24, 0, 4);
+		na.setNode(25, 0, 3);
+		na.setNode(26, 0, 5);
+		na.setNode(27, 1, 1);
+		na.setNode(28, 0, 2);
+		na.setNode(29, 0, 1);
+		na.setNode(30, 0, 4);
+		na.setNode(31, 0, 3);
+		
+		
+
+		graphStorage.edge(16, 0, 1, false);
+		graphStorage.edge(0, 16, 1, false);
+		graphStorage.edge(0, 9, 1, false);
+		graphStorage.edge(9, 0, 1, false);
+		graphStorage.edge(0, 17, 1, false);
+		graphStorage.edge(17, 0, 1, false);
+		graphStorage.edge(9, 10, 1, false);
+		graphStorage.edge(10, 9, 1, false);
+		graphStorage.edge(10, 11, 1, false);
+		graphStorage.edge(11, 10, 1, false);
+		graphStorage.edge(11, 28, 1, false);
+		graphStorage.edge(28, 11, 1, false);
+		graphStorage.edge(28, 29, 1, false);
+		graphStorage.edge(29, 28, 1, false);
+		graphStorage.edge(29, 30, 1, false);
+		graphStorage.edge(30, 29, 1, false);
+		graphStorage.edge(30, 31, 1, false);
+		graphStorage.edge(31, 30, 1, false);
+		graphStorage.edge(31, 4, 1, false);
+		graphStorage.edge(4, 31, 1, false);
+
+		graphStorage.edge(17, 1, 1, false);
+		graphStorage.edge(1, 17, 1, false);
+		graphStorage.edge(15, 1, 1, false);
+		graphStorage.edge(1, 15, 1, false);
+		graphStorage.edge(14, 1, 1, false);
+		graphStorage.edge(1, 14, 1, false);
+		graphStorage.edge(14, 18, 1, false);
+		graphStorage.edge(18, 14, 1, false);
+		graphStorage.edge(18, 19, 1, false);
+		graphStorage.edge(19, 18, 1, false);
+		graphStorage.edge(19, 20, 1, false);
+		graphStorage.edge(20, 19, 1, false);
+		graphStorage.edge(20, 15, 1, false);
+		graphStorage.edge(15, 20, 1, false);
+		graphStorage.edge(19, 21, 1, false);
+		graphStorage.edge(21, 19, 1, false);
+		graphStorage.edge(21, 16, 1, false);
+		graphStorage.edge(16, 21, 1, false);
+		graphStorage.edge(1, 2, 1, false);
+		graphStorage.edge(2, 1, 1, false);
+		graphStorage.edge(2, 3, 1, false);
+		graphStorage.edge(3, 2, 1, false);
+		graphStorage.edge(3, 4, 1, false);
+		graphStorage.edge(4, 3, 1, false);
+
+		graphStorage.edge(4, 5, 1, false);
+		graphStorage.edge(5, 6, 1, false);
+		graphStorage.edge(6, 7, 1, false);
+		graphStorage.edge(7, 13, 1, false);
+		graphStorage.edge(13, 12, 1, false);
+		graphStorage.edge(12, 4, 1, false);
+
+		graphStorage.edge(7, 8, 1, false);
+		graphStorage.edge(8, 7, 1, false);
+		graphStorage.edge(8, 22, 1, false);
+		graphStorage.edge(22, 8, 1, false);
+		graphStorage.edge(22, 23, 1, false);
+		graphStorage.edge(23, 22, 1, false);
+		graphStorage.edge(23, 24, 1, false);
+		graphStorage.edge(24, 23, 1, false);
+		graphStorage.edge(24, 25, 1, false);
+		graphStorage.edge(25, 24, 1, false);
+		graphStorage.edge(25, 27, 1, false);
+		graphStorage.edge(27, 25, 1, false);
+		graphStorage.edge(27, 5, 1, false);
+		graphStorage.edge(5, 27, 1, false);
+		graphStorage.edge(25, 26, 1, false);
+		graphStorage.edge(26, 25, 1, false);
+
+		// this.printGraphhopperGraph(graphStorage.getAllEdges());
+
+		PrepareContractionHierarchies pch = new PrepareContractionHierarchies(encodingManager.getEncoder("car"),
+				new ShortestWeighting());
+		pch.setGraph(graphStorage);
+		pch.doWork();
+
+		// this.printGraphhopperGraph(graphStorage.getAllEdges());
+
+		GraphHopper gh = new GraphHopper();
+		gh.loadGraph((LevelGraphStorage) pch.getG());
+
+		// TODO Change the location and use config.properties
+		String graphHopperTestDir = Configuration.USER_HOME + "/graphhopper/test/contractedGraphhopperExample4";
+		String graphastTestDir = Configuration.USER_HOME + "/graphast/test/contractedGraphhopperExample4";
+
+		// Object that will perform the importation from graphHopper to Graphast
+		OSMImporterImpl osmImporter = new OSMImporterImpl();
+		osmImporter.setGraphastDir(graphastTestDir);
+		osmImporter.setGraphHopperDir(graphHopperTestDir);
+
+		CHGraph graph = osmImporter.executeCH(gh);
+
+		graph.save();
+		return graph;
+	}
+
 	public CHGraph generateGraphhopperExample1() {
 
 		EncodingManager encodingManager = new EncodingManager("car");
@@ -392,7 +532,7 @@ public class GraphGenerator {
 		graph.save();
 		return graph;
 	}
-	
+
 	public CHGraph generateMonacoCHWithPoI() {
 		String osmFile = this.getClass().getResource("/monaco-latest.osm.pbf").getPath();
 		String graphHopperMonacoDir = Configuration.USER_HOME + "/graphhopper/test/monaco";

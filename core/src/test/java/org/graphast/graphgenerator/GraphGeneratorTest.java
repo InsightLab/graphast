@@ -31,10 +31,13 @@ public class GraphGeneratorTest {
 	private static CHGraph contractedGraphhopperExample1;
 	private static CHGraph graphMITExample;
 	private static CHGraph graphHopperExample4;
+	private static CHGraph graphhopperExample4;
+	private static CHGraph contractedGraphhopperExample4;
+	
 
 	@BeforeClass
 	public static void setup() throws NumberFormatException, IOException {
-		 graphMonaco = new GraphGenerator().generateMonaco();
+//		 graphMonaco = new GraphGenerator().generateMonaco();
 		//// graphWashington = new GraphGenerator().generateWashington();
 		// graphExample = new GraphGenerator().generateExample();
 		// graphExample2 = new GraphGenerator().generateExample2();
@@ -48,9 +51,12 @@ public class GraphGeneratorTest {
 		// GraphGenerator().generateGraphhopperNativeExample();
 		
 		
-		graphMITExample = new GraphGenerator().generateMITExample();
 		graphhopperExample1 = new GraphGenerator().generateGraphhopperExample1();
 		contractedGraphhopperExample1 = new GraphGenerator().generateContractedGraphhopperExample1();
+		graphhopperExample4 = new GraphGenerator().generateGraphHopperExample4();
+		contractedGraphhopperExample4 = new GraphGenerator().generateContractedGraphhopperExample4();
+		
+		
 		graphHopperExample4 = new GraphGenerator().generateGraphHopperExample4();
 		
 	}
@@ -58,45 +64,49 @@ public class GraphGeneratorTest {
 	@Test
 	public void compareGraphhopperExample1() {
 
-		graphhopperExample1.prepareNodes();
-		graphhopperExample1.contractNodes();
+		CHGraph testGraphGraphhopper = contractedGraphhopperExample4;
+		
+		CHGraph testGraph = graphhopperExample4;
+		
+		testGraph.prepareNodes();
+		testGraph.contractNodes();
 
 		System.out.println("Print the graph contracted by GRAPHAST!");
-		for (int i = 0; i < graphhopperExample1.getNumberOfNodes(); i++) {
-			CHNode testNode = graphhopperExample1.getNode(i);
+		for (int i = 0; i < testGraph.getNumberOfNodes(); i++) {
+			CHNode testNode = testGraph.getNode(i);
 			System.out.println("nodeID: " + testNode.getExternalId() + ", Latitude: " + testNode.getLatitude()
 					+ ", Longitude: " + testNode.getLongitude() + ", Level: " + testNode.getLevel());
 		}
 
-		for (int i = 0; i < graphhopperExample1.getNumberOfEdges(); i++) {
-			CHEdge testEdge = contractedGraphhopperExample1.getEdge(i);
+		for (int i = 0; i < testGraph.getNumberOfEdges(); i++) {
+			CHEdge testEdge = testGraph.getEdge(i);
 			System.out.println("edgeID: " + testEdge.getExternalId() + ", From: "
-					+ graphhopperExample1.getNode(testEdge.getFromNode()).getExternalId() + ", To: "
-					+ graphhopperExample1.getNode(testEdge.getToNode()).getExternalId() + ", Distance: "
+					+ testGraph.getNode(testEdge.getFromNode()).getExternalId() + ", To: "
+					+ testGraph.getNode(testEdge.getToNode()).getExternalId() + ", Distance: "
 					+ testEdge.getDistance() + ", isShortcut: " + testEdge.isShortcut());
 		}
 
 		System.out.println("Print the graph contracted by GRAPHHOPPER!");
-		for (int i = 0; i < contractedGraphhopperExample1.getNumberOfNodes(); i++) {
-			CHNode testNode = contractedGraphhopperExample1.getNode(i);
+		for (int i = 0; i < testGraphGraphhopper.getNumberOfNodes(); i++) {
+			CHNode testNode = testGraphGraphhopper.getNode(i);
 			System.out.println("nodeID: " + testNode.getExternalId() + ", Latitude: " + testNode.getLatitude()
 					+ ", Longitude: " + testNode.getLongitude() + ", isPoI: " + testNode.getCategory());
 		}
 
-		for (int i = 0; i < contractedGraphhopperExample1.getNumberOfEdges(); i++) {
-			CHEdge testEdge = contractedGraphhopperExample1.getEdge(i);
+		for (int i = 0; i < testGraphGraphhopper.getNumberOfEdges(); i++) {
+			CHEdge testEdge = testGraphGraphhopper.getEdge(i);
 			System.out.println("edgeID: " + testEdge.getExternalId() + ", From: "
-					+ contractedGraphhopperExample1.getNode(testEdge.getFromNode()).getExternalId() + ", To: "
-					+ contractedGraphhopperExample1.getNode(testEdge.getToNode()).getExternalId() + ", Distance: "
-					+ testEdge.getDistance());
+					+ testGraphGraphhopper.getNode(testEdge.getFromNode()).getExternalId() + ", To: "
+					+ testGraphGraphhopper.getNode(testEdge.getToNode()).getExternalId() + ", Distance: "
+					+ testEdge.getDistance() + ", isShortcut: " + testEdge.isShortcut());
 		}
 		
 		
-		BidirectionalDijkstraCH bidirectionalDijkstra = new BidirectionalDijkstraCH(graphhopperExample1);
-		
-		Path bidirectionalDijkstraFinalPath = bidirectionalDijkstra.execute(graphhopperExample1.getNode(5), graphhopperExample1.getNode(4));
-		
-		System.out.println("Distancia: " + bidirectionalDijkstraFinalPath.getTotalCost());
+//		BidirectionalDijkstraCH bidirectionalDijkstra = new BidirectionalDijkstraCH(graphhopperExample1);
+//		
+//		Path bidirectionalDijkstraFinalPath = bidirectionalDijkstra.execute(graphhopperExample1.getNode(5), graphhopperExample1.getNode(4));
+//		
+//		System.out.println("Distancia: " + bidirectionalDijkstraFinalPath.getTotalCost());
 		
 		
 		
