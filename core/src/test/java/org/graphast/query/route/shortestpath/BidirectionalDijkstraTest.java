@@ -7,6 +7,7 @@ import org.graphast.model.contraction.CHGraph;
 import org.graphast.query.route.shortestpath.dijkstra.Dijkstra;
 import org.graphast.query.route.shortestpath.dijkstra.DijkstraConstantWeight;
 import org.graphast.query.route.shortestpath.dijkstrach.BidirectionalDijkstraCH;
+import org.graphast.query.route.shortestpath.dijkstrach.BreadthFirstSearchCH;
 import org.graphast.query.route.shortestpath.model.Path;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -57,7 +58,7 @@ public class BidirectionalDijkstraTest {
 	@Test
 	public void graphTest() {
 
-		CHGraph testGraph = graphMonaco;
+		CHGraph testGraph = graphHopperExample;
 		
 		testGraph.prepareNodes();
 		testGraph.contractNodes();
@@ -93,7 +94,23 @@ public class BidirectionalDijkstraTest {
 				}
 			}
 		}
-	
+		
+		for(int i=0; i<testGraph.getNumberOfNodes(); i++) {
+			for(int j=0; j<testGraph.getNumberOfNodes(); j++) {
+				
+				if(i==j) continue;
+				
+				BreadthFirstSearchCH breadFirstSearch = new BreadthFirstSearchCH(testGraph);
+				
+				try {
+					breadFirstSearch.executeNaiveBFS(testGraph.getNode(i), testGraph.getNode(j));
+					System.out.println("[BREADTH-FIRST SEARCH] Path FOUND between " + i + " and " + j);
+				} catch (Exception e) {
+					System.out.println("[BREADTH-FIRST SEARCH] Path NOT FOUND between " + i + " and " + j);
+				}
+			}
+		}
+		
 //		BidirectionalDijkstraCH bidirectionalDijkstra = new BidirectionalDijkstraCH(testGraph);
 //		
 //		long i = testGraph.getNearestNode(43.72842465479131, 7.414896579419745).getId();

@@ -3,7 +3,9 @@ package org.graphast.query.route.shortestpath.dijkstrach;
 import static org.graphast.util.NumberUtils.convertToInt;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.PriorityQueue;
+import java.util.Queue;
 
 import org.graphast.exception.PathNotFoundException;
 import org.graphast.model.Edge;
@@ -562,8 +564,4 @@ public class BidirectionalDijkstraCH {
 
 	}
 	
-	
-	
-	
-
 }
