@@ -109,14 +109,14 @@ public class BidirectionalDijkstraTest {
 		
 		BidirectionalDijkstraCH bidirectionalDijkstra = new BidirectionalDijkstraCH(testGraph);
 		
-//		long i = testGraph.getNearestNode(43.72842465479131, 7.414896579419745).getId();
-//		long j = testGraph.getNearestNode(43.727428512143234, 7.422287369272576).getId();
+		long i = testGraph.getNearestNode(43.72842465479131, 7.414896579419745).getId();
+		long j = 602;
 		
 		try {
-			Path bidirectionalDijkstraFinalPath = bidirectionalDijkstra.execute(testGraph.getNode(552), testGraph.getNode(748));
-			System.out.println("[BIDIRECTIONAL DIJKSTRA] Path distance between " + 552 + " and " + 276 + ": ");
+			Path bidirectionalDijkstraFinalPath = bidirectionalDijkstra.execute(testGraph.getNode(i), testGraph.getNode(j));
+			System.out.println("[BIDIRECTIONAL DIJKSTRA] Path distance between " + i + " and " + j + ": ");
 		} catch (Exception e) {
-			System.out.println("[BIDIRECTIONAL DIJKSTRA] Path NOT FOUND between " + 552 + " and " + 276);
+			System.out.println("[BIDIRECTIONAL DIJKSTRA] Path NOT FOUND between " + i + " and " + j);
 		}
 		
 	}
