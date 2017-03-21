@@ -24,8 +24,8 @@ import it.unimi.dsi.fastutil.longs.Long2IntMap;
 
 public class BidirectionalDijkstraCHIterator {
 
-//	private Logger logger = LoggerFactory.getLogger(this.getClass());
-	
+	// private Logger logger = LoggerFactory.getLogger(this.getClass());
+
 	// External references
 	private CHGraph graph;
 	private CHNode source;
@@ -85,8 +85,8 @@ public class BidirectionalDijkstraCHIterator {
 	public boolean iterate() {
 
 		if (forwardsUnsettleNodes.isEmpty() && backwardsUnsettleNodes.isEmpty()) {
-			//Add this node to a specific queue
-//			logger.info("Path NOT found");
+			// Add this node to a specific queue
+			// logger.info("Path NOT found");
 			return true;
 		} else {
 
@@ -140,7 +140,7 @@ public class BidirectionalDijkstraCHIterator {
 		forwardsSettleNodes.put(forwardsRemovedNode.getId(), forwardsRemovedNode.getDistance());
 		numberOfForwardSettleNodes++;
 
-//		logger.debug("Node being analyzed: {}", forwardsRemovedNode.getId());
+		// logger.debug("Node being analyzed: {}", forwardsRemovedNode.getId());
 
 		expandVertexForward();
 
@@ -201,11 +201,11 @@ public class BidirectionalDijkstraCHIterator {
 		for (long vid : neighbors.keySet()) {
 
 			if (graph.getNode(vid).getLevel() < graph.getNode(forwardsRemovedNode.getId()).getLevel()) {
-//				logger.debug("Neighbor not being analyzed: {}", vid);
+				// logger.debug("Neighbor not being analyzed: {}", vid);
 				continue;
 			}
 
-//			logger.debug("Neighbor being analyzed: {}", vid);
+			// logger.debug("Neighbor being analyzed: {}", vid);
 			DistanceEntry newEntry = new DistanceEntry(vid, neighbors.get(vid) + forwardsRemovedNode.getDistance(),
 					forwardsRemovedNode.getId());
 
@@ -299,12 +299,12 @@ public class BidirectionalDijkstraCHIterator {
 
 			if (graph.getNode(vid).getLevel() < graph.getNode(backwardsRemovedNode.getId()).getLevel()) {
 				// verifyMeetingNodeBackwardSearch(vid, neighbors);
-//				logger.debug("Neighbor not being analyzed: {}", vid);
+				// logger.debug("Neighbor not being analyzed: {}", vid);
 				continue;
 			}
 
-//			logger.debug("Neighbor being analyzed: {}", vid);
-			
+			// logger.debug("Neighbor being analyzed: {}", vid);
+
 			DistanceEntry newEntry = new DistanceEntry(vid, neighbors.get(vid) + backwardsRemovedNode.getDistance(),
 					backwardsRemovedNode.getId());
 
@@ -386,18 +386,6 @@ public class BidirectionalDijkstraCHIterator {
 						+ forwardsSettleNodes.get(vid));
 				meetingNode.setParent(backwardsRemovedNode.getId());
 			}
-		}
-
-	}
-
-	private void specialVerifyMeetingNodeBackwardSearch(long vid) {
-
-		if (forwardsSettleNodes.containsKey(vid) && (backwardsSettleNodes.get(backwardsRemovedNode.getId())
-				+ forwardsSettleNodes.get(vid) < meetingNode.getDistance())) {
-			meetingNode.setId(vid);
-			meetingNode
-					.setDistance(backwardsSettleNodes.get(backwardsRemovedNode.getId()) + forwardsSettleNodes.get(vid));
-			meetingNode.setParent(backwardsRemovedNode.getId());
 		}
 
 	}
