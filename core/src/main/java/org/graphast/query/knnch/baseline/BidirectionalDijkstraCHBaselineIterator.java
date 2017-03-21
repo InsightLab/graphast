@@ -17,6 +17,8 @@ import org.graphast.model.contraction.CHNode;
 import org.graphast.query.route.shortestpath.model.DistanceEntry;
 import org.graphast.query.route.shortestpath.model.Path;
 import org.graphast.query.route.shortestpath.model.RouteEntry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 
@@ -29,6 +31,8 @@ public class BidirectionalDijkstraCHBaselineIterator {
 	private Queue<DistanceEntry> smallerDistancePoI;
 	private Map<Long, BidirectionalDijkstraCHBaselineIterator> dijkstraHash;
 	private Map<Long, Path> poisFound;
+	
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private int forwardsSmallerDistanceForThisIteration = 0;
 	private int backwardsSmallerDistanceForThisIteration = 0;
@@ -83,7 +87,6 @@ public class BidirectionalDijkstraCHBaselineIterator {
 	public boolean iterate() {
 
 		// Condition to alternate between forward and backward search
-
 		if (forwardsUnsettleNodes.isEmpty()) {
 			return backwardSearch();
 		}
@@ -127,18 +130,15 @@ public class BidirectionalDijkstraCHBaselineIterator {
 			path.constructPath(target.getId(), resultParentNodes, graph);
 
 			poisFound.put(target.getId(), path);
-			System.out.println("Caminho para o PoI " + target.getId());
-			System.out.println("\t" + path);
+//			logger.info("Path to the PoI {}", target.getId());
+//			logger.info("\t{}", path);
 			return true;
 
 		}
 
 		if (backwardsUnsettleNodes.isEmpty() && forwardsUnsettleNodes.isEmpty()) {
 
-			// smallerDistancePoI.add(new DistanceEntry(target.getId(),
-			// forwardsSmallerDistanceForThisIteration +
-			// backwardsSmallerDistanceForThisIteration, -1));
-			System.out.println("Caminho nao encontrado");
+			logger.info("Path not found.");
 			return true;
 		}
 
@@ -178,9 +178,9 @@ public class BidirectionalDijkstraCHBaselineIterator {
 			path.constructPath(target.getId(), resultParentNodes, graph);
 
 			poisFound.put(target.getId(), path);
-			System.out.println("Caminho para o PoI " + target.getId());
-			System.out.println("\t" + path);
-			System.out.println("Vizinho encontrado!");
+//			System.out.println("Caminho para o PoI " + target.getId());
+//			System.out.println("\t" + path);
+//			System.out.println("Vizinho encontrado!");
 
 			return true;
 
@@ -191,7 +191,7 @@ public class BidirectionalDijkstraCHBaselineIterator {
 			// smallerDistancePoI.add(new DistanceEntry(target.getId(),
 			// forwardsSmallerDistanceForThisIteration +
 			// backwardsSmallerDistanceForThisIteration, -1));
-			System.out.println("Caminho nao encontrado");
+//			System.out.println("Caminho nao encontrado");
 			return true;
 		}
 

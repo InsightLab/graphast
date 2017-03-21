@@ -52,10 +52,8 @@ public class KNNCHSearchBaseline {
 
 		while (!dijkstraHash.isEmpty()) {
 
-			System.out.println(smallerDistancePoI);
-
 			long currentPoI = smallerDistancePoI.poll().getId();
-			System.out.println("PoI que será analisado nessa iteração: " + currentPoI);
+			logger.debug("PoI being analyzed: {}.", currentPoI);
 
 			if (dijkstraHash.get(currentPoI).iterate()) {
 				dijkstraHash.remove(currentPoI);
@@ -65,7 +63,7 @@ public class KNNCHSearchBaseline {
 
 		knnSW.stop();
 
-		logger.info("Execution Time of baseline kNN: {}ms", knnSW.getNanos());
+		logger.info("Execution Time of the Naive kNN Baseline: {}ms", knnSW.getNanos());
 
 		retrieveKNN();
 
@@ -74,12 +72,10 @@ public class KNNCHSearchBaseline {
 	public void retrieveKNN() {
 
 		for (Entry<Long, Path> poi : poisFound.entrySet()) {
-
 			nearestNeighbors.add(new DistanceEntry(poi.getKey(), (int) poi.getValue().getTotalCost(), -1l));
-
 		}
 
-		System.out.println(nearestNeighbors);
+//		System.out.println(nearestNeighbors);
 
 	}
 

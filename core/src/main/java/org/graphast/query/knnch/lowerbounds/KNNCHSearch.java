@@ -68,11 +68,9 @@ public class KNNCHSearch {
 		createLowerBounds(source.getId());
 
 		for (int i = 0; i < k; i++) {
-			BidirectionalDijkstraCHIterator dj = new BidirectionalDijkstraCHIterator(graph, source,
-					graph.getNode(lowerBoundDistanceSourcePoIs.peek().getId()), smallerDistancePoI, dijkstraHash);
+			BidirectionalDijkstraCHIterator dj = new BidirectionalDijkstraCHIterator(graph, source,	graph.getNode(lowerBoundDistanceSourcePoIs.peek().getId()), smallerDistancePoI, dijkstraHash);
 
-			this.smallerDistancePoI
-					.add(new DistanceEntry(graph.getNode(lowerBoundDistanceSourcePoIs.peek().getId()).getId(), 0, -1));
+			this.smallerDistancePoI.add(new DistanceEntry(graph.getNode(lowerBoundDistanceSourcePoIs.peek().getId()).getId(), 0, -1));
 
 			dijkstraHash.put(lowerBoundDistanceSourcePoIs.poll().getId(), dj);
 		}
@@ -91,12 +89,8 @@ public class KNNCHSearch {
 
 		while (!dijkstraHash.isEmpty()) {
 
-			System.out.println(smallerDistancePoI);
-
-			if ((graph.getPOIs().size() < k)
-					&& smallerDistancePoI.peek().getDistance() >= nextCandidateNNLowerBound.getDistance()) {
-				BidirectionalDijkstraCHIterator dj = new BidirectionalDijkstraCHIterator(graph, source,
-						graph.getNode(nextCandidateNNLowerBound.getId()), smallerDistancePoI, dijkstraHash);
+			if ((graph.getPOIs().size() < k) && smallerDistancePoI.peek().getDistance() >= nextCandidateNNLowerBound.getDistance()) {
+				BidirectionalDijkstraCHIterator dj = new BidirectionalDijkstraCHIterator(graph, source,	graph.getNode(nextCandidateNNLowerBound.getId()), smallerDistancePoI, dijkstraHash);
 				dijkstraHash.put(nextCandidateNNLowerBound.getId(), dj);
 
 				lowerBoundDistanceSourcePoIs.poll();
@@ -105,10 +99,12 @@ public class KNNCHSearch {
 			}
 
 			long currentPoI = smallerDistancePoI.poll().getId();
-			System.out.println("PoI que será analisado nessa iteração: " + currentPoI);
+//			logger.info("PoI that will be analyzed: {}", currentPoI);
+//			logger.info("Number of PoIs being considered: {}", dijkstraHash.size());
 			if (dijkstraHash.get(currentPoI).iterate()) {
 				dijkstraHash.remove(currentPoI);
 			}
+			
 
 		}
 

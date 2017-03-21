@@ -198,11 +198,6 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 	@Override
 	public boolean prepareNodes() {
 
-		// TODO Por que inicializar assim?
-//		for (int i = 0; i < this.getNumberOfNodes(); i++) {
-//			this.updateNodeInfo(this.getNode(i), maxLevel, 0);
-//		}
-
 		// Calculating the priority for all nodes
 		for (int nodeId = 0; nodeId < this.getNumberOfNodes(); nodeId++) {
 
@@ -263,7 +258,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 		int edgeDifference = possibleShortcuts.get(n.getId()).size() - degree;
 
 		int prioridade = 10 * edgeDifference + originalEdgeCount + numberOfContractedNeighbors;
-		System.out.println(n.getExternalId() + ";" + prioridade);
+		logger.debug("Priority of node {}: {}", n.getId(), prioridade);
 
 		return 10 * edgeDifference + originalEdgeCount + numberOfContractedNeighbors;
 
@@ -333,7 +328,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 	// Consider the following "graph": u --> u --> w
 	public void findShortcut(CHNode n, boolean contract) {
-		logger.info("PROCURANDO ATALHOS PARA O NÓ {}. LAT: {} LON: {}", n.getExternalId(), n.getLatitude(),
+		logger.debug("PROCURANDO ATALHOS PARA O NÓ {}. LAT: {} LON: {}", n.getExternalId(), n.getLatitude(),
 				n.getLongitude());
 
 		int temporaryDegreeCounter = 0;
@@ -344,7 +339,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 		// Nó TO das arestas outgoings do grafo reverso serão os FROM do grafo
 		// original.
 		for (Long ingoingEdgeId : this.getInEdges(n.getId())) {
-			logger.info("fromNodeExternalID: {}. LAT: {} LON: {}",
+			logger.debug("fromNodeExternalID: {}. LAT: {} LON: {}",
 					this.getNode(this.getEdge(ingoingEdgeId).getFromNode()).getExternalId(),
 					this.getNode(this.getEdge(ingoingEdgeId).getFromNode()).getLatitude(),
 					this.getNode(this.getEdge(ingoingEdgeId).getFromNode()).getLongitude());
@@ -354,7 +349,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 			// Accept only uncontracted nodes.
 			if (this.getNode(fromNodeId).getLevel() != 0) {
-				logger.info("\tIgnored because the node {} is already contracted.",
+				logger.debug("\tIgnored because the node {} is already contracted.",
 						this.getNode(this.getEdge(ingoingEdgeId).getFromNode()).getExternalId());
 				continue;
 			}
@@ -365,7 +360,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 			// Arestas outgoing do nó N. O nó TO será o nó final.
 			for (Long outgoingEdgeId : this.getOutEdges(n.getId())) {
-				logger.info("\ttoNodeExternalID: {}. LAT: {} LON: {}",
+				logger.debug("\ttoNodeExternalID: {}. LAT: {} LON: {}",
 						this.getNode(this.getEdge(outgoingEdgeId).getToNode()).getExternalId(),
 						this.getNode(this.getEdge(outgoingEdgeId).getToNode()).getLatitude(),
 						this.getNode(this.getEdge(outgoingEdgeId).getToNode()).getLongitude());
@@ -381,11 +376,11 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 					if (this.getNode(toNodeId).getLevel() != 0) {
 
-						logger.info("\t\tIgnored because the node {} is already contracted.",
+						logger.debug("\t\tIgnored because the node {} is already contracted.",
 								this.getNode(this.getEdge(outgoingEdgeId).getToNode()).getExternalId());
 						continue;
 					} else {
-						logger.info("\t\tIgnored because the source node {} is equal to the destination {}.",
+						logger.debug("\t\tIgnored because the source node {} is equal to the destination {}.",
 								this.getNode(this.getEdge(ingoingEdgeId).getFromNode()).getExternalId(),
 								this.getNode(this.getEdge(outgoingEdgeId).getToNode()).getExternalId());
 						continue;
@@ -399,7 +394,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 				shortestPath.setLimitVisitedNodes((int) meanDegree * 100);
 
 				Path path;
-				logger.info("\t\tSearching for a path between {} and {}, ignoring node {}.",
+				logger.debug("\t\tSearching for a path between {} and {}, ignoring node {}.",
 						this.getNode(this.getEdge(ingoingEdgeId).getFromNode()).getExternalId(),
 						this.getNode(this.getEdge(outgoingEdgeId).getToNode()).getExternalId(), n.getExternalId());
 
@@ -418,7 +413,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 					int outgoingEdgeCounter = this.getEdge(outgoingEdgeId).getOriginalEdgeCounter();
 
 					String newLabel = "Shortcut " + fromNodeId + "-" + toNodeId;
-					logger.info("\t\t\t[SHORTCUT] FROM NODE {} TO NODE {}",
+					logger.debug("\t\t\t[SHORTCUT] FROM NODE {} TO NODE {}",
 							this.getNode(this.getEdge(ingoingEdgeId).getFromNode()).getExternalId(),
 							this.getNode(this.getEdge(outgoingEdgeId).getToNode()).getExternalId());
 					CHEdge shortcut = new CHEdgeImpl(fromNodeId, toNodeId, (int) shortestPathBeforeContraction,
@@ -428,7 +423,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 					possibleLocalShortcut.add(shortcut);
 
 				} else {
-					logger.info("\tShortcut between source node {} and destination node {} not created.",
+					logger.debug("\tShortcut between source node {} and destination node {} not created.",
 							this.getNode(this.getEdge(ingoingEdgeId).getFromNode()).getExternalId(),
 							this.getNode(this.getEdge(outgoingEdgeId).getToNode()).getExternalId());
 				}
@@ -512,11 +507,8 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 			counter++;
 			CHNode polledNode = sortedNodesQueue.poll();
-			System.out.println("NODE BEING CONTRACTED: " + polledNode.getExternalId() + ". Priority: " + polledNode.getPriority());
-			// logger.debug("[CONTRACTING] NodeID {}. Priority: {}",
-			// polledNode.getId(), polledNode.getPriority());
+			logger.debug("Node being contracted: {}. Priority: {}", polledNode.getId(), polledNode.getPriority());
 
-//			if (!sortedNodesQueue.isEmpty() && sortedNodesQueue.size() < lastNodesLazyUpdates) {
 			if (sortedNodesQueue.size() < lastNodesLazyUpdates) {
 				
 				oldPriorities.put(polledNode.getId(), calculatePriority(this.getNode(polledNode.getId()), true));
@@ -666,8 +658,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 			}
 
 		}
-		// System.out.println("Para o nó " + this.getNode(node).getExternalId()
-		// + " foram criados " + temporaryShortcutCounter + " atalhos.");
+		
 		return temporaryShortcutCounter;
 
 	}

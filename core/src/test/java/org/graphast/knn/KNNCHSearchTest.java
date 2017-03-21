@@ -20,10 +20,10 @@ public class KNNCHSearchTest {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	private static CHGraph graphMonacoWithPoI;
-//	private static CHGraph graphHopperExampleWithPoIs;
-//	private static CHGraph graphHopperExample2WithPoIs;
-//	private static CHGraph graphHopperExample3WithPoIs;
-//	private static CHGraph graphHopperExample4WithPoIs;
+	private static CHGraph graphHopperExampleWithPoIs;
+	private static CHGraph graphHopperExample2WithPoIs;
+	private static CHGraph graphHopperExample3WithPoIs;
+	private static CHGraph graphHopperExample4WithPoIs;
 
 	@BeforeClass
 	public static void setup() {
@@ -32,36 +32,40 @@ public class KNNCHSearchTest {
 		graphMonacoWithPoI.prepareNodes();
 		graphMonacoWithPoI.contractNodes();
 
-//		graphHopperExampleWithPoIs = new GraphGenerator().generateGraphHopperExampleWithPoIs();
-//		graphHopperExampleWithPoIs.prepareNodes();
-//		graphHopperExampleWithPoIs.contractNodes();
-//
-//		graphHopperExample2WithPoIs = new GraphGenerator().generateGraphHopperExample2WithPoIs();
-//		graphHopperExample2WithPoIs.prepareNodes();
-//		graphHopperExample2WithPoIs.contractNodes();
-//
-//		graphHopperExample3WithPoIs = new GraphGenerator().generateGraphHopperExample3WithPoIs();
-//		graphHopperExample3WithPoIs.prepareNodes();
-//		graphHopperExample3WithPoIs.contractNodes();
-//
-//		graphHopperExample4WithPoIs = new GraphGenerator().generateGraphHopperExample4WithPoIs();
-//		graphHopperExample4WithPoIs.prepareNodes();
-//		graphHopperExample4WithPoIs.contractNodes();
+		graphHopperExampleWithPoIs = new GraphGenerator().generateGraphHopperExampleWithPoIs();
+		graphHopperExampleWithPoIs.prepareNodes();
+		graphHopperExampleWithPoIs.contractNodes();
+
+		graphHopperExample2WithPoIs = new GraphGenerator().generateGraphHopperExample2WithPoIs();
+		graphHopperExample2WithPoIs.prepareNodes();
+		graphHopperExample2WithPoIs.contractNodes();
+
+		graphHopperExample3WithPoIs = new GraphGenerator().generateGraphHopperExample3WithPoIs();
+		graphHopperExample3WithPoIs.prepareNodes();
+		graphHopperExample3WithPoIs.contractNodes();
+
+		graphHopperExample4WithPoIs = new GraphGenerator().generateGraphHopperExample4WithPoIs();
+		graphHopperExample4WithPoIs.prepareNodes();
+		graphHopperExample4WithPoIs.contractNodes();
 
 	}
 
 	@Test
 	public void graphMonacoWithPoITest() {
 
-		// Calculate the distance from all PoIs to the source node.
+		CHGraph testGraph = graphMonacoWithPoI;
 		Long source = graphMonacoWithPoI.getNodeId(43.72842465479131, 7.414896579419745);
+//		Long source = 0l;
+		int k = 128;
+		
+		// Calculate the distance from all PoIs to the source node.
+		logger.info("Starting to run the Naive kNN Baseline.");
+		KNNCHSearchBaseline knnBaseline = new KNNCHSearchBaseline(testGraph);
+		knnBaseline.search(testGraph.getNode(source), k);
 
-
-//		KNNCHSearchBaseline knnBaseline = new KNNCHSearchBaseline(graphMonacoWithPoI);
-//		knnBaseline.search(graphMonacoWithPoI.getNode(source), 40);
-		graphMonacoWithPoI.getPOIs().size();
-		KNNCHSearch knn = new KNNCHSearch(graphMonacoWithPoI);
-		knn.search(graphMonacoWithPoI.getNode(source), 64);
+		logger.info("Starting to run the first prunning method for kNN with CH.");
+		KNNCHSearch knn = new KNNCHSearch(testGraph);
+		knn.search(testGraph.getNode(source), k);
 
 	}
 

@@ -17,17 +17,21 @@ import org.graphast.model.contraction.CHNode;
 import org.graphast.query.route.shortestpath.model.DistanceEntry;
 import org.graphast.query.route.shortestpath.model.Path;
 import org.graphast.query.route.shortestpath.model.RouteEntry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 
 public class BidirectionalDijkstraCHIterator {
 
+//	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	// External references
 	private CHGraph graph;
 	private CHNode source;
 	private CHNode target;
 	private Queue<DistanceEntry> smallerDistancePoI;
-	
+
 	private int forwardsSmallerDistanceForThisIteration = 0;
 	private int backwardsSmallerDistanceForThisIteration = 0;
 
@@ -72,66 +76,63 @@ public class BidirectionalDijkstraCHIterator {
 
 		forwardsRemovedNode = forwardsUnsettleNodes.peek();
 		backwardsRemovedNode = backwardsUnsettleNodes.peek();
-		
+
+		forwardsParentNodes.put(source.getId(), new RouteEntry(-1, 0, -1, null));
+		backwardsParentNodes.put(target.getId(), new RouteEntry(-1, 0, -1, null));
+
 	}
 
 	public boolean iterate() {
 
-		// Condition to alternate between forward and backward search
-
-		if (forwardsUnsettleNodes.isEmpty()) {
-			return backwardSearch();
-		}
-
-		if (backwardsUnsettleNodes.isEmpty()) {
-			return forwardSearch();
-		}
-
-		if (forwardsUnsettleNodes.peek().getDistance() <= backwardsUnsettleNodes.peek().getDistance()) {
-			return forwardSearch();
+		if (forwardsUnsettleNodes.isEmpty() && backwardsUnsettleNodes.isEmpty()) {
+			//Add this node to a specific queue
+//			logger.info("Path NOT found");
+			return true;
 		} else {
-			return backwardSearch();
+
+			// Condition to alternate between forward and backward search
+			if (forwardsUnsettleNodes.isEmpty()) {
+				return backwardSearch();
+			} else if (backwardsUnsettleNodes.isEmpty()) {
+				return forwardSearch();
+			} else {
+				if (forwardsUnsettleNodes.peek().getDistance() <= backwardsUnsettleNodes.peek().getDistance()) {
+					return forwardSearch();
+				} else {
+					return backwardSearch();
+				}
+			}
 		}
 
 	}
 
 	private boolean forwardSearch() {
 
-		int forwardDistance;
-		int backwardDistance;
-
-		if (forwardsUnsettleNodes.isEmpty()) {
-			forwardDistance = forwardsSmallerDistanceForThisIteration;
-		} else {
-			forwardDistance = forwardsUnsettleNodes.peek().getDistance();
-		}
-
+		// Stopping criteria of Bidirectional search
 		if (backwardsUnsettleNodes.isEmpty()) {
-			backwardDistance = backwardsSmallerDistanceForThisIteration;
-		} else {
-			backwardDistance = backwardsUnsettleNodes.peek().getDistance();
-		}
 
-		if (forwardDistance + backwardDistance >= meetingNode.getDistance()) {
+			if (meetingNode.getDistance() != Integer.MAX_VALUE && forwardsUnsettleNodes.peek().getDistance()
+					+ forwardsSettleNodes.get(meetingNode.getId()) >= meetingNode.getDistance()) {
+
+				HashMap<Long, RouteEntry> resultParentNodes;
+				path = new Path();
+				resultParentNodes = joinParents(meetingNode, forwardsParentNodes, backwardsParentNodes);
+				path.constructPath(target.getId(), resultParentNodes, graph);
+
+				return true;
+
+			}
+
+		} else if (forwardsUnsettleNodes.peek().getDistance()
+				+ backwardsUnsettleNodes.peek().getDistance() >= meetingNode.getDistance()) {
 
 			HashMap<Long, RouteEntry> resultParentNodes;
 			path = new Path();
 			resultParentNodes = joinParents(meetingNode, forwardsParentNodes, backwardsParentNodes);
 			path.constructPath(target.getId(), resultParentNodes, graph);
-			System.out.println("Caminho para o PoI " + target.getId());
-			System.out.println("\t" + path);
-			System.out.println("Vizinho encontrado!");
+
 			return true;
 
-		}
-		
-		if (backwardsUnsettleNodes.isEmpty() && forwardsUnsettleNodes.isEmpty()) {
-
-			// smallerDistancePoI.add(new DistanceEntry(target.getId(),
-			// forwardsSmallerDistanceForThisIteration +
-			// backwardsSmallerDistanceForThisIteration, -1));
-			System.out.println("Caminho entre o nó " + this.source + " e o nó " + this.target + " não encontrado.");
-			return true;
 		}
 
 		forwardsRemovedNode = forwardsUnsettleNodes.poll();
@@ -139,7 +140,9 @@ public class BidirectionalDijkstraCHIterator {
 		forwardsSettleNodes.put(forwardsRemovedNode.getId(), forwardsRemovedNode.getDistance());
 		numberOfForwardSettleNodes++;
 
-		expandVertexForward(forwardsRemovedNode);
+//		logger.debug("Node being analyzed: {}", forwardsRemovedNode.getId());
+
+		expandVertexForward();
 
 		return false;
 
@@ -147,73 +150,62 @@ public class BidirectionalDijkstraCHIterator {
 
 	private boolean backwardSearch() {
 
-		int forwardDistance;
-		int backwardDistance;
-
+		// Stopping criteria of Bidirectional search
 		if (forwardsUnsettleNodes.isEmpty()) {
-			forwardDistance = forwardsSmallerDistanceForThisIteration;
+			if (meetingNode.getDistance() != Integer.MAX_VALUE && backwardsUnsettleNodes.peek().getDistance()
+					+ forwardsSettleNodes.get(meetingNode.getId()) >= meetingNode.getDistance()) {
+
+				HashMap<Long, RouteEntry> resultParentNodes;
+				path = new Path();
+				resultParentNodes = joinParents(meetingNode, forwardsParentNodes, backwardsParentNodes);
+				path.constructPath(target.getId(), resultParentNodes, graph);
+
+				return true;
+
+			}
 		} else {
-			forwardDistance = forwardsUnsettleNodes.peek().getDistance();
-		}
 
-		if (backwardsUnsettleNodes.isEmpty()) {
-			backwardDistance = backwardsSmallerDistanceForThisIteration;
-		} else {
-			backwardDistance = backwardsUnsettleNodes.peek().getDistance();
-		}
+			if (forwardsUnsettleNodes.peek().getDistance() + backwardsUnsettleNodes.peek().getDistance() >= meetingNode
+					.getDistance()) {
 
-		if (forwardDistance + backwardDistance >= meetingNode.getDistance()) {
+				HashMap<Long, RouteEntry> resultParentNodes;
+				path = new Path();
+				resultParentNodes = joinParents(meetingNode, forwardsParentNodes, backwardsParentNodes);
+				path.constructPath(target.getId(), resultParentNodes, graph);
 
-			HashMap<Long, RouteEntry> resultParentNodes;
-			path = new Path();
-			resultParentNodes = joinParents(meetingNode, forwardsParentNodes, backwardsParentNodes);
-			path.constructPath(target.getId(), resultParentNodes, graph);
-			System.out.println("Caminho para o PoI " + target.getId());
-			System.out.println("\t" + path);
-			System.out.println("Vizinho encontrado!");
+				return true;
 
-			return true;
-
-		}
-		
-		if (backwardsUnsettleNodes.isEmpty() && forwardsUnsettleNodes.isEmpty()) {
-
-			// smallerDistancePoI.add(new DistanceEntry(target.getId(),
-			// forwardsSmallerDistanceForThisIteration +
-			// backwardsSmallerDistanceForThisIteration, -1));
-			System.out.println("Caminho entre o nó " + this.source + " e o nó " + this.target + " não encontrado.");
-			return true;
+			}
 		}
 
 		backwardsRemovedNode = backwardsUnsettleNodes.poll();
 		backwardsSettleNodes.put(backwardsRemovedNode.getId(), backwardsRemovedNode.getDistance());
 		numberOfBackwardSettleNodes++;
 
-		expandVertexBackward(backwardsRemovedNode);
+		expandVertexBackward();
 
 		return false;
 
 	}
 
-	private void expandVertexForward(DistanceEntry forwardsRemovedNode) {
+	private void expandVertexForward() {
 
 		Long2IntMap neighbors = graph.accessNeighborhood(graph.getNode(forwardsRemovedNode.getId()));
 
-		boolean flag = false;
-		
+		verifyMeetingNodeForwardSearch(forwardsRemovedNode.getId(), neighbors, true);
+
 		int backupDistance = forwardsSmallerDistanceForThisIteration;
-		
+
 		forwardsSmallerDistanceForThisIteration = Integer.MAX_VALUE;
-		
+
 		for (long vid : neighbors.keySet()) {
 
 			if (graph.getNode(vid).getLevel() < graph.getNode(forwardsRemovedNode.getId()).getLevel()) {
+//				logger.debug("Neighbor not being analyzed: {}", vid);
 				continue;
-
 			}
 
-			flag = true;
-
+//			logger.debug("Neighbor being analyzed: {}", vid);
 			DistanceEntry newEntry = new DistanceEntry(vid, neighbors.get(vid) + forwardsRemovedNode.getDistance(),
 					forwardsRemovedNode.getId());
 
@@ -229,7 +221,8 @@ public class BidirectionalDijkstraCHIterator {
 				distance = neighbors.get(vid);
 				edge = getEdge(forwardsRemovedNode.getId(), vid, distance, forwardDirection);
 
-				forwardsParentNodes.put(vid, new RouteEntry(forwardsRemovedNode.getId(), distance, edge.getId(), edge.getLabel()));
+				forwardsParentNodes.put(vid,
+						new RouteEntry(forwardsRemovedNode.getId(), distance, edge.getId(), edge.getLabel()));
 
 				if (forwardsSmallerDistanceForThisIteration > neighbors.get(vid) + forwardsRemovedNode.getDistance()) {
 					forwardsSmallerDistanceForThisIteration = neighbors.get(vid) + forwardsRemovedNode.getDistance();
@@ -255,72 +248,63 @@ public class BidirectionalDijkstraCHIterator {
 					forwardsParentNodes.put(vid,
 							new RouteEntry(forwardsRemovedNode.getId(), distance, edge.getId(), edge.getLabel()));
 
-					// TODO Chegar se eu não tenho que retirar da pilha
 					if (forwardsSmallerDistanceForThisIteration > distance) {
 						forwardsSmallerDistanceForThisIteration = distance;
-					} 
+					}
 
 				} else {
 					forwardsSmallerDistanceForThisIteration = backupDistance;
 				}
 			}
 
-			verifyMeetingNodeForwardSearch(vid, neighbors);
+			verifyMeetingNodeForwardSearch(vid, neighbors, false);
 
 		}
+		smallerDistancePoI.add(new DistanceEntry(target.getId(),
+				forwardsSmallerDistanceForThisIteration + backwardsSmallerDistanceForThisIteration, -1));
+	}
 
-		if (!flag) {
-			specialVerifyMeetingNodeForwardSearch(forwardsRemovedNode.getId());
+	private void verifyMeetingNodeForwardSearch(long vid, Long2IntMap neighbors, boolean test) {
 
-			if (forwardsSmallerDistanceForThisIteration > meetingNode.getDistance()) {
-				forwardsSmallerDistanceForThisIteration = meetingNode.getDistance();
-			} 
-			else {
-				forwardsSmallerDistanceForThisIteration = backupDistance;
+		if (test) {
+			if (backwardsSettleNodes.containsKey(vid) && (forwardsSettleNodes.get(forwardsRemovedNode.getId())
+					+ backwardsSettleNodes.get(vid) < meetingNode.getDistance())) {
+				meetingNode.setId(vid);
+				meetingNode.setDistance(
+						forwardsSettleNodes.get(forwardsRemovedNode.getId()) + backwardsSettleNodes.get(vid));
+				meetingNode.setParent(forwardsRemovedNode.getId());
+			}
+		} else {
+			if (backwardsSettleNodes.containsKey(vid) && (forwardsSettleNodes.get(forwardsRemovedNode.getId())
+					+ neighbors.get(vid) + backwardsSettleNodes.get(vid) < meetingNode.getDistance())) {
+				meetingNode.setId(vid);
+				meetingNode.setDistance(forwardsSettleNodes.get(forwardsRemovedNode.getId()) + neighbors.get(vid)
+						+ backwardsSettleNodes.get(vid));
+				meetingNode.setParent(forwardsRemovedNode.getId());
 			}
 		}
-		smallerDistancePoI.add(new DistanceEntry(target.getId(), forwardsSmallerDistanceForThisIteration + backwardsSmallerDistanceForThisIteration, -1));
+
 	}
 
-	private void verifyMeetingNodeForwardSearch(long vid, Long2IntMap neighbors) {
-
-		if (backwardsSettleNodes.containsKey(vid) && (forwardsSettleNodes.get(forwardsRemovedNode.getId())
-				+ neighbors.get(vid) + backwardsSettleNodes.get(vid) < meetingNode.getDistance())) {
-			meetingNode.setId(vid);
-			meetingNode.setDistance(forwardsSettleNodes.get(forwardsRemovedNode.getId()) + neighbors.get(vid)
-					+ backwardsSettleNodes.get(vid));
-			meetingNode.setParent(forwardsRemovedNode.getId());
-		}
-	}
-
-	private void specialVerifyMeetingNodeForwardSearch(long vid) {
-
-		if (forwardsSettleNodes.containsKey(vid) && backwardsSettleNodes.containsKey(vid) && (backwardsSettleNodes.get(vid)
-				+ forwardsSettleNodes.get(vid) < meetingNode.getDistance())) {
-			meetingNode.setId(vid);
-			meetingNode
-					.setDistance(backwardsSettleNodes.get(backwardsRemovedNode.getId()) + forwardsSettleNodes.get(vid));
-			meetingNode.setParent(backwardsRemovedNode.getId());
-		}
-	}
-
-	private void expandVertexBackward(DistanceEntry backwardsRemovedNode) {
+	private void expandVertexBackward() {
 
 		Long2IntMap neighbors = this.graph.accessIngoingNeighborhood(this.graph.getNode(backwardsRemovedNode.getId()));
 
-		boolean flag = false;
-		
+		verifyMeetingNodeBackwardSearch(backwardsRemovedNode.getId(), neighbors, true);
+
 		int backupDistance = backwardsSmallerDistanceForThisIteration;
 		backwardsSmallerDistanceForThisIteration = Integer.MAX_VALUE;
-		
+
 		for (long vid : neighbors.keySet()) {
 
 			if (graph.getNode(vid).getLevel() < graph.getNode(backwardsRemovedNode.getId()).getLevel()) {
+				// verifyMeetingNodeBackwardSearch(vid, neighbors);
+//				logger.debug("Neighbor not being analyzed: {}", vid);
 				continue;
 			}
 
-			flag = true;
-
+//			logger.debug("Neighbor being analyzed: {}", vid);
+			
 			DistanceEntry newEntry = new DistanceEntry(vid, neighbors.get(vid) + backwardsRemovedNode.getDistance(),
 					backwardsRemovedNode.getId());
 
@@ -339,9 +323,10 @@ public class BidirectionalDijkstraCHIterator {
 				backwardsParentNodes.put(vid,
 						new RouteEntry(backwardsRemovedNode.getId(), distance, edge.getId(), edge.getLabel()));
 
-				if (backwardsSmallerDistanceForThisIteration > neighbors.get(vid) + backwardsRemovedNode.getDistance()) {
+				if (backwardsSmallerDistanceForThisIteration > neighbors.get(vid)
+						+ backwardsRemovedNode.getDistance()) {
 					backwardsSmallerDistanceForThisIteration = neighbors.get(vid) + backwardsRemovedNode.getDistance();
-				} 
+				}
 
 			} else {
 
@@ -364,43 +349,45 @@ public class BidirectionalDijkstraCHIterator {
 					backwardsParentNodes.put(vid,
 							new RouteEntry(backwardsRemovedNode.getId(), distance, edge.getId(), edge.getLabel()));
 
-					if (backwardsSmallerDistanceForThisIteration > neighbors.get(vid) + backwardsRemovedNode.getDistance()) {
-						backwardsSmallerDistanceForThisIteration = neighbors.get(vid) + backwardsRemovedNode.getDistance();
-					} 
-					
+					if (backwardsSmallerDistanceForThisIteration > neighbors.get(vid)
+							+ backwardsRemovedNode.getDistance()) {
+						backwardsSmallerDistanceForThisIteration = neighbors.get(vid)
+								+ backwardsRemovedNode.getDistance();
+					}
 
 				} else {
 					backwardsSmallerDistanceForThisIteration = backupDistance;
 				}
-
 			}
 
-			verifyMeetingNodeBackwardSearch(vid, neighbors);
+			verifyMeetingNodeBackwardSearch(vid, neighbors, false);
 
 		}
+		smallerDistancePoI.add(new DistanceEntry(target.getId(),
+				forwardsSmallerDistanceForThisIteration + backwardsSmallerDistanceForThisIteration, -1));
 
-		if (!flag) {
-			specialVerifyMeetingNodeBackwardSearch(backwardsRemovedNode.getId());
-
-			if (backwardsSmallerDistanceForThisIteration > meetingNode.getDistance()) {
-				backwardsSmallerDistanceForThisIteration = meetingNode.getDistance();
-			} else {
-				backwardsSmallerDistanceForThisIteration = backupDistance;
-			}
-		}
-		
-		smallerDistancePoI.add(new DistanceEntry(target.getId(), forwardsSmallerDistanceForThisIteration + backwardsSmallerDistanceForThisIteration, -1));
 	}
 
-	private void verifyMeetingNodeBackwardSearch(long vid, Long2IntMap neighbors) {
+	private void verifyMeetingNodeBackwardSearch(long vid, Long2IntMap neighbors, boolean test) {
 
-		if (forwardsSettleNodes.containsKey(vid) && (backwardsSettleNodes.get(backwardsRemovedNode.getId())
-				+ neighbors.get(vid) + forwardsSettleNodes.get(vid) < meetingNode.getDistance())) {
-			meetingNode.setId(vid);
-			meetingNode.setDistance(backwardsSettleNodes.get(backwardsRemovedNode.getId()) + neighbors.get(vid)
-					+ forwardsSettleNodes.get(vid));
-			meetingNode.setParent(backwardsRemovedNode.getId());
+		if (test) {
+			if (forwardsSettleNodes.containsKey(vid) && (backwardsSettleNodes.get(backwardsRemovedNode.getId())
+					+ forwardsSettleNodes.get(vid) < meetingNode.getDistance())) {
+				meetingNode.setId(vid);
+				meetingNode.setDistance(
+						backwardsSettleNodes.get(backwardsRemovedNode.getId()) + forwardsSettleNodes.get(vid));
+				meetingNode.setParent(backwardsRemovedNode.getId());
+			}
+		} else {
+			if (forwardsSettleNodes.containsKey(vid) && (backwardsSettleNodes.get(backwardsRemovedNode.getId())
+					+ neighbors.get(vid) + forwardsSettleNodes.get(vid) < meetingNode.getDistance())) {
+				meetingNode.setId(vid);
+				meetingNode.setDistance(backwardsSettleNodes.get(backwardsRemovedNode.getId()) + neighbors.get(vid)
+						+ forwardsSettleNodes.get(vid));
+				meetingNode.setParent(backwardsRemovedNode.getId());
+			}
 		}
+
 	}
 
 	private void specialVerifyMeetingNodeBackwardSearch(long vid) {
@@ -423,8 +410,8 @@ public class BidirectionalDijkstraCHIterator {
 		RouteEntry nextForwardParent = forwardsParentNodes.get(meetingNode.getId());
 
 		if (nextForwardParent != null) {
-			
-			if(forwardsParentNodes.get(meetingNode.getId()) == null) {
+
+			if (forwardsParentNodes.get(meetingNode.getId()) == null) {
 				forwardsParentNodes.put(meetingNode.getId(), backwardsParentNodes.get(meetingNode.getId()));
 			}
 
@@ -442,10 +429,10 @@ public class BidirectionalDijkstraCHIterator {
 
 		if (!backwardsParentNodes.isEmpty()) {
 
-			if(backwardsParentNodes.get(meetingNode.getId()) == null) {
+			if (backwardsParentNodes.get(meetingNode.getId()) == null) {
 				backwardsParentNodes.put(meetingNode.getId(), forwardsParentNodes.get(meetingNode.getId()));
 			}
-			
+
 			RouteEntry nextBackwardsParent = new RouteEntry(meetingNode.getId(),
 					backwardsParentNodes.get(meetingNode.getId()).getCost(),
 					backwardsParentNodes.get(meetingNode.getId()).getEdgeId(),

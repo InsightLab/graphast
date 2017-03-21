@@ -3,9 +3,7 @@ package org.graphast.query.route.shortestpath.dijkstrach;
 import static org.graphast.util.NumberUtils.convertToInt;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.PriorityQueue;
-import java.util.Queue;
 
 import org.graphast.exception.PathNotFoundException;
 import org.graphast.model.Edge;
@@ -80,14 +78,14 @@ public class BidirectionalDijkstraCH {
 
 		forwardsRemovedNode = forwardsUnsettleNodes.peek();
 		backwardsRemovedNode = backwardsUnsettleNodes.peek();
-		
+
 		forwardsParentNodes.put(source.getId(), new RouteEntry(-1, 0, -1, null));
 		backwardsParentNodes.put(target.getId(), new RouteEntry(-1, 0, -1, null));
 
 		while (!forwardsUnsettleNodes.isEmpty() || !backwardsUnsettleNodes.isEmpty()) {
 
 			// Condition to alternate between forward and backward search
-			if(forwardsUnsettleNodes.isEmpty()) {
+			if (forwardsUnsettleNodes.isEmpty()) {
 				backwardSearch();
 			} else if (backwardsUnsettleNodes.isEmpty()) {
 				forwardSearch();
@@ -98,7 +96,7 @@ public class BidirectionalDijkstraCH {
 					backwardSearch();
 				}
 			}
-			
+
 			if (path != null) {
 
 				return path;
@@ -108,7 +106,7 @@ public class BidirectionalDijkstraCH {
 		}
 
 		throw new PathNotFoundException("Path not found between (" + source.getLatitude() + "," + source.getLongitude()
-		+ ") and (" + target.getLatitude() + "," + target.getLongitude() + ")");
+				+ ") and (" + target.getLatitude() + "," + target.getLongitude() + ")");
 
 	}
 
@@ -117,7 +115,8 @@ public class BidirectionalDijkstraCH {
 		// Stopping criteria of Bidirectional search
 		if (backwardsUnsettleNodes.isEmpty()) {
 
-			if (meetingNode.getDistance()!=Integer.MAX_VALUE && forwardsUnsettleNodes.peek().getDistance() + forwardsSettleNodes.get(meetingNode.getId()) >= meetingNode.getDistance()) {
+			if (meetingNode.getDistance() != Integer.MAX_VALUE && forwardsUnsettleNodes.peek().getDistance()
+					+ forwardsSettleNodes.get(meetingNode.getId()) >= meetingNode.getDistance()) {
 
 				HashMap<Long, RouteEntry> resultParentNodes;
 				path = new Path();
@@ -139,14 +138,12 @@ public class BidirectionalDijkstraCH {
 			return;
 
 		}
-		
-		
 
 		forwardsRemovedNode = forwardsUnsettleNodes.poll();
 		forwardsUnsettleNodesAux.remove(forwardsRemovedNode.getId());
 		forwardsSettleNodes.put(forwardsRemovedNode.getId(), forwardsRemovedNode.getDistance());
 		numberOfForwardSettleNodes++;
-		
+
 		System.out.println("Nó sendo analizado: " + forwardsRemovedNode.getId());
 
 		expandVertexForward();
@@ -154,10 +151,11 @@ public class BidirectionalDijkstraCH {
 	}
 
 	private void backwardSearch() {
-		
+
 		// Stopping criteria of Bidirectional search
-		if(forwardsUnsettleNodes.isEmpty()) {
-			if (meetingNode.getDistance()!=Integer.MAX_VALUE && backwardsUnsettleNodes.peek().getDistance() + forwardsSettleNodes.get(meetingNode.getId()) >= meetingNode.getDistance()) {
+		if (forwardsUnsettleNodes.isEmpty()) {
+			if (meetingNode.getDistance() != Integer.MAX_VALUE && backwardsUnsettleNodes.peek().getDistance()
+					+ forwardsSettleNodes.get(meetingNode.getId()) >= meetingNode.getDistance()) {
 
 				HashMap<Long, RouteEntry> resultParentNodes;
 				path = new Path();
@@ -168,8 +166,9 @@ public class BidirectionalDijkstraCH {
 
 			}
 		} else {
-			
-			if (forwardsUnsettleNodes.peek().getDistance() + backwardsUnsettleNodes.peek().getDistance() >= meetingNode.getDistance()) {
+
+			if (forwardsUnsettleNodes.peek().getDistance() + backwardsUnsettleNodes.peek().getDistance() >= meetingNode
+					.getDistance()) {
 
 				HashMap<Long, RouteEntry> resultParentNodes;
 				path = new Path();
@@ -180,7 +179,7 @@ public class BidirectionalDijkstraCH {
 
 			}
 		}
-		
+
 		backwardsRemovedNode = backwardsUnsettleNodes.poll();
 		backwardsSettleNodes.put(backwardsRemovedNode.getId(), backwardsRemovedNode.getDistance());
 		numberOfBackwardSettleNodes++;
@@ -192,13 +191,11 @@ public class BidirectionalDijkstraCH {
 	private void expandVertexForward() {
 
 		Long2IntMap neighbors = graph.accessNeighborhood(graph.getNode(forwardsRemovedNode.getId()));
-		
+
 		verifyMeetingNodeForwardSearch(forwardsRemovedNode.getId(), neighbors, true);
-		
+
 		for (long vid : neighbors.keySet()) {
 
-			
-			
 			if (graph.getNode(vid).getLevel() < graph.getNode(forwardsRemovedNode.getId()).getLevel()) {
 				System.out.println("\t Vizinho não considerado: " + vid);
 				continue;
@@ -247,17 +244,18 @@ public class BidirectionalDijkstraCH {
 			}
 
 			verifyMeetingNodeForwardSearch(vid, neighbors, false);
-			
+
 		}
 	}
 
 	private void verifyMeetingNodeForwardSearch(long vid, Long2IntMap neighbors, boolean test) {
 
-		if(test) {
+		if (test) {
 			if (backwardsSettleNodes.containsKey(vid) && (forwardsSettleNodes.get(forwardsRemovedNode.getId())
-					 + backwardsSettleNodes.get(vid) < meetingNode.getDistance())) {
+					+ backwardsSettleNodes.get(vid) < meetingNode.getDistance())) {
 				meetingNode.setId(vid);
-				meetingNode.setDistance(forwardsSettleNodes.get(forwardsRemovedNode.getId()) + backwardsSettleNodes.get(vid));
+				meetingNode.setDistance(
+						forwardsSettleNodes.get(forwardsRemovedNode.getId()) + backwardsSettleNodes.get(vid));
 				meetingNode.setParent(forwardsRemovedNode.getId());
 			}
 		} else {
@@ -269,8 +267,6 @@ public class BidirectionalDijkstraCH {
 				meetingNode.setParent(forwardsRemovedNode.getId());
 			}
 		}
-		
-		
 
 	}
 
@@ -279,13 +275,11 @@ public class BidirectionalDijkstraCH {
 		Long2IntMap neighbors = this.graph.accessIngoingNeighborhood(this.graph.getNode(backwardsRemovedNode.getId()));
 
 		verifyMeetingNodeBackwardSearch(backwardsRemovedNode.getId(), neighbors, true);
-		
+
 		for (long vid : neighbors.keySet()) {
 
-			
-			
 			if (graph.getNode(vid).getLevel() < graph.getNode(backwardsRemovedNode.getId()).getLevel()) {
-//				verifyMeetingNodeBackwardSearch(vid, neighbors);
+				// verifyMeetingNodeBackwardSearch(vid, neighbors);
 				System.out.println("\t Vizinho não considerado: " + vid);
 				continue;
 			}
@@ -333,17 +327,18 @@ public class BidirectionalDijkstraCH {
 			}
 
 			verifyMeetingNodeBackwardSearch(vid, neighbors, false);
-			
+
 		}
 	}
 
 	private void verifyMeetingNodeBackwardSearch(long vid, Long2IntMap neighbors, boolean test) {
 
-		if(test) {
+		if (test) {
 			if (forwardsSettleNodes.containsKey(vid) && (backwardsSettleNodes.get(backwardsRemovedNode.getId())
-					+  forwardsSettleNodes.get(vid) < meetingNode.getDistance())) {
+					+ forwardsSettleNodes.get(vid) < meetingNode.getDistance())) {
 				meetingNode.setId(vid);
-				meetingNode.setDistance(backwardsSettleNodes.get(backwardsRemovedNode.getId()) + forwardsSettleNodes.get(vid));
+				meetingNode.setDistance(
+						backwardsSettleNodes.get(backwardsRemovedNode.getId()) + forwardsSettleNodes.get(vid));
 				meetingNode.setParent(backwardsRemovedNode.getId());
 			}
 		} else {
@@ -355,8 +350,6 @@ public class BidirectionalDijkstraCH {
 				meetingNode.setParent(backwardsRemovedNode.getId());
 			}
 		}
-		
-		
 
 	}
 
@@ -371,30 +364,31 @@ public class BidirectionalDijkstraCH {
 	private HashMap<Long, RouteEntry> joinParents(DistanceEntry meetingNode,
 			HashMap<Long, RouteEntry> forwardsParentNodes, HashMap<Long, RouteEntry> backwardsParentNodes) {
 
-	HashMap<Long, RouteEntry> resultListOfParents = new HashMap<>();
+		HashMap<Long, RouteEntry> resultListOfParents = new HashMap<>();
 
-	long currrentNodeId = meetingNode.getId();
-	RouteEntry nextParent = forwardsParentNodes.get(currrentNodeId);
-	resultListOfParents.put(currrentNodeId, nextParent);
-	currrentNodeId = nextParent.getId();
-	
-	while(forwardsParentNodes.get(currrentNodeId) != null) {
-		nextParent = forwardsParentNodes.get(currrentNodeId);
+		long currrentNodeId = meetingNode.getId();
+		RouteEntry nextParent = forwardsParentNodes.get(currrentNodeId);
 		resultListOfParents.put(currrentNodeId, nextParent);
 		currrentNodeId = nextParent.getId();
-	}
-	
-	currrentNodeId = meetingNode.getId();
-	
-	while(backwardsParentNodes.get(currrentNodeId) != null) {
-		nextParent = backwardsParentNodes.get(currrentNodeId);
-		resultListOfParents.put(nextParent.getId(), new RouteEntry(currrentNodeId, nextParent.getCost(), nextParent.getEdgeId(), nextParent.getLabel()));
-		currrentNodeId = nextParent.getId();
-	}
-	
-	return resultListOfParents;
 
-}
+		while (forwardsParentNodes.get(currrentNodeId) != null) {
+			nextParent = forwardsParentNodes.get(currrentNodeId);
+			resultListOfParents.put(currrentNodeId, nextParent);
+			currrentNodeId = nextParent.getId();
+		}
+
+		currrentNodeId = meetingNode.getId();
+
+		while (backwardsParentNodes.get(currrentNodeId) != null) {
+			nextParent = backwardsParentNodes.get(currrentNodeId);
+			resultListOfParents.put(nextParent.getId(), new RouteEntry(currrentNodeId, nextParent.getCost(),
+					nextParent.getEdgeId(), nextParent.getLabel()));
+			currrentNodeId = nextParent.getId();
+		}
+
+		return resultListOfParents;
+
+	}
 
 	private CHEdge getEdge(long fromNodeId, long toNodeId, int distance, boolean expandingDirection) {
 
@@ -501,22 +495,20 @@ public class BidirectionalDijkstraCH {
 	public int getNumberOfRegularSearches() {
 		return numberOfRegularSearches;
 	}
-	
-	
+
 	public void executeToAll(Node source) {
-		
-		for(int i=0; i<graph.getNumberOfNodes(); i++) {
-			
+
+		for (int i = 0; i < graph.getNumberOfNodes(); i++) {
+
 			path = null;
 			meetingNode = new DistanceEntry(-1, Integer.MAX_VALUE, -1);
-			
+
 			this.setSource(source);
 			this.setTarget(graph.getNode(i));
-			
-			if(source.getId() == target.getId()) {
+
+			if (source.getId() == target.getId()) {
 				continue;
 			}
-			
 
 			initializeQueue(source, forwardsUnsettleNodes);
 			initializeQueue(target, backwardsUnsettleNodes);
@@ -526,14 +518,14 @@ public class BidirectionalDijkstraCH {
 
 			forwardsRemovedNode = forwardsUnsettleNodes.peek();
 			backwardsRemovedNode = backwardsUnsettleNodes.peek();
-			
+
 			forwardsParentNodes.put(source.getId(), new RouteEntry(-1, 0, -1, null));
 			backwardsParentNodes.put(target.getId(), new RouteEntry(-1, 0, -1, null));
 
 			while (!forwardsUnsettleNodes.isEmpty() || !backwardsUnsettleNodes.isEmpty()) {
 
 				// Condition to alternate between forward and backward search
-				if(forwardsUnsettleNodes.isEmpty()) {
+				if (forwardsUnsettleNodes.isEmpty()) {
 					backwardSearch();
 				} else if (backwardsUnsettleNodes.isEmpty()) {
 					forwardSearch();
@@ -544,24 +536,24 @@ public class BidirectionalDijkstraCH {
 						backwardSearch();
 					}
 				}
-				
+
 				if (path != null) {
 
 					System.out.println("Path  found between (" + source.getId() + ") and (" + target.getId() + ")");
-					
+
 					break;
 
 				}
 
 			}
 
-			if(path == null) {
+			if (path == null) {
 				System.out.println("Path not found between (" + source.getId() + ") and (" + target.getId() + ")");
 				break;
 			}
-		
+
 		}
 
 	}
-	
+
 }
