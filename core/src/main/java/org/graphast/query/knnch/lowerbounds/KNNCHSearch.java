@@ -17,7 +17,6 @@ import org.graphast.model.contraction.CHNode;
 import org.graphast.query.route.shortestpath.model.DistanceEntry;
 import org.graphast.query.route.shortestpath.model.Path;
 import org.graphast.query.route.shortestpath.model.RouteEntry;
-import org.graphast.util.DistanceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,8 +76,6 @@ public class KNNCHSearch {
 
 	public KNNCHSearch(CHGraph graph) {
 		this.graph = graph;
-
-
 	}
 
 	/**
@@ -115,20 +112,15 @@ public class KNNCHSearch {
 		this.smallerDistancePoI = smallerDistancePoI;
 
 		initializeQueue(source, forwardsUnsettleNodes);
-//		initializeQueue(target, backwardsUnsettleNodes);
 
 		forwardsUnsettleNodesAux.put(source.getId(), 0);
-//		backwardsUnsettleNodesAux.put(target.getId(), 0);
-
-//		forwardsRemovedNode = forwardsUnsettleNodes.peek();
-//		backwardsRemovedNode = backwardsUnsettleNodes.peek();
 
 		forwardsParentNodes.put(source.getId(), new RouteEntry(-1, 0, -1, null));
-//		backwardsParentNodes.put(target.getId(), new RouteEntry(-1, 0, -1, null));
 		
 		createLowerBounds(source.getId());
 
 		for (int i = 0; i < k; i++) {
+			
 			PriorityQueue<DistanceEntry> backwardsUnsettleNodes = new PriorityQueue<>();
 			
 			CHNode target = graph.getNode(lowerBoundDistanceSourcePoIs.poll().getId());
