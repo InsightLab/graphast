@@ -63,9 +63,9 @@ public class KNNCHSearchTest {
 		KNNCHSearchBaseline knnBaseline = new KNNCHSearchBaseline(testGraph);
 		knnBaseline.search(testGraph.getNode(source), k);
 
-		logger.info("Starting to run the first prunning method for kNN with CH.");
-		KNNCHSearch knn = new KNNCHSearch(testGraph);
-		knn.search(testGraph.getNode(source), k);
+//		logger.info("Starting to run the first prunning method for kNN with CH.");
+//		KNNCHSearch knn = new KNNCHSearch(testGraph);
+//		knn.search(testGraph.getNode(source), k);
 
 	}
 

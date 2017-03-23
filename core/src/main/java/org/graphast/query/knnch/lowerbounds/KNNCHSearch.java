@@ -44,6 +44,9 @@ public class KNNCHSearch {
 
 	private CHNode source;
 	private CHNode target;
+	
+	private int expandedNodesForwardSearch = 0;
+	private int expandedNodesBackwardSearch = 0;
 
 	private int forwardsSmallerDistanceForThisIteration = 0;
 	private int backwardsSmallerDistanceForThisIteration = 0;
@@ -162,8 +165,6 @@ public class KNNCHSearch {
 				initializeQueue(target, backwardsUnsettleNodes);
 				backwardUnsettleNodesHash.put(nextCandidateNNLowerBound.getId(), backwardsUnsettleNodes);
 				
-				
-				
 				meetingNodeHash.put(lowerBoundDistanceSourcePoIs.poll().getId(), new DistanceEntry(-1, Integer.MAX_VALUE, -1));
 				
 				this.smallerDistancePoI.add(new DistanceEntry(target.getId(), 0, -1));
@@ -210,6 +211,9 @@ public class KNNCHSearch {
 		knnSW.stop();
 
 		logger.info("Execution Time of lower bound kNN: {}ms", knnSW.getNanos());
+		logger.info("Number of expanded nodes in the forward search: {}", expandedNodesForwardSearch);
+		logger.info("Number of expanded nodes in the backward search: {}", expandedNodesBackwardSearch);
+		
 
 	}
 	
@@ -264,6 +268,8 @@ public class KNNCHSearch {
 
 		expandVertexForward();
 
+		expandedNodesForwardSearch++;
+		
 		return;
 
 	}
@@ -405,6 +411,8 @@ public class KNNCHSearch {
 		backwardsSettleNodes.put(backwardsRemovedNode.getId(), backwardsRemovedNode.getDistance());
 		numberOfBackwardSettleNodes++;
 
+		expandedNodesBackwardSearch++;
+		
 		expandVertexBackward();
 
 		return;

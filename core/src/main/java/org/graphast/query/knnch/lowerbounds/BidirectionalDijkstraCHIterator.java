@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
-import org.graphast.exception.PathNotFoundException;
 import org.graphast.model.Edge;
 import org.graphast.model.Node;
 import org.graphast.model.contraction.CHEdge;
@@ -24,7 +23,7 @@ import it.unimi.dsi.fastutil.longs.Long2IntMap;
 
 public class BidirectionalDijkstraCHIterator {
 
-	// private Logger logger = LoggerFactory.getLogger(this.getClass());
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	// External references
 	private CHGraph graph;

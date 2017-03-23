@@ -25,6 +25,9 @@ public class KNNCHSearchBaseline {
 
 	private Queue<DistanceEntry> smallerDistancePoI = new PriorityQueue<>();
 	private Map<Long, BidirectionalDijkstraCHBaselineIterator> dijkstraHash = new HashMap<>();
+	
+	private int expandedNodesForwardSearch = 0;
+	private int expandedNodesBackwardSearch = 0;
 
 	private Queue<DistanceEntry> nearestNeighbors = new PriorityQueue<>();
 

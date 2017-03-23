@@ -256,11 +256,19 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 		}
 
 		int edgeDifference = possibleShortcuts.get(n.getId()).size() - degree;
+		
+//		int hyperPoICoefficient = 0;
+
+//		if (n.getCategory() != -1) {
+//			hyperPoICoefficient += 20 * this.getNumberOfEdges() + this.getNumberOfEdges() + this.getNumberOfNodes() + this.getInEdges(n.getId()).size() + this.getOutEdges(n.getId()).size();
+//		}
 
 		int prioridade = 10 * edgeDifference + originalEdgeCount + numberOfContractedNeighbors;
+//		int prioridade = 10 * edgeDifference + originalEdgeCount + numberOfContractedNeighbors + hyperPoICoefficient;
 		logger.debug("Priority of node {}: {}", n.getId(), prioridade);
 
 		return 10 * edgeDifference + originalEdgeCount + numberOfContractedNeighbors;
+//		return 10 * edgeDifference + originalEdgeCount + numberOfContractedNeighbors + hyperPoICoefficient;
 
 	}
 

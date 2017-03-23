@@ -15,18 +15,24 @@ import org.graphast.query.route.shortestpath.model.DistanceEntry;
 import org.graphast.query.route.shortestpath.model.Path;
 import org.graphast.query.route.shortestpath.model.RouteEntry;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.graphhopper.util.StopWatch;
 
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 
 public class BidirectionalDijkstraCH {
 
+	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	
 	protected static boolean forwardDirection = true;
 	protected static boolean backwardDirection = false;
 
 	Node source;
 	Node target;
 
+	
 	Path path;
 
 	PriorityQueue<DistanceEntry> forwardsUnsettleNodes = new PriorityQueue<>();
@@ -46,8 +52,8 @@ public class BidirectionalDijkstraCH {
 	private CHGraph graph;
 
 	// --METRICS VARIABLES
-	int numberOfForwardSettleNodes = 0;
-	int numberOfBackwardSettleNodes = 0;
+	int expandedNodesForwardSearch = 0;
+	int expandedNodesBackwardSearch = 0;
 	int numberOfRegularSearches = 0;
 
 	public BidirectionalDijkstraCH(CHGraph graph) {
@@ -99,6 +105,10 @@ public class BidirectionalDijkstraCH {
 
 			if (path != null) {
 
+				logger.info("PoI being searched: {}", target.getId());
+				logger.info("    Number of expanded nodes in the forward search: {}", expandedNodesForwardSearch);
+				logger.info("    Number of expanded nodes in the backward search: {}", expandedNodesBackwardSearch);
+				
 				return path;
 
 			}
@@ -142,9 +152,9 @@ public class BidirectionalDijkstraCH {
 		forwardsRemovedNode = forwardsUnsettleNodes.poll();
 		forwardsUnsettleNodesAux.remove(forwardsRemovedNode.getId());
 		forwardsSettleNodes.put(forwardsRemovedNode.getId(), forwardsRemovedNode.getDistance());
-		numberOfForwardSettleNodes++;
+		expandedNodesForwardSearch++;
 
-		System.out.println("Nó sendo analizado: " + forwardsRemovedNode.getId());
+		logger.debug("Node being analyzed in the forwardSearch(): {}", forwardsRemovedNode.getId());
 
 		expandVertexForward();
 
@@ -182,8 +192,10 @@ public class BidirectionalDijkstraCH {
 
 		backwardsRemovedNode = backwardsUnsettleNodes.poll();
 		backwardsSettleNodes.put(backwardsRemovedNode.getId(), backwardsRemovedNode.getDistance());
-		numberOfBackwardSettleNodes++;
+		expandedNodesBackwardSearch++;
 
+		logger.debug("Node being analyzed in the backwardSearch(): {}", backwardsRemovedNode.getId());
+		
 		expandVertexBackward();
 
 	}
@@ -197,11 +209,11 @@ public class BidirectionalDijkstraCH {
 		for (long vid : neighbors.keySet()) {
 
 			if (graph.getNode(vid).getLevel() < graph.getNode(forwardsRemovedNode.getId()).getLevel()) {
-				System.out.println("\t Vizinho não considerado: " + vid);
+				logger.debug("Node ignored: {}", vid);
 				continue;
 			}
 
-			System.out.println("\t Vizinho considerado: " + vid);
+			logger.debug("Node considered: {}", vid);
 			DistanceEntry newEntry = new DistanceEntry(vid, neighbors.get(vid) + forwardsRemovedNode.getDistance(),
 					forwardsRemovedNode.getId());
 
@@ -280,10 +292,12 @@ public class BidirectionalDijkstraCH {
 
 			if (graph.getNode(vid).getLevel() < graph.getNode(backwardsRemovedNode.getId()).getLevel()) {
 				// verifyMeetingNodeBackwardSearch(vid, neighbors);
-				System.out.println("\t Vizinho não considerado: " + vid);
+				logger.debug("Node ignored: {}", vid);
 				continue;
 			}
 
+			logger.debug("Node considered: {}", vid);
+			
 			DistanceEntry newEntry = new DistanceEntry(vid, neighbors.get(vid) + backwardsRemovedNode.getDistance(),
 					backwardsRemovedNode.getId());
 
@@ -485,11 +499,11 @@ public class BidirectionalDijkstraCH {
 	}
 
 	public int getNumberOfForwardSettleNodes() {
-		return numberOfForwardSettleNodes;
+		return expandedNodesForwardSearch;
 	}
 
 	public int getNumberOfBackwardSettleNodes() {
-		return numberOfBackwardSettleNodes;
+		return expandedNodesBackwardSearch;
 	}
 
 	public int getNumberOfRegularSearches() {
