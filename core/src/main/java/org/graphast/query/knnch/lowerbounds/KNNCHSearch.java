@@ -182,6 +182,9 @@ public class KNNCHSearch {
 			meetingNode = meetingNodeHash.get(currentPoI);
 			target = graph.getNode(currentPoI);
 
+			if(backwardsUnsettleNodes == null)
+				continue;
+			
 //			 logger.info("PoI that will be analyzed: {}", currentPoI);
 			// logger.info("Number of PoIs being considered: {}",
 			// dijkstraHash.size());
@@ -402,7 +405,6 @@ public class KNNCHSearch {
 
 				pathHash.put(target.getId(), path);
 				backwardUnsettleNodesHash.remove(target.getId());
-
 				return path;
 
 			}

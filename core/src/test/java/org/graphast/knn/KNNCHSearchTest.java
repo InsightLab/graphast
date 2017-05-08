@@ -35,10 +35,10 @@ public class KNNCHSearchTest {
 		graphMonacoWithPoI.contractNodes();
 		preprocessingSW.stop();
 		logger.info("preprocessingTime = {} seconds", preprocessingSW.getSeconds());
-		
-		 logger.info("Starting to generate PoI'S");
-		 POIImporter.generateRandomPoIs(graphMonacoWithPoI, 100);
-		 logger.info("Finishing PoI's generation.");
+
+		logger.info("Starting to generate PoI'S");
+		POIImporter.generateRandomPoIs(graphMonacoWithPoI, 100);
+		logger.info("Finishing PoI's generation.");
 
 		// graphHopperExampleWithPoIs = new
 		// GraphGenerator().generateGraphHopperExampleWithPoIs();
@@ -142,36 +142,38 @@ public class KNNCHSearchTest {
 	//
 	// }
 
-//	@Test
-//	public void graphHopperExample4WithPoIsExperiment() {
-//
-//		CHGraph testGraph = graphHopperExample4WithPoIs;
-//		Long source = 0l;
-//		int numberOfRepetitions = 10;
-//
-//		List<Integer> numberOfNeighbors = new ArrayList<>(Arrays.asList(1, 2, 4, 8, 16, 32));
-//
-//		for (Integer k : numberOfNeighbors) {
-//			logger.info("Starting to run the first prunning method for kNN with CH. k = {}", k);
-//			int averageExecutionTime = 0;
-//
-//			for (int i = 0; i < numberOfRepetitions; i++) {
-//				StopWatch knnSW = new StopWatch();
-//
-//				KNNCHSearch knn = new KNNCHSearch(testGraph);
-//				knnSW.start();
-//				knn.search(graphHopperExample4WithPoIs.getNode(source), k);
-//				knnSW.stop();
-//
-//				averageExecutionTime += knnSW.getNanos();
-//			}
-//
-//			averageExecutionTime = averageExecutionTime / numberOfRepetitions;
-//			logger.info("averageExecutionTime = {}", averageExecutionTime);
-//
-//		}
-//
-//	}
+	// @Test
+	// public void graphHopperExample4WithPoIsExperiment() {
+	//
+	// CHGraph testGraph = graphHopperExample4WithPoIs;
+	// Long source = 0l;
+	// int numberOfRepetitions = 10;
+	//
+	// List<Integer> numberOfNeighbors = new ArrayList<>(Arrays.asList(1, 2, 4,
+	// 8, 16, 32));
+	//
+	// for (Integer k : numberOfNeighbors) {
+	// logger.info("Starting to run the first prunning method for kNN with CH. k
+	// = {}", k);
+	// int averageExecutionTime = 0;
+	//
+	// for (int i = 0; i < numberOfRepetitions; i++) {
+	// StopWatch knnSW = new StopWatch();
+	//
+	// KNNCHSearch knn = new KNNCHSearch(testGraph);
+	// knnSW.start();
+	// knn.search(graphHopperExample4WithPoIs.getNode(source), k);
+	// knnSW.stop();
+	//
+	// averageExecutionTime += knnSW.getNanos();
+	// }
+	//
+	// averageExecutionTime = averageExecutionTime / numberOfRepetitions;
+	// logger.info("averageExecutionTime = {}", averageExecutionTime);
+	//
+	// }
+	//
+	// }
 
 	// @Test
 	// public void graphMonacoWithPoITest() {
