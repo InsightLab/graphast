@@ -33,4 +33,28 @@ public class DistanceEntry extends EntryImpl implements Comparable<Object> {
 		return "Entry [id=" + getId() + ", distance=" + distance
 				+ ", parent=" + getParent() + "]";
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + distance;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DistanceEntry other = (DistanceEntry) obj;
+		if (distance != other.distance)
+			return false;
+		return true;
+	}
+	
+	
 }

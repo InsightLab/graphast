@@ -18,7 +18,7 @@ import org.graphast.query.route.shortestpath.AbstractShortestPathService;
 import org.graphast.query.route.shortestpath.dijkstra.DijkstraLinearFunction;
 import org.graphast.util.DistanceUtils;
 
-public class Path {
+public class Path implements Comparable<Path> {
 
 	private List<Point> geometry;
 	private List<Long> edges;
@@ -81,8 +81,9 @@ public class Path {
 				newInstruction.setEndGeometry(geometry.size()-1);
 			}
 		} else {
-			newInstruction = new Instruction(0, re.getLabel(), re.getCost(), 0);
-			edges.add(re.getEdgeId());
+			//Case where the destination and source match
+			newInstruction = new Instruction((int)id, re.getLabel(), re.getCost(), 0);
+//			edges.add(re.getEdgeId());
 		}
 
 

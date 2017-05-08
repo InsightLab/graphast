@@ -6,13 +6,13 @@ public interface Entry {
 
 	public abstract boolean equals(EntryImpl o);
 
-	public abstract long getId();
+	public abstract Long getId();
 
-	public abstract void setId(long id);
+	public abstract void setId(Long id);
 
-	public abstract long getParent();
+	public abstract Long getParent();
 
-	public abstract void setParent(long parent);
+	public abstract void setParent(Long parent);
 
 	public abstract String toString();
 

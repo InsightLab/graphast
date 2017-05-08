@@ -37,9 +37,9 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 	private Map<Long, Integer> oldPriorities = new HashMap<>();
 
-	private int neighborUpdatePercentage = 20;
-	private int periodicUpdatesPercentage = 20;
-	private int lastNodesLazyUpdatePercentage = 10;
+	private int neighborUpdatePercentage = 0;
+	private int periodicUpdatesPercentage = 0;
+	private int lastNodesLazyUpdatePercentage = 0;
 	private double nodesContractedPercentage = 100;
 	private int numberShortcutsCreated;
 	private final Random rand = new Random(123);

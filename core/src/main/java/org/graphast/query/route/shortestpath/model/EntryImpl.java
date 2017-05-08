@@ -4,8 +4,8 @@ import org.graphast.query.model.Entry;
 
 public class EntryImpl implements Entry{
 
-	private long id;
-	private long parent;
+	private Long id;
+	private Long parent;
 
 	public EntryImpl(long id, long parent) {
 		this.id = id;
@@ -24,7 +24,7 @@ public class EntryImpl implements Entry{
 	 * @see org.graphast.query.route.shortestpath.Entry#getId()
 	 */
 	@Override
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -32,7 +32,7 @@ public class EntryImpl implements Entry{
 	 * @see org.graphast.query.route.shortestpath.Entry#setId(long)
 	 */
 	@Override
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -40,7 +40,7 @@ public class EntryImpl implements Entry{
 	 * @see org.graphast.query.route.shortestpath.Entry#getParent()
 	 */
 	@Override
-	public long getParent() {
+	public Long getParent() {
 		return parent;
 	}
 
@@ -48,7 +48,33 @@ public class EntryImpl implements Entry{
 	 * @see org.graphast.query.route.shortestpath.Entry#setParent(long)
 	 */
 	@Override
-	public void setParent(long parent) {
+	public void setParent(Long parent) {
 		this.parent = parent;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + (int) (parent ^ (parent >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		EntryImpl other = (EntryImpl) obj;
+		if (id != other.id)
+			return false;
+		if (parent != other.parent)
+			return false;
+		return true;
+	}
+	
 }

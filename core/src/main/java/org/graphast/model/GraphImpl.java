@@ -1036,7 +1036,7 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		lat = latLongToInt(latitude);
 		lon = latLongToInt(longitude);
 		if (getNodeId(lat, lon) == null) {
-			return getNearestNode(latitude, longitude).getId();
+			return null;
 		}
 		else {
 			return getNodeId(lat, lon);

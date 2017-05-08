@@ -384,8 +384,6 @@ public class GraphGenerator {
 		na.setNode(29, 0, 1);
 		na.setNode(30, 0, 4);
 		na.setNode(31, 0, 3);
-		
-		
 
 		graphStorage.edge(16, 0, 1, false);
 		graphStorage.edge(0, 16, 1, false);
@@ -540,7 +538,7 @@ public class GraphGenerator {
 
 		CHGraph graph = new OSMImporterImpl(osmFile, graphHopperMonacoDir, graphastMonacoDir).executeCH();
 
-		POIImporter.importPoIList(graph, "src/test/resources/monaco-latest.csv");
+//		POIImporter.importPoIList(graph, "src/test/resources/monaco-latest.csv");
 
 		// System.out.println("#nodes: " + graph.getNumberOfNodes());
 		// System.out.println("#edges: " + graph.getNumberOfEdges());
@@ -2102,100 +2100,100 @@ public class GraphGenerator {
 		CHEdge edge;
 		CHNode node;
 
-		node = new CHNodeImpl(0l, 10, 30);
+		node = new CHNodeImpl(0l, 10, 30, 1);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(1l, 10, 10);
+		node = new CHNodeImpl(1l, 10, 10, 1);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(2l, 20, 10);
+		node = new CHNodeImpl(2l, 20, 10, 1);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(3l, 30, 10);
+		node = new CHNodeImpl(3l, 30, 10, 1);
 		graph.addNode(node);
 
 		node = new CHNodeImpl(4l, 40, 10, 1);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(5l, 50, 0);
+		node = new CHNodeImpl(5l, 50, 0, 1);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(6l, 60, 0);
+		node = new CHNodeImpl(6l, 60, 0, 1);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(7l, 70, 10);
+		node = new CHNodeImpl(7l, 70, 10, 1);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(8l, 80, 10);
+		node = new CHNodeImpl(8l, 80, 10, 1);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(9l, 20, 30);
+		node = new CHNodeImpl(9l, 20, 30, 1);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(10l, 30, 30);
+		node = new CHNodeImpl(10l, 30, 30, 1);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(11l, 40, 30);
+		node = new CHNodeImpl(11l, 40, 30, 1);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(12l, 50, 20);
+		node = new CHNodeImpl(12l, 50, 20, 1);
 		graph.addNode(node);
 
 		node = new CHNodeImpl(13l, 60, 20, 1);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(14l, 10, 0);
+		node = new CHNodeImpl(14l, 10, 0, 1);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(15l, -10, 10);
+		node = new CHNodeImpl(15l, -10, 10, 1);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(16l, -10, 30);
+		node = new CHNodeImpl(16l, -10, 30, 1);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(17l, 10, 20);
+		node = new CHNodeImpl(17l, 10, 20, 1);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(18l, 10, -10);
+		node = new CHNodeImpl(18l, 10, -10, 1);
 		graph.addNode(node);
 
 		node = new CHNodeImpl(19l, 10, -20, 1);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(20l, 0, -10);
+		node = new CHNodeImpl(20l, 0, -10, 1);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(21l, 0, -20);
+		node = new CHNodeImpl(21l, 0, -20, 1);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(22l, 80, 0);
+		node = new CHNodeImpl(22l, 80, 0, 1);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(23l, 80, -10);
+		node = new CHNodeImpl(23l, 80, -10, 1);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(24l, 70, -10);
+		node = new CHNodeImpl(24l, 70, -10, 1);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(25l, 50, -10);
+		node = new CHNodeImpl(25l, 50, -10, 1);
 		graph.addNode(node);
 
 		node = new CHNodeImpl(26l, 40, -30, 1);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(27l, 40, -10);
+		node = new CHNodeImpl(27l, 40, -10, 1);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(28l, 40, 50);
+		node = new CHNodeImpl(28l, 40, 50, 1);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(29l, 50, 50);
+		node = new CHNodeImpl(29l, 50, 50, 1);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(30l, 50, 40);
+		node = new CHNodeImpl(30l, 50, 40, 1);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(31l, 50, 30);
+		node = new CHNodeImpl(31l, 50, 30, 1);
 		graph.addNode(node);
 
 		// TODO Create a constructor without the originalEdgeCounter
@@ -2293,12 +2291,6 @@ public class GraphGenerator {
 		graph.addEdge(edge);
 
 		edge = new CHEdgeImpl(20l, 19l, 14, 1, "Edge 31");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(20l, 15l, 22, 1, "Edge 32");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(15l, 20l, 22, 1, "Edge 33");
 		graph.addEdge(edge);
 
 		edge = new CHEdgeImpl(19l, 21l, 10, 1, "Edge 34");
@@ -2671,14 +2663,8 @@ public class GraphGenerator {
 		edge = new CHEdgeImpl(20l, 19l, 1, 1, "Edge 31");
 		graph.addEdge(edge);
 
-		edge = new CHEdgeImpl(20l, 15l, 1, 1, "Edge 32");
+		edge = new CHEdgeImpl(19l, 21l, 1, 1, "Edge 34");
 		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(15l, 20l, 1, 1, "Edge 33");
-		graph.addEdge(edge);
-
-		// edge = new CHEdgeImpl(19l, 21l, 1, 1, "Edge 34");
-		// graph.addEdge(edge);
 
 		edge = new CHEdgeImpl(21l, 19l, 1, 1, "Edge 35");
 		graph.addEdge(edge);
