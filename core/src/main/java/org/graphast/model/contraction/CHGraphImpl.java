@@ -195,6 +195,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 	}
 
+	//Method is working properly
 	@Override
 	public boolean prepareNodes() {
 
@@ -421,9 +422,9 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 					int outgoingEdgeCounter = this.getEdge(outgoingEdgeId).getOriginalEdgeCounter();
 
 					String newLabel = "Shortcut " + fromNodeId + "-" + toNodeId;
-					logger.debug("\t\t\t[SHORTCUT] FROM NODE {} TO NODE {}",
+					logger.debug("\t\t\t[SHORTCUT] FROM NODE {} TO NODE {}. Distance: {}",
 							this.getNode(this.getEdge(ingoingEdgeId).getFromNode()).getExternalId(),
-							this.getNode(this.getEdge(outgoingEdgeId).getToNode()).getExternalId());
+							this.getNode(this.getEdge(outgoingEdgeId).getToNode()).getExternalId(), (int) shortestPathBeforeContraction);
 					CHEdge shortcut = new CHEdgeImpl(fromNodeId, toNodeId, (int) shortestPathBeforeContraction,
 							ingoingEdgeCounter + outgoingEdgeCounter, n.getId(), this.getEdge(ingoingEdgeId).getId(),
 							this.getEdge(outgoingEdgeId).getId(), newLabel, true);
@@ -538,14 +539,16 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 			// Contracting a node
 
-			this.addShortcuts(polledNode.getId());
+//			this.addShortcuts(polledNode.getId());
 			// logger.debug("\t\t\tNumber of shortcuts created: {}",
 			// numberShortcutsCreated);
+			System.out.println("-Para o nó " + polledNode.getId() + " foram criados " + this.addShortcuts(polledNode.getId()) + " atalhos. Seu nível é " + level);
 
 			this.updateNodeInfo(polledNode, level, polledNode.getPriority());
 			// TODO Double check if this setLevel is necessary, since we already
 			// have a updateNodeInfo before
 //			polledNode.setLevel(level);
+			
 
 			level++;
 

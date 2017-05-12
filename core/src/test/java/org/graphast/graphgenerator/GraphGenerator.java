@@ -1978,12 +1978,6 @@ public class GraphGenerator {
 		edge = new CHEdgeImpl(20l, 19l, 1, 1, "Edge 31");
 		graph.addEdge(edge);
 
-		edge = new CHEdgeImpl(20l, 15l, 1, 1, "Edge 32");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(15l, 20l, 1, 1, "Edge 33");
-		graph.addEdge(edge);
-
 		edge = new CHEdgeImpl(19l, 21l, 1, 1, "Edge 34");
 		graph.addEdge(edge);
 

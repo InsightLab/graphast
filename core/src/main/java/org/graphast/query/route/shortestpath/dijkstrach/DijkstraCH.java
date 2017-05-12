@@ -113,7 +113,7 @@ public class DijkstraCH {
 			expandVertex(removed, queue, parents, wasTraversed, skippedNode);
 			
 //			if(wasTraversed.containsKey(targetId) && wasTraversed.get(targetId)==-1) {
-			if (queue.peek().getId() == targetId) {
+			if (removed.getId() == targetId) {
 				Path path = new Path();
 				path.constructPath(queue.peek().getId(), parents, graph);
 				return path;
@@ -254,7 +254,10 @@ public class DijkstraCH {
 			if (vid == skippedNode.getId()) {
 				continue;
 			}
-			
+			if (graph.getNode(vid).getLevel() < graph.getNode(removed.getId()).getLevel()) {
+				// verifyMeetingNodeBackwardSearch(vid, neighbors);
+				continue;
+			}
 //			if (vid == skippedNode.getId()) {
 //				continue;
 //			}
