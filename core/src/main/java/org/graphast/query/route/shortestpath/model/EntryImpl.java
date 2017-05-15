@@ -72,8 +72,8 @@ public class EntryImpl implements Entry{
 		EntryImpl other = (EntryImpl) obj;
 		if (id != other.id)
 			return false;
-		if (parent != other.parent)
-			return false;
+//		if (parent != other.parent)
+//			return false;
 		return true;
 	}
 	
