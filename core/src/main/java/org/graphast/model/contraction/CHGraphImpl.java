@@ -195,7 +195,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 	}
 
-	//Method is working properly
+	// Method is working properly
 	@Override
 	public boolean prepareNodes() {
 
@@ -215,6 +215,12 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 		if (sortedNodesQueue.isEmpty())
 			return false;
+
+//		System.out.println("NODE;PRIORITY");
+//		while (!sortedNodesQueue.isEmpty()) {
+//			System.out.println(sortedNodesQueue.peek().getId() + ";" + sortedNodesQueue.peek().getPriority());
+//			sortedNodesQueue.poll();
+//		}
 
 		return true;
 
@@ -257,19 +263,24 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 		}
 
 		int edgeDifference = possibleShortcuts.get(n.getId()).size() - degree;
-		
-//		int hyperPoICoefficient = 0;
 
-//		if (n.getCategory() != -1) {
-//			hyperPoICoefficient += 20 * this.getNumberOfEdges() + this.getNumberOfEdges() + this.getNumberOfNodes() + this.getInEdges(n.getId()).size() + this.getOutEdges(n.getId()).size();
-//		}
+		// int hyperPoICoefficient = 0;
+
+		// if (n.getCategory() != -1) {
+		// hyperPoICoefficient += 20 * this.getNumberOfEdges() +
+		// this.getNumberOfEdges() + this.getNumberOfNodes() +
+		// this.getInEdges(n.getId()).size() +
+		// this.getOutEdges(n.getId()).size();
+		// }
 
 		int prioridade = 10 * edgeDifference + originalEdgeCount + numberOfContractedNeighbors;
-//		int prioridade = 10 * edgeDifference + originalEdgeCount + numberOfContractedNeighbors + hyperPoICoefficient;
+		// int prioridade = 10 * edgeDifference + originalEdgeCount +
+		// numberOfContractedNeighbors + hyperPoICoefficient;
 		logger.debug("Priority of node {}: {}", n.getId(), prioridade);
 
 		return 10 * edgeDifference + originalEdgeCount + numberOfContractedNeighbors;
-//		return 10 * edgeDifference + originalEdgeCount + numberOfContractedNeighbors + hyperPoICoefficient;
+		// return 10 * edgeDifference + originalEdgeCount +
+		// numberOfContractedNeighbors + hyperPoICoefficient;
 
 	}
 
@@ -340,6 +351,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 		logger.debug("PROCURANDO ATALHOS PARA O NÓ {}. LAT: {} LON: {}", n.getExternalId(), n.getLatitude(),
 				n.getLongitude());
 
+//		System.out.println("Node being CONTRACTED: " + n.getId());
 		int temporaryDegreeCounter = 0;
 		List<CHEdge> possibleLocalShortcut = new ArrayList<>();
 
@@ -424,17 +436,21 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 					String newLabel = "Shortcut " + fromNodeId + "-" + toNodeId;
 					logger.debug("\t\t\t[SHORTCUT] FROM NODE {} TO NODE {}. Distance: {}",
 							this.getNode(this.getEdge(ingoingEdgeId).getFromNode()).getExternalId(),
-							this.getNode(this.getEdge(outgoingEdgeId).getToNode()).getExternalId(), (int) shortestPathBeforeContraction);
+							this.getNode(this.getEdge(outgoingEdgeId).getToNode()).getExternalId(),
+							(int) shortestPathBeforeContraction);
 					CHEdge shortcut = new CHEdgeImpl(fromNodeId, toNodeId, (int) shortestPathBeforeContraction,
 							ingoingEdgeCounter + outgoingEdgeCounter, n.getId(), this.getEdge(ingoingEdgeId).getId(),
 							this.getEdge(outgoingEdgeId).getId(), newLabel, true);
 
 					possibleLocalShortcut.add(shortcut);
+					
+//					System.out.println("\tNEW SHORTCUT FROM "+ fromNodeId + " AND " + toNodeId + " CREATED.");
 
 				} else {
 					logger.debug("\tShortcut between source node {} and destination node {} not created.",
 							this.getNode(this.getEdge(ingoingEdgeId).getFromNode()).getExternalId(),
 							this.getNode(this.getEdge(outgoingEdgeId).getToNode()).getExternalId());
+//					System.out.println("\tShortcut between " + fromNodeId + " and " + toNodeId + " not created.");
 				}
 
 			}
@@ -461,7 +477,8 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 		// => enable it but call not so often
 		boolean periodicUpdate = true;
 
-		long periodicUpdatesCount = Math.round(Math.max(10, sortedNodesQueue.size() / 100d * periodicUpdatesPercentage));
+		long periodicUpdatesCount = Math
+				.round(Math.max(10, sortedNodesQueue.size() / 100d * periodicUpdatesPercentage));
 
 		if (periodicUpdatesPercentage == 0) {
 			periodicUpdate = false;
@@ -469,10 +486,9 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 		// Disable lazy updates for last x percentage of nodes as preparation is
 		// then a lot slower and query time does not really benefit
-		long lastNodesLazyUpdates = lastNodesLazyUpdatePercentage == 0
-                ? 0l
-                : Math.round(sortedNodesQueue.size() / 100d * lastNodesLazyUpdatePercentage);
-		
+		long lastNodesLazyUpdates = lastNodesLazyUpdatePercentage == 0 ? 0l
+				: Math.round(sortedNodesQueue.size() / 100d * lastNodesLazyUpdatePercentage);
+
 		// According to paper "Polynomial-time Construction of Contraction
 		// Hierarchies for Multi-criteria Objectives" by Funke and Storandt,
 		// we don't need to wait for all nodes to be contracted
@@ -499,11 +515,11 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 					if (this.getNode(nodeId).getLevel() != 0)
 						continue;
-					
+
 					oldPriorities.put((long) nodeId, calculatePriority(this.getNode(nodeId), true));
 					int priority = oldPriorities.get((long) nodeId);
 
-					//TODO Double check this
+					// TODO Double check this
 					this.updateNodeInfo(this.getNode(nodeId), this.getNode(nodeId).getLevel(), priority);
 					sortedNodesQueue.add((CHNodeImpl) this.getNode(nodeId));
 
@@ -519,7 +535,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 			logger.debug("Node being contracted: {}. Priority: {}", polledNode.getId(), polledNode.getPriority());
 
 			if (sortedNodesQueue.size() < lastNodesLazyUpdates) {
-				
+
 				oldPriorities.put(polledNode.getId(), calculatePriority(this.getNode(polledNode.getId()), true));
 				int priority = oldPriorities.get(polledNode.getId());
 
@@ -529,8 +545,8 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 					CHNode node = this.getNode(polledNode.getId());
 					node.setPriority(priority);
 					// TODO Double check this maxLevel setter. Is it necessary?
-//					node.setLevel(maxLevel);
-//					this.updateNodeInfo(node, maxLevel, priority);
+					// node.setLevel(maxLevel);
+					// this.updateNodeInfo(node, maxLevel, priority);
 
 					sortedNodesQueue.add((CHNodeImpl) node);
 					continue;
@@ -539,28 +555,30 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 			// Contracting a node
 
-//			this.addShortcuts(polledNode.getId());
+			 this.addShortcuts(polledNode.getId());
 			// logger.debug("\t\t\tNumber of shortcuts created: {}",
 			// numberShortcutsCreated);
-			System.out.println("-Para o nó " + polledNode.getId() + " foram criados " + this.addShortcuts(polledNode.getId()) + " atalhos. Seu nível é " + level);
+//			System.out.println("-Para o nó " + polledNode.getId() + " foram criados "
+//					+ this.addShortcuts(polledNode.getId()) + " atalhos. Seu nível é " + level);
 
+//			System.out.println(polledNode.getId() + ";" + level + ";" + this.addShortcuts(polledNode.getId()));
+			
 			this.updateNodeInfo(polledNode, level, polledNode.getPriority());
 			// TODO Double check if this setLevel is necessary, since we already
 			// have a updateNodeInfo before
-//			polledNode.setLevel(level);
-			
+			// polledNode.setLevel(level);
 
 			level++;
 
 			if (sortedNodesQueue.size() < nodesToAvoidContract) {
-			
-				while(!sortedNodesQueue.isEmpty()) {
+
+				while (!sortedNodesQueue.isEmpty()) {
 					polledNode = sortedNodesQueue.poll();
 					polledNode.setLevel(level);
 				}
 				// skipped nodes are already set to maxLevel
 				break;
-				
+
 			}
 
 			for (Long edgeID : this.getInEdges(polledNode.getId())) {
@@ -577,7 +595,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 				if (neighborUpdate && rand.nextInt(100) < neighborUpdatePercentage) {
 					int oldPrio = oldPriorities.get(nearestNeighborID);
-					//TODO Double check this priority calculation
+					// TODO Double check this priority calculation
 					int newPrio = calculatePriority(this.getNode(nearestNeighborID), true, polledNode.getId(), edgeID);
 					oldPriorities.replace(nearestNeighborID, newPrio);
 					// logger.debug("\t[LAZY UPDATE] NodeID: {}, Priority: {}",
@@ -611,7 +629,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 				if (neighborUpdate && rand.nextInt(100) < neighborUpdatePercentage) {
 
 					int oldPrio = oldPriorities.get(nearestNeighborID);
-					//TODO Double check this priority calculation
+					// TODO Double check this priority calculation
 					int newPrio = calculatePriority(this.getNode(nearestNeighborID), true, polledNode.getId(), edgeID);
 					oldPriorities.replace(nearestNeighborID, newPrio);
 					// logger.debug("\t[LAZY UPDATE] NodeID: {}, Priority: {}",
@@ -631,7 +649,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 			}
 
 		}
-		
+
 		this.save();
 	}
 
@@ -669,7 +687,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 			}
 
 		}
-		
+
 		return temporaryShortcutCounter;
 
 	}
