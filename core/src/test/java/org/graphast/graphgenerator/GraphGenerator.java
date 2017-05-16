@@ -2094,308 +2094,293 @@ public class GraphGenerator {
 		CHEdge edge;
 		CHNode node;
 
-		node = new CHNodeImpl(0l, 10, 30, 1);
+		node = new CHNodeImpl(0l, 10, 30);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(1l, 10, 10, 1);
+		node = new CHNodeImpl(1l, 10, 10);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(2l, 20, 10, 1);
+		node = new CHNodeImpl(2l, 20, 10);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(3l, 30, 10, 1);
+		node = new CHNodeImpl(3l, 30, 10);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(4l, 40, 10, 1);
+		node = new CHNodeImpl(4l, 40, 10);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(5l, 50, 0, 1);
+		node = new CHNodeImpl(5l, 50, 0);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(6l, 60, 0, 1);
+		node = new CHNodeImpl(6l, 60, 0);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(7l, 70, 10, 1);
+		node = new CHNodeImpl(7l, 70, 10);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(8l, 80, 10, 1);
+		node = new CHNodeImpl(8l, 80, 10);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(9l, 20, 30, 1);
+		node = new CHNodeImpl(9l, 20, 30);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(10l, 30, 30, 1);
+		node = new CHNodeImpl(10l, 30, 30);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(11l, 40, 30, 1);
+		node = new CHNodeImpl(11l, 40, 30);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(12l, 50, 20, 1);
+		node = new CHNodeImpl(12l, 50, 20);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(13l, 60, 20, 1);
+		node = new CHNodeImpl(13l, 60, 20);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(14l, 10, 0, 1);
+		node = new CHNodeImpl(14l, 10, 0);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(15l, -10, 10, 1);
+		node = new CHNodeImpl(15l, -10, 10);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(16l, -10, 30, 1);
+		node = new CHNodeImpl(16l, -10, 30);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(17l, 10, 20, 1);
+		node = new CHNodeImpl(17l, 10, 20);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(18l, 10, -10, 1);
+		node = new CHNodeImpl(18l, 10, -10);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(19l, 10, -20, 1);
+		node = new CHNodeImpl(19l, 10, -20);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(20l, 0, -10, 1);
+		node = new CHNodeImpl(20l, 0, -10);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(21l, 0, -20, 1);
+		node = new CHNodeImpl(21l, 0, -20);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(22l, 80, 0, 1);
+		node = new CHNodeImpl(22l, 80, 0);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(23l, 80, -10, 1);
+		node = new CHNodeImpl(23l, 80, -10);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(24l, 70, -10, 1);
+		node = new CHNodeImpl(24l, 70, -10);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(25l, 50, -10, 1);
+		node = new CHNodeImpl(25l, 50, -10);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(26l, 40, -30, 1);
+		node = new CHNodeImpl(26l, 40, -30);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(27l, 40, -10, 1);
+		node = new CHNodeImpl(27l, 40, -10);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(28l, 40, 50, 1);
+		node = new CHNodeImpl(28l, 40, 50);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(29l, 50, 50, 1);
+		node = new CHNodeImpl(29l, 50, 50);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(30l, 50, 40, 1);
+		node = new CHNodeImpl(30l, 50, 40);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(31l, 50, 30, 1);
-		graph.addNode(node);
-		
-		node = new CHNodeImpl(32l, 70, 30);
-		graph.addNode(node);
-		
-		node = new CHNodeImpl(33l, 10, 50);
+		node = new CHNodeImpl(31l, 50, 30);
 		graph.addNode(node);
 
 		// TODO Create a constructor without the originalEdgeCounter
-		edge = new CHEdgeImpl(0l, 16l, 20, 1, "Edge 0");
+		edge = new CHEdgeImpl(0l, 9l, 1, 1, "Edge 0-9");
 		graph.addEdge(edge);
 
-		edge = new CHEdgeImpl(16l, 0l, 20, 1, "Edge 1");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(0l, 9l, 10, 1, "Edge 2");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(9l, 0l, 10, 1, "Edge 3");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(0l, 17l, 10, 1, "Edge 4");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(17l, 0l, 10, 1, "Edge 5");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(9l, 10l, 10, 1, "Edge 6");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(10l, 9l, 10, 1, "Edge 7");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(10l, 11l, 10, 1, "Edge 8");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(11l, 10l, 10, 1, "Edge 9");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(11l, 28l, 20, 1, "Edge 10");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(28l, 11l, 20, 1, "Edge 11");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(28l, 29l, 10, 1, "Edge 12");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(29l, 28l, 10, 1, "Edge 13");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(29l, 30l, 10, 1, "Edge 14");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(30l, 29l, 10, 1, "Edge 15");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(30l, 31l, 10, 1, "Edge 16");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(31l, 30l, 10, 1, "Edge 17");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(31l, 4l, 22, 1, "Edge 18");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(4l, 31l, 22, 1, "Edge 19");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(17l, 1l, 10, 1, "Edge 20");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(1l, 17l, 10, 1, "Edge 21");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(15l, 1l, 20, 1, "Edge 22");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(1l, 15l, 20, 1, "Edge 23");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(14l, 1l, 10, 1, "Edge 24");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(1l, 14l, 10, 1, "Edge 25");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(14l, 18l, 10, 1, "Edge 26");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(18l, 14l, 10, 1, "Edge 27");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(18l, 19l, 10, 1, "Edge 28");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(19l, 18l, 10, 1, "Edge 29");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(19l, 20l, 14, 1, "Edge 30");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(20l, 19l, 14, 1, "Edge 31");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(19l, 21l, 10, 1, "Edge 32");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(21l, 19l, 10, 1, "Edge 33");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(21l, 16l, 51, 1, "Edge 34");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(16l, 21l, 51, 1, "Edge 35");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(1l, 2l, 10, 1, "Edge 36");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(2l, 1l, 10, 1, "Edge 37");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(2l, 3l, 10, 1, "Edge 38");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(3l, 2l, 10, 1, "Edge 39");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(3l, 4l, 10, 1, "Edge 40");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(4l, 3l, 10, 1, "Edge 41");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(4l, 5l, 14, 1, "Edge 42");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(5l, 6l, 10, 1, "Edge 43");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(6l, 7l, 14, 1, "Edge 44");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(7l, 13l, 14, 1, "Edge 45");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(13l, 12l, 10, 1, "Edge 46");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(12l, 4l, 14, 1, "Edge 47");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(7l, 8l, 10, 1, "Edge 48");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(8l, 7l, 10, 1, "Edge 49");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(8l, 22l, 10, 1, "Edge 50");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(22l, 8l, 10, 1, "Edge 51");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(22l, 23l, 10, 1, "Edge 52");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(23l, 22l, 10, 1, "Edge 53");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(23l, 24l, 10, 1, "Edge 54");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(24l, 23l, 10, 1, "Edge 55");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(24l, 25l, 20, 1, "Edge 56");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(25l, 24l, 20, 1, "Edge 57");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(25l, 27l, 10, 1, "Edge 58");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(27l, 25l, 10, 1, "Edge 59");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(27l, 5l, 14, 1, "Edge 60");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(5l, 27l, 14, 1, "Edge 61");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(25l, 26l, 22, 1, "Edge 62");
-		graph.addEdge(edge);
-
-		edge = new CHEdgeImpl(26l, 25l, 22, 1, "Edge 63");
+		edge = new CHEdgeImpl(9l, 0l, 1, 1, "Edge 9-0");
 		graph.addEdge(edge);
 		
-		edge = new CHEdgeImpl(13l, 32l, 14, 1, "Edge 64");
+		edge = new CHEdgeImpl(0l, 16l, 1, 1, "Edge 0-16");
 		graph.addEdge(edge);
 		
-		edge = new CHEdgeImpl(0l, 33l, 20, 1, "Edge 65");
+		edge = new CHEdgeImpl(16l, 0l, 1, 1, "Edge 16-0");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(0l, 17l, 1, 1, "Edge 0-17");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(17l, 0l, 1, 1, "Edge 17-0");
 		graph.addEdge(edge);
 		
-		edge = new CHEdgeImpl(0l, 9l, 100, 1, "Edge 66");
+		edge = new CHEdgeImpl(1l, 2l, 1, 1, "Edge 1-2");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(2l, 1l, 1, 1, "Edge 2-1");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(1l, 14l, 1, 1, "Edge 1-14");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(14l, 1l, 1, 1, "Edge 14-1");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(1l, 15l, 1, 1, "Edge 1-15");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(15l, 1l, 1, 1, "Edge 15-1");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(1l, 17l, 1, 1, "Edge 1-17");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(17l, 1l, 1, 1, "Edge 17-1");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(2l, 3l, 1, 1, "Edge 2-3");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(3l, 2l, 1, 1, "Edge 3-2");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(3l, 4l, 1, 1, "Edge 3-4");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(4l, 3l, 1, 1, "Edge 4-3");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(4l, 5l, 1, 1, "Edge 4-5");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(4l, 31l, 1, 1, "Edge 4-31");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(31l, 4l, 1, 1, "Edge 31-4");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(5l, 6l, 1, 1, "Edge 5-6");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(5l, 27l, 1, 1, "Edge 5-27");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(27l, 5l, 1, 1, "Edge 27-5");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(6l, 7l, 1, 1, "Edge 6-7");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(7l, 13l, 1, 1, "Edge 7-13");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(7l, 8l, 1, 1, "Edge 7-8");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(8l, 7l, 1, 1, "Edge 8-7");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(8l, 22l, 1, 1, "Edge 8-22");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(22l, 8l, 1, 1, "Edge 22-8");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(9l, 10l, 1, 1, "Edge 9-10");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(10l, 9l, 1, 1, "Edge 10-9");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(10l, 11l, 1, 1, "Edge 10-11");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(11l, 10l, 1, 1, "Edge 11-10");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(11l, 28l, 1, 1, "Edge 11-28");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(28l, 11l, 1, 1, "Edge 28-11");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(12l, 4l, 1, 1, "Edge 12-4");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(13l, 12l, 1, 1, "Edge 13-12");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(14l, 18l, 1, 1, "Edge 14-18");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(18l, 14l, 1, 1, "Edge 18-14");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(16l, 21l, 1, 1, "Edge 16-21");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(21l, 16l, 1, 1, "Edge 21-16");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(18l, 19l, 1, 1, "Edge 18-19");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(19l, 18l, 1, 1, "Edge 19-18");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(19l, 20l, 1, 1, "Edge 19-20");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(20l, 19l, 1, 1, "Edge 20-19");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(19l, 21l, 1, 1, "Edge 19-21");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(21l, 19l, 1, 1, "Edge 21-19");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(22l, 23l, 1, 1, "Edge 22-23");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(23l, 22l, 1, 1, "Edge 23-22");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(23l, 24l, 1, 1, "Edge 23-24");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(24l, 23l, 1, 1, "Edge 24-23");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(24l, 25l, 1, 1, "Edge 24-25");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(25l, 24l, 1, 1, "Edge 25-24");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(25l, 26l, 1, 1, "Edge 25-26");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(26l, 25l, 1, 1, "Edge 26-25");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(25l, 27l, 1, 1, "Edge 25-27");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(27l, 25l, 1, 1, "Edge 27-25");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(28l, 29l, 1, 1, "Edge 28-29");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(29l, 28l, 1, 1, "Edge 29-28");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(29l, 30l, 1, 1, "Edge 29-30");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(30l, 29l, 1, 1, "Edge 30-29");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(30l, 31l, 1, 1, "Edge 30-31");
+		graph.addEdge(edge);
+
+		edge = new CHEdgeImpl(31l, 30l, 1, 1, "Edge 31-30");
 		graph.addEdge(edge);
 
 		// graph.createHyperPOIS();
