@@ -2,7 +2,9 @@ package org.graphast.query.route.shortestpath.dijkstrach;
 
 import static org.graphast.util.NumberUtils.convertToInt;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.PriorityQueue;
 
 import org.graphast.exception.PathNotFoundException;
@@ -13,6 +15,7 @@ import org.graphast.model.contraction.CHEdgeImpl;
 import org.graphast.model.contraction.CHGraph;
 import org.graphast.query.model.Entry;
 import org.graphast.query.route.shortestpath.model.DistanceEntry;
+import org.graphast.query.route.shortestpath.model.Instruction;
 import org.graphast.query.route.shortestpath.model.Path;
 import org.graphast.query.route.shortestpath.model.RouteEntry;
 import org.slf4j.Logger;
@@ -114,8 +117,19 @@ public class BidirectionalDijkstraCH {
 
 		}
 
-		throw new PathNotFoundException("Path not found between (" + source.getLatitude() + "," + source.getLongitude()
-				+ ") and (" + target.getLatitude() + "," + target.getLongitude() + ")");
+		Path path = new Path();
+		Instruction instruction = new Instruction(Integer.MAX_VALUE,
+				"PATH NOT FOUND BETWEEN " + source.getId() + " AND " + target.getId(), Double.MAX_VALUE,
+				Integer.MAX_VALUE);
+		List<Instruction> instructions = new ArrayList<>();
+		instructions.add(instruction);
+		path.setInstructions(instructions);
+		return path;
+
+		// throw new PathNotFoundException("Path not found between (" +
+		// source.getLatitude() + "," + source.getLongitude()
+		// + ") and (" + target.getLatitude() + "," + target.getLongitude() +
+		// ")");
 
 	}
 
@@ -140,7 +154,8 @@ public class BidirectionalDijkstraCH {
 			endCurr = backwardsUnsettleNodes.peek().getDistance();
 		}
 
-		if ( (startCurr + endCurr >= meetingNode.getDistance()) || (forwardsUnsettleNodes.peek() == null && backwardsUnsettleNodes.peek() == null) ) {
+		if ((startCurr + endCurr >= meetingNode.getDistance())
+				|| (forwardsUnsettleNodes.peek() == null && backwardsUnsettleNodes.peek() == null)) {
 
 			while (!forwardsUnsettleNodes.isEmpty()) {
 				DistanceEntry possibleNewMeetingNode = forwardsUnsettleNodes.poll();
@@ -157,7 +172,7 @@ public class BidirectionalDijkstraCH {
 				}
 
 			}
-			
+
 			while (!backwardsUnsettleNodes.isEmpty()) {
 				DistanceEntry possibleNewMeetingNode = backwardsUnsettleNodes.poll();
 				if (forwardsSettleNodes.containsKey(possibleNewMeetingNode.getId())) {
@@ -171,6 +186,18 @@ public class BidirectionalDijkstraCH {
 
 					}
 				}
+			}
+
+			if ((forwardsUnsettleNodes.peek() == null && backwardsUnsettleNodes.peek() == null)
+					&& meetingNode.getId() == -1) {
+				path = new Path();
+				Instruction instruction = new Instruction(Integer.MAX_VALUE,
+						"PATH NOT FOUND BETWEEN " + source.getId() + " AND " + target.getId(), Double.MAX_VALUE,
+						Integer.MAX_VALUE);
+				List<Instruction> instructions = new ArrayList<>();
+				instructions.add(instruction);
+				path.setInstructions(instructions);
+				return;
 			}
 
 			HashMap<Long, RouteEntry> resultParentNodes;
@@ -204,7 +231,8 @@ public class BidirectionalDijkstraCH {
 			endCurr = backwardsUnsettleNodes.peek().getDistance();
 		}
 
-		if ( (startCurr + endCurr >= meetingNode.getDistance()) || (forwardsUnsettleNodes.peek() == null && backwardsUnsettleNodes.peek() == null)  ) {
+		if ((startCurr + endCurr >= meetingNode.getDistance())
+				|| (forwardsUnsettleNodes.peek() == null && backwardsUnsettleNodes.peek() == null)) {
 
 			while (!backwardsUnsettleNodes.isEmpty()) {
 				DistanceEntry possibleNewMeetingNode = backwardsUnsettleNodes.poll();
@@ -220,7 +248,7 @@ public class BidirectionalDijkstraCH {
 					}
 				}
 			}
-			
+
 			while (!forwardsUnsettleNodes.isEmpty()) {
 				DistanceEntry possibleNewMeetingNode = forwardsUnsettleNodes.poll();
 				if (backwardsSettleNodes.containsKey(possibleNewMeetingNode.getId())) {
@@ -235,6 +263,18 @@ public class BidirectionalDijkstraCH {
 					}
 				}
 
+			}
+
+			if ((forwardsUnsettleNodes.peek() == null && backwardsUnsettleNodes.peek() == null)
+					&& meetingNode.getId() == -1) {
+				path = new Path();
+				Instruction instruction = new Instruction(Integer.MAX_VALUE,
+						"PATH NOT FOUND BETWEEN " + source.getId() + " AND " + target.getId(), Double.MAX_VALUE,
+						Integer.MAX_VALUE);
+				List<Instruction> instructions = new ArrayList<>();
+				instructions.add(instruction);
+				path.setInstructions(instructions);
+				return;
 			}
 
 			HashMap<Long, RouteEntry> resultParentNodes;

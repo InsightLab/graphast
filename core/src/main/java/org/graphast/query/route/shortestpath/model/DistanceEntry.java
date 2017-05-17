@@ -42,15 +42,21 @@ public class DistanceEntry extends EntryImpl implements Comparable<Object> {
 		return result;
 	}
 
-//	@Override
-//	public boolean equals(Object obj) {
-//		
-//		if( super.equals(obj) && this.distance == ((DistanceEntry)obj).distance ) {
-//			return true;
-//		} else {
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		DistanceEntry other = (DistanceEntry) obj;
+		if (!getId().equals(other.getId()))
+			return false;
+//		if (parent != other.parent)
 //			return false;
-//		}
-//	}
+		return true;
+	}
 	
 	
 }

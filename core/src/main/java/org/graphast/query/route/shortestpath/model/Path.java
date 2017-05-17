@@ -92,7 +92,7 @@ public class Path implements Comparable<Path> {
 
 		while (parent != -1) {
 			re = parents.get(parent);
-
+			
 			if (re != null) {
 				String predecessorLabel = verificationQueue.peek().getLabel();
 				if(re.getEdgeId()!=-1) {

@@ -14,6 +14,7 @@ import org.graphast.model.Graph;
 import org.graphast.model.GraphBounds;
 import org.graphast.model.Node;
 import org.graphast.query.route.shortestpath.AbstractShortestPathService;
+import org.graphast.query.route.shortestpath.model.Instruction;
 import org.graphast.query.route.shortestpath.model.Path;
 import org.graphast.query.route.shortestpath.model.RouteEntry;
 import org.graphast.query.route.shortestpath.model.TimeEntry;
@@ -103,8 +104,16 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 			
 			numberOfExpandingVertex++;
 		}
-		throw new PathNotFoundException("Path not found between (" + source.getLatitude() + "," + source.getLongitude()
-				+ ") and (" + target.getLatitude() + "," + target.getLongitude() + ")");
+		
+		Path path = new Path();
+		Instruction instruction = new Instruction(Integer.MAX_VALUE, "PATH NOT FOUND BETWEEN " + source.getId() + " AND " + target.getId(), Double.MAX_VALUE, Integer.MAX_VALUE);
+		List<Instruction> instructions = new ArrayList<>();
+		instructions.add(instruction);
+		path.setInstructions(instructions);
+		return path;
+		
+//		throw new PathNotFoundException("Path not found between (" + source.getLatitude() + "," + source.getLongitude()
+//				+ ") and (" + target.getLatitude() + "," + target.getLongitude() + ")");
 	}
 
 	public void init(Node source, Node target, PriorityQueue<TimeEntry> queue, HashMap<Long, RouteEntry> parents, int t) {

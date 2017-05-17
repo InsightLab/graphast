@@ -17,11 +17,13 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.graphhopper.util.StopWatch;
+
 public class KNNCHSearchTest {
 
 	private static Logger logger = LoggerFactory.getLogger(KNNCHSearchTest.class);
 
-	private static CHGraph graphMonacoWithPoI;
+	// private static CHGraph graphMonacoWithPoI;
 	// private static CHGraph graphHopperExampleWithPoIs;
 	// private static CHGraph graphHopperExample2WithPoIs;
 	// private static CHGraph graphHopperExample3WithPoIs;
@@ -58,7 +60,7 @@ public class KNNCHSearchTest {
 		// graphHopperExample3WithPoIs.prepareNodes();
 		// graphHopperExample3WithPoIs.contractNodes();
 
-		graphHopperExample4WithPoIs = new GraphGenerator().generateGraphHopperExample4WithPoIs();
+		graphHopperExample4WithPoIs = new GraphGenerator().generateGraphHopperExample4();
 		graphHopperExample4WithPoIs.prepareNodes();
 		graphHopperExample4WithPoIs.contractNodes();
 		logger.info("Starting to generate PoI'S");
@@ -114,43 +116,48 @@ public class KNNCHSearchTest {
 	@Test
 	public void graphHopperExample4WithPoIsTest() {
 
-		Long source = 0l;
+		for (Long source = 0l; source < graphHopperExample4WithPoIs.getNumberOfNodes(); source++) {
+			// Long source = 0l;
 
-		Queue<Path> finalResult = new PriorityQueue<>();
+			logger.info("SOURCE = {}", source);
+			
+			Queue<Path> finalResult = new PriorityQueue<>();
 
-		KNNCHSearch knn = new KNNCHSearch(graphHopperExample4WithPoIs);
+			KNNCHSearch knn = new KNNCHSearch(graphHopperExample4WithPoIs);
 
-		finalResult = knn.search(graphHopperExample4WithPoIs.getNode(source), 32);
+			finalResult = knn.search(graphHopperExample4WithPoIs.getNode(source), 34);
 
-		int size = finalResult.size();
+			int size = finalResult.size();
 
-		for (int i = 1; i <= size; i++) {
-			Path poi = finalResult.poll();
-			logger.info("k = {}", i);
+			for (int i = 1; i <= size; i++) {
+				Path poi = finalResult.poll();
+				logger.info("\tk = {}", i);
 
-			Long destination;
+				Long destination;
 
-			if (poi.getEdges().size() == 0) {
-				logger.info("\tPoI: {}, Distance = {}", poi.getInstructions().get(0).getDirection(),
+				if (poi.getEdges().size() == 0) {
+					logger.info("\t\tPoI: {}, Distance = {}", poi.getInstructions().get(0).getDirection(),
+							poi.getTotalDistance());
+					destination = 0l;
+
+				} else {
+					logger.info(
+							"\t\tPoI: {}, Distance = {}", graphHopperExample4WithPoIs
+									.getEdge(poi.getEdges().get(poi.getEdges().size() - 1)).getToNode(),
+							poi.getTotalDistance());
+					destination = graphHopperExample4WithPoIs.getEdge(poi.getEdges().get(poi.getEdges().size() - 1))
+							.getToNode();
+
+				}
+
+				Dijkstra dj = new DijkstraConstantWeight(graphHopperExample4WithPoIs);
+
+				assertEquals(
+						dj.shortestPath(graphHopperExample4WithPoIs.getNode(source),
+								graphHopperExample4WithPoIs.getNode(destination)).getTotalDistance(),
 						poi.getTotalDistance());
-				destination = 0l;
-
-			} else {
-				logger.info("\tPoI: {}, Distance = {}",
-						graphHopperExample4WithPoIs.getEdge(poi.getEdges().get(poi.getEdges().size() - 1)).getToNode(),
-						poi.getTotalDistance());
-				destination = graphHopperExample4WithPoIs.getEdge(poi.getEdges().get(poi.getEdges().size() - 1))
-						.getToNode();
 
 			}
-
-			Dijkstra dj = new DijkstraConstantWeight(graphHopperExample4WithPoIs);
-
-			assertEquals(
-					dj.shortestPath(graphHopperExample4WithPoIs.getNode(source),
-							graphHopperExample4WithPoIs.getNode(destination)).getTotalDistance(),
-					poi.getTotalDistance());
-
 		}
 
 	}
@@ -168,7 +175,7 @@ public class KNNCHSearchTest {
 	// for (Integer k : numberOfNeighbors) {
 	// logger.info("Starting to run the first prunning method for kNN with CH. k
 	// = {}", k);
-	// int averageExecutionTime = 0;
+	// double averageExecutionTime = 0;
 	//
 	// for (int i = 0; i < numberOfRepetitions; i++) {
 	// StopWatch knnSW = new StopWatch();
@@ -178,7 +185,7 @@ public class KNNCHSearchTest {
 	// knn.search(graphHopperExample4WithPoIs.getNode(source), k);
 	// knnSW.stop();
 	//
-	// averageExecutionTime += knnSW.getNanos();
+	// averageExecutionTime += knnSW.getSeconds();
 	// }
 	//
 	// averageExecutionTime = averageExecutionTime / numberOfRepetitions;
@@ -190,10 +197,10 @@ public class KNNCHSearchTest {
 
 	// @Test
 	// public void graphMonacoWithPoITest() {
-	//// CHGraph testGraph = graphMonacoWithPoI;
+	// // CHGraph testGraph = graphMonacoWithPoI;
 	// Long source = graphMonacoWithPoI.getNodeId(43.72842465479131,
 	// 7.414896579419745);
-	//
+	// logger.info("Source: {}", source);
 	// Queue<Path> finalResult = new PriorityQueue<>();
 	//
 	// KNNCHSearch knn = new KNNCHSearch(graphMonacoWithPoI);
@@ -226,10 +233,10 @@ public class KNNCHSearchTest {
 	//
 	// Dijkstra dj = new DijkstraConstantWeight(graphMonacoWithPoI);
 	//
-	//
+	// logger.info("Source {}, Destination {}", source, destination);
 	// assertEquals(dj.shortestPath(graphMonacoWithPoI.getNode(source),
-	// graphMonacoWithPoI.getNode(destination)).getTotalDistance(),
-	// poi.getTotalDistance());
+	// graphMonacoWithPoI.getNode(destination))
+	// .getTotalDistance(), poi.getTotalDistance());
 	//
 	// }
 	//
@@ -265,6 +272,43 @@ public class KNNCHSearchTest {
 	// logger.info("averageExecutionTime = {} seconds", averageExecutionTime);
 	//
 	// }
+	//
+	// }
+
+	// @Test
+	// public void shortestPathTest() {
+	//
+	// Long source = 552l;
+	// Long destination = 500l;
+	//
+	// Dijkstra dijkstra = new DijkstraConstantWeight(graphMonacoWithPoI);
+	// Path dijkstraPath =
+	// dijkstra.shortestPath(graphMonacoWithPoI.getNode(source),
+	// graphMonacoWithPoI.getNode(destination));
+	//
+	// BidirectionalDijkstraCH bidirectionalDijkstra = new
+	// BidirectionalDijkstraCH(graphMonacoWithPoI);
+	// Path finalPath =
+	// bidirectionalDijkstra.execute(graphMonacoWithPoI.getNode(source),
+	// graphMonacoWithPoI.getNode(destination));
+	//
+	//// assertEquals(dijkstraPath.getTotalDistance(),
+	// finalPath.getTotalDistance());
+	//
+	// source = 500l;
+	// destination = 552l;
+	//
+	// dijkstra = new DijkstraConstantWeight(graphMonacoWithPoI);
+	// dijkstraPath = dijkstra.shortestPath(graphMonacoWithPoI.getNode(source),
+	// graphMonacoWithPoI.getNode(destination));
+	//
+	// bidirectionalDijkstra = new BidirectionalDijkstraCH(graphMonacoWithPoI);
+	// finalPath =
+	// bidirectionalDijkstra.execute(graphMonacoWithPoI.getNode(source),
+	// graphMonacoWithPoI.getNode(destination));
+	//
+	// assertEquals(dijkstraPath.getTotalDistance(),
+	// finalPath.getTotalDistance());
 	//
 	// }
 

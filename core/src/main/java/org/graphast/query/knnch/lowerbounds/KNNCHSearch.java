@@ -197,7 +197,7 @@ public class KNNCHSearch {
 			if(backwardsUnsettleNodes == null)
 				continue;
 			
-//			 logger.info("PoI that will be analyzed: {}", currentPoI);
+			 logger.debug("PoI that will be analyzed: {}", currentPoI);
 			// logger.info("Number of PoIs being considered: {}",
 			// dijkstraHash.size());
 

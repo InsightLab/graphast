@@ -1880,6 +1880,12 @@ public class GraphGenerator {
 
 		node = new CHNodeImpl(31l, 50, 30);
 		graph.addNode(node);
+		
+		node = new CHNodeImpl(32l, 70, 30);
+		graph.addNode(node);
+		
+		node = new CHNodeImpl(33l, 10, 50);
+		graph.addNode(node);
 
 		// TODO Create a constructor without the originalEdgeCounter
 		edge = new CHEdgeImpl(0l, 9l, 1, 1, "Edge 0-9");
@@ -1898,6 +1904,12 @@ public class GraphGenerator {
 		graph.addEdge(edge);
 
 		edge = new CHEdgeImpl(17l, 0l, 1, 1, "Edge 17-0");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(0l, 19l, 10, 1, "Edge 0-19");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(0l, 33l, 1, 1, "Edge 0-33");
 		graph.addEdge(edge);
 		
 		edge = new CHEdgeImpl(1l, 2l, 1, 1, "Edge 1-2");
@@ -1994,6 +2006,12 @@ public class GraphGenerator {
 		graph.addEdge(edge);
 		
 		edge = new CHEdgeImpl(13l, 12l, 1, 1, "Edge 13-12");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(13l, 32l, 1, 1, "Edge 13-32");
+		graph.addEdge(edge);
+		
+		edge = new CHEdgeImpl(32l, 13l, 1, 1, "Edge 32-13");
 		graph.addEdge(edge);
 		
 		edge = new CHEdgeImpl(14l, 18l, 1, 1, "Edge 14-18");

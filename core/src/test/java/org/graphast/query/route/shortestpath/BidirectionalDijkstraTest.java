@@ -42,15 +42,18 @@ public class BidirectionalDijkstraTest {
 		// GraphGenerator().generateGraphHopperExample2();
 		// graphHopperExample3 = new
 		// GraphGenerator().generateGraphHopperExample3();
-		graphHopperExample4 = new GraphGenerator().generateGraphHopperExample4();
-		graphHopperExample4.prepareNodes();
-		graphHopperExample4.contractNodes();
-		
+		// graphHopperExample4 = new
+		// GraphGenerator().generateGraphHopperExample4();
+		// graphHopperExample4.prepareNodes();
+		// graphHopperExample4.contractNodes();
+
 		// graphMITExample = new GraphGenerator().generateMITExample();
 		// graphMITExample2 = new GraphGenerator().generateMITExample2();
 		// graphMITExample3 = new GraphGenerator().generateMITExample3();
 
-		// graphMonaco = new GraphGenerator().generateMonacoCH();
+		graphMonaco = new GraphGenerator().generateMonacoCH();
+		graphMonaco.prepareNodes();
+		graphMonaco.contractNodes();
 		// graphTinyMonaco = new GraphGenerator().generateTinyMonacoCH();
 		// graphSeattle = new GraphGenerator().generateSeattleCH();
 		// graphGreece = new GraphGenerator().generateGreeceCH();
@@ -444,60 +447,55 @@ public class BidirectionalDijkstraTest {
 	// logger.info("Bidirectional Dijkstra was {}x SLOWER", result);
 	// }
 	// }
-	//
-	@Test
-	public void graphHopperExample4Test() {
 
-		for (int source = 0; source < graphHopperExample4.getNumberOfNodes(); source++) {
-			for (int destination = 0; destination < graphHopperExample4.getNumberOfNodes(); destination++) {
+	// @Test
+	// public void graphHopperExample4Test() {
+	//
+	// CHGraph testGraph = graphHopperExample4;
+	//
+	// for (int source = 0; source < testGraph.getNumberOfNodes(); source++) {
+	// for (int destination = 0; destination < testGraph.getNumberOfNodes();
+	// destination++) {
+	//
+	// logger.info("SOURCE: {}, DESTINATION: {}.", source, destination);
+	//
+	// Dijkstra dijkstra = new DijkstraConstantWeight(testGraph);
+	// Path dijkstraPath = dijkstra.shortestPath(testGraph.getNode(source),
+	// testGraph.getNode(destination));
+	//
+	// BidirectionalDijkstraCH bidirectionalDijkstra = new
+	// BidirectionalDijkstraCH(testGraph);
+	// Path finalPath = bidirectionalDijkstra.execute(testGraph.getNode(source),
+	// testGraph.getNode(destination));
+	//
+	// assertEquals(dijkstraPath.getTotalDistance(),
+	// finalPath.getTotalDistance());
+	//
+	// }
+	// }
+	// }
+
+	@Test
+	public void monacoTest() {
+
+		CHGraph testGraph = graphMonaco;
+
+		for (int source = 0; source < testGraph.getNumberOfNodes(); source++) {
+			for (int destination = 0; destination < testGraph.getNumberOfNodes(); destination++) {
 
 				logger.info("SOURCE: {}, DESTINATION: {}.", source, destination);
-				
-				Dijkstra dijkstra = new DijkstraConstantWeight(graphHopperExample4);
 
-				StopWatch dijkstraSW = new StopWatch();
+				Dijkstra dijkstra = new DijkstraConstantWeight(testGraph);
+				Path dijkstraPath = dijkstra.shortestPath(testGraph.getNode(source), testGraph.getNode(destination));
 
-				dijkstraSW.start();
-
-				Path dijkstraPath = dijkstra.shortestPath(graphHopperExample4.getNode(source),
-						graphHopperExample4.getNode(destination));
-
-				dijkstraSW.stop();
-
-//				logger.info("Execution Time of regular Dijkstra Algorithm graphHopperExample4Test(): {}ns",
-//						dijkstraSW.getNanos());
-
-				logger.info("Shortest Path - Regular Dijkstra");
-				logger.info("\t{}", dijkstraPath.getInstructions());
-
-//				assertEquals(0, dijkstraPath.getTotalDistance());
-
-				BidirectionalDijkstraCH bidirectionalDijkstra = new BidirectionalDijkstraCH(graphHopperExample4);
-
-				StopWatch bidirectionalDijkstraSW = new StopWatch();
-
-				bidirectionalDijkstraSW.start();
-				Path finalPath = bidirectionalDijkstra.execute(graphHopperExample4.getNode(source),
-						graphHopperExample4.getNode(destination));
-				bidirectionalDijkstraSW.stop();
-
-				logger.info("Execution Time of Bidirectional Dijkstra Algorithm in graphHopperExample4Test(): {}ns",
-						bidirectionalDijkstraSW.getNanos());
-
-				logger.info("Shortest Path");
-				logger.info("\t{}", finalPath.getInstructions());
+				BidirectionalDijkstraCH bidirectionalDijkstra = new BidirectionalDijkstraCH(testGraph);
+				Path finalPath = bidirectionalDijkstra.execute(testGraph.getNode(source),
+						testGraph.getNode(destination));
 
 				assertEquals(dijkstraPath.getTotalDistance(), finalPath.getTotalDistance());
 
-				if (dijkstraSW.getNanos() > bidirectionalDijkstraSW.getNanos()) {
-					logger.info("Bidirectional Dijkstra was FASTER");
-				} else {
-					logger.info("Bidirectional Dijkstra was SLOWER");
-				}
-
 			}
 		}
-
 	}
 
 	// @Test
@@ -887,6 +885,30 @@ public class BidirectionalDijkstraTest {
 	// System.out.println("[BIDIRECTIONAL] Number of settle nodes: " +
 	// (bidirectionalDijkstra.getNumberOfForwardSettleNodes() +
 	// bidirectionalDijkstra.getNumberOfBackwardSettleNodes()));
+	//
+	// }
+
+	// @Test
+	// public void shortestPathTest() {
+	//
+	// Long source = 49l;
+	// Long destination = 457l;
+	//
+	// CHGraph testGraph = graphMonaco;
+	//
+	// logger.info("SOURCE: {}, DESTINATION: {}.", source, destination);
+	//
+	// Dijkstra dijkstra = new DijkstraConstantWeight(testGraph);
+	// Path dijkstraPath = dijkstra.shortestPath(testGraph.getNode(source),
+	// testGraph.getNode(destination));
+	//
+	// BidirectionalDijkstraCH bidirectionalDijkstra = new
+	// BidirectionalDijkstraCH(testGraph);
+	// Path finalPath = bidirectionalDijkstra.execute(testGraph.getNode(source),
+	// testGraph.getNode(destination));
+	//
+	// assertEquals(dijkstraPath.getTotalDistance(),
+	// finalPath.getTotalDistance());
 	//
 	// }
 
