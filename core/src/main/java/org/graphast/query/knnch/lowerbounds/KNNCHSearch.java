@@ -2,8 +2,10 @@ package org.graphast.query.knnch.lowerbounds;
 
 import static org.graphast.util.NumberUtils.convertToInt;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -17,6 +19,7 @@ import org.graphast.model.contraction.CHGraph;
 import org.graphast.model.contraction.CHNode;
 import org.graphast.query.model.Entry;
 import org.graphast.query.route.shortestpath.model.DistanceEntry;
+import org.graphast.query.route.shortestpath.model.Instruction;
 import org.graphast.query.route.shortestpath.model.Path;
 import org.graphast.query.route.shortestpath.model.RouteEntry;
 import org.slf4j.Logger;
@@ -115,6 +118,7 @@ public class KNNCHSearch {
 
 	public Queue<Path> search(CHNode source, int k) {
 
+		this.source = source;
 //		this.smallerDistancePoI = smallerDistancePoI;
 
 		initializeQueue(source, forwardsUnsettleNodes);
@@ -331,6 +335,19 @@ public class KNNCHSearch {
 					}
 				}
 			}
+			
+			if(meetingNode.getDistance() == Integer.MAX_VALUE) {
+				path = new Path();
+				Instruction instruction = new Instruction(Integer.MAX_VALUE,
+						"PATH NOT FOUND BETWEEN " + source.getId() + " AND " + target.getId(), Double.MAX_VALUE,
+						Integer.MAX_VALUE);
+				List<Instruction> instructions = new ArrayList<>();
+				instructions.add(instruction);
+				path.setInstructions(instructions);
+				
+//				System.out.println("Path not found between " + source.getId() + " (" + source.getLatitude() + ", " + source.getLongitude() + ") and " + target.getId() + " (" + target.getLatitude() + ", " + target.getLongitude() + ").");
+				return path;
+			}
 
 			HashMap<Long, RouteEntry> resultParentNodes;
 			path = new Path();
@@ -537,6 +554,18 @@ public class KNNCHSearch {
 //				}
 //
 //			}
+			
+			if(meetingNode.getDistance() == Integer.MAX_VALUE) {
+				path = new Path();
+				Instruction instruction = new Instruction(Integer.MAX_VALUE,
+						"PATH NOT FOUND BETWEEN " + source.getId() + " AND " + target.getId(), Double.MAX_VALUE,
+						Integer.MAX_VALUE);
+				List<Instruction> instructions = new ArrayList<>();
+				instructions.add(instruction);
+				path.setInstructions(instructions);
+//				System.out.println("Path not found between " + source.getId() + " (" + source.getLatitude() + ", " + source.getLongitude() + ") and " + target.getId() + " (" + target.getLatitude() + ", " + target.getLongitude() + ").");
+				return path;
+			}
 
 			HashMap<Long, RouteEntry> resultParentNodes;
 			path = new Path();
@@ -674,50 +703,24 @@ public class KNNCHSearch {
 
 		HashMap<Long, RouteEntry> resultListOfParents = new HashMap<>();
 
-		RouteEntry nextForwardParent = forwardsParentNodes.get(meetingNode.getId());
+		long currrentNodeId = meetingNode.getId();
+		RouteEntry nextParent = forwardsParentNodes.get(currrentNodeId);
+		resultListOfParents.put(currrentNodeId, nextParent);
+		currrentNodeId = nextParent.getId();
 
-		if (nextForwardParent != null) {
-
-			if (forwardsParentNodes.get(meetingNode.getId()) == null) {
-				forwardsParentNodes.put(meetingNode.getId(), backwardsParentNodes.get(meetingNode.getId()));
-			}
-
-			resultListOfParents.put(meetingNode.getId(), nextForwardParent);
-
-			while (forwardsParentNodes.get(nextForwardParent.getId()) != null) {
-
-				resultListOfParents.put(nextForwardParent.getId(), forwardsParentNodes.get(nextForwardParent.getId()));
-
-				nextForwardParent = forwardsParentNodes.get(nextForwardParent.getId());
-
-			}
-
+		while (forwardsParentNodes.get(currrentNodeId) != null) {
+			nextParent = forwardsParentNodes.get(currrentNodeId);
+			resultListOfParents.put(currrentNodeId, nextParent);
+			currrentNodeId = nextParent.getId();
 		}
 
-		if (!backwardsParentNodes.isEmpty()) {
+		currrentNodeId = meetingNode.getId();
 
-			if (backwardsParentNodes.get(meetingNode.getId()) == null) {
-				backwardsParentNodes.put(meetingNode.getId(), forwardsParentNodes.get(meetingNode.getId()));
-			}
-
-			RouteEntry nextBackwardsParent = new RouteEntry(meetingNode.getId(),
-					backwardsParentNodes.get(meetingNode.getId()).getCost(),
-					backwardsParentNodes.get(meetingNode.getId()).getEdgeId(),
-					backwardsParentNodes.get(meetingNode.getId()).getLabel());
-
-			resultListOfParents.put(backwardsParentNodes.get(meetingNode.getId()).getId(), nextBackwardsParent);
-
-			long nextNodeId = backwardsParentNodes.get(meetingNode.getId()).getId();
-
-			while (backwardsParentNodes.get(nextNodeId) != null) {
-				nextBackwardsParent = new RouteEntry(nextNodeId, backwardsParentNodes.get(nextNodeId).getCost(),
-						backwardsParentNodes.get(nextNodeId).getEdgeId(),
-						backwardsParentNodes.get(nextNodeId).getLabel());
-				nextNodeId = backwardsParentNodes.get(nextNodeId).getId();
-
-				resultListOfParents.put(nextNodeId, nextBackwardsParent);
-
-			}
+		while (backwardsParentNodes.get(currrentNodeId) != null) {
+			nextParent = backwardsParentNodes.get(currrentNodeId);
+			resultListOfParents.put(nextParent.getId(), new RouteEntry(currrentNodeId, nextParent.getCost(),
+					nextParent.getEdgeId(), nextParent.getLabel()));
+			currrentNodeId = nextParent.getId();
 		}
 
 		return resultListOfParents;
