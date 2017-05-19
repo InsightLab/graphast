@@ -60,8 +60,8 @@ public class BidirectionalDijkstraTest {
 		// graphMITExample3 = new GraphGenerator().generateMITExample3();
 
 		graphMonaco = new GraphGenerator().generateMonacoCH();
-		graphMonaco.prepareNodes();
-		graphMonaco.contractNodes();
+//		 graphMonaco.prepareNodes();
+//		 graphMonaco.contractNodes();
 
 		// graphTinyMonaco = new GraphGenerator().generateTinyMonacoCH();
 		// graphSeattle = new GraphGenerator().generateSeattleCH();
@@ -128,79 +128,159 @@ public class BidirectionalDijkstraTest {
 //	@Test
 //	public void shortestPathTest() {
 //
-////		String osmFile = Configuration.USER_HOME + "/graphhopper/osm/monaco-latest.osm.pbf";
-////		String graphDir = Configuration.USER_HOME + "/graphhopper/osm/monaco";
-////
-////		GraphHopper hopper = OSMToGraphHopperReader.createGraph(osmFile, graphDir, true, false);
-////
-////		LevelGraphStorage graphStorage = (LevelGraphStorage) hopper.getGraph();
-////
-////		LocationIndexTreeSC index = new LocationIndexTreeSC(graphStorage, new RAMDirectory(graphDir, true));
-////		if (!index.loadExisting()) {
-////			index.prepareIndex();
-////		}
+//		// String osmFile = Configuration.USER_HOME +
+//		// "/graphhopper/osm/monaco-latest.osm.pbf";
+//		// String graphDir = Configuration.USER_HOME +
+//		// "/graphhopper/osm/monaco";
+//		//
+//		// GraphHopper hopper = OSMToGraphHopperReader.createGraph(osmFile,
+//		// graphDir, true, false);
+//		//
+//		// LevelGraphStorage graphStorage = (LevelGraphStorage)
+//		// hopper.getGraph();
+//		//
+//		// LocationIndexTreeSC index = new LocationIndexTreeSC(graphStorage, new
+//		// RAMDirectory(graphDir, true));
+//		// if (!index.loadExisting()) {
+//		// index.prepareIndex();
+//		// }
 //
 //		CHGraph testGraph = graphMonaco;
 //		for (int source = 0; source < testGraph.getNumberOfNodes(); source++) {
 //			System.out.println("Source: " + source);
 //			for (int destination = 0; destination < testGraph.getNumberOfNodes(); destination++) {
 //
-////				QueryResult fromQR = index.findClosest(testGraph.getNode(source).getLatitude(),
-////						testGraph.getNode(source).getLongitude(), EdgeFilter.ALL_EDGES);
-////				int closestNodeSource = fromQR.getClosestNode();
-////				QueryResult toQR = index.findClosest(testGraph.getNode(destination).getLatitude(),
-////						testGraph.getNode(destination).getLongitude(), EdgeFilter.ALL_EDGES);
-////				int closestNodeDestination = toQR.getClosestNode();
-////
-////				GHRequest req = new GHRequest(graphStorage.getNodeAccess().getLat(closestNodeSource),
-////						graphStorage.getNodeAccess().getLon(closestNodeSource),
-////						graphStorage.getNodeAccess().getLat(closestNodeDestination),
-////						graphStorage.getNodeAccess().getLon(closestNodeDestination)).setVehicle("car")
-////								.setAlgorithm("dijkstrabi");
-////				GHResponse res = hopper.route(req);
-////
-////				int distanceGraphhopper = (int) Math.round(res.getDistance() * 1000);
+//				// QueryResult fromQR =
+//				// index.findClosest(testGraph.getNode(source).getLatitude(),
+//				// testGraph.getNode(source).getLongitude(),
+//				// EdgeFilter.ALL_EDGES);
+//				// int closestNodeSource = fromQR.getClosestNode();
+//				// QueryResult toQR =
+//				// index.findClosest(testGraph.getNode(destination).getLatitude(),
+//				// testGraph.getNode(destination).getLongitude(),
+//				// EdgeFilter.ALL_EDGES);
+//				// int closestNodeDestination = toQR.getClosestNode();
+//				//
+//				// GHRequest req = new
+//				// GHRequest(graphStorage.getNodeAccess().getLat(closestNodeSource),
+//				// graphStorage.getNodeAccess().getLon(closestNodeSource),
+//				// graphStorage.getNodeAccess().getLat(closestNodeDestination),
+//				// graphStorage.getNodeAccess().getLon(closestNodeDestination)).setVehicle("car")
+//				// .setAlgorithm("dijkstrabi");
+//				// GHResponse res = hopper.route(req);
+//				//
+//				// int distanceGraphhopper = (int) Math.round(res.getDistance()
+//				// * 1000);
 //
 //				Dijkstra dijkstra = new DijkstraConstantWeight(testGraph);
 //				Path dijkstraPath = dijkstra.shortestPath(testGraph.getNode(source), testGraph.getNode(destination));
 //
-//				BidirectionalDijkstraCH bidirectionalDijkstra = new	BidirectionalDijkstraCH(testGraph);
-//				Path finalPath = bidirectionalDijkstra.execute(testGraph.getNode(source), testGraph.getNode(destination));
-//				
-//				if(finalPath.getTotalCost() != dijkstraPath.getTotalDistance()) {
-//					System.out.println("Different results between source " + source + " and destination " + destination);
-//					System.out.println("\tSource: " + testGraph.getNode(source).getLatitude() + "," + testGraph.getNode(source).getLongitude());
-//					System.out.println("\tDestination: " + testGraph.getNode(destination).getLatitude() + "," + testGraph.getNode(destination).getLongitude());
-//					System.out.println("Graphast distance: " + dijkstraPath.getTotalDistance() + ", Graphhopper distance: " + finalPath.getTotalDistance());
+//				BidirectionalDijkstraCH bidirectionalDijkstra = new BidirectionalDijkstraCH(testGraph);
+//				Path finalPath = bidirectionalDijkstra.execute(testGraph.getNode(source),
+//						testGraph.getNode(destination));
+//
+//				if (finalPath.getTotalCost() != dijkstraPath.getTotalDistance()) {
+//					System.out
+//							.println("Different results between source " + source + " and destination " + destination);
+//					System.out.println("\tSource: " + testGraph.getNode(source).getLatitude() + ","
+//							+ testGraph.getNode(source).getLongitude());
+//					System.out.println("\tDestination: " + testGraph.getNode(destination).getLatitude() + ","
+//							+ testGraph.getNode(destination).getLongitude());
+//					System.out.println("Graphast distance: " + dijkstraPath.getTotalDistance()
+//							+ ", Graphhopper distance: " + finalPath.getTotalDistance());
 //				}
-//				
-//				
-////				assertEquals(dijkstraPath.getTotalDistance(),
-////						finalPath.getTotalDistance());
+//
+//				// assertEquals(dijkstraPath.getTotalDistance(),
+//				// finalPath.getTotalDistance());
 //			}
 //		}
 //	}
-	
+
 	@Test
 	public void shortestPathUnitaryTest() {
-		
+
 		CHGraph testGraph = graphMonaco;
 		Long source = 0l;
 		Long target = 12l;
-		
+
 		Dijkstra dijkstra = new DijkstraConstantWeight(testGraph);
 		Path dijkstraPath = dijkstra.shortestPath(testGraph.getNode(source), testGraph.getNode(target));
 
-		BidirectionalDijkstraCH bidirectionalDijkstra = new	BidirectionalDijkstraCH(testGraph);
-		Path finalPath = bidirectionalDijkstra.execute(testGraph.getNode(source), testGraph.getNode(target));
-		
-		if(finalPath.getTotalCost() != dijkstraPath.getTotalDistance()) {
-			System.out.println("Different results between source " + source + " and destination " + target);
-			System.out.println("\tSource: " + testGraph.getNode(source).getLatitude() + "," + testGraph.getNode(source).getLongitude());
-			System.out.println("\tDestination: " + testGraph.getNode(target).getLatitude() + "," + testGraph.getNode(target).getLongitude());
-			System.out.println("Regular Dijkstra distance: " + dijkstraPath.getTotalDistance() + ", Bidirectional Dijkstra distance: " + finalPath.getTotalDistance());
+		for (Long id : dijkstraPath.getEdges()) {
+			System.out.println(
+					"FROM: " + testGraph.getEdge(id).getFromNode() + ", TO: " + testGraph.getEdge(id).getToNode());
 		}
-		
+
+		BidirectionalDijkstraCH bidirectionalDijkstra = new BidirectionalDijkstraCH(testGraph);
+		Path finalPath = bidirectionalDijkstra.execute(testGraph.getNode(source), testGraph.getNode(target));
+
+		if (finalPath.getTotalCost() != dijkstraPath.getTotalDistance()) {
+			System.out.println("Different results between source " + source + " and destination " + target);
+			System.out.println("\tSource: " + testGraph.getNode(source).getLatitude() + ","
+					+ testGraph.getNode(source).getLongitude());
+			System.out.println("\tDestination: " + testGraph.getNode(target).getLatitude() + ","
+					+ testGraph.getNode(target).getLongitude());
+			System.out.println("Regular Dijkstra distance: " + dijkstraPath.getTotalDistance()
+					+ ", Bidirectional Dijkstra distance: " + finalPath.getTotalDistance());
+		}
+
 	}
+
+//	@Test
+//	public void shortestPathUnitaryGraphhopperTest() {
+//
+//		CHGraph testGraph = graphMonaco;
+//
+//		String osmFile = Configuration.USER_HOME + "/graphhopper/osm/monaco-latest.osm.pbf";
+//		String graphDir = Configuration.USER_HOME + "/graphhopper/osm/monacoCH";
+//
+//		GraphHopper hopper = OSMToGraphHopperReader.createGraph(osmFile, graphDir, true, false);
+//
+//		LevelGraphStorage graphStorage = (LevelGraphStorage) hopper.getGraph();
+//
+//		LocationIndexTreeSC index = new LocationIndexTreeSC(graphStorage, new RAMDirectory(graphDir, true));
+//		if (!index.loadExisting()) {
+//			index.prepareIndex();
+//		}
+//
+//		int source = 0;
+//		int destination = 12;
+//
+//		QueryResult fromQR = index.findClosest(testGraph.getNode(source).getLatitude(),
+//				testGraph.getNode(source).getLongitude(), EdgeFilter.ALL_EDGES);
+//		int closestNodeSource = fromQR.getClosestNode();
+//		QueryResult toQR = index.findClosest(testGraph.getNode(destination).getLatitude(),
+//				testGraph.getNode(destination).getLongitude(), EdgeFilter.ALL_EDGES);
+//		int closestNodeDestination = toQR.getClosestNode();
+//
+//		GHRequest req = new GHRequest(graphStorage.getNodeAccess().getLat(closestNodeSource),
+//				graphStorage.getNodeAccess().getLon(closestNodeSource),
+//				graphStorage.getNodeAccess().getLat(closestNodeDestination),
+//				graphStorage.getNodeAccess().getLon(closestNodeDestination)).setVehicle("car")
+//						.setAlgorithm("dijkstrabi");
+//		GHResponse res = hopper.route(req);
+//
+//		int distanceGraphhopper = (int) Math.round(res.getDistance() * 1000);
+//
+//		Dijkstra dijkstra = new DijkstraConstantWeight(testGraph);
+//		Path dijkstraPath = dijkstra.shortestPath(testGraph.getNode(source), testGraph.getNode(destination));
+//
+////		BidirectionalDijkstraCH bidirectionalDijkstra = new BidirectionalDijkstraCH(testGraph);
+////		Path finalPath = bidirectionalDijkstra.execute(testGraph.getNode(source), testGraph.getNode(destination));
+//
+//		if (distanceGraphhopper != dijkstraPath.getTotalDistance()) {
+//			System.out.println("Different results between source " + source + " and destination " + destination);
+//			System.out.println("\tSource: " + testGraph.getNode(source).getLatitude() + ","
+//					+ testGraph.getNode(source).getLongitude());
+//			System.out.println("\tDestination: " + testGraph.getNode(destination).getLatitude() + ","
+//					+ testGraph.getNode(destination).getLongitude());
+//			System.out.println("Graphast distance: " + dijkstraPath.getTotalDistance() + ", Graphhopper distance: "
+//					+ distanceGraphhopper);
+//		}
+//
+//		// assertEquals(dijkstraPath.getTotalDistance(),
+//		// finalPath.getTotalDistance());
+//
+//	}
 
 }

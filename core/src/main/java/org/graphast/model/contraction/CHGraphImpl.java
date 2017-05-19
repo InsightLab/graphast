@@ -3,11 +3,13 @@ package org.graphast.model.contraction;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Random;
+import java.util.Set;
 
 import org.graphast.config.Configuration;
 import org.graphast.model.Edge;
@@ -239,13 +241,12 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 			originalEdgeCount += e.getOriginalEdgeCounter();
 		}
 
-		int degree = 0;
 		int numberOfContractedNeighbors = 0;
-
+		Set<Long> test = new HashSet<>();
 		for (Long edgeId : this.getInEdges(n.getId())) {
 
-			degree += 1;
-
+			test.add(this.getEdge(edgeId).getExternalId());
+			
 			if (this.getEdge(edgeId).isShortcut()) {
 				numberOfContractedNeighbors += 1;
 			}
@@ -254,15 +255,18 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 		for (Long edgeId : this.getOutEdges(n.getId())) {
 
-			degree += 1;
+			test.add(this.getEdge(edgeId).getExternalId());
 
 			if (this.getEdge(edgeId).isShortcut()) {
 				numberOfContractedNeighbors += 1;
 			}
 
 		}
+		
+		int degree = 0;
+		degree = test.size();
 
-		int edgeDifference = possibleShortcuts.get(n.getId()).size() - degree;
+		int edgeDifference = possibleShortcuts.get(n.getId()).size() - (test.size());
 
 		// int hyperPoICoefficient = 0;
 
@@ -274,13 +278,9 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 		// }
 
 		int prioridade = 10 * edgeDifference + originalEdgeCount + numberOfContractedNeighbors;
-		// int prioridade = 10 * edgeDifference + originalEdgeCount +
-		// numberOfContractedNeighbors + hyperPoICoefficient;
-		logger.debug("Priority of node {}: {}", n.getId(), prioridade);
+		logger.debug("Priority of node {}: {}", n.getExternalId(), prioridade);
 
 		return 10 * edgeDifference + originalEdgeCount + numberOfContractedNeighbors;
-		// return 10 * edgeDifference + originalEdgeCount +
-		// numberOfContractedNeighbors + hyperPoICoefficient;
 
 	}
 
@@ -296,12 +296,14 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 		int degree = 0;
 		int numberOfContractedNeighbors = 0;
-
+		Set<Long> test = new HashSet<>();
+		
 		for (Long edgeId : this.getInEdges(n.getId())) {
 
 			if (this.getNode(this.getEdge(edgeId).getFromNode()).getId() == contractedNodeId) {
 				if (this.getEdge(outsideEdgeId).isShortcut() && edgeId == outsideEdgeId) {
 					degree += 1;
+					test.add(this.getEdge(edgeId).getExternalId());
 				} else {
 					continue;
 				}
@@ -309,6 +311,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 			} else {
 				if (this.getNode(this.getEdge(edgeId).getFromNode()).getLevel() == 0) {
 					degree += 1;
+					test.add(this.getEdge(edgeId).getExternalId());
 				}
 			}
 
@@ -322,6 +325,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 			if (this.getNode(this.getEdge(edgeId).getToNode()).getId() == contractedNodeId) {
 				if (this.getEdge(outsideEdgeId).isShortcut() && edgeId == outsideEdgeId) {
 					degree += 1;
+					test.add(this.getEdge(edgeId).getExternalId());
 				} else {
 					continue;
 				}
@@ -330,6 +334,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 					// if(this.getNode(this.getEdge(edgeId).getToNode()).getLevel()==maxLevel
 					// || this.getEdge(edgeId).isShortcut() ) {
 					degree += 1;
+					test.add(this.getEdge(edgeId).getExternalId());
 				}
 			}
 
@@ -337,7 +342,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 				numberOfContractedNeighbors += 1;
 			}
 		}
-
+		degree = test.size();
 		int edgeDifference = possibleShortcuts.get(n.getId()).size() - degree;
 
 		int priority = 10 * edgeDifference + originalEdgeCount + numberOfContractedNeighbors;

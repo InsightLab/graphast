@@ -136,11 +136,12 @@ public class BidirectionalDijkstraCH {
 	private void forwardSearch() {
 
 		forwardsRemovedNode = forwardsUnsettleNodes.poll();
+		System.out.println("[BIDIRECTIONAL FORWARD] Node being analyzed: " + forwardsRemovedNode.getId());
 		forwardsUnsettleNodesAux.remove(forwardsRemovedNode.getId());
 		forwardsSettleNodes.put(forwardsRemovedNode.getId(), forwardsRemovedNode.getDistance());
 		expandedNodesForwardSearch++;
 
-		logger.debug("Node being analyzed in the forwardSearch(): {}", forwardsRemovedNode.getId());
+		logger.debug("[BIDIRECTIONAL FORWARD] Node being analyzed in the forwardSearch(): {}", forwardsRemovedNode.getId());
 
 		expandVertexForward();
 
@@ -169,6 +170,21 @@ public class BidirectionalDijkstraCH {
 				return;
 			}
 			
+			while (!backwardsUnsettleNodes.isEmpty()) {
+				DistanceEntry possibleNewMeetingNode = backwardsUnsettleNodes.poll();
+				if (forwardsSettleNodes.containsKey(possibleNewMeetingNode.getId())) {
+					if (meetingNode.getDistance() > possibleNewMeetingNode.getDistance()
+							+ forwardsSettleNodes.get(possibleNewMeetingNode.getId())) {
+
+						meetingNode.setId(possibleNewMeetingNode.getId());
+						meetingNode.setDistance(possibleNewMeetingNode.getDistance()
+								+ forwardsSettleNodes.get(possibleNewMeetingNode.getId()));
+						meetingNode.setParent(possibleNewMeetingNode.getParent());
+
+					}
+				}
+			}
+			
 			while (!forwardsUnsettleNodes.isEmpty()) {
 				DistanceEntry possibleNewMeetingNode = forwardsUnsettleNodes.poll();
 				if (backwardsSettleNodes.containsKey(possibleNewMeetingNode.getId())) {
@@ -185,21 +201,6 @@ public class BidirectionalDijkstraCH {
 
 			}
 
-//			while (!backwardsUnsettleNodes.isEmpty()) {
-//				DistanceEntry possibleNewMeetingNode = backwardsUnsettleNodes.poll();
-//				if (forwardsSettleNodes.containsKey(possibleNewMeetingNode.getId())) {
-//					if (meetingNode.getDistance() > possibleNewMeetingNode.getDistance()
-//							+ forwardsSettleNodes.get(possibleNewMeetingNode.getId())) {
-//
-//						meetingNode.setId(possibleNewMeetingNode.getId());
-//						meetingNode.setDistance(possibleNewMeetingNode.getDistance()
-//								+ forwardsSettleNodes.get(possibleNewMeetingNode.getId()));
-//						meetingNode.setParent(possibleNewMeetingNode.getParent());
-//
-//					}
-//				}
-//			}
-
 			HashMap<Long, RouteEntry> resultParentNodes;
 			path = new Path();
 			resultParentNodes = joinParents(meetingNode, forwardsParentNodes, backwardsParentNodes);
@@ -214,10 +215,11 @@ public class BidirectionalDijkstraCH {
 	private void backwardSearch() {
 
 		backwardsRemovedNode = backwardsUnsettleNodes.poll();
+		System.out.println("[BIDIRECTIONAL BACKWARD] Node being analyzed: " + backwardsRemovedNode.getId());
 		backwardsSettleNodes.put(backwardsRemovedNode.getId(), backwardsRemovedNode.getDistance());
 		expandedNodesBackwardSearch++;
 
-		logger.debug("Node being analyzed in the backwardSearch(): {}", backwardsRemovedNode.getId());
+		logger.debug("[BIDIRECTIONAL BACKWARD] Node being analyzed in the backwardSearch(): {}", backwardsRemovedNode.getId());
 
 		expandVertexBackward();
 
@@ -304,6 +306,8 @@ public class BidirectionalDijkstraCH {
 			logger.debug("Node considered: {}", vid);
 			DistanceEntry newEntry = new DistanceEntry(vid, neighbors.get(vid) + forwardsRemovedNode.getDistance(),
 					forwardsRemovedNode.getId());
+			
+			System.out.println("\tNode being expanded: " + vid + ". Distance: " + newEntry.getDistance());
 
 			Edge edge;
 			int distance;
@@ -397,6 +401,8 @@ public class BidirectionalDijkstraCH {
 			DistanceEntry newEntry = new DistanceEntry(vid, neighbors.get(vid) + backwardsRemovedNode.getDistance(),
 					backwardsRemovedNode.getId());
 
+			System.out.println("\tNode being expanded: " + vid + ". Distance: " + newEntry.getDistance());
+			
 			Edge edge;
 			int distance;
 

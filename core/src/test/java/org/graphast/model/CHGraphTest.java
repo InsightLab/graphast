@@ -1,20 +1,23 @@
 package org.graphast.model;
 
-import static org.junit.Assert.assertEquals;
+import java.util.HashSet;
+import java.util.Set;
 
-import java.util.List;
-
+import org.graphast.config.Configuration;
 import org.graphast.graphgenerator.GraphGenerator;
-import org.graphast.model.contraction.CHEdge;
+import org.graphast.importer.OSMToGraphHopperReader;
 import org.graphast.model.contraction.CHGraph;
-import org.graphast.query.route.shortestpath.dijkstrach.DijkstraCH;
-import org.graphast.query.route.shortestpath.model.Path;
+import org.graphast.model.contraction.CHNode;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.graphhopper.util.StopWatch;
+import com.graphhopper.GraphHopper;
+import com.graphhopper.storage.LevelGraphStorage;
+import com.graphhopper.storage.RAMDirectory;
+import com.graphhopper.storage.index.LocationIndexTreeSC;
+import com.graphhopper.util.EdgeIterator;
 
 public class CHGraphTest {
 
@@ -726,24 +729,66 @@ public class CHGraphTest {
 	@Test
 	public void contractionHierarchyMonacoTest() {
 
-		StopWatch preComputationSW = new StopWatch();
-		preComputationSW.start();
-		graphExampleMonacoCH.prepareNodes();
-		// System.out.println(graphExampleMonacoCH.getNumberOfNodes());
-		// System.out.println(graphExampleMonacoCH.getNumberOfEdges());
+		String osmFile = Configuration.USER_HOME + "/graphhopper/osm/monaco-latest.osm.pbf";
+		String graphDir = Configuration.USER_HOME + "/graphhopper/osm/monacoCH";
 
-		graphExampleMonacoCH.contractNodes();
-		preComputationSW.stop();
+		CHGraph testGraph = graphExampleMonacoCH;
 
-		System.out.println(preComputationSW);
+		GraphHopper hopper = OSMToGraphHopperReader.createGraph(osmFile, graphDir, true, false);
 
-		// for (int i = 0; i < graphExampleMonacoCH.getNumberOfNodes(); i++) {
-		// CHNode n = graphExampleMonacoCH.getNode(i);
-		//
-		// System.out.println(n.getId() + "," + n.getLevel() + "," +
-		// n.getPriority());
-		//
-		// }
+		LevelGraphStorage graphStorage = (LevelGraphStorage) hopper.getGraph();
+
+		LocationIndexTreeSC index = new LocationIndexTreeSC(graphStorage, new RAMDirectory(graphDir, true));
+		if (!index.loadExisting()) {
+			index.prepareIndex();
+		}
+
+		EdgeIterator edgeIterator = graphStorage.getAllEdges();
+		Set<Integer> visitedNodes = new HashSet<Integer>();
+		
+		if (!visitedNodes.contains(edgeIterator.getBaseNode())) {
+			System.out.println(edgeIterator.getBaseNode() + ";"
+					+ graphStorage.getLevel(edgeIterator.getBaseNode()));
+			visitedNodes.add(edgeIterator.getBaseNode());
+		}
+
+		if (!visitedNodes.contains(edgeIterator.getAdjNode())) {
+			System.out.println(edgeIterator.getAdjNode() + ";"
+					+ graphStorage.getLevel(edgeIterator.getAdjNode()));
+			visitedNodes.add(edgeIterator.getAdjNode());
+		} 
+
+		while (edgeIterator.next()) {
+			if (!visitedNodes.contains(edgeIterator.getBaseNode())) {
+				System.out.println(edgeIterator.getBaseNode() + ";"
+						+ graphStorage.getLevel(edgeIterator.getBaseNode()));
+				visitedNodes.add(edgeIterator.getBaseNode());
+			}
+
+			if (!visitedNodes.contains(edgeIterator.getAdjNode())) {
+				System.out.println(edgeIterator.getAdjNode() + ";"
+						+ graphStorage.getLevel(edgeIterator.getAdjNode()));
+				visitedNodes.add(edgeIterator.getAdjNode());
+			}
+		}
+
+		 testGraph.prepareNodes();
+		 
+		 for (int i = 0; i < testGraph.getNumberOfNodes(); i++) {
+				CHNode n = testGraph.getNode(i);
+
+				System.out.println(n.getExternalId() + ";" + n.getPriority());
+
+		 }
+		 
+		 
+		 
+		 testGraph.contractNodes();
+
+		 
+		 
+		
+		
 		//
 		// for (int i = 0; i < graphExampleMonacoCH.getNumberOfEdges(); i++) {
 		// CHEdge e = graphExampleMonacoCH.getEdge(i);
@@ -754,19 +799,6 @@ public class CHGraphTest {
 		// e.isShortcut());
 		//
 		// }
-
-		DijkstraCH dj = new DijkstraCH(graphExampleMonacoCH);
-
-		StopWatch knnSW = new StopWatch();
-		knnSW.start();
-
-//		dj.shortestPath(graphExampleMonacoCH.getNode(177), 3);
-		
-		dj.shortestPath(graphExampleMonacoCH.getNode(554), graphExampleMonacoCH.getNode(605), null);
-
-		knnSW.stop();
-
-		System.out.println(knnSW.getNanos());
 
 	}
 
