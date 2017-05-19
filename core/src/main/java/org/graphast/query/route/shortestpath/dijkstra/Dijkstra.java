@@ -106,7 +106,7 @@ public abstract class Dijkstra extends AbstractShortestPathService {
 		}
 		
 		Path path = new Path();
-		Instruction instruction = new Instruction(Integer.MAX_VALUE, "PATH NOT FOUND BETWEEN " + source.getId() + " AND " + target.getId(), Double.MAX_VALUE, Integer.MAX_VALUE);
+		Instruction instruction = new Instruction(Integer.MAX_VALUE, "PATH NOT FOUND BETWEEN " + source.getId() + " AND " + target.getId(), 0, 0);
 		List<Instruction> instructions = new ArrayList<>();
 		instructions.add(instruction);
 		path.setInstructions(instructions);

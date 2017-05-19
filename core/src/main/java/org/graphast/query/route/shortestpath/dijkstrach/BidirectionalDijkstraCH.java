@@ -119,8 +119,8 @@ public class BidirectionalDijkstraCH {
 
 		Path path = new Path();
 		Instruction instruction = new Instruction(Integer.MAX_VALUE,
-				"PATH NOT FOUND BETWEEN " + source.getId() + " AND " + target.getId(), Double.MAX_VALUE,
-				Integer.MAX_VALUE);
+				"PATH NOT FOUND BETWEEN " + source.getId() + " AND " + target.getId(), 0,
+				0);
 		List<Instruction> instructions = new ArrayList<>();
 		instructions.add(instruction);
 		path.setInstructions(instructions);
@@ -157,6 +157,18 @@ public class BidirectionalDijkstraCH {
 		if ((startCurr + endCurr >= meetingNode.getDistance())
 				|| (forwardsUnsettleNodes.peek() == null && backwardsUnsettleNodes.peek() == null)) {
 
+			if ((forwardsUnsettleNodes.peek() == null && backwardsUnsettleNodes.peek() == null)
+					&& meetingNode.getId() == -1) {
+				path = new Path();
+				Instruction instruction = new Instruction(Integer.MAX_VALUE,
+						"PATH NOT FOUND BETWEEN " + source.getId() + " AND " + target.getId(), 0,
+						0);
+				List<Instruction> instructions = new ArrayList<>();
+				instructions.add(instruction);
+				path.setInstructions(instructions);
+				return;
+			}
+			
 			while (!forwardsUnsettleNodes.isEmpty()) {
 				DistanceEntry possibleNewMeetingNode = forwardsUnsettleNodes.poll();
 				if (backwardsSettleNodes.containsKey(possibleNewMeetingNode.getId())) {
@@ -173,32 +185,20 @@ public class BidirectionalDijkstraCH {
 
 			}
 
-			while (!backwardsUnsettleNodes.isEmpty()) {
-				DistanceEntry possibleNewMeetingNode = backwardsUnsettleNodes.poll();
-				if (forwardsSettleNodes.containsKey(possibleNewMeetingNode.getId())) {
-					if (meetingNode.getDistance() > possibleNewMeetingNode.getDistance()
-							+ forwardsSettleNodes.get(possibleNewMeetingNode.getId())) {
-
-						meetingNode.setId(possibleNewMeetingNode.getId());
-						meetingNode.setDistance(possibleNewMeetingNode.getDistance()
-								+ forwardsSettleNodes.get(possibleNewMeetingNode.getId()));
-						meetingNode.setParent(possibleNewMeetingNode.getParent());
-
-					}
-				}
-			}
-
-			if ((forwardsUnsettleNodes.peek() == null && backwardsUnsettleNodes.peek() == null)
-					&& meetingNode.getId() == -1) {
-				path = new Path();
-				Instruction instruction = new Instruction(Integer.MAX_VALUE,
-						"PATH NOT FOUND BETWEEN " + source.getId() + " AND " + target.getId(), Double.MAX_VALUE,
-						Integer.MAX_VALUE);
-				List<Instruction> instructions = new ArrayList<>();
-				instructions.add(instruction);
-				path.setInstructions(instructions);
-				return;
-			}
+//			while (!backwardsUnsettleNodes.isEmpty()) {
+//				DistanceEntry possibleNewMeetingNode = backwardsUnsettleNodes.poll();
+//				if (forwardsSettleNodes.containsKey(possibleNewMeetingNode.getId())) {
+//					if (meetingNode.getDistance() > possibleNewMeetingNode.getDistance()
+//							+ forwardsSettleNodes.get(possibleNewMeetingNode.getId())) {
+//
+//						meetingNode.setId(possibleNewMeetingNode.getId());
+//						meetingNode.setDistance(possibleNewMeetingNode.getDistance()
+//								+ forwardsSettleNodes.get(possibleNewMeetingNode.getId()));
+//						meetingNode.setParent(possibleNewMeetingNode.getParent());
+//
+//					}
+//				}
+//			}
 
 			HashMap<Long, RouteEntry> resultParentNodes;
 			path = new Path();
@@ -234,6 +234,18 @@ public class BidirectionalDijkstraCH {
 		if ((startCurr + endCurr >= meetingNode.getDistance())
 				|| (forwardsUnsettleNodes.peek() == null && backwardsUnsettleNodes.peek() == null)) {
 
+			if ((forwardsUnsettleNodes.peek() == null && backwardsUnsettleNodes.peek() == null)
+					&& meetingNode.getId() == -1) {
+				path = new Path();
+				Instruction instruction = new Instruction(Integer.MAX_VALUE,
+						"PATH NOT FOUND BETWEEN " + source.getId() + " AND " + target.getId(), 0,
+						0);
+				List<Instruction> instructions = new ArrayList<>();
+				instructions.add(instruction);
+				path.setInstructions(instructions);
+				return;
+			}
+			
 			while (!backwardsUnsettleNodes.isEmpty()) {
 				DistanceEntry possibleNewMeetingNode = backwardsUnsettleNodes.poll();
 				if (forwardsSettleNodes.containsKey(possibleNewMeetingNode.getId())) {
@@ -263,18 +275,6 @@ public class BidirectionalDijkstraCH {
 					}
 				}
 
-			}
-
-			if ((forwardsUnsettleNodes.peek() == null && backwardsUnsettleNodes.peek() == null)
-					&& meetingNode.getId() == -1) {
-				path = new Path();
-				Instruction instruction = new Instruction(Integer.MAX_VALUE,
-						"PATH NOT FOUND BETWEEN " + source.getId() + " AND " + target.getId(), Double.MAX_VALUE,
-						Integer.MAX_VALUE);
-				List<Instruction> instructions = new ArrayList<>();
-				instructions.add(instruction);
-				path.setInstructions(instructions);
-				return;
 			}
 
 			HashMap<Long, RouteEntry> resultParentNodes;
