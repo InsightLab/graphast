@@ -773,16 +773,6 @@ public class CHGraphTest {
 		}
 
 		 testGraph.prepareNodes();
-		 
-		 for (int i = 0; i < testGraph.getNumberOfNodes(); i++) {
-				CHNode n = testGraph.getNode(i);
-
-				System.out.println(n.getExternalId() + ";" + n.getPriority());
-
-		 }
-		 
-		 
-		 
 		 testGraph.contractNodes();
 
 		 

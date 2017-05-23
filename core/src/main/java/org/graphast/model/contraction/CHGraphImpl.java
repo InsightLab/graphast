@@ -218,11 +218,11 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 		if (sortedNodesQueue.isEmpty())
 			return false;
 
-//		System.out.println("NODE;PRIORITY");
-//		while (!sortedNodesQueue.isEmpty()) {
-//			System.out.println(sortedNodesQueue.peek().getId() + ";" + sortedNodesQueue.peek().getPriority());
-//			sortedNodesQueue.poll();
-//		}
+		System.out.println("NODE;PRIORITY");
+		while (!sortedNodesQueue.isEmpty()) {
+			System.out.println(sortedNodesQueue.peek().getExternalId() + ";" + sortedNodesQueue.peek().getPriority());
+			sortedNodesQueue.poll();
+		}
 
 		return true;
 

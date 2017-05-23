@@ -389,10 +389,27 @@ public class OSMImporterImpl implements Importer {
 			}
 			
 			if(fromNodeId == toNodeId) {
+				
+				PointList pl = edgeIterator.fetchWayGeometry(3); //3 gets all point including from node and to node
+				List<Point> geometry = new ArrayList<Point>();
+				for(int i =0; i < pl.size(); i++) {
+					Point p = new Point(pl.getLatitude(i),pl.getLongitude(i));
+					geometry.add(p);
+				}
+				
 				count2++;
-				logger.info("Edge not created, because fromNodeId({}) == toNodeId({})", fromNodeId, toNodeId);
+				CHEdge edge = new CHEdgeImpl(externalEdgeId, fromNodeId, toNodeId, distance, label, geometry);
+				graph.addEdge(edge);
+				
 				continue;
 			}
+			
+			
+//			if(fromNodeId == toNodeId) {
+//				count2++;
+//				logger.info("Edge not created, because fromNodeId({}) == toNodeId({})", fromNodeId, toNodeId);
+//				continue;
+//			}
 			
 			//geometry
 			PointList pl = edgeIterator.fetchWayGeometry(3); //3 gets all point including from node and to node
