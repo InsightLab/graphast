@@ -218,11 +218,11 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 		if (sortedNodesQueue.isEmpty())
 			return false;
 
-		System.out.println("NODE;PRIORITY");
-		while (!sortedNodesQueue.isEmpty()) {
-			System.out.println(sortedNodesQueue.peek().getExternalId() + ";" + sortedNodesQueue.peek().getPriority());
-			sortedNodesQueue.poll();
-		}
+//		System.out.println("NODE;PRIORITY");
+//		while (!sortedNodesQueue.isEmpty()) {
+//			System.out.println(sortedNodesQueue.peek().getExternalId() + ";" + sortedNodesQueue.peek().getPriority());
+//			sortedNodesQueue.poll();
+//		}
 
 		return true;
 
@@ -371,7 +371,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 					this.getNode(this.getEdge(ingoingEdgeId).getFromNode()).getLongitude());
 
 			Long fromNodeId = this.getEdge(ingoingEdgeId).getFromNode();
-			double ingoingDistance = this.getIngoingLowestEdgeValue(n, fromNodeId);
+			double ingoingDistance = this.getEdge(ingoingEdgeId).getDistance();
 
 			// Accept only uncontracted nodes.
 			if (this.getNode(fromNodeId).getLevel() != 0) {
@@ -392,7 +392,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 						this.getNode(this.getEdge(outgoingEdgeId).getToNode()).getLongitude());
 
 				Long toNodeId = this.getEdge(outgoingEdgeId).getToNode();
-				double outgoingDistance = this.getOutgoingLowestEdgeValue(n, toNodeId);
+				double outgoingDistance = this.getEdge(outgoingEdgeId).getDistance();
 
 				// Se o toNodeId == fromNodeId, significa que estamos
 				// saindo e chegando na mesma aresta, com um nó intermediário
@@ -466,6 +466,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 		if (contract) {
 			meanDegree = (meanDegree * 2 + temporaryDegreeCounter) / 3;
+			logger.debug("meanDegree: {}", meanDegree);
 		}
 
 	}
@@ -537,7 +538,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 			counter++;
 			CHNode polledNode = sortedNodesQueue.poll();
-			logger.debug("Node being contracted: {}. Priority: {}", polledNode.getId(), polledNode.getPriority());
+//			System.out.println(sortedNodesQueue.size());
 
 			if (sortedNodesQueue.size() < lastNodesLazyUpdates) {
 
@@ -560,18 +561,15 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 			// Contracting a node
 
-			 this.addShortcuts(polledNode.getId());
+//			 this.addShortcuts(polledNode.getId());
 			// logger.debug("\t\t\tNumber of shortcuts created: {}",
 			// numberShortcutsCreated);
 //			System.out.println("-Para o nó " + polledNode.getId() + " foram criados "
 //					+ this.addShortcuts(polledNode.getId()) + " atalhos. Seu nível é " + level);
 
-//			System.out.println(polledNode.getId() + ";" + level + ";" + this.addShortcuts(polledNode.getId()));
+			System.out.println(polledNode.getExternalId() + ";" + level + ";" + this.addShortcuts(polledNode.getId()));
 			
 			this.updateNodeInfo(polledNode, level, polledNode.getPriority());
-			// TODO Double check if this setLevel is necessary, since we already
-			// have a updateNodeInfo before
-			// polledNode.setLevel(level);
 
 			level++;
 
@@ -705,7 +703,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 			if (edge.isShortcut() && edge.getToNode() == shortcutEntry.getToNode()) {
 
 				if (shortcutEntry.getDistance() >= edge.getDistance()) {
-					return false;
+					return true;
 				}
 
 				if (edge.getId() == shortcutEntry.getOutgoingSkippedEdge()

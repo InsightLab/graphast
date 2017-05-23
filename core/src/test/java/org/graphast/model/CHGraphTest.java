@@ -743,41 +743,40 @@ public class CHGraphTest {
 			index.prepareIndex();
 		}
 
-		EdgeIterator edgeIterator = graphStorage.getAllEdges();
-		Set<Integer> visitedNodes = new HashSet<Integer>();
-		
-		if (!visitedNodes.contains(edgeIterator.getBaseNode())) {
-			System.out.println(edgeIterator.getBaseNode() + ";"
-					+ graphStorage.getLevel(edgeIterator.getBaseNode()));
-			visitedNodes.add(edgeIterator.getBaseNode());
-		}
-
-		if (!visitedNodes.contains(edgeIterator.getAdjNode())) {
-			System.out.println(edgeIterator.getAdjNode() + ";"
-					+ graphStorage.getLevel(edgeIterator.getAdjNode()));
-			visitedNodes.add(edgeIterator.getAdjNode());
-		} 
-
-		while (edgeIterator.next()) {
-			if (!visitedNodes.contains(edgeIterator.getBaseNode())) {
-				System.out.println(edgeIterator.getBaseNode() + ";"
-						+ graphStorage.getLevel(edgeIterator.getBaseNode()));
-				visitedNodes.add(edgeIterator.getBaseNode());
-			}
-
-			if (!visitedNodes.contains(edgeIterator.getAdjNode())) {
-				System.out.println(edgeIterator.getAdjNode() + ";"
-						+ graphStorage.getLevel(edgeIterator.getAdjNode()));
-				visitedNodes.add(edgeIterator.getAdjNode());
-			}
-		}
+//		EdgeIterator edgeIterator = graphStorage.getAllEdges();
+//		Set<Integer> visitedNodes = new HashSet<Integer>();
+//		
+//		if (!visitedNodes.contains(edgeIterator.getBaseNode())) {
+//			System.out.println(edgeIterator.getBaseNode() + ";"
+//					+ graphStorage.getLevel(edgeIterator.getBaseNode()));
+//			visitedNodes.add(edgeIterator.getBaseNode());
+//		}
+//
+//		if (!visitedNodes.contains(edgeIterator.getAdjNode())) {
+//			System.out.println(edgeIterator.getAdjNode() + ";"
+//					+ graphStorage.getLevel(edgeIterator.getAdjNode()));
+//			visitedNodes.add(edgeIterator.getAdjNode());
+//		} 
+//
+//		while (edgeIterator.next()) {
+//			if (!visitedNodes.contains(edgeIterator.getBaseNode())) {
+//				System.out.println(edgeIterator.getBaseNode() + ";"
+//						+ graphStorage.getLevel(edgeIterator.getBaseNode()));
+//				visitedNodes.add(edgeIterator.getBaseNode());
+//			}
+//
+//			if (!visitedNodes.contains(edgeIterator.getAdjNode())) {
+//				System.out.println(edgeIterator.getAdjNode() + ";"
+//						+ graphStorage.getLevel(edgeIterator.getAdjNode()));
+//				visitedNodes.add(edgeIterator.getAdjNode());
+//			}
+//		}
 
 		 testGraph.prepareNodes();
 		 testGraph.contractNodes();
 
 		 
 		 
-		
 		
 		//
 		// for (int i = 0; i < graphExampleMonacoCH.getNumberOfEdges(); i++) {

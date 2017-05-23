@@ -115,7 +115,7 @@ public class DijkstraCH {
 //			if(wasTraversed.containsKey(targetId) && wasTraversed.get(targetId)==-1) {
 			if (removed.getId() == targetId) {
 				Path path = new Path();
-				path.constructPath(queue.peek().getId(), parents, graph);
+				path.constructPath(removed.getId(), parents, graph);
 				return path;
 			}
 
