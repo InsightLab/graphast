@@ -353,7 +353,8 @@ public class KNNCHSearch {
 			path = new Path();
 			resultParentNodes = joinParents(meetingNode, forwardsParentNodes, backwardsParentNodes);
 			path.constructPath(target.getId(), resultParentNodes, graph);
-
+			smallerDistancePoI.remove(new DistanceEntry(target.getId(), -1, -1));
+			backwardUnsettleNodesHash.remove(target.getId());
 			return path;
 
 		}
@@ -571,7 +572,8 @@ public class KNNCHSearch {
 			path = new Path();
 			resultParentNodes = joinParents(meetingNode, forwardsParentNodes, backwardsParentNodes);
 			path.constructPath(target.getId(), resultParentNodes, graph);
-
+			smallerDistancePoI.remove(new DistanceEntry(target.getId(), -1, -1));
+			backwardUnsettleNodesHash.remove(target.getId());
 			return path;
 
 		}

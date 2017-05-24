@@ -60,8 +60,8 @@ public class BidirectionalDijkstraTest {
 		// graphMITExample3 = new GraphGenerator().generateMITExample3();
 
 		graphMonaco = new GraphGenerator().generateMonacoCH();
-//		 graphMonaco.prepareNodes();
-//		 graphMonaco.contractNodes();
+		 graphMonaco.prepareNodes();
+		 graphMonaco.contractNodes();
 
 		// graphTinyMonaco = new GraphGenerator().generateTinyMonacoCH();
 		// graphSeattle = new GraphGenerator().generateSeattleCH();

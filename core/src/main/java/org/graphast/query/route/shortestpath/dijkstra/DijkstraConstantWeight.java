@@ -43,7 +43,7 @@ public class DijkstraConstantWeight extends Dijkstra {
 				int travelTime = removed.getTravelTime() + neig.get(vid);
 				TimeEntry newEntry = new TimeEntry(vid, travelTime, arrivalTime, removed.getId());
 
-				System.out.println("\tNode being expanded: " + vid + ". Distance: " + travelTime);
+//				System.out.println("\tNode being expanded: " + vid + ". Distance: " + travelTime);
 				
 				Edge edge = null;
 				int distance = -1;

@@ -562,10 +562,6 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 			// Contracting a node
 
 //			 this.addShortcuts(polledNode.getId());
-			// logger.debug("\t\t\tNumber of shortcuts created: {}",
-			// numberShortcutsCreated);
-//			System.out.println("-Para o nó " + polledNode.getId() + " foram criados "
-//					+ this.addShortcuts(polledNode.getId()) + " atalhos. Seu nível é " + level);
 
 			System.out.println(polledNode.getExternalId() + ";" + level + ";" + this.addShortcuts(polledNode.getId()));
 			
