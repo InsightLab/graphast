@@ -92,18 +92,25 @@ public class BidirectionalDijkstraCH {
 
 		while (!forwardsUnsettleNodes.isEmpty() || !backwardsUnsettleNodes.isEmpty()) {
 
-			// Condition to alternate between forward and backward search
-			if (forwardsUnsettleNodes.isEmpty()) {
-				backwardSearch();
-			} else if (backwardsUnsettleNodes.isEmpty()) {
+			if (!forwardsUnsettleNodes.isEmpty())
 				forwardSearch();
-			} else {
-				if (forwardsUnsettleNodes.peek().getDistance() <= backwardsUnsettleNodes.peek().getDistance()) {
-					forwardSearch();
-				} else {
-					backwardSearch();
-				}
-			}
+			
+			if (!backwardsUnsettleNodes.isEmpty())
+				backwardSearch();
+			
+			
+//			// Condition to alternate between forward and backward search
+//			if (forwardsUnsettleNodes.isEmpty()) {
+//				backwardSearch();
+//			} else if (backwardsUnsettleNodes.isEmpty()) {
+//				forwardSearch();
+//			} else {
+//				if (forwardsUnsettleNodes.peek().getDistance() <= backwardsUnsettleNodes.peek().getDistance()) {
+//					forwardSearch();
+//				} else {
+//					backwardSearch();
+//				}
+//			}
 
 			if (path != null) {
 
@@ -119,8 +126,7 @@ public class BidirectionalDijkstraCH {
 
 		Path path = new Path();
 		Instruction instruction = new Instruction(Integer.MAX_VALUE,
-				"PATH NOT FOUND BETWEEN " + source.getId() + " AND " + target.getId(), 0,
-				0);
+				"PATH NOT FOUND BETWEEN " + source.getId() + " AND " + target.getId(), 0, 0);
 		List<Instruction> instructions = new ArrayList<>();
 		instructions.add(instruction);
 		path.setInstructions(instructions);
@@ -136,12 +142,14 @@ public class BidirectionalDijkstraCH {
 	private void forwardSearch() {
 
 		forwardsRemovedNode = forwardsUnsettleNodes.poll();
-		System.out.println("[BIDIRECTIONAL FORWARD] Node being analyzed: " + forwardsRemovedNode.getId());
+		System.out.println("[BIDIRECTIONAL FORWARD] Node being analyzed: "
+				+ graph.getNode(forwardsRemovedNode.getId()).getExternalId() + ". Distance: " + forwardsRemovedNode.getDistance());
 		forwardsUnsettleNodesAux.remove(forwardsRemovedNode.getId());
 		forwardsSettleNodes.put(forwardsRemovedNode.getId(), forwardsRemovedNode.getDistance());
 		expandedNodesForwardSearch++;
 
-		logger.debug("[BIDIRECTIONAL FORWARD] Node being analyzed in the forwardSearch(): {}", forwardsRemovedNode.getId());
+		logger.debug("[BIDIRECTIONAL FORWARD] Node being analyzed in the forwardSearch(): {}",
+				forwardsRemovedNode.getId());
 
 		expandVertexForward();
 
@@ -162,14 +170,13 @@ public class BidirectionalDijkstraCH {
 					&& meetingNode.getId() == -1) {
 				path = new Path();
 				Instruction instruction = new Instruction(Integer.MAX_VALUE,
-						"PATH NOT FOUND BETWEEN " + source.getId() + " AND " + target.getId(), 0,
-						0);
+						"PATH NOT FOUND BETWEEN " + source.getId() + " AND " + target.getId(), 0, 0);
 				List<Instruction> instructions = new ArrayList<>();
 				instructions.add(instruction);
 				path.setInstructions(instructions);
 				return;
 			}
-			
+
 			while (!backwardsUnsettleNodes.isEmpty()) {
 				DistanceEntry possibleNewMeetingNode = backwardsUnsettleNodes.poll();
 				if (forwardsSettleNodes.containsKey(possibleNewMeetingNode.getId())) {
@@ -184,7 +191,7 @@ public class BidirectionalDijkstraCH {
 					}
 				}
 			}
-			
+
 			while (!forwardsUnsettleNodes.isEmpty()) {
 				DistanceEntry possibleNewMeetingNode = forwardsUnsettleNodes.poll();
 				if (backwardsSettleNodes.containsKey(possibleNewMeetingNode.getId())) {
@@ -215,11 +222,13 @@ public class BidirectionalDijkstraCH {
 	private void backwardSearch() {
 
 		backwardsRemovedNode = backwardsUnsettleNodes.poll();
-		System.out.println("[BIDIRECTIONAL BACKWARD] Node being analyzed: " + backwardsRemovedNode.getId());
+		System.out.println("[BIDIRECTIONAL BACKWARD] Node being analyzed: "
+				+ graph.getNode(backwardsRemovedNode.getId()).getExternalId() + ". Distance: " + backwardsRemovedNode.getDistance());
 		backwardsSettleNodes.put(backwardsRemovedNode.getId(), backwardsRemovedNode.getDistance());
 		expandedNodesBackwardSearch++;
 
-		logger.debug("[BIDIRECTIONAL BACKWARD] Node being analyzed in the backwardSearch(): {}", backwardsRemovedNode.getId());
+		logger.debug("[BIDIRECTIONAL BACKWARD] Node being analyzed in the backwardSearch(): {}",
+				backwardsRemovedNode.getId());
 
 		expandVertexBackward();
 
@@ -240,14 +249,13 @@ public class BidirectionalDijkstraCH {
 					&& meetingNode.getId() == -1) {
 				path = new Path();
 				Instruction instruction = new Instruction(Integer.MAX_VALUE,
-						"PATH NOT FOUND BETWEEN " + source.getId() + " AND " + target.getId(), 0,
-						0);
+						"PATH NOT FOUND BETWEEN " + source.getId() + " AND " + target.getId(), 0, 0);
 				List<Instruction> instructions = new ArrayList<>();
 				instructions.add(instruction);
 				path.setInstructions(instructions);
 				return;
 			}
-			
+
 			while (!backwardsUnsettleNodes.isEmpty()) {
 				DistanceEntry possibleNewMeetingNode = backwardsUnsettleNodes.poll();
 				if (forwardsSettleNodes.containsKey(possibleNewMeetingNode.getId())) {
@@ -297,7 +305,7 @@ public class BidirectionalDijkstraCH {
 		verifyMeetingNodeForwardSearch(forwardsRemovedNode.getId(), neighbors, true);
 
 		for (long vid : neighbors.keySet()) {
-
+			System.out.println(graph.getNode(vid));
 			if (graph.getNode(vid).getLevel() < graph.getNode(forwardsRemovedNode.getId()).getLevel()) {
 				logger.debug("Node ignored: {}", vid);
 				continue;
@@ -306,8 +314,9 @@ public class BidirectionalDijkstraCH {
 			logger.debug("Node considered: {}", vid);
 			DistanceEntry newEntry = new DistanceEntry(vid, neighbors.get(vid) + forwardsRemovedNode.getDistance(),
 					forwardsRemovedNode.getId());
-			
-			System.out.println("\tNode being expanded: " + vid + ". Distance: " + newEntry.getDistance());
+
+			// System.out.println("\tNode being expanded: " + vid + ". Distance:
+			// " + newEntry.getDistance());
 
 			Edge edge;
 			int distance;
@@ -401,8 +410,9 @@ public class BidirectionalDijkstraCH {
 			DistanceEntry newEntry = new DistanceEntry(vid, neighbors.get(vid) + backwardsRemovedNode.getDistance(),
 					backwardsRemovedNode.getId());
 
-			System.out.println("\tNode being expanded: " + vid + ". Distance: " + newEntry.getDistance());
-			
+			// System.out.println("\tNode being expanded: " + vid + ". Distance:
+			// " + newEntry.getDistance());
+
 			Edge edge;
 			int distance;
 

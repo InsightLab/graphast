@@ -772,6 +772,8 @@ public class CHGraphTest {
 //			}
 //		}
 
+		System.out.println("TEST");
+		
 		 testGraph.prepareNodes();
 		 testGraph.contractNodes();
 

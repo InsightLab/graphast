@@ -59,7 +59,7 @@ public class BidirectionalDijkstraTest {
 		// graphMITExample2 = new GraphGenerator().generateMITExample2();
 		// graphMITExample3 = new GraphGenerator().generateMITExample3();
 
-		graphMonaco = new GraphGenerator().generateMonacoCH();
+		graphMonaco = new GraphGenerator().generateMonacoCHWithPoI();
 		 graphMonaco.prepareNodes();
 		 graphMonaco.contractNodes();
 
@@ -200,8 +200,8 @@ public class BidirectionalDijkstraTest {
 	public void shortestPathUnitaryTest() {
 
 		CHGraph testGraph = graphMonaco;
-		Long source = 0l;
-		Long target = 12l;
+		Long source = 552l;
+		Long target = 355l;
 
 		Dijkstra dijkstra = new DijkstraConstantWeight(testGraph);
 		Path dijkstraPath = dijkstra.shortestPath(testGraph.getNode(source), testGraph.getNode(target));
@@ -214,7 +214,7 @@ public class BidirectionalDijkstraTest {
 		BidirectionalDijkstraCH bidirectionalDijkstra = new BidirectionalDijkstraCH(testGraph);
 		Path finalPath = bidirectionalDijkstra.execute(testGraph.getNode(source), testGraph.getNode(target));
 
-		if (finalPath.getTotalCost() != dijkstraPath.getTotalDistance()) {
+		if ((int) finalPath.getTotalCost() != (int) dijkstraPath.getTotalDistance()) {
 			System.out.println("Different results between source " + source + " and destination " + target);
 			System.out.println("\tSource: " + testGraph.getNode(source).getLatitude() + ","
 					+ testGraph.getNode(source).getLongitude());
@@ -223,7 +223,7 @@ public class BidirectionalDijkstraTest {
 			System.out.println("Regular Dijkstra distance: " + dijkstraPath.getTotalDistance()
 					+ ", Bidirectional Dijkstra distance: " + finalPath.getTotalDistance());
 		}
-
+		
 	}
 
 //	@Test
