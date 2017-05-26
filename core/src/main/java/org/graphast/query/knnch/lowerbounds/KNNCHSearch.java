@@ -50,6 +50,8 @@ public class KNNCHSearch {
 
 	private CHNode source;
 	private CHNode target;
+	
+	private int numberOfPoIs;
 
 	private int expandedNodesForwardSearch = 0;
 	private int expandedNodesBackwardSearch = 0;
@@ -85,6 +87,7 @@ public class KNNCHSearch {
 
 	public KNNCHSearch(CHGraph graph) {
 		this.graph = graph;
+		this.numberOfPoIs = graph.getPOIs().size();
 	}
 
 	/**
@@ -158,7 +161,7 @@ public class KNNCHSearch {
 		// If the number of nearest nodes that we need is equal to the number of
 		// PoIs in the graph,
 		// there is no nextCandidate: all PoI's will be considered!
-		if (graph.getPOIs().size() < k) {
+		if (numberOfPoIs < k) {
 			nextCandidateNNLowerBound.setId(lowerBoundDistanceSourcePoIs.peek().getId());
 			nextCandidateNNLowerBound.setDistance(lowerBoundDistanceSourcePoIs.peek().getDistance());
 		}
@@ -169,7 +172,7 @@ public class KNNCHSearch {
 
 		while (!backwardUnsettleNodesHash.isEmpty()) {
 
-			if ((graph.getPOIs().size() < k) && smallerDistancePoI.peek().getDistance() >= nextCandidateNNLowerBound.getDistance()) {
+			if ((numberOfPoIs < k) && smallerDistancePoI.peek().getDistance() >= nextCandidateNNLowerBound.getDistance()) {
 				PriorityQueue<DistanceEntry> backwardsUnsettleNodes = new PriorityQueue<>();
 				HashMap<Long, Integer> backwardsUnsettleNodesAux = new HashMap<>();
 
