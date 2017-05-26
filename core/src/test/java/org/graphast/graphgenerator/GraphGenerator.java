@@ -222,12 +222,13 @@ public class GraphGenerator {
 	public GraphBounds generateMonaco() {
 
 		String osmFile = this.getClass().getResource("/monaco-latest.osm.pbf").getPath();
+		String poiFile = this.getClass().getResource("/monaco-latest.csv").getPath();
 		String graphHopperMonacoDir = Configuration.USER_HOME + "/graphhopper/test/monaco";
 		String graphastMonacoDir = Configuration.USER_HOME + "/graphast/test/monaco";
 
 		GraphBounds graph = new OSMImporterImpl(osmFile, graphHopperMonacoDir, graphastMonacoDir).execute();
 
-		POIImporter.importPoIList(graph, "src/test/resources/monaco-latest.csv");
+		POIImporter.importPoIList(graph, poiFile);
 
 		CostGenerator.generateAllSyntheticEdgesCosts(graph);
 
@@ -556,6 +557,31 @@ public class GraphGenerator {
 		return graph;
 	}
 
+	public CHGraph generateBerlinCH() {
+		String osmFile = this.getClass().getResource("/monaco-latest.osm.pbf").getPath();
+		String graphHopperMonacoDir = Configuration.USER_HOME + "/graphhopper/test/monaco";
+		String graphastMonacoDir = Configuration.USER_HOME + "/graphast/test/monaco";
+
+		CHGraph graph = new OSMImporterImpl(osmFile, graphHopperMonacoDir, graphastMonacoDir).executeCH();
+
+//		POIImporter.importPoIList(graph, "src/test/resources/monaco-latest.csv");
+
+		// System.out.println("#nodes: " + graph.getNumberOfNodes());
+		// System.out.println("#edges: " + graph.getNumberOfEdges());
+
+		// graph.createHyperPOIS();
+
+		// System.out.println("#nodes: " + graph.getNumberOfNodes());
+		// System.out.println("#edges: " + graph.getNumberOfEdges());
+		//
+		// graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
+		// graph.setMaxLevel((int) (graph.getNumberOfNodes() + 1));
+
+		graph.save();
+
+		return graph;
+	}
+	
 	public CHGraph generateSeattleCH() {
 		String osmFile = this.getClass().getResource("/seattle-latest.osm.pbf").getPath();
 		String graphHopperSeattleDir = Configuration.USER_HOME + "/graphhopper/test/seattle";

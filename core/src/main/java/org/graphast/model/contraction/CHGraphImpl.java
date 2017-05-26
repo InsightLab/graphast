@@ -204,7 +204,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 		// Calculating the priority for all nodes
 		for (int nodeId = 0; nodeId < this.getNumberOfNodes(); nodeId++) {
 
-			// logger.info("[PRIORITIZING] nodeID: {}", nodeId);
+			logger.info("[PRIORITIZING] nodeID: {}", nodeId);
 
 			int priority = calculatePriority(this.getNode(nodeId), false);
 
@@ -217,12 +217,6 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 		if (sortedNodesQueue.isEmpty())
 			return false;
-
-//		System.out.println("NODE;PRIORITY");
-//		while (!sortedNodesQueue.isEmpty()) {
-//			System.out.println(sortedNodesQueue.peek().getExternalId() + ";" + sortedNodesQueue.peek().getPriority());
-//			sortedNodesQueue.poll();
-//		}
 
 		return true;
 
@@ -243,6 +237,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 		int numberOfContractedNeighbors = 0;
 		Set<Long> test = new HashSet<>();
+		
 		for (Long edgeId : this.getInEdges(n.getId())) {
 
 			test.add(this.getEdge(edgeId).getExternalId());
@@ -263,22 +258,7 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 		}
 		
-		int degree = 0;
-		degree = test.size();
-
 		int edgeDifference = possibleShortcuts.get(n.getId()).size() - (test.size());
-
-		// int hyperPoICoefficient = 0;
-
-		// if (n.getCategory() != -1) {
-		// hyperPoICoefficient += 20 * this.getNumberOfEdges() +
-		// this.getNumberOfEdges() + this.getNumberOfNodes() +
-		// this.getInEdges(n.getId()).size() +
-		// this.getOutEdges(n.getId()).size();
-		// }
-
-		int prioridade = 10 * edgeDifference + originalEdgeCount + numberOfContractedNeighbors;
-		logger.debug("Priority of node {}: {}", n.getExternalId(), prioridade);
 
 		return 10 * edgeDifference + originalEdgeCount + numberOfContractedNeighbors;
 
@@ -353,8 +333,8 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 	// Consider the following "graph": u --> u --> w
 	public void findShortcut(CHNode n, boolean contract) {
-		logger.debug("PROCURANDO ATALHOS PARA O NÓ {}. LAT: {} LON: {}", n.getExternalId(), n.getLatitude(),
-				n.getLongitude());
+//		logger.debug("PROCURANDO ATALHOS PARA O NÓ {}. LAT: {} LON: {}", n.getExternalId(), n.getLatitude(),
+//				n.getLongitude());
 
 //		System.out.println("Node being CONTRACTED: " + n.getId());
 		int temporaryDegreeCounter = 0;
@@ -565,6 +545,8 @@ public class CHGraphImpl extends GraphImpl implements CHGraph {
 
 //			System.out.println(polledNode.getExternalId() + ";" + level + ";" + this.addShortcuts(polledNode.getId()));
 			
+			 logger.info("Node being contracted: {}, Level: {}", polledNode.getId(), level);
+			 
 			this.updateNodeInfo(polledNode, level, polledNode.getPriority());
 
 			level++;
