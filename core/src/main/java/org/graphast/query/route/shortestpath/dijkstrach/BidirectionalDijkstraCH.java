@@ -34,10 +34,9 @@ public class BidirectionalDijkstraCH {
 
 	Node source;
 	Node target;
-	
+
 	int startCurr = 0;
 	int endCurr = 0;
-	
 
 	Path path;
 
@@ -93,8 +92,22 @@ public class BidirectionalDijkstraCH {
 
 		forwardsParentNodes.put(source.getId(), new RouteEntry(-1, 0, -1, null));
 		backwardsParentNodes.put(target.getId(), new RouteEntry(-1, 0, -1, null));
+		
+		forwardsSettleNodes.put(source.getId(), 0);
+		backwardsSettleNodes.put(target.getId(), 0);
 
-		while (!forwardsUnsettleNodes.isEmpty() || !backwardsUnsettleNodes.isEmpty()) {
+		if(source.getId() == target.getId()) {
+			Path path = new Path();
+			Instruction instruction = new Instruction(0,
+					"SOURCE EQUAL TO DESTINATION", 0, 0);
+			List<Instruction> instructions = new ArrayList<>();
+			instructions.add(instruction);
+			path.setInstructions(instructions);
+			
+			return path;
+		}
+		
+		while (!finished()) {
 
 			if (!forwardsUnsettleNodes.isEmpty())
 				forwardSearch();
@@ -102,111 +115,74 @@ public class BidirectionalDijkstraCH {
 			if (!backwardsUnsettleNodes.isEmpty())
 				backwardSearch();
 
-			// // Condition to alternate between forward and backward search
-			// if (forwardsUnsettleNodes.isEmpty()) {
-			// backwardSearch();
-			// } else if (backwardsUnsettleNodes.isEmpty()) {
-			// forwardSearch();
-			// } else {
-			// if (forwardsUnsettleNodes.peek().getDistance() <=
-			// backwardsUnsettleNodes.peek().getDistance()) {
-			// forwardSearch();
-			// } else {
-			// backwardSearch();
-			// }
-			// }
-
-			if (path != null) {
-
-				logger.info("PoI being searched: {}", target.getId());
-				logger.info("    Number of expanded nodes in the forward search: {}", expandedNodesForwardSearch);
-				logger.info("    Number of expanded nodes in the backward search: {}", expandedNodesBackwardSearch);
-
-				return path;
-
-			}
-
 		}
 
-		Path path = new Path();
-		Instruction instruction = new Instruction(Integer.MAX_VALUE,
-				"PATH NOT FOUND BETWEEN " + source.getId() + " AND " + target.getId(), 0, 0);
-		List<Instruction> instructions = new ArrayList<>();
-		instructions.add(instruction);
-		path.setInstructions(instructions);
-		return path;
-
-		// throw new PathNotFoundException("Path not found between (" +
-		// source.getLatitude() + "," + source.getLongitude()
-		// + ") and (" + target.getLatitude() + "," + target.getLongitude() +
-		// ")");
-
-	}
-
-	private void forwardSearch() {
-
-		forwardsRemovedNode = forwardsUnsettleNodes.poll();
-		System.out.println("[BIDIRECTIONAL FORWARD] Node being analyzed: " + graph.getNode(forwardsRemovedNode.getId()).getExternalId() + ". Distance: " + forwardsRemovedNode.getDistance());
-		forwardsUnsettleNodesAux.remove(forwardsRemovedNode.getId());
-		forwardsSettleNodes.put(forwardsRemovedNode.getId(), forwardsRemovedNode.getDistance());
-		expandedNodesForwardSearch++;
-
-		logger.debug("[BIDIRECTIONAL FORWARD] Node being analyzed in the forwardSearch(): {}",
-				forwardsRemovedNode.getId());
-
-		expandVertexForward();
-		
-		if(forwardsUnsettleNodes.peek() == null && backwardsUnsettleNodes.peek() == null && meetingNode.getDistance() != Integer.MAX_VALUE) {
+		if (meetingNode.getDistance() != Integer.MAX_VALUE) {
+			
 			HashMap<Long, RouteEntry> resultParentNodes;
 			path = new Path();
 			resultParentNodes = joinParents(meetingNode, forwardsParentNodes, backwardsParentNodes);
 			path.constructPath(target.getId(), resultParentNodes, graph);
 
-			return;
-		}
-		
-		if (forwardsUnsettleNodes.peek() != null) {
-			startCurr = forwardsUnsettleNodes.peek().getDistance();
+			return path;
+			
 		} else {
-			startCurr = 0;
-		}
-		if (backwardsUnsettleNodes.peek() != null) {
-			endCurr = backwardsUnsettleNodes.peek().getDistance();
-		} else {
-			endCurr = 0;
-		}
-
-		if (startCurr + endCurr >= meetingNode.getDistance()) {
-
-			HashMap<Long, RouteEntry> resultParentNodes;
-			path = new Path();
-			resultParentNodes = joinParents(meetingNode, forwardsParentNodes, backwardsParentNodes);
-			path.constructPath(target.getId(), resultParentNodes, graph);
-
-			return;
-
-		}
-		
-		if ((forwardsUnsettleNodes.peek() == null && backwardsUnsettleNodes.peek() == null)
-				&& meetingNode.getId() == -1) {
-			path = new Path();
+			
+			Path path = new Path();
 			Instruction instruction = new Instruction(Integer.MAX_VALUE,
 					"PATH NOT FOUND BETWEEN " + source.getId() + " AND " + target.getId(), 0, 0);
 			List<Instruction> instructions = new ArrayList<>();
 			instructions.add(instruction);
 			path.setInstructions(instructions);
-			return;
+			
+			return path;
+			
 		}
 
+	}
+	
+	private boolean finished() {
+		if(forwardsUnsettleNodes.isEmpty() && backwardsUnsettleNodes.isEmpty())
+			return true;
+		
+		return startCurr >= meetingNode.getDistance() && endCurr >= meetingNode.getDistance();
+	}
+
+	private void forwardSearch() {
+
+		forwardsRemovedNode = forwardsUnsettleNodes.poll();
+		
+		startCurr = forwardsRemovedNode.getDistance();
+		
+		System.out.println("[BIDIRECTIONAL FORWARD] Node being analyzed: "
+				+ graph.getNode(forwardsRemovedNode.getId()).getExternalId() + ". Distance: "
+				+ forwardsRemovedNode.getDistance());
+		
+//		forwardsUnsettleNodesAux.remove(forwardsRemovedNode.getId());
+		forwardsSettleNodes.put(forwardsRemovedNode.getId(), forwardsRemovedNode.getDistance());
+		
+		expandedNodesForwardSearch++;
+
+		logger.debug("[BIDIRECTIONAL FORWARD] Node being analyzed in the forwardSearch(): {}",
+				forwardsRemovedNode.getId());
+		
+		expandVertexForward();
+		
 	}
 
 	private void backwardSearch() {
 
 		backwardsRemovedNode = backwardsUnsettleNodes.poll();
+		
+		endCurr = backwardsRemovedNode.getDistance();
+		
 		System.out.println("[BIDIRECTIONAL BACKWARD] Node being analyzed: "
 				+ graph.getNode(backwardsRemovedNode.getId()).getExternalId() + ". Distance: "
 				+ backwardsRemovedNode.getDistance());
+		
+//		backwardsUnsettleNodesAux.remove(backwardsRemovedNode.getId());
 		backwardsSettleNodes.put(backwardsRemovedNode.getId(), backwardsRemovedNode.getDistance());
+		
 		expandedNodesBackwardSearch++;
 
 		logger.debug("[BIDIRECTIONAL BACKWARD] Node being analyzed in the backwardSearch(): {}",
@@ -214,56 +190,14 @@ public class BidirectionalDijkstraCH {
 		
 		expandVertexBackward();
 		
-		if(forwardsUnsettleNodes.peek() == null && backwardsUnsettleNodes.peek() == null && meetingNode.getDistance() != Integer.MAX_VALUE) {
-			HashMap<Long, RouteEntry> resultParentNodes;
-			path = new Path();
-			resultParentNodes = joinParents(meetingNode, forwardsParentNodes, backwardsParentNodes);
-			path.constructPath(target.getId(), resultParentNodes, graph);
-
-			return;
-		}
-		
-		if (forwardsUnsettleNodes.peek() != null) {
-			startCurr = forwardsUnsettleNodes.peek().getDistance();
-		} else {
-			startCurr = 0;
-		}
-		if (backwardsUnsettleNodes.peek() != null) {
-			endCurr = backwardsUnsettleNodes.peek().getDistance();
-		} else {
-			endCurr = 0;
-		}
-
-		if (startCurr + endCurr >= meetingNode.getDistance()) {
-
-			HashMap<Long, RouteEntry> resultParentNodes;
-			path = new Path();
-			resultParentNodes = joinParents(meetingNode, forwardsParentNodes, backwardsParentNodes);
-			path.constructPath(target.getId(), resultParentNodes, graph);
-
-			return;
-
-		} 
-		
-		if ((forwardsUnsettleNodes.peek() == null && backwardsUnsettleNodes.peek() == null)
-				&& meetingNode.getId() == -1) {
-			path = new Path();
-			Instruction instruction = new Instruction(Integer.MAX_VALUE,
-					"PATH NOT FOUND BETWEEN " + source.getId() + " AND " + target.getId(), 0, 0);
-			List<Instruction> instructions = new ArrayList<>();
-			instructions.add(instruction);
-			path.setInstructions(instructions);
-			return;
-		}
-
 	}
 
 	private void expandVertexForward() {
 
 		Long2IntMap neighbors = graph.accessNeighborhood(graph.getNode(forwardsRemovedNode.getId()));
-		
-		neighbors.put(forwardsRemovedNode.getId().longValue(), 0);
-		
+
+//		neighbors.put(forwardsRemovedNode.getId().longValue(), 0);
+
 		for (long vid : neighbors.keySet()) {
 
 			if (graph.getNode(vid).getLevel() < graph.getNode(forwardsRemovedNode.getId()).getLevel()) {
@@ -271,14 +205,11 @@ public class BidirectionalDijkstraCH {
 				continue;
 			}
 
-			verifyMeetingNodeForwardSearch(forwardsRemovedNode.getId(), vid, neighbors);
-			
 			logger.debug("Node considered: {}", vid);
 			DistanceEntry newEntry = new DistanceEntry(vid, neighbors.get(vid) + forwardsRemovedNode.getDistance(),
 					forwardsRemovedNode.getId());
 
-			// System.out.println("\tNode being expanded: " + vid + ". Distance:
-			// " + newEntry.getDistance());
+			System.out.println("\tNode being expanded: " + graph.getNode(vid).getExternalId() + ". Distance: " + newEntry.getDistance());
 
 			Edge edge;
 			int distance;
@@ -325,25 +256,30 @@ public class BidirectionalDijkstraCH {
 
 				}
 			}
+			
+			verifyMeetingNodeForwardSearch(forwardsRemovedNode.getId(), vid, neighbors);
+			
 		}
 	}
 
 	private void verifyMeetingNodeForwardSearch(long removed, long vid, Long2IntMap neighbors) {
-		
-		if (backwardsSettleNodes.containsKey(vid) && (forwardsSettleNodes.get(removed) + neighbors.get(vid) + backwardsSettleNodes.get(vid) < meetingNode.getDistance())) {
+
+		if (backwardsUnsettleNodesAux.containsKey(vid) && (forwardsSettleNodes.get(removed) + neighbors.get(vid) + backwardsUnsettleNodesAux.get(vid) < meetingNode.getDistance())) {
 			meetingNode.setId(vid);
-			meetingNode.setDistance(forwardsSettleNodes.get(removed) + neighbors.get(vid) + backwardsSettleNodes.get(vid));
+			meetingNode.setDistance(forwardsSettleNodes.get(removed) + neighbors.get(vid) + backwardsUnsettleNodesAux.get(vid));
 			meetingNode.setParent(forwardsRemovedNode.getId());
+			
+			System.out.println("\t\t\tMeeting node: " + graph.getNode(meetingNode.getId()).getExternalId());
 		}
-		
+
 	}
 
 	private void expandVertexBackward() {
 
 		Long2IntMap neighbors = this.graph.accessIngoingNeighborhood(this.graph.getNode(backwardsRemovedNode.getId()));
 
-		neighbors.put(backwardsRemovedNode.getId().longValue(), 0);
-		
+//		neighbors.put(backwardsRemovedNode.getId().longValue(), 0);
+
 		for (long vid : neighbors.keySet()) {
 
 			if (graph.getNode(vid).getLevel() < graph.getNode(backwardsRemovedNode.getId()).getLevel()) {
@@ -351,16 +287,13 @@ public class BidirectionalDijkstraCH {
 				logger.debug("Node ignored: {}", vid);
 				continue;
 			}
-			
-			verifyMeetingNodeBackwardSearch(backwardsRemovedNode.getId(), vid, neighbors);
 
 			logger.debug("Node considered: {}", vid);
 
 			DistanceEntry newEntry = new DistanceEntry(vid, neighbors.get(vid) + backwardsRemovedNode.getDistance(),
 					backwardsRemovedNode.getId());
 
-			// System.out.println("\tNode being expanded: " + vid + ". Distance:
-			// " + newEntry.getDistance());
+			System.out.println("\tNode being expanded: " + graph.getNode(vid).getExternalId() + ". Distance: " + newEntry.getDistance());
 
 			Edge edge;
 			int distance;
@@ -409,15 +342,19 @@ public class BidirectionalDijkstraCH {
 
 				}
 			}
+			
+			verifyMeetingNodeBackwardSearch(backwardsRemovedNode.getId(), vid, neighbors);
+			
 		}
 	}
 
 	private void verifyMeetingNodeBackwardSearch(long removed, long vid, Long2IntMap neighbors) {
 
-		if (forwardsSettleNodes.containsKey(vid) && (backwardsSettleNodes.get(removed) + neighbors.get(vid) + forwardsSettleNodes.get(vid) < meetingNode.getDistance())) {
+		if (forwardsUnsettleNodesAux.containsKey(vid) && (backwardsSettleNodes.get(removed) + neighbors.get(vid) + forwardsUnsettleNodesAux.get(vid) < meetingNode.getDistance())) {
 			meetingNode.setId(vid);
-			meetingNode.setDistance(backwardsSettleNodes.get(removed) + neighbors.get(vid) + forwardsSettleNodes.get(vid));
+			meetingNode.setDistance(backwardsSettleNodes.get(removed) + neighbors.get(vid) + forwardsUnsettleNodesAux.get(vid));
 			meetingNode.setParent(backwardsRemovedNode.getId());
+			System.out.println("\t\t\tMeeting node: " + graph.getNode(meetingNode.getId()).getExternalId());
 		}
 
 	}
