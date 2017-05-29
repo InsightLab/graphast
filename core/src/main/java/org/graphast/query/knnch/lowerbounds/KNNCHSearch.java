@@ -3,6 +3,7 @@ package org.graphast.query.knnch.lowerbounds;
 import static org.graphast.util.NumberUtils.convertToInt;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -36,6 +37,7 @@ public class KNNCHSearch {
 	private CHGraph graph;
 
 	private Queue<DistanceEntry> smallerDistancePoI = new PriorityQueue<>();
+	private Map<Long, Integer> smallerDistancePoIHash = new HashMap<>();
 	private Queue<DistanceEntry> lowerBoundDistanceSourcePoIs = new PriorityQueue<>();
 
 	private Map<Long, PriorityQueue<DistanceEntry>> backwardUnsettleNodesHash = new HashMap<>();
@@ -51,6 +53,17 @@ public class KNNCHSearch {
 	private CHNode source;
 	private CHNode target;
 	
+	private Long currentPoI = -1l;
+	private int kIterator = 1;
+	private int iteratorResult = 1;
+	
+	private Map<Integer, Long> nearestNeighborMap = new HashMap<>();
+
+	int startCurr = 0;
+	int endCurr = 0;
+	Map<Long, Integer> startCurrList = new HashMap<>();
+	Map<Long, Integer> endCurrList = new HashMap<>();
+
 	private int numberOfPoIs;
 
 	private int expandedNodesForwardSearch = 0;
@@ -122,7 +135,7 @@ public class KNNCHSearch {
 	public Queue<Path> search(CHNode source, int k) {
 
 		this.source = source;
-//		this.smallerDistancePoI = smallerDistancePoI;
+		// this.smallerDistancePoI = smallerDistancePoI;
 
 		initializeQueue(source, forwardsUnsettleNodes);
 
@@ -132,8 +145,7 @@ public class KNNCHSearch {
 
 		createLowerBounds(source.getId());
 
-		
-		//Inicializando atributos para cada ponto de interesse
+		// Inicializando atributos para cada ponto de interesse
 		for (int i = 0; i < k; i++) {
 
 			PriorityQueue<DistanceEntry> backwardsUnsettleNodes = new PriorityQueue<>();
@@ -144,6 +156,7 @@ public class KNNCHSearch {
 			backwardsUnsettleNodesAux.put(target.getId(), 0);
 
 			this.smallerDistancePoI.add(new DistanceEntry(target.getId(), 0, -1));
+			this.smallerDistancePoIHash.put(target.getId(), Integer.MAX_VALUE);
 
 			backwardUnsettleNodesHash.put(target.getId(), backwardsUnsettleNodes);
 			backwardsUnsettleNodesAuxHash.put(target.getId(), backwardsUnsettleNodesAux);
@@ -152,6 +165,8 @@ public class KNNCHSearch {
 			backwardSettleNodesHash.put(target.getId(), backwardsSettleNodes);
 
 			meetingNodeHash.put(target.getId(), new DistanceEntry(-1, Integer.MAX_VALUE, -1));
+			startCurrList.put(target.getId(), 0);
+			endCurrList.put(target.getId(), 0);
 
 			HashMap<Long, RouteEntry> backwardsParentNodes = new HashMap<>();
 			backwardsParentNodes.put(target.getId(), new RouteEntry(-1, 0, -1, null));
@@ -172,14 +187,15 @@ public class KNNCHSearch {
 
 		while (!backwardUnsettleNodesHash.isEmpty()) {
 
-			if ((numberOfPoIs < k) && smallerDistancePoI.peek().getDistance() >= nextCandidateNNLowerBound.getDistance()) {
+			if ((numberOfPoIs < k)
+					&& smallerDistancePoI.peek().getDistance() >= nextCandidateNNLowerBound.getDistance()) {
 				PriorityQueue<DistanceEntry> backwardsUnsettleNodes = new PriorityQueue<>();
 				HashMap<Long, Integer> backwardsUnsettleNodesAux = new HashMap<>();
 
 				CHNode target = graph.getNode(nextCandidateNNLowerBound.getId());
 				initializeQueue(target, backwardsUnsettleNodes);
 				backwardsUnsettleNodesAux.put(target.getId(), 0);
-				
+
 				backwardUnsettleNodesHash.put(nextCandidateNNLowerBound.getId(), backwardsUnsettleNodes);
 				backwardsUnsettleNodesAuxHash.put(nextCandidateNNLowerBound.getId(), backwardsUnsettleNodesAux);
 
@@ -187,71 +203,88 @@ public class KNNCHSearch {
 						new DistanceEntry(-1, Integer.MAX_VALUE, -1));
 
 				this.smallerDistancePoI.add(new DistanceEntry(target.getId(), 0, -1));
+				this.smallerDistancePoIHash.put(target.getId(), Integer.MAX_VALUE);
 
 				lowerBoundDistanceSourcePoIs.poll();
 				nextCandidateNNLowerBound.setId(lowerBoundDistanceSourcePoIs.peek().getId());
 				nextCandidateNNLowerBound.setDistance(lowerBoundDistanceSourcePoIs.peek().getDistance());
 			}
 
-			Long currentPoI = smallerDistancePoI.poll().getId();
+			currentPoI = smallerDistancePoI.poll().getId();
+			
+			if(currentPoI == source.getId()) {
+				backwardUnsettleNodesHash.remove(currentPoI);
+				kIterator++;
+				iteratorResult++;
+				Path path = new Path();
+				Instruction instruction = new Instruction(0,
+						"SOURCE EQUAL TO DESTINATION", 0, 0);
+				List<Instruction> instructions = new ArrayList<>();
+				instructions.add(instruction);
+				path.setInstructions(instructions);
+				
+				finalResult.add(path);
+				
+				continue;
+			}
+			
+//			smallerDistancePoIHash.remove(currentPoI);
 			backwardsUnsettleNodes = backwardUnsettleNodesHash.get(currentPoI);
 			backwardsUnsettleNodesAux = backwardsUnsettleNodesAuxHash.get(currentPoI);
 			backwardsSettleNodes = backwardSettleNodesHash.get(currentPoI);
 			backwardsParentNodes = parentsHash.get(currentPoI);
 			meetingNode = meetingNodeHash.get(currentPoI);
+			startCurr = startCurrList.get(currentPoI);
+			endCurr = endCurrList.get(currentPoI);
 			target = graph.getNode(currentPoI);
 
-			if(backwardsUnsettleNodes == null)
-				continue;
-			
-			 logger.debug("PoI that will be analyzed: {}", currentPoI);
-			// logger.info("Number of PoIs being considered: {}",
-			// dijkstraHash.size());
+			if (!finished()) {
 
-			if (forwardsUnsettleNodes.isEmpty() && backwardsUnsettleNodes.isEmpty()) {
-				// Add this node to a specific queue
-				// logger.info("Path NOT found");
-				backwardUnsettleNodesHash.remove(currentPoI);
-			} else {
+				logger.debug("PoI that will be analyzed: {}", currentPoI);
 
-				// Condition to alternate between forward and backward search
-				if (forwardsUnsettleNodes.isEmpty()) {
-					Path nearestNeighborPath = backwardSearch();
-					if (nearestNeighborPath != null) {
-						finalResult.add(nearestNeighborPath);
-					}
+				if (!forwardsUnsettleNodes.isEmpty())
+					forwardSearch();
 
-				} else if (backwardsUnsettleNodes.isEmpty()) {
-					Path nearestNeighborPath = forwardSearch();
-					if (nearestNeighborPath != null) {
-						finalResult.add(nearestNeighborPath);
-					}
-				} else {
-					if (forwardsUnsettleNodes.peek().getDistance() <= backwardsUnsettleNodes.peek().getDistance()) {
-						Path nearestNeighborPath = forwardSearch();
-						if (nearestNeighborPath != null) {
-							finalResult.add(nearestNeighborPath);
-						}
-					} else {
-						Path nearestNeighborPath = backwardSearch();
-						if (nearestNeighborPath != null) {
-							finalResult.add(nearestNeighborPath);
-						}
-					}
-				}
+				if (!backwardsUnsettleNodes.isEmpty())
+					backwardSearch();
 			}
+
 		}
 
 		knnSW.stop();
+		
+		for(int i = iteratorResult; i<kIterator; i++) {
+			
+			path = new Path();
+			HashMap<Long, RouteEntry> resultParentNodes = joinParents(meetingNodeHash.get(nearestNeighborMap.get(i)), forwardsParentNodes, parentsHash.get(nearestNeighborMap.get(i)));
+			path.constructPath(nearestNeighborMap.get(i), resultParentNodes, graph);
 
-		// logger.info("Execution Time of lower bound kNN: {}ms",
-		// knnSW.getNanos());
-		// logger.info("Number of expanded nodes in the forward search: {}",
-		// expandedNodesForwardSearch);
-		// logger.info("Number of expanded nodes in the backward search: {}",
-		// expandedNodesBackwardSearch);
-
+			finalResult.add(path);
+			
+		}
+		
 		return finalResult;
+
+	}
+
+	private boolean finished() {
+		if (forwardsUnsettleNodes.isEmpty() && backwardsUnsettleNodes.isEmpty()) {
+			backwardUnsettleNodesHash.remove(currentPoI);
+			smallerDistancePoI.remove(new DistanceEntry(currentPoI, -1, -1));
+			nearestNeighborMap.put(kIterator, currentPoI);
+			kIterator++;
+			return true;
+		}
+		
+		if(startCurr >= meetingNode.getDistance() && endCurr >= meetingNode.getDistance()) {
+			backwardUnsettleNodesHash.remove(currentPoI);
+			smallerDistancePoI.remove(new DistanceEntry(currentPoI, -1, -1));
+			nearestNeighborMap.put(kIterator, currentPoI);
+			kIterator++;
+			return true;
+		} else {
+			return false;
+		}
 
 	}
 
@@ -263,116 +296,25 @@ public class KNNCHSearch {
 
 	}
 
-	private Path forwardSearch() {
-		
-		Path path = null;
+	private void forwardSearch() {
 
 		forwardsRemovedNode = forwardsUnsettleNodes.poll();
-		forwardsUnsettleNodesAux.remove(forwardsRemovedNode.getId());
+		
+		startCurrList.replace(currentPoI, forwardsRemovedNode.getDistance());
+
 		forwardsSettleNodes.put(forwardsRemovedNode.getId(), forwardsRemovedNode.getDistance());
+
 		expandedNodesForwardSearch++;
 
 		logger.debug("Node being analyzed in the forwardSearch(): {}", forwardsRemovedNode.getId());
 
 		expandVertexForward();
 
-		int startCurr = 0;
-		int endCurr = 0;
-
-		if (forwardsUnsettleNodes.peek() != null) {
-			startCurr = forwardsUnsettleNodes.peek().getDistance();
-		}
-		if (backwardsUnsettleNodes.peek() != null) {
-			endCurr = backwardsUnsettleNodes.peek().getDistance();
-		}
-
-		if ( (startCurr + endCurr >= meetingNode.getDistance()) || (forwardsUnsettleNodes.peek() == null && backwardsUnsettleNodes.peek() == null) ) {
-
-			Iterator<DistanceEntry> iteratorForwardsUnsettleNodes = forwardsUnsettleNodes.iterator();
-			
-			while(iteratorForwardsUnsettleNodes.hasNext()) {
-				DistanceEntry possibleNewMeetingNode = iteratorForwardsUnsettleNodes.next();
-				if (backwardsSettleNodes.containsKey(possibleNewMeetingNode.getId())) {
-					if (meetingNode.getDistance() > possibleNewMeetingNode.getDistance()
-							+ backwardsSettleNodes.get(possibleNewMeetingNode.getId())) {
-
-						meetingNode.setId(possibleNewMeetingNode.getId());
-						meetingNode.setDistance(possibleNewMeetingNode.getDistance()
-								+ backwardsSettleNodes.get(possibleNewMeetingNode.getId()));
-						meetingNode.setParent(possibleNewMeetingNode.getParent());
-
-					}
-				}
-			}
-			
-			
-			
-			
-//			while (!forwardsUnsettleNodes.isEmpty()) {
-//				DistanceEntry possibleNewMeetingNode = forwardsUnsettleNodes.poll();
-//				if (backwardsSettleNodes.containsKey(possibleNewMeetingNode.getId())) {
-//					if (meetingNode.getDistance() > possibleNewMeetingNode.getDistance()
-//							+ backwardsSettleNodes.get(possibleNewMeetingNode.getId())) {
-//
-//						meetingNode.setId(possibleNewMeetingNode.getId());
-//						meetingNode.setDistance(possibleNewMeetingNode.getDistance()
-//								+ backwardsSettleNodes.get(possibleNewMeetingNode.getId()));
-//						meetingNode.setParent(possibleNewMeetingNode.getParent());
-//
-//					}
-//				}
-//
-//			}
-			
-			while (!backwardsUnsettleNodes.isEmpty()) {
-				DistanceEntry possibleNewMeetingNode = backwardsUnsettleNodes.poll();
-				if (forwardsSettleNodes.containsKey(possibleNewMeetingNode.getId())) {
-					if (meetingNode.getDistance() > possibleNewMeetingNode.getDistance()
-							+ forwardsSettleNodes.get(possibleNewMeetingNode.getId())) {
-
-						meetingNode.setId(possibleNewMeetingNode.getId());
-						meetingNode.setDistance(possibleNewMeetingNode.getDistance()
-								+ forwardsSettleNodes.get(possibleNewMeetingNode.getId()));
-						meetingNode.setParent(possibleNewMeetingNode.getParent());
-
-					}
-				}
-			}
-			
-			if(meetingNode.getDistance() == Integer.MAX_VALUE) {
-				path = new Path();
-				Instruction instruction = new Instruction(Integer.MAX_VALUE,
-						"PATH NOT FOUND BETWEEN " + source.getId() + " AND " + target.getId(), Double.MAX_VALUE,
-						Integer.MAX_VALUE);
-				List<Instruction> instructions = new ArrayList<>();
-				instructions.add(instruction);
-				path.setInstructions(instructions);
-				
-//				System.out.println("Path not found between " + source.getId() + " (" + source.getLatitude() + ", " + source.getLongitude() + ") and " + target.getId() + " (" + target.getLatitude() + ", " + target.getLongitude() + ").");
-				return path;
-			}
-
-			HashMap<Long, RouteEntry> resultParentNodes;
-			path = new Path();
-			resultParentNodes = joinParents(meetingNode, forwardsParentNodes, backwardsParentNodes);
-			path.constructPath(target.getId(), resultParentNodes, graph);
-			smallerDistancePoI.remove(new DistanceEntry(target.getId(), -1, -1));
-			backwardUnsettleNodesHash.remove(target.getId());
-			return path;
-
-		}
-
-		expandedNodesForwardSearch++;
-
-		return path;
-
 	}
 
 	private void expandVertexForward() {
 
 		Long2IntMap neighbors = graph.accessNeighborhood(graph.getNode(forwardsRemovedNode.getId()));
-
-		verifyMeetingNodeForwardSearch(forwardsRemovedNode.getId(), neighbors, true);
 
 		int backupDistance = forwardsRemovedNode.getDistance();
 
@@ -445,153 +387,55 @@ public class KNNCHSearch {
 					forwardsSmallerDistanceForThisIteration = backupDistance;
 				}
 			}
+
+			verifyMeetingNodeForwardSearch(forwardsRemovedNode.getId(), vid, neighbors);
+
 		}
-		if(forwardsSmallerDistanceForThisIteration == Integer.MAX_VALUE) {
+		if (forwardsSmallerDistanceForThisIteration == Integer.MAX_VALUE) {
 			forwardsSmallerDistanceForThisIteration = backupDistance;
 		}
-		smallerDistancePoI.add(new DistanceEntry(target.getId(),
-				forwardsSmallerDistanceForThisIteration + backwardsSmallerDistanceForThisIteration, -1));
+		
+//		if(smallerDistancePoIHash.get(target.getId()) > forwardsSmallerDistanceForThisIteration + backwardsSmallerDistanceForThisIteration) {
+//			smallerDistancePoIHash.replace(target.getId(), forwardsSmallerDistanceForThisIteration + backwardsSmallerDistanceForThisIteration);
+//			smallerDistancePoI.add(new DistanceEntry(target.getId(), forwardsSmallerDistanceForThisIteration + backwardsSmallerDistanceForThisIteration, -1));
+//		}
+		
+		
 	}
 
-	private void verifyMeetingNodeForwardSearch(long vid, Long2IntMap neighbors, boolean test) {
+	private void verifyMeetingNodeForwardSearch(long removed, long vid, Long2IntMap neighbors) {
 
-		if (test) {
-			if (backwardsSettleNodes.containsKey(vid) && (forwardsSettleNodes.get(forwardsRemovedNode.getId())
-					+ backwardsSettleNodes.get(vid) < meetingNode.getDistance())) {
-				meetingNode.setId(vid);
-				meetingNode.setDistance(
-						forwardsSettleNodes.get(forwardsRemovedNode.getId()) + backwardsSettleNodes.get(vid));
-				meetingNode.setParent(forwardsRemovedNode.getId());
-			}
-		} else {
-			if (backwardsSettleNodes.containsKey(vid) && (forwardsSettleNodes.get(forwardsRemovedNode.getId())
-					+ neighbors.get(vid) + backwardsSettleNodes.get(vid) < meetingNode.getDistance())) {
-				meetingNode.setId(vid);
-				meetingNode.setDistance(forwardsSettleNodes.get(forwardsRemovedNode.getId()) + neighbors.get(vid)
-						+ backwardsSettleNodes.get(vid));
-				meetingNode.setParent(forwardsRemovedNode.getId());
-			}
+		if (backwardsUnsettleNodesAux.containsKey(vid) && (forwardsSettleNodes.get(removed) + neighbors.get(vid)
+				+ backwardsUnsettleNodesAux.get(vid) < meetingNode.getDistance())) {
+			meetingNode.setId(vid);
+			meetingNode.setDistance(
+					forwardsSettleNodes.get(removed) + neighbors.get(vid) + backwardsUnsettleNodesAux.get(vid));
+			meetingNode.setParent(forwardsRemovedNode.getId());
+
+			System.out.println("\t\t\tMeeting node: " + graph.getNode(meetingNode.getId()).getExternalId());
 		}
 
 	}
 
-	private Path backwardSearch() {
-		Path path = null;
+	private void backwardSearch() {
 
 		backwardsRemovedNode = backwardsUnsettleNodes.poll();
+
+		endCurrList.replace(currentPoI, forwardsRemovedNode.getDistance());
+
 		backwardsSettleNodes.put(backwardsRemovedNode.getId(), backwardsRemovedNode.getDistance());
+
 		expandedNodesBackwardSearch++;
 
 		logger.debug("Node being analyzed in the backwardSearch(): {}", backwardsRemovedNode.getId());
 
 		expandVertexBackward();
 
-		int startCurr = 0;
-		int endCurr = 0;
-
-		if (forwardsUnsettleNodes.peek() != null) {
-			startCurr = forwardsUnsettleNodes.peek().getDistance();
-		}
-		if (backwardsUnsettleNodes.peek() != null) {
-			endCurr = backwardsUnsettleNodes.peek().getDistance();
-		}
-
-		if ( (startCurr + endCurr >= meetingNode.getDistance()) || (forwardsUnsettleNodes.peek() == null && backwardsUnsettleNodes.peek() == null)  ) {
-
-			while (!backwardsUnsettleNodes.isEmpty()) {
-				DistanceEntry possibleNewMeetingNode = backwardsUnsettleNodes.poll();
-				if (forwardsSettleNodes.containsKey(possibleNewMeetingNode.getId())) {
-					if (meetingNode.getDistance() > possibleNewMeetingNode.getDistance()
-							+ forwardsSettleNodes.get(possibleNewMeetingNode.getId())) {
-
-						meetingNode.setId(possibleNewMeetingNode.getId());
-						meetingNode.setDistance(possibleNewMeetingNode.getDistance()
-								+ forwardsSettleNodes.get(possibleNewMeetingNode.getId()));
-						meetingNode.setParent(possibleNewMeetingNode.getParent());
-
-					}
-				}
-			}
-
-			Iterator<DistanceEntry> iteratorForwardsUnsettleNodes = forwardsUnsettleNodes.iterator();
-			
-			while(iteratorForwardsUnsettleNodes.hasNext()) {
-				DistanceEntry possibleNewMeetingNode = iteratorForwardsUnsettleNodes.next();
-				if (backwardsSettleNodes.containsKey(possibleNewMeetingNode.getId())) {
-					if (meetingNode.getDistance() > possibleNewMeetingNode.getDistance()
-							+ backwardsSettleNodes.get(possibleNewMeetingNode.getId())) {
-
-						meetingNode.setId(possibleNewMeetingNode.getId());
-						meetingNode.setDistance(possibleNewMeetingNode.getDistance()
-								+ backwardsSettleNodes.get(possibleNewMeetingNode.getId()));
-						meetingNode.setParent(possibleNewMeetingNode.getParent());
-
-					}
-				}
-			}
-			
-			for(Long entry : forwardsSettleNodes.keySet()) {
-				if (backwardsSettleNodes.containsKey(entry)) {
-					if (meetingNode.getDistance() > forwardsSettleNodes.get(entry) + backwardsSettleNodes.get(entry)) {
-
-						meetingNode.setId(entry);
-						meetingNode.setDistance(forwardsSettleNodes.get(entry) + backwardsSettleNodes.get(entry));
-						meetingNode.setParent(forwardsParentNodes.get(entry).getId());
-
-					}
-				}
-				
-			}
-			
-//			while (!forwardsUnsettleNodes.isEmpty()) {
-//				DistanceEntry possibleNewMeetingNode = forwardsUnsettleNodes.poll();
-//				if (backwardsSettleNodes.containsKey(possibleNewMeetingNode.getId())) {
-//					if (meetingNode.getDistance() > possibleNewMeetingNode.getDistance()
-//							+ backwardsSettleNodes.get(possibleNewMeetingNode.getId())) {
-//
-//						meetingNode.setId(possibleNewMeetingNode.getId());
-//						meetingNode.setDistance(possibleNewMeetingNode.getDistance()
-//								+ backwardsSettleNodes.get(possibleNewMeetingNode.getId()));
-//						meetingNode.setParent(possibleNewMeetingNode.getParent());
-//
-//					}
-//				}
-//
-//			}
-			
-			if(meetingNode.getDistance() == Integer.MAX_VALUE) {
-				path = new Path();
-				Instruction instruction = new Instruction(Integer.MAX_VALUE,
-						"PATH NOT FOUND BETWEEN " + source.getId() + " AND " + target.getId(), Double.MAX_VALUE,
-						Integer.MAX_VALUE);
-				List<Instruction> instructions = new ArrayList<>();
-				instructions.add(instruction);
-				path.setInstructions(instructions);
-//				System.out.println("Path not found between " + source.getId() + " (" + source.getLatitude() + ", " + source.getLongitude() + ") and " + target.getId() + " (" + target.getLatitude() + ", " + target.getLongitude() + ").");
-				return path;
-			}
-
-			HashMap<Long, RouteEntry> resultParentNodes;
-			path = new Path();
-			resultParentNodes = joinParents(meetingNode, forwardsParentNodes, backwardsParentNodes);
-			path.constructPath(target.getId(), resultParentNodes, graph);
-			smallerDistancePoI.remove(new DistanceEntry(target.getId(), -1, -1));
-			backwardUnsettleNodesHash.remove(target.getId());
-			return path;
-
-		}
-
-		expandedNodesBackwardSearch++;
-
-		return path;
-
 	}
 
 	private void expandVertexBackward() {
 
 		Long2IntMap neighbors = this.graph.accessIngoingNeighborhood(this.graph.getNode(backwardsRemovedNode.getId()));
-
-		verifyMeetingNodeBackwardSearch(backwardsRemovedNode.getId(), neighbors, true);
 
 		int backupDistance = backwardsRemovedNode.getDistance();
 		backwardsSmallerDistanceForThisIteration = Integer.MAX_VALUE;
@@ -671,34 +515,29 @@ public class KNNCHSearch {
 
 			}
 
+			verifyMeetingNodeBackwardSearch(backwardsRemovedNode.getId(), vid, neighbors);
+
 		}
-		if(backwardsSmallerDistanceForThisIteration == Integer.MAX_VALUE) {
+		if (backwardsSmallerDistanceForThisIteration == Integer.MAX_VALUE) {
 			backwardsSmallerDistanceForThisIteration = backupDistance;
 		}
 
-		smallerDistancePoI.add(new DistanceEntry(target.getId(),
-				forwardsSmallerDistanceForThisIteration + backwardsSmallerDistanceForThisIteration, -1));
+//		if(smallerDistancePoIHash.get(target.getId()) > forwardsSmallerDistanceForThisIteration + backwardsSmallerDistanceForThisIteration) {
+//			smallerDistancePoIHash.replace(target.getId(), forwardsSmallerDistanceForThisIteration + backwardsSmallerDistanceForThisIteration);
+//		}
+		smallerDistancePoI.add(new DistanceEntry(target.getId(), forwardsSmallerDistanceForThisIteration + backwardsSmallerDistanceForThisIteration, -1));
 
 	}
 
-	private void verifyMeetingNodeBackwardSearch(long vid, Long2IntMap neighbors, boolean test) {
+	private void verifyMeetingNodeBackwardSearch(long removed, long vid, Long2IntMap neighbors) {
 
-		if (test) {
-			if (forwardsSettleNodes.containsKey(vid) && (backwardsSettleNodes.get(backwardsRemovedNode.getId())
-					+ forwardsSettleNodes.get(vid) < meetingNode.getDistance())) {
-				meetingNode.setId(vid);
-				meetingNode.setDistance(
-						backwardsSettleNodes.get(backwardsRemovedNode.getId()) + forwardsSettleNodes.get(vid));
-				meetingNode.setParent(backwardsRemovedNode.getId());
-			}
-		} else {
-			if (forwardsSettleNodes.containsKey(vid) && (backwardsSettleNodes.get(backwardsRemovedNode.getId())
-					+ neighbors.get(vid) + forwardsSettleNodes.get(vid) < meetingNode.getDistance())) {
-				meetingNode.setId(vid);
-				meetingNode.setDistance(backwardsSettleNodes.get(backwardsRemovedNode.getId()) + neighbors.get(vid)
-						+ forwardsSettleNodes.get(vid));
-				meetingNode.setParent(backwardsRemovedNode.getId());
-			}
+		if (forwardsUnsettleNodesAux.containsKey(vid) && (backwardsSettleNodes.get(removed) + neighbors.get(vid)
+				+ forwardsUnsettleNodesAux.get(vid) < meetingNode.getDistance())) {
+			meetingNode.setId(vid);
+			meetingNode.setDistance(
+					backwardsSettleNodes.get(removed) + neighbors.get(vid) + forwardsUnsettleNodesAux.get(vid));
+			meetingNode.setParent(backwardsRemovedNode.getId());
+			System.out.println("\t\t\tMeeting node: " + graph.getNode(meetingNode.getId()).getExternalId());
 		}
 
 	}

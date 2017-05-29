@@ -1823,7 +1823,7 @@ public class GraphGenerator {
 		node = new CHNodeImpl(3l, 30, 10);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(4l, 40, 10);
+		node = new CHNodeImpl(4l, 40, 10, 4);
 		graph.addNode(node);
 
 		node = new CHNodeImpl(5l, 50, 0);
@@ -1850,7 +1850,7 @@ public class GraphGenerator {
 		node = new CHNodeImpl(12l, 50, 20);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(13l, 60, 20);
+		node = new CHNodeImpl(13l, 60, 20, 4);
 		graph.addNode(node);
 
 		node = new CHNodeImpl(14l, 10, 0);
@@ -1868,7 +1868,7 @@ public class GraphGenerator {
 		node = new CHNodeImpl(18l, 10, -10);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(19l, 10, -20);
+		node = new CHNodeImpl(19l, 10, -20, 4);
 		graph.addNode(node);
 
 		node = new CHNodeImpl(20l, 0, -10);
@@ -1889,7 +1889,7 @@ public class GraphGenerator {
 		node = new CHNodeImpl(25l, 50, -10);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(26l, 40, -30);
+		node = new CHNodeImpl(26l, 40, -30, 4);
 		graph.addNode(node);
 
 		node = new CHNodeImpl(27l, 40, -10);
