@@ -64,12 +64,15 @@ public class KNNCHSearchTest {
 		// graphHopperExample3WithPoIs.prepareNodes();
 		// graphHopperExample3WithPoIs.contractNodes();
 
-		graphHopperExample4WithPoIs = new GraphGenerator().generateGraphHopperExample4();
+		graphHopperExample4WithPoIs = new GraphGenerator().generateGraphHopperExample4Test();
 //		graphHopperExample4WithPoIs.prepareNodes();
 //		graphHopperExample4WithPoIs.contractNodes();
-//		logger.info("Starting to generate PoI'S");
-//		POIImporter.generateRandomPoIs(graphHopperExample4WithPoIs, 25);
-//		logger.info("Finishing PoI's generation.");
+//		graphHopperExample4WithPoIs.getNearestNode(10, -10).setCategory(4);
+//		graphHopperExample4WithPoIs.getNearestNode(10, -20).setCategory(4);
+//		graphHopperExample4WithPoIs.getNearestNode(10, 0).setCategory(4);
+		logger.info("Starting to generate PoI'S");
+		POIImporter.generateRandomPoIs(graphHopperExample4WithPoIs, 100);
+		logger.info("Finishing PoI's generation.");
 
 		// StdDraw.drawGraph(graphHopperExample4WithPoIs);
 
@@ -121,15 +124,15 @@ public class KNNCHSearchTest {
 	public void graphHopperExample4WithPoIsTest() {
 
 //		for (Long source = 0l; source < graphHopperExample4WithPoIs.getNumberOfNodes(); source++) {
-			 Long source = 4l;
+			 Long source = 18l;
 
 			logger.info("SOURCE = {}", source);
-
+			
 			Queue<Path> finalResult = new PriorityQueue<>();
 
 			KNNCHSearch knn = new KNNCHSearch(graphHopperExample4WithPoIs);
 
-			finalResult = knn.search(graphHopperExample4WithPoIs.getNode(source), 2);
+			finalResult = knn.search(graphHopperExample4WithPoIs.getNode(source), 4);
 
 			int size = finalResult.size();
 
@@ -138,28 +141,27 @@ public class KNNCHSearchTest {
 				logger.info("\tk = {}", i);
 
 				Long destination;
+				
+				Dijkstra dj = new DijkstraConstantWeight(graphHopperExample4WithPoIs);
 
 				if (poi.getEdges().size() == 0) {
-					logger.info("\t\tPoI: {}, Distance = {}", poi.getInstructions().get(0).getDirection(),
-							poi.getTotalDistance());
-					destination = 0l;
+					logger.info("\t\tPoI: {}, Distance = {}", graphHopperExample4WithPoIs.getNode(poi.getInstructions().get(0).getDirection()).getExternalId(),
+							poi.getTotalCost());
+					destination = (long) poi.getInstructions().get(0).getDirection();
 
 				} else {
 					logger.info(
-							"\t\tPoI: {}, Distance = {}", graphHopperExample4WithPoIs
-									.getEdge(poi.getEdges().get(poi.getEdges().size() - 1)).getToNode(),
-							poi.getTotalDistance());
+							"\t\tPoI: {}, Distance = {}", graphHopperExample4WithPoIs.getNode(graphHopperExample4WithPoIs.getEdge(poi.getEdges().get(poi.getEdges().size() - 1)).getToNode()).getExternalId(),
+							poi.getTotalCost());
 					destination = graphHopperExample4WithPoIs.getEdge(poi.getEdges().get(poi.getEdges().size() - 1))
 							.getToNode();
 
 				}
 
-				Dijkstra dj = new DijkstraConstantWeight(graphHopperExample4WithPoIs);
-
 				assertEquals(
 						dj.shortestPath(graphHopperExample4WithPoIs.getNode(source),
 								graphHopperExample4WithPoIs.getNode(destination)).getTotalDistance(),
-						poi.getTotalDistance());
+						poi.getTotalCost(), 0);
 
 			}
 //		}

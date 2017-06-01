@@ -1,7 +1,11 @@
 package org.graphast.graphgenerator;
 
+import static org.graphast.util.GeoUtils.latLongToDouble;
+import static org.graphast.util.GeoUtils.latLongToInt;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.graphast.config.Configuration;
@@ -23,12 +27,13 @@ import org.graphast.model.contraction.CHGraphImpl;
 import org.graphast.model.contraction.CHNode;
 import org.graphast.model.contraction.CHNodeImpl;
 import org.graphast.query.route.shortestpath.dijkstra.DijkstraConstantWeight;
+import org.graphast.util.FileUtils;
+import org.graphast.util.NumberUtils;
+import org.graphhopper.config.Config;
 
 import com.graphhopper.GraphHopper;
 import com.graphhopper.routing.ch.PrepareContractionHierarchies;
-import com.graphhopper.routing.util.Bike2WeightFlagEncoder;
 import com.graphhopper.routing.util.EncodingManager;
-import com.graphhopper.routing.util.FlagEncoder;
 import com.graphhopper.routing.util.ShortestWeighting;
 import com.graphhopper.storage.GraphBuilder;
 import com.graphhopper.storage.GraphStorage;
@@ -36,8 +41,10 @@ import com.graphhopper.storage.LevelGraphStorage;
 import com.graphhopper.storage.NodeAccess;
 import com.graphhopper.util.EdgeIterator;
 import com.graphhopper.util.EdgeIteratorState;
-import com.graphhopper.util.GHUtility;
 import com.graphhopper.util.Helper;
+import com.graphhopper.util.PointList;
+
+import it.unimi.dsi.fastutil.ints.Int2LongOpenHashMap;
 
 public class GraphGenerator {
 
@@ -1800,6 +1807,259 @@ public class GraphGenerator {
 
 	}
 
+	
+	public CHGraph generateGraphHopperExample4Test() {
+		
+		CHGraph graph = new CHGraphImpl(Configuration.USER_HOME + "/graphast/test/bigTest");
+		
+		String defaultGraphLoc = Config.getProperty("example.graph.dir");
+
+		EncodingManager encodingManager = new EncodingManager("car");
+		GraphBuilder gb = new GraphBuilder(encodingManager).setLocation(defaultGraphLoc).setStore(true);
+		LevelGraphStorage graphStorage = gb.levelGraphCreate();
+
+		NodeAccess na = graphStorage.getNodeAccess();
+		na.setNode(0, 10, 30);
+		na.setNode(1, 10, 10);
+		na.setNode(2, 20, 10);
+		na.setNode(3, 30, 10);
+		na.setNode(4, 40, 10);
+		na.setNode(5, 50, 0);
+		na.setNode(6, 60, 0);
+		na.setNode(7, 70, 10);
+		na.setNode(8, 80, 10);
+		na.setNode(9, 20, 30);
+		na.setNode(10, 30, 30);
+		na.setNode(11, 40, 30);
+		na.setNode(12, 50, 20);
+		na.setNode(13, 60, 20);
+		na.setNode(14, 10, 0);
+		na.setNode(15, -10, 10);
+		na.setNode(16, -10, 30);
+		na.setNode(17, 10, 20);
+		na.setNode(18, 10, -10);
+		na.setNode(19, 10, -20);
+		na.setNode(20, 0, -10);
+		na.setNode(21, 0, -20);
+		na.setNode(22, 80, 0);
+		na.setNode(23, 80, -10);
+		na.setNode(24, 70, -10);
+		na.setNode(25, 50, -10);
+		na.setNode(26, 40, -30);
+		na.setNode(27, 40, -10);
+		na.setNode(28, 40, 50);
+		na.setNode(29, 50, 50);
+		na.setNode(30, 50, 40);
+		na.setNode(31, 50, 30);
+		na.setNode(32, 70, 30);
+		na.setNode(33, 10, 50);
+		
+		graphStorage.edge(0, 9, 10, false);
+		graphStorage.edge(9, 0, 10, false);
+		graphStorage.edge(0, 16, 20, false);
+		graphStorage.edge(16, 0, 20, false);
+		graphStorage.edge(0, 17, 10, false);
+		graphStorage.edge(17, 0, 10, false);
+		graphStorage.edge(0, 19, 100, false);
+		graphStorage.edge(0, 33, 20, false);
+		graphStorage.edge(1, 2, 10, false);
+		graphStorage.edge(2, 1, 10, false);
+		graphStorage.edge(1, 14, 10, false);
+		graphStorage.edge(14, 1, 10, false);
+		graphStorage.edge(1, 15, 20, false);
+		graphStorage.edge(15, 1, 20, false);
+		graphStorage.edge(1, 17, 10, false);
+		graphStorage.edge(17, 1, 10, false);
+		graphStorage.edge(2, 3, 10, false);
+		graphStorage.edge(3, 2, 10, false);
+		graphStorage.edge(3, 4, 10, false);
+		graphStorage.edge(4, 3, 10, false);
+		graphStorage.edge(4, 5, 14.142136, false);
+		graphStorage.edge(4, 31, 22.36068, false);
+		graphStorage.edge(31, 4, 22.36068, false);
+		graphStorage.edge(5, 6, 10, false);
+		graphStorage.edge(5, 27, 14.142136, false);
+		graphStorage.edge(27, 5, 14.142136, false);
+		graphStorage.edge(6, 7, 14.142136, false);
+		graphStorage.edge(7, 13, 14.142136, false);
+		graphStorage.edge(7, 8, 10, false);
+		graphStorage.edge(8, 7, 10, false);
+		graphStorage.edge(8, 22, 10, false);
+		graphStorage.edge(22, 8, 10, false);
+		graphStorage.edge(9, 10, 10, false);
+		graphStorage.edge(10, 9, 10, false);
+		graphStorage.edge(10, 11, 10, false);
+		graphStorage.edge(11, 10, 10, false);
+		graphStorage.edge(11, 28, 20, false);
+		graphStorage.edge(28, 11, 20, false);
+		graphStorage.edge(12, 4, 14.142136, false);
+		graphStorage.edge(13, 12, 10, false);
+		graphStorage.edge(13, 32, 14.142136, false);
+		graphStorage.edge(32, 13, 14.142136, false);
+		graphStorage.edge(14, 18, 10, false);
+		graphStorage.edge(18, 14, 10, false);
+		graphStorage.edge(16, 21, 50.990195, false);
+		graphStorage.edge(21, 16, 50.990195, false);
+		graphStorage.edge(18, 19, 10, false);
+		graphStorage.edge(19, 18, 10, false);
+		graphStorage.edge(19, 20, 14.142136, false);
+		graphStorage.edge(20, 19, 14.142136, false);
+		graphStorage.edge(19, 21, 10, false);
+		graphStorage.edge(21, 19, 10, false);
+		graphStorage.edge(22, 23, 10, false);
+		graphStorage.edge(23, 22, 10, false);
+		graphStorage.edge(23, 24, 10, false);
+		graphStorage.edge(24, 23, 10, false);
+		graphStorage.edge(24, 25, 20, false);
+		graphStorage.edge(25, 24, 20, false);
+		graphStorage.edge(25, 26, 22.36068, false);
+		graphStorage.edge(26, 25, 22.36068, false);
+		graphStorage.edge(25, 27, 10, false);
+		graphStorage.edge(27, 25, 10, false);
+		graphStorage.edge(28, 29, 10, false);
+		graphStorage.edge(29, 28, 10, false);
+		graphStorage.edge(29, 30, 10, false);
+		graphStorage.edge(30, 29, 10, false);
+		graphStorage.edge(30, 31, 10, false);
+		graphStorage.edge(31, 30, 10, false);
+
+		graphStorage.flush();
+		graphStorage.close();
+
+		graphStorage = (LevelGraphStorage) gb.load();
+
+		PrepareContractionHierarchies pch = new PrepareContractionHierarchies(encodingManager.getEncoder("car"),
+				new ShortestWeighting());
+		pch.setGraph(graphStorage);
+		pch.doWork();
+		pch.getG();
+		
+		
+//		GraphStorage gs = gh.getGraph();
+//		EdgeIterator edgeIterator = gs.getAllEdges();
+		
+		LevelGraphStorage graphLevel = (LevelGraphStorage) pch.getG();
+		
+		EdgeIterator edgeIterator = graphLevel.getAllEdges();
+		
+		Int2LongOpenHashMap hashExternalIdToId = new Int2LongOpenHashMap();
+		int count = 0;
+		int count2= 0;
+		int countInvalidDirection = 0;
+		int countBidirectional = 0;
+		int countOneWay = 0;
+		int countOneWayInverse = 0;
+		while(edgeIterator.next()) {
+			count++;
+
+			int externalFromNodeId = edgeIterator.getBaseNode();
+			int externalToNodeId = edgeIterator.getAdjNode();
+			int externalEdgeId = edgeIterator.getEdge();
+			int distance = (int)NumberUtils.round(edgeIterator.getDistance(), 0); // Convert distance from meters to millimeters
+			String label = edgeIterator.getName();
+
+			int fromNodeLevel = graphLevel.getLevel(externalFromNodeId);
+			int toNodeLevel = graphLevel.getLevel(externalToNodeId);
+			
+			double latitudeFrom = latLongToDouble(latLongToInt(graphLevel.getNodeAccess().getLatitude(externalFromNodeId)));
+			double longitudeFrom = latLongToDouble(latLongToInt(graphLevel.getNodeAccess().getLongitude(externalFromNodeId)));	
+
+			double latitudeTo = latLongToDouble(latLongToInt(graphLevel.getNodeAccess().getLatitude(externalToNodeId)));
+			double longitudeTo = latLongToDouble(latLongToInt(graphLevel.getNodeAccess().getLongitude(externalToNodeId)));			
+
+			CHNodeImpl fromNode, toNode;
+
+			long fromNodeId, toNodeId;
+
+			if(!hashExternalIdToId.containsKey(externalFromNodeId)){
+
+				fromNode = new CHNodeImpl(externalFromNodeId, latitudeFrom, longitudeFrom);
+				fromNode.setLevel(fromNodeLevel);
+				graph.addNode(fromNode);
+				fromNodeId = (long)fromNode.getId();
+				hashExternalIdToId.put(externalFromNodeId, fromNodeId);
+			} else {
+				fromNodeId = hashExternalIdToId.get(externalFromNodeId);
+			}
+
+			if(!hashExternalIdToId.containsKey(externalToNodeId)){
+				toNode = new CHNodeImpl(externalToNodeId, latitudeTo, longitudeTo);
+				toNode.setLevel(toNodeLevel);
+				graph.addNode(toNode);
+				toNodeId = (long)toNode.getId();
+				hashExternalIdToId.put(externalToNodeId, toNodeId);
+			} else {
+				toNodeId = hashExternalIdToId.get(externalToNodeId);
+			}
+
+			int direction = 9999;
+			try {
+				direction = getDirection(edgeIterator.getFlags());
+			} catch (Exception e) {
+				countInvalidDirection++;
+			}
+			
+			if(fromNodeId == toNodeId) {
+				
+				PointList pl = edgeIterator.fetchWayGeometry(3); //3 gets all point including from node and to node
+				List<Point> geometry = new ArrayList<Point>();
+				for(int i =0; i < pl.size(); i++) {
+					Point p = new Point(pl.getLatitude(i),pl.getLongitude(i));
+					geometry.add(p);
+				}
+				
+				count2++;
+				CHEdge edge = new CHEdgeImpl(externalEdgeId, fromNodeId, toNodeId, distance, label, geometry);
+				graph.addEdge(edge);
+				
+				continue;
+			}
+			
+			
+//			if(fromNodeId == toNodeId) {
+//				count2++;
+//				logger.info("Edge not created, because fromNodeId({}) == toNodeId({})", fromNodeId, toNodeId);
+//				continue;
+//			}
+			
+			//geometry
+			PointList pl = edgeIterator.fetchWayGeometry(3); //3 gets all point including from node and to node
+			List<Point> geometry = new ArrayList<Point>();
+			for(int i =0; i < pl.size(); i++) {
+				Point p = new Point(pl.getLatitude(i),pl.getLongitude(i));
+				geometry.add(p);
+			}
+			
+			if(direction == 0) {          // Bidirectional
+				CHEdge edge = new CHEdgeImpl(externalEdgeId, fromNodeId, toNodeId, distance, label, geometry);
+				graph.addEdge(edge);
+				edge = new CHEdgeImpl(externalEdgeId, toNodeId, fromNodeId, distance, label, geometry);
+				graph.addEdge(edge);
+				countBidirectional++;
+				
+			} else if(direction == 1) {   // One direction: base -> adj
+				CHEdge edge = new CHEdgeImpl(externalEdgeId, fromNodeId, toNodeId, distance, label, geometry);
+				graph.addEdge(edge);
+				countOneWay++;
+			} else if(direction == -1) {  // One direction: adj -> base
+				CHEdge edge = new CHEdgeImpl(externalEdgeId, toNodeId, fromNodeId, distance, label, geometry);
+				graph.addEdge(edge);
+				countOneWayInverse++;
+			} else {
+			}
+		}
+
+
+		graph.save();
+
+		
+		return graph;
+		
+		
+	}
+	
+	
+	
 	/*
 	 * Based on the initRoundaboutGraph() graph from GraphHopper
 	 * PrepareContractionHierarchiesTest.java class.
@@ -1823,7 +2083,7 @@ public class GraphGenerator {
 		node = new CHNodeImpl(3l, 30, 10);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(4l, 40, 10, 4);
+		node = new CHNodeImpl(4l, 40, 10);
 		graph.addNode(node);
 
 		node = new CHNodeImpl(5l, 50, 0);
@@ -1850,7 +2110,7 @@ public class GraphGenerator {
 		node = new CHNodeImpl(12l, 50, 20);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(13l, 60, 20, 4);
+		node = new CHNodeImpl(13l, 60, 20);
 		graph.addNode(node);
 
 		node = new CHNodeImpl(14l, 10, 0);
@@ -1868,7 +2128,7 @@ public class GraphGenerator {
 		node = new CHNodeImpl(18l, 10, -10);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(19l, 10, -20, 4);
+		node = new CHNodeImpl(19l, 10, -20);
 		graph.addNode(node);
 
 		node = new CHNodeImpl(20l, 0, -10);
@@ -1889,7 +2149,7 @@ public class GraphGenerator {
 		node = new CHNodeImpl(25l, 50, -10);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(26l, 40, -30, 4);
+		node = new CHNodeImpl(26l, 40, -30);
 		graph.addNode(node);
 
 		node = new CHNodeImpl(27l, 40, -10);
@@ -1898,7 +2158,7 @@ public class GraphGenerator {
 		node = new CHNodeImpl(28l, 40, 50);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(29l, 50, 50);
+		node = new CHNodeImpl(29l, 50, 50, 4);
 		graph.addNode(node);
 
 		node = new CHNodeImpl(30l, 50, 40);
@@ -3243,6 +3503,21 @@ public class GraphGenerator {
 			System.out.println("externalEdgeId: " + externalEdgeId + " externalFromNodeId: " + externalFromNodeId
 					+ " externalToNodeId: " + externalToNodeId);
 
+		}
+	}
+	
+	public int getDirection(long flags) {
+		long direction = (flags & 3);
+
+		if(direction ==  1) {
+			return 1;   // One direction: From --> To 
+		} else if(direction ==  2) {
+			return -1;  // One direction: To --> From
+		} else if(direction == 3) {
+			return 0;   // Bidirectional: To <--> From
+		}
+		else {
+			throw new IllegalArgumentException("Invalid flag: " + direction);
 		}
 	}
 

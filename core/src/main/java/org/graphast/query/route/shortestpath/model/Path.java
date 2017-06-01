@@ -373,10 +373,10 @@ public class Path implements Comparable<Path> {
 
 	public int compareTo(Path path) {
 		
-		if(this.getTotalDistance() < path.getTotalDistance())
+		if(this.getTotalCost() < path.getTotalCost())
 			return -1;
 		
-		if(this.getTotalDistance() > path.getTotalDistance())
+		if(this.getTotalCost() > path.getTotalCost())
 			return 1;
 		
 		return 0;
