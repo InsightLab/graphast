@@ -1,8 +1,9 @@
-package org.graphast.query.knnch.lowerbounds;
+package org.graphast.query.knn;
 
 import static org.graphast.util.NumberUtils.convertToInt;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,7 @@ import com.graphhopper.util.StopWatch;
 
 import it.unimi.dsi.fastutil.longs.Long2IntMap;
 
-public class KNNCHSearch {
+public class BidirectionalKNNSearch {
 
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -39,6 +40,9 @@ public class KNNCHSearch {
 	private Queue<DistanceEntry> smallerDistancePoI = new PriorityQueue<>();
 	private Map<Long, Integer> smallerDistancePoIHash = new HashMap<>();
 	private Queue<DistanceEntry> lowerBoundDistanceSourcePoIs = new PriorityQueue<>();
+	private Queue<DistanceEntry> smallerSettleNodes = new PriorityQueue<>(Collections.reverseOrder());
+	private Queue<DistanceEntry> lowerBoundForwardRemovedNode = new PriorityQueue<>(Collections.reverseOrder());
+	
 
 	private Map<Long, PriorityQueue<DistanceEntry>> backwardUnsettleNodesHash = new HashMap<>();
 	private Map<Long, HashMap<Long, Integer>> backwardsUnsettleNodesAuxHash = new HashMap<>();
@@ -102,7 +106,7 @@ public class KNNCHSearch {
 	int numberOfBackwardSettleNodes = 0;
 	int numberOfRegularSearches = 0;
 
-	public KNNCHSearch(CHGraph graph) {
+	public BidirectionalKNNSearch(CHGraph graph) {
 		this.graph = graph;
 		this.numberOfPoIs = graph.getPOIs().size();
 	}
@@ -159,7 +163,12 @@ public class KNNCHSearch {
 
 		while (!backwardUnsettleNodesHash.isEmpty() && kIterator<k+1) {
 
-			if ((numberOfPoIs > k) && largestSettleNodeDistance >= nextCandidateNNLowerBound.getDistance()) {
+			
+			CHNode lowerBoundSource = graph.getNode(smallerSettleNodes.peek().getParent());
+			CHNode lowerBoundTarget = graph.getNode(lowerBoundForwardRemovedNode.peek().getId());
+			Long lowerBound = (long) Math.sqrt(Math.pow((lowerBoundTarget.getLatitude() - lowerBoundSource.getLatitude()), 2) + Math.pow((lowerBoundTarget.getLongitude() - lowerBoundSource.getLongitude()), 2));
+			
+			if ((numberOfPoIs > k) && smallerSettleNodes.peek().getDistance() + lowerBound + lowerBoundForwardRemovedNode.peek().getDistance() >= nextCandidateNNLowerBound.getDistance()) {
 				PriorityQueue<DistanceEntry> backwardsUnsettleNodes = new PriorityQueue<>();
 				HashMap<Long, Integer> backwardsUnsettleNodesAux = new HashMap<>();
 
@@ -221,17 +230,16 @@ public class KNNCHSearch {
 				nearestNeighborMap.put(kIterator, currentPoI);
 				kIterator++;
 				smallerDistancePoI.poll();
+				smallerSettleNodes.remove(new DistanceEntry(source.getId(), 0, -1));
 				continue;
 			}
 			
-			forwardsRemovedNode =null;
+			forwardsRemovedNode = null;
 
 			if (!finished()) {
 
 				logger.debug("PoI that will be analyzed: {}", graph.getNode(currentPoI).getExternalId());
 
-				
-				
 				if (forwardsUnsettleNodes.isEmpty()) {
 					backwardSearch();
 				} else if (backwardsUnsettleNodes.isEmpty()) {
@@ -351,6 +359,7 @@ public class KNNCHSearch {
 
 		forwardsUnsettleNodesAux.put(source.getId(), 0);
 		forwardsParentNodes.put(source.getId(), new RouteEntry(-1, 0, -1, null));
+		lowerBoundForwardRemovedNode.offer(new DistanceEntry(source.getId(), 0, -1));
 	
 	}
 
@@ -388,11 +397,14 @@ public class KNNCHSearch {
 		HashMap<Long, RouteEntry> backwardsParentNodes = new HashMap<>();
 		backwardsParentNodes.put(target.getId(), new RouteEntry(-1, 0, -1, null));
 		parentsHash.put(target.getId(), backwardsParentNodes);
+		
+		smallerSettleNodes.add(new DistanceEntry(target.getId(), 0, target.getId()));
 	
 	}
 	
 	private void forwardSearch() {
 
+		lowerBoundForwardRemovedNode.offer(forwardsUnsettleNodes.peek());
 		forwardsRemovedNode = forwardsUnsettleNodes.poll();
 		
 		verifyPoI(forwardsRemovedNode);
@@ -588,6 +600,9 @@ public class KNNCHSearch {
 		backwardsRemovedNode = backwardsUnsettleNodes.poll();
 		backwardAllSettleNodes.put(backwardsRemovedNode.getId(), currentPoI);
 
+		smallerSettleNodes.remove(new DistanceEntry(currentPoI, -1, -1));
+		smallerSettleNodes.offer(new DistanceEntry(currentPoI, backwardsRemovedNode.getDistance(), backwardsRemovedNode.getId()));
+		
 		largestBackwardsNodesDistance = (long) backwardsRemovedNode.getDistance();
 
 		if (largestSettleNodeDistance < largestForwardNodesDistance + largestBackwardsNodesDistance) {

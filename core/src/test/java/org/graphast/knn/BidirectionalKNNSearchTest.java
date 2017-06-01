@@ -12,6 +12,7 @@ import org.graphast.graphgenerator.GraphGenerator;
 import org.graphast.importer.POIImporter;
 import org.graphast.model.Node;
 import org.graphast.model.contraction.CHGraph;
+import org.graphast.query.knn.BidirectionalKNNSearch;
 import org.graphast.query.knnch.lowerbounds.KNNCHSearch;
 import org.graphast.query.route.shortestpath.dijkstra.Dijkstra;
 import org.graphast.query.route.shortestpath.dijkstra.DijkstraConstantWeight;
@@ -23,9 +24,9 @@ import org.slf4j.LoggerFactory;
 
 import com.graphhopper.util.StopWatch;
 
-public class KNNCHSearchTest {
+public class BidirectionalKNNSearchTest {
 
-	private static Logger logger = LoggerFactory.getLogger(KNNCHSearchTest.class);
+	private static Logger logger = LoggerFactory.getLogger(BidirectionalKNNSearchTest.class);
 
 	private CHGraph graphMonacoWithPoI;
 	// private static CHGraph graphHopperExampleWithPoIs;
@@ -64,7 +65,7 @@ public class KNNCHSearchTest {
 		// graphHopperExample3WithPoIs.prepareNodes();
 		// graphHopperExample3WithPoIs.contractNodes();
 
-		graphHopperExample4WithPoIs = new GraphGenerator().generateGraphHopperExample4Test();
+		graphHopperExample4WithPoIs = new GraphGenerator().generateGraphHopperExample4();
 //		graphHopperExample4WithPoIs.prepareNodes();
 //		graphHopperExample4WithPoIs.contractNodes();
 //		graphHopperExample4WithPoIs.getNearestNode(10, -10).setCategory(4);
@@ -124,15 +125,15 @@ public class KNNCHSearchTest {
 	public void graphHopperExample4WithPoIsTest() {
 
 //		for (Long source = 0l; source < graphHopperExample4WithPoIs.getNumberOfNodes(); source++) {
-			 Long source = 18l;
+			 Long source = 8l;
 
 			logger.info("SOURCE = {}", source);
 			
 			Queue<Path> finalResult = new PriorityQueue<>();
 
-			KNNCHSearch knn = new KNNCHSearch(graphHopperExample4WithPoIs);
+			BidirectionalKNNSearch knn = new BidirectionalKNNSearch(graphHopperExample4WithPoIs);
 
-			finalResult = knn.search(graphHopperExample4WithPoIs.getNode(source), 7);
+			finalResult = knn.search(graphHopperExample4WithPoIs.getNode(source), 4);
 
 			int size = finalResult.size();
 
