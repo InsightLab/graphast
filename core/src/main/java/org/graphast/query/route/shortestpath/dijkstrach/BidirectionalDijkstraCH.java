@@ -154,17 +154,13 @@ public class BidirectionalDijkstraCH {
 		
 		startCurr = forwardsRemovedNode.getDistance();
 		
-		System.out.println("[BIDIRECTIONAL FORWARD] Node being analyzed: "
-				+ graph.getNode(forwardsRemovedNode.getId()).getExternalId() + ". Distance: "
-				+ forwardsRemovedNode.getDistance());
+		System.out.println("[BIDIRECTIONAL FORWARD] Node being analyzed: " + graph.getNode(forwardsRemovedNode.getId()).getExternalId() + ". Distance: " + forwardsRemovedNode.getDistance());
 		
-//		forwardsUnsettleNodesAux.remove(forwardsRemovedNode.getId());
 		forwardsSettleNodes.put(forwardsRemovedNode.getId(), forwardsRemovedNode.getDistance());
 		
 		expandedNodesForwardSearch++;
 
-		logger.debug("[BIDIRECTIONAL FORWARD] Node being analyzed in the forwardSearch(): {}",
-				forwardsRemovedNode.getId());
+		logger.debug("[BIDIRECTIONAL FORWARD] Node being analyzed in the forwardSearch(): {}", forwardsRemovedNode.getId());
 		
 		expandVertexForward();
 		
@@ -176,11 +172,8 @@ public class BidirectionalDijkstraCH {
 		
 		endCurr = backwardsRemovedNode.getDistance();
 		
-		System.out.println("[BIDIRECTIONAL BACKWARD] Node being analyzed: "
-				+ graph.getNode(backwardsRemovedNode.getId()).getExternalId() + ". Distance: "
-				+ backwardsRemovedNode.getDistance());
+		System.out.println("[BIDIRECTIONAL BACKWARD] Node being analyzed: " + graph.getNode(backwardsRemovedNode.getId()).getExternalId() + ". Distance: " + backwardsRemovedNode.getDistance());
 		
-//		backwardsUnsettleNodesAux.remove(backwardsRemovedNode.getId());
 		backwardsSettleNodes.put(backwardsRemovedNode.getId(), backwardsRemovedNode.getDistance());
 		
 		expandedNodesBackwardSearch++;

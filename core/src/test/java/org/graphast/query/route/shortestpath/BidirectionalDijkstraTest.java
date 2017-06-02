@@ -48,7 +48,7 @@ public class BidirectionalDijkstraTest {
 		// graphMITExample2 = new GraphGenerator().generateMITExample2();
 		// graphMITExample3 = new GraphGenerator().generateMITExample3();
 
-//		graphMonaco = new GraphGenerator().generateMonacoCHWithPoI();
+		graphMonaco = new GraphGenerator().generateMonacoCHWithPoI();
 //		graphMonaco.prepareNodes();
 //		graphMonaco.contractNodes();
 
@@ -63,24 +63,20 @@ public class BidirectionalDijkstraTest {
 	@Test
 	public void graphHopperExample4Test() {
 
-		CHGraph testGraph = graphHopperExample4;
+		CHGraph testGraph = graphMonaco;
 
 		for (int source = 0; source < testGraph.getNumberOfNodes(); source++) {
 			for (int destination = 0; destination < testGraph.getNumberOfNodes(); destination++) {
 
-//			int source = 0;
-//			int destination = 7;
-		
 				logger.info("SOURCE: {}, DESTINATION: {}.", source, destination);
 
 				Dijkstra dijkstra = new DijkstraConstantWeight(testGraph);
 				Path dijkstraPath = dijkstra.shortestPath(testGraph.getNode(source), testGraph.getNode(destination));
 
 				BidirectionalDijkstraCH bidirectionalDijkstra = new BidirectionalDijkstraCH(testGraph);
-				Path finalPath = bidirectionalDijkstra.execute(testGraph.getNode(source),
-						testGraph.getNode(destination));
+				Path finalPath = bidirectionalDijkstra.execute(testGraph.getNode(source), testGraph.getNode(destination));
 				
-				assertEquals(dijkstraPath.getTotalCost(), finalPath.getTotalCost(), 0);
+				assertEquals(dijkstraPath.getTotalCost(), finalPath.getTotalCost(), 1);
 
 			}
 		}

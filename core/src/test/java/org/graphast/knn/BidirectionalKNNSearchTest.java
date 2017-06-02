@@ -71,9 +71,9 @@ public class BidirectionalKNNSearchTest {
 //		graphHopperExample4WithPoIs.getNearestNode(10, -10).setCategory(4);
 //		graphHopperExample4WithPoIs.getNearestNode(10, -20).setCategory(4);
 //		graphHopperExample4WithPoIs.getNearestNode(10, 0).setCategory(4);
-		logger.info("Starting to generate PoI'S");
-		POIImporter.generateRandomPoIs(graphHopperExample4WithPoIs, 100);
-		logger.info("Finishing PoI's generation.");
+//		logger.info("Starting to generate PoI'S");
+//		POIImporter.generateRandomPoIs(graphHopperExample4WithPoIs, 100);
+//		logger.info("Finishing PoI's generation.");
 
 		// StdDraw.drawGraph(graphHopperExample4WithPoIs);
 
@@ -125,7 +125,7 @@ public class BidirectionalKNNSearchTest {
 	public void graphHopperExample4WithPoIsTest() {
 
 //		for (Long source = 0l; source < graphHopperExample4WithPoIs.getNumberOfNodes(); source++) {
-			 Long source = 8l;
+			 Long source = 0l;
 
 			logger.info("SOURCE = {}", source);
 			
@@ -133,7 +133,7 @@ public class BidirectionalKNNSearchTest {
 
 			BidirectionalKNNSearch knn = new BidirectionalKNNSearch(graphHopperExample4WithPoIs);
 
-			finalResult = knn.search(graphHopperExample4WithPoIs.getNode(source), 4);
+			finalResult = knn.search(graphHopperExample4WithPoIs.getNode(source), 1);
 
 			int size = finalResult.size();
 

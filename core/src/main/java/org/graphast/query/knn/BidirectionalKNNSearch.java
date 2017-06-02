@@ -42,7 +42,6 @@ public class BidirectionalKNNSearch {
 	private Queue<DistanceEntry> lowerBoundDistanceSourcePoIs = new PriorityQueue<>();
 	private Queue<DistanceEntry> smallerSettleNodes = new PriorityQueue<>(Collections.reverseOrder());
 	private Queue<DistanceEntry> lowerBoundForwardRemovedNode = new PriorityQueue<>(Collections.reverseOrder());
-	
 
 	private Map<Long, PriorityQueue<DistanceEntry>> backwardUnsettleNodesHash = new HashMap<>();
 	private Map<Long, HashMap<Long, Integer>> backwardsUnsettleNodesAuxHash = new HashMap<>();
@@ -52,7 +51,7 @@ public class BidirectionalKNNSearch {
 	private Map<Long, HashMap<Long, RouteEntry>> parentsHash = new HashMap<>();
 
 	private Map<Long, Long> backwardAllSettleNodes = new HashMap<>();
-	
+
 	private DistanceEntry nextCandidateNNLowerBound = new DistanceEntry(-1, -1, -1);
 	// TODO Criar metodos para adicionar pois na estrutura poisFound
 
@@ -120,9 +119,7 @@ public class BidirectionalKNNSearch {
 	 */
 	private void createLowerBounds(Long source) {
 
-		for (PoI poi : graph.getPOIs()) {
-			long nodeId = graph.getNodeId(poi.getLatitude(), poi.getLongitude());
-			Node node = graph.getNode(nodeId);
+		for (Node node : graph.getPOIsNodes()) {
 
 			// TODO Double check the units in for this distance (this cast may
 			// not be totally correct).
@@ -131,9 +128,10 @@ public class BidirectionalKNNSearch {
 			// DistanceUtils.distanceLatLong(graph.getNode(source).getLatitude(),
 			// graph.getNode(source).getLongitude(), node.getLatitude(),
 			// node.getLongitude());
-			int distance = (int) Math.sqrt(Math.pow((node.getLatitude() - graph.getNode(source).getLatitude()), 2) + Math.pow((node.getLongitude() - graph.getNode(source).getLongitude()), 2));
+			int distance = (int) Math.sqrt(Math.pow((node.getLatitude() - graph.getNode(source).getLatitude()), 2)
+					+ Math.pow((node.getLongitude() - graph.getNode(source).getLongitude()), 2));
 
-			DistanceEntry lowerBound = new DistanceEntry(nodeId, distance, -1);
+			DistanceEntry lowerBound = new DistanceEntry(node.getId(), distance, -1);
 			lowerBoundDistanceSourcePoIs.add(lowerBound);
 		}
 
@@ -151,7 +149,7 @@ public class BidirectionalKNNSearch {
 			initializeBackwardSearchStructure();
 		}
 
-		//Updating the next candidate for nearest neighbor
+		// Updating the next candidate for nearest neighbor
 		if (numberOfPoIs > k) {
 			nextCandidateNNLowerBound.setId(lowerBoundDistanceSourcePoIs.peek().getId());
 			nextCandidateNNLowerBound.setDistance(lowerBoundDistanceSourcePoIs.peek().getDistance());
@@ -161,16 +159,9 @@ public class BidirectionalKNNSearch {
 
 		knnSW.start();
 
-		while (!backwardUnsettleNodesHash.isEmpty() && kIterator<k+1) {
+		while (!backwardUnsettleNodesHash.isEmpty() && kIterator < k + 1) {
 
-			
-			CHNode lowerBoundSource = graph.getNode(smallerSettleNodes.peek().getParent());
-			CHNode lowerBoundTarget = graph.getNode(lowerBoundForwardRemovedNode.peek().getId());
-			Long lowerBound = (long) Math.sqrt(Math.pow((lowerBoundTarget.getLatitude() - lowerBoundSource.getLatitude()), 2) + Math.pow((lowerBoundTarget.getLongitude() - lowerBoundSource.getLongitude()), 2));
-			
-			//TODO Integer calculateCurrentLowerBound
-			
-			if ((numberOfPoIs > k) && smallerSettleNodes.peek().getDistance() + lowerBound + lowerBoundForwardRemovedNode.peek().getDistance() >= nextCandidateNNLowerBound.getDistance()) {
+			if ((numberOfPoIs > backwardsUnsettleNodesAuxHash.size()) && calculateCurrentLowerBound() > nextCandidateNNLowerBound.getDistance()) {
 				PriorityQueue<DistanceEntry> backwardsUnsettleNodes = new PriorityQueue<>();
 				HashMap<Long, Integer> backwardsUnsettleNodesAux = new HashMap<>();
 
@@ -202,8 +193,14 @@ public class BidirectionalKNNSearch {
 				parentsHash.put(target.getId(), backwardsParentNodes);
 
 				lowerBoundDistanceSourcePoIs.poll();
-				nextCandidateNNLowerBound.setId(lowerBoundDistanceSourcePoIs.peek().getId());
-				nextCandidateNNLowerBound.setDistance(lowerBoundDistanceSourcePoIs.peek().getDistance());
+				if(lowerBoundDistanceSourcePoIs.peek() != null) {
+					nextCandidateNNLowerBound.setId(lowerBoundDistanceSourcePoIs.peek().getId());
+					nextCandidateNNLowerBound.setDistance(lowerBoundDistanceSourcePoIs.peek().getDistance());
+				} else {
+					nextCandidateNNLowerBound.setId(-1l);
+					nextCandidateNNLowerBound.setDistance(-1);
+				}
+				
 			}
 
 			if (smallerDistancePoI.size() == 0) {
@@ -235,7 +232,7 @@ public class BidirectionalKNNSearch {
 				smallerSettleNodes.remove(new DistanceEntry(source.getId(), 0, -1));
 				continue;
 			}
-			
+
 			forwardsRemovedNode = null;
 
 			if (!finished()) {
@@ -254,15 +251,6 @@ public class BidirectionalKNNSearch {
 					}
 				}
 
-				meetingNode = meetingNodeHash.get(currentPoI);
-				
-				startCurr = startCurrList.get(currentPoI);
-				endCurr = endCurrList.get(currentPoI);
-				
-				if (!finished()) {
-					
-				}
-				
 			}
 
 		}
@@ -300,9 +288,9 @@ public class BidirectionalKNNSearch {
 	}
 
 	private boolean finished() {
-		
-		if(forwardsRemovedNode != null && backwardAllSettleNodes.containsKey(forwardsRemovedNode.getId())) {
-			if(nearestNeighborMap.containsValue(forwardsRemovedNode.getId())) {
+
+		if (forwardsRemovedNode != null && backwardAllSettleNodes.containsKey(forwardsRemovedNode.getId())) {
+			if (nearestNeighborMap.containsValue(forwardsRemovedNode.getId())) {
 				return true;
 			}
 			backwardUnsettleNodesHash.remove(currentPoI);
@@ -311,10 +299,10 @@ public class BidirectionalKNNSearch {
 			kIterator++;
 			return true;
 		}
-		
-		//TODO fazer parecido para backwards?
-		if(forwardsSettleNodes.containsKey(currentPoI)) {
-			if(nearestNeighborMap.containsValue(currentPoI)) {
+
+		// TODO fazer parecido para backwards?
+		if (forwardsSettleNodes.containsKey(currentPoI)) {
+			if (nearestNeighborMap.containsValue(currentPoI)) {
 				return true;
 			}
 			backwardUnsettleNodesHash.remove(currentPoI);
@@ -323,7 +311,7 @@ public class BidirectionalKNNSearch {
 			kIterator++;
 			return true;
 		}
-		
+
 		if (forwardsUnsettleNodes.isEmpty() && backwardsUnsettleNodes.isEmpty()) {
 			backwardUnsettleNodesHash.remove(currentPoI);
 			smallerDistancePoI.remove(new DistanceEntry(currentPoI, -1, -1));
@@ -351,25 +339,25 @@ public class BidirectionalKNNSearch {
 		queue.offer(new DistanceEntry(nodeId, 0, -1));
 
 	}
-	
+
 	/**
 	 * Initialize the necessary structures for the Forward Search.
 	 */
 	private void initializeForwardSearchStructure() {
-		
+
 		initializeSearchStructures(source, forwardsUnsettleNodes);
 
 		forwardsUnsettleNodesAux.put(source.getId(), 0);
 		forwardsParentNodes.put(source.getId(), new RouteEntry(-1, 0, -1, null));
 		lowerBoundForwardRemovedNode.offer(new DistanceEntry(source.getId(), 0, -1));
-	
+
 	}
 
 	/**
 	 * Initialize the necessary structures for the Backward Search.
 	 */
 	private void initializeBackwardSearchStructure() {
-		
+
 		PriorityQueue<DistanceEntry> backwardsUnsettleNodes = new PriorityQueue<>();
 		HashMap<Long, Integer> backwardsUnsettleNodesAux = new HashMap<>();
 
@@ -387,7 +375,7 @@ public class BidirectionalKNNSearch {
 		backwardsSettleNodes.put(target.getId(), 0);
 		backwardSettleNodesHash.put(target.getId(), backwardsSettleNodes);
 		backwardAllSettleNodes.put(target.getId(), target.getId());
-		
+
 		meetingNodeHash.put(target.getId(), new DistanceEntry(-1, Integer.MAX_VALUE, -1));
 		startCurrList.put(target.getId(), 0);
 		endCurrList.put(target.getId(), 0);
@@ -399,18 +387,18 @@ public class BidirectionalKNNSearch {
 		HashMap<Long, RouteEntry> backwardsParentNodes = new HashMap<>();
 		backwardsParentNodes.put(target.getId(), new RouteEntry(-1, 0, -1, null));
 		parentsHash.put(target.getId(), backwardsParentNodes);
-		
+
 		smallerSettleNodes.add(new DistanceEntry(target.getId(), 0, target.getId()));
-	
+
 	}
-	
+
 	private void forwardSearch() {
 
 		lowerBoundForwardRemovedNode.offer(forwardsUnsettleNodes.peek());
 		forwardsRemovedNode = forwardsUnsettleNodes.poll();
-		
+
 		verifyPoI(forwardsRemovedNode);
-		
+
 		if (forwardsRemovedNode.getDistance() > largestForwardNodesDistance) {
 			largestForwardNodesDistance = (long) forwardsRemovedNode.getDistance();
 		}
@@ -425,45 +413,48 @@ public class BidirectionalKNNSearch {
 
 		expandedNodesForwardSearch++;
 
-		logger.debug("\t[FORWARD] Node being analyzed: {}. Distance: {}", graph.getNode(forwardsRemovedNode.getId()).getExternalId(), forwardsRemovedNode.getDistance());
+		logger.debug("\t[FORWARD] Node being analyzed: {}. Distance: {}",
+				graph.getNode(forwardsRemovedNode.getId()).getExternalId(), forwardsRemovedNode.getDistance());
 
 		expandVertexForward();
 
 	}
-	
+
 	/**
-	 * Verifies if the forwardsRemovedNode.getID() is a Point of Interest.
-	 * If true, add a meeting node and remove it from the queue.
+	 * Verifies if the forwardsRemovedNode.getID() is a Point of Interest. If
+	 * true, add a meeting node and remove it from the queue.
+	 * 
 	 * @param forwardsRemovedNode
 	 */
 	private void verifyPoI(DistanceEntry forwardsRemovedNode) {
-		if(graph.getPOIsNodes().contains(graph.getNode(forwardsRemovedNode.getId()))) {
-			
-			if(nearestNeighborMap.containsValue(forwardsRemovedNode.getId())) {
+		if (graph.getPOIsNodes().contains(graph.getNode(forwardsRemovedNode.getId()))) {
+
+			if (nearestNeighborMap.containsValue(forwardsRemovedNode.getId())) {
 				return;
 			}
-			
+
 			backwardUnsettleNodesHash.remove(forwardsRemovedNode.getId());
 			smallerDistancePoI.remove(new DistanceEntry(forwardsRemovedNode.getId(), -1, -1));
 			nearestNeighborMap.put(kIterator, forwardsRemovedNode.getId());
-			
-			if(meetingNodeHash.get(forwardsRemovedNode.getId()) == null) {
-				meetingNodeHash.put(forwardsRemovedNode.getId(), new DistanceEntry(forwardsRemovedNode.getId(), forwardsRemovedNode.getDistance(), forwardsRemovedNode.getParent()));
+
+			if (meetingNodeHash.get(forwardsRemovedNode.getId()) == null) {
+				meetingNodeHash.put(forwardsRemovedNode.getId(), new DistanceEntry(forwardsRemovedNode.getId(),
+						forwardsRemovedNode.getDistance(), forwardsRemovedNode.getParent()));
 				kIterator++;
-				
-				if(parentsHash.get(forwardsRemovedNode.getId()) == null) {
+
+				if (parentsHash.get(forwardsRemovedNode.getId()) == null) {
 					HashMap<Long, RouteEntry> newParent = new HashMap<>();
 					newParent.put(forwardsRemovedNode.getId(), new RouteEntry(-1, 0, -1, null));
 					parentsHash.put(forwardsRemovedNode.getId(), newParent);
 				}
-				
+
 				return;
 			}
-			
+
 			meetingNodeHash.get(forwardsRemovedNode.getId()).setId(forwardsRemovedNode.getId());
 			meetingNodeHash.get(forwardsRemovedNode.getId()).setDistance(forwardsRemovedNode.getDistance());
 			meetingNodeHash.get(forwardsRemovedNode.getId()).setParent(forwardsRemovedNode.getParent());
-			
+
 			kIterator++;
 			return;
 		}
@@ -477,7 +468,7 @@ public class BidirectionalKNNSearch {
 
 		forwardsSmallerDistanceForThisIteration = Integer.MAX_VALUE;
 
-//		neighbors.put((long) forwardsRemovedNode.getId(), 0);
+		// neighbors.put((long) forwardsRemovedNode.getId(), 0);
 
 		verifyMeetingNodeForwardSearch(forwardsRemovedNode.getId(), forwardsRemovedNode.getId(), neighbors);
 
@@ -557,9 +548,10 @@ public class BidirectionalKNNSearch {
 			forwardsSmallerDistanceForThisIteration = backupDistance;
 		}
 
-//		smallerDistancePoI.poll();
-//		smallerDistancePoI.add(new DistanceEntry(target.getId(),
-//				forwardsSmallerDistanceForThisIteration + backwardsSmallerDistanceForThisIteration, -1));
+		// smallerDistancePoI.poll();
+		// smallerDistancePoI.add(new DistanceEntry(target.getId(),
+		// forwardsSmallerDistanceForThisIteration +
+		// backwardsSmallerDistanceForThisIteration, -1));
 
 	}
 
@@ -603,8 +595,9 @@ public class BidirectionalKNNSearch {
 		backwardAllSettleNodes.put(backwardsRemovedNode.getId(), currentPoI);
 
 		smallerSettleNodes.remove(new DistanceEntry(currentPoI, -1, -1));
-		smallerSettleNodes.offer(new DistanceEntry(currentPoI, backwardsRemovedNode.getDistance(), backwardsRemovedNode.getId()));
-		
+		smallerSettleNodes
+				.offer(new DistanceEntry(currentPoI, backwardsRemovedNode.getDistance(), backwardsRemovedNode.getId()));
+
 		largestBackwardsNodesDistance = (long) backwardsRemovedNode.getDistance();
 
 		if (largestSettleNodeDistance < largestForwardNodesDistance + largestBackwardsNodesDistance) {
@@ -630,7 +623,7 @@ public class BidirectionalKNNSearch {
 		int backupDistance = backwardsRemovedNode.getDistance();
 		backwardsSmallerDistanceForThisIteration = Integer.MAX_VALUE;
 
-//		neighbors.put((long) backwardsRemovedNode.getId(), 0);
+		// neighbors.put((long) backwardsRemovedNode.getId(), 0);
 
 		verifyMeetingNodeBackwardSearch(backwardsRemovedNode.getId(), backwardsRemovedNode.getId(), neighbors);
 
@@ -734,7 +727,7 @@ public class BidirectionalKNNSearch {
 		// forwardsSmallerDistanceForThisIteration +
 		// backwardsSmallerDistanceForThisIteration);
 		// }
-		if(!nearestNeighborMap.containsValue(target.getId())) {
+		if (!nearestNeighborMap.containsValue(target.getId())) {
 			smallerDistancePoI.poll();
 			smallerDistancePoI.add(new DistanceEntry(target.getId(), backwardsSmallerDistanceForThisIteration, -1));
 		}
@@ -841,80 +834,90 @@ public class BidirectionalKNNSearch {
 		return returningEdge;
 
 	}
-	
+
 	private int calculateCurrentLowerBound() {
-		
-		//Double check if an alteration in the first queue will have impact in the second
-		Queue<DistanceEntry> possibleForwardUnsettleNodes = new PriorityQueue<>(forwardsUnsettleNodes);
-		
-		DistanceEntry forwardLowerBoundNode = possibleForwardUnsettleNodes.poll();
-		Queue<DistanceEntry> forwardNodesToBeAnalyzed = new PriorityQueue<>();
-		forwardNodesToBeAnalyzed.add(forwardLowerBoundNode);
-		
-		while(possibleForwardUnsettleNodes.peek() != null && possibleForwardUnsettleNodes.peek().getDistance() == forwardLowerBoundNode.getDistance()) {
-			forwardNodesToBeAnalyzed.add(possibleForwardUnsettleNodes.peek());
-			possibleForwardUnsettleNodes.poll();
+
+		// //Double check if an alteration in the first queue will have impact
+		// in the second
+		// Queue<DistanceEntry> possibleForwardUnsettleNodes = new
+		// PriorityQueue<>(forwardsUnsettleNodes);
+		//
+		// DistanceEntry forwardLowerBoundNode =
+		// possibleForwardUnsettleNodes.poll();
+		// Queue<DistanceEntry> forwardNodesToBeAnalyzed = new
+		// PriorityQueue<>();
+		// forwardNodesToBeAnalyzed.add(forwardLowerBoundNode);
+		//
+		// while(possibleForwardUnsettleNodes.peek() != null &&
+		// possibleForwardUnsettleNodes.peek().getDistance() ==
+		// forwardLowerBoundNode.getDistance()) {
+		// forwardNodesToBeAnalyzed.add(possibleForwardUnsettleNodes.peek());
+		// possibleForwardUnsettleNodes.poll();
+		// }
+
+		Map<Long, PriorityQueue<DistanceEntry>> possibleBackwardUnsettleNodes = new HashMap<>();
+		for (Map.Entry<Long, PriorityQueue<DistanceEntry>> entryToBeCopied : backwardUnsettleNodesHash.entrySet()) {
+			Queue<DistanceEntry> newEntry = new PriorityQueue<>(entryToBeCopied.getValue());
+			possibleBackwardUnsettleNodes.put(entryToBeCopied.getKey(), (PriorityQueue<DistanceEntry>) newEntry);
 		}
-		
-		Map<Long, PriorityQueue<DistanceEntry>> possibleBackwardUnsettleNodes = new HashMap<>(backwardUnsettleNodesHash);
+
 		Map<Long, PriorityQueue<DistanceEntry>> backwardNodesToBeAnalyzed = new HashMap<>();
-		
-		for(Map.Entry<Long, PriorityQueue<DistanceEntry>> possibleLowerBoundPoI : possibleBackwardUnsettleNodes.entrySet()) {
-			
+
+		for (Map.Entry<Long, PriorityQueue<DistanceEntry>> possibleLowerBoundPoI : possibleBackwardUnsettleNodes
+				.entrySet()) {
+
 			DistanceEntry backwardLowerBoundNode = possibleLowerBoundPoI.getValue().poll();
 			Queue<DistanceEntry> localBackwardNodesToBeAnalyzed = new PriorityQueue<>();
 			localBackwardNodesToBeAnalyzed.add(backwardLowerBoundNode);
-			
-			while(possibleLowerBoundPoI.getValue().peek() != null && possibleLowerBoundPoI.getValue().peek().getDistance() == backwardLowerBoundNode.getDistance()) {
+
+			while (possibleLowerBoundPoI.getValue().peek() != null
+					&& possibleLowerBoundPoI.getValue().peek().getDistance() == backwardLowerBoundNode.getDistance()) {
 				localBackwardNodesToBeAnalyzed.add(possibleLowerBoundPoI.getValue().peek());
 				possibleLowerBoundPoI.getValue().poll();
 			}
-			
-			backwardNodesToBeAnalyzed.put(possibleLowerBoundPoI.getKey(), (PriorityQueue<DistanceEntry>) localBackwardNodesToBeAnalyzed);
+
+			backwardNodesToBeAnalyzed.put(possibleLowerBoundPoI.getKey(),
+					(PriorityQueue<DistanceEntry>) localBackwardNodesToBeAnalyzed);
 		}
-		
-		
-		Map<Long, PriorityQueue<DistanceEntry>> comparisonHashMap = new HashMap<>();
 
 		Map<Long, PriorityQueue<Integer>> finalBackwardsLowerBounds = new HashMap<>();
 
-		for(DistanceEntry forwardCandidate : forwardNodesToBeAnalyzed) {
-			
-			for(Map.Entry<Long, PriorityQueue<DistanceEntry>> backwardCandidates : backwardNodesToBeAnalyzed.entrySet()) {
+		for (Map.Entry<Long, PriorityQueue<DistanceEntry>> backwardCandidates : backwardNodesToBeAnalyzed.entrySet()) {
+
+			int localPoILowerBound = Integer.MAX_VALUE;
+
+			for (DistanceEntry backwardCandidate : backwardCandidates.getValue()) {
 				
-				int localPoILowerBound = Integer.MAX_VALUE;
-				
-				for(DistanceEntry backwardCandidate : backwardCandidates.getValue()) {
-					
-					CHNode lowerBoundSource = graph.getNode(forwardCandidate.getId());
-					CHNode lowerBoundTarget = graph.getNode(backwardCandidate.getId());
-					
-					int lowerBound = (int) Math.sqrt(Math.pow((lowerBoundTarget.getLatitude() - lowerBoundSource.getLatitude()), 2) + Math.pow((lowerBoundTarget.getLongitude() - lowerBoundSource.getLongitude()), 2));
-					
-					if(lowerBound < localPoILowerBound) {
-						localPoILowerBound = lowerBound;
-					}
-				
+				CHNode lowerBoundSource = source;
+				CHNode lowerBoundTarget = graph.getNode(backwardCandidate.getId());
+
+				int lowerBound = (int) Math
+						.sqrt(Math.pow((lowerBoundTarget.getLatitude() - lowerBoundSource.getLatitude()), 2)
+								+ Math.pow((lowerBoundTarget.getLongitude() - lowerBoundSource.getLongitude()), 2));
+
+				if (lowerBound + backwardCandidate.getDistance() < localPoILowerBound) {
+					localPoILowerBound = lowerBound + backwardCandidate.getDistance();
 				}
-				
-				if(finalBackwardsLowerBounds.get(backwardCandidates.getKey()) == null) {
-					Queue<Integer> teste = new PriorityQueue<>();
-					teste.add(localPoILowerBound);
-					finalBackwardsLowerBounds.put(backwardCandidates.getKey(), (PriorityQueue<Integer>) teste);
-				} else {
-					finalBackwardsLowerBounds.get(backwardCandidates.getKey()).add(localPoILowerBound);
-				}
-				
+
 			}
+
+			if (finalBackwardsLowerBounds.get(backwardCandidates.getKey()) == null) {
+				Queue<Integer> teste = new PriorityQueue<>();
+				teste.add(localPoILowerBound);
+				finalBackwardsLowerBounds.put(backwardCandidates.getKey(), (PriorityQueue<Integer>) teste);
+			} else {
+				finalBackwardsLowerBounds.get(backwardCandidates.getKey()).add(localPoILowerBound);
+			}
+
 		}
 
 		int lowerBound = 0;
-		
-		for(Map.Entry<Long, PriorityQueue<Integer>> entry : finalBackwardsLowerBounds.entrySet()) {
-			if(entry.getValue().peek() > lowerBound)
+
+		for (Map.Entry<Long, PriorityQueue<Integer>> entry : finalBackwardsLowerBounds.entrySet()) {
+			if (entry.getValue().peek() > lowerBound)
 				lowerBound = entry.getValue().peek();
 		}
-		
+
 		return lowerBound;
 	}
 
