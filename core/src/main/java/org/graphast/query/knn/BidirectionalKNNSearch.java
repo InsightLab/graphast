@@ -168,6 +168,8 @@ public class BidirectionalKNNSearch {
 			CHNode lowerBoundTarget = graph.getNode(lowerBoundForwardRemovedNode.peek().getId());
 			Long lowerBound = (long) Math.sqrt(Math.pow((lowerBoundTarget.getLatitude() - lowerBoundSource.getLatitude()), 2) + Math.pow((lowerBoundTarget.getLongitude() - lowerBoundSource.getLongitude()), 2));
 			
+			//TODO Integer calculateCurrentLowerBound
+			
 			if ((numberOfPoIs > k) && smallerSettleNodes.peek().getDistance() + lowerBound + lowerBoundForwardRemovedNode.peek().getDistance() >= nextCandidateNNLowerBound.getDistance()) {
 				PriorityQueue<DistanceEntry> backwardsUnsettleNodes = new PriorityQueue<>();
 				HashMap<Long, Integer> backwardsUnsettleNodesAux = new HashMap<>();
@@ -838,6 +840,82 @@ public class BidirectionalKNNSearch {
 
 		return returningEdge;
 
+	}
+	
+	private int calculateCurrentLowerBound() {
+		
+		//Double check if an alteration in the first queue will have impact in the second
+		Queue<DistanceEntry> possibleForwardUnsettleNodes = new PriorityQueue<>(forwardsUnsettleNodes);
+		
+		DistanceEntry forwardLowerBoundNode = possibleForwardUnsettleNodes.poll();
+		Queue<DistanceEntry> forwardNodesToBeAnalyzed = new PriorityQueue<>();
+		forwardNodesToBeAnalyzed.add(forwardLowerBoundNode);
+		
+		while(possibleForwardUnsettleNodes.peek() != null && possibleForwardUnsettleNodes.peek().getDistance() == forwardLowerBoundNode.getDistance()) {
+			forwardNodesToBeAnalyzed.add(possibleForwardUnsettleNodes.peek());
+			possibleForwardUnsettleNodes.poll();
+		}
+		
+		Map<Long, PriorityQueue<DistanceEntry>> possibleBackwardUnsettleNodes = new HashMap<>(backwardUnsettleNodesHash);
+		Map<Long, PriorityQueue<DistanceEntry>> backwardNodesToBeAnalyzed = new HashMap<>();
+		
+		for(Map.Entry<Long, PriorityQueue<DistanceEntry>> possibleLowerBoundPoI : possibleBackwardUnsettleNodes.entrySet()) {
+			
+			DistanceEntry backwardLowerBoundNode = possibleLowerBoundPoI.getValue().poll();
+			Queue<DistanceEntry> localBackwardNodesToBeAnalyzed = new PriorityQueue<>();
+			localBackwardNodesToBeAnalyzed.add(backwardLowerBoundNode);
+			
+			while(possibleLowerBoundPoI.getValue().peek() != null && possibleLowerBoundPoI.getValue().peek().getDistance() == backwardLowerBoundNode.getDistance()) {
+				localBackwardNodesToBeAnalyzed.add(possibleLowerBoundPoI.getValue().peek());
+				possibleLowerBoundPoI.getValue().poll();
+			}
+			
+			backwardNodesToBeAnalyzed.put(possibleLowerBoundPoI.getKey(), (PriorityQueue<DistanceEntry>) localBackwardNodesToBeAnalyzed);
+		}
+		
+		
+		Map<Long, PriorityQueue<DistanceEntry>> comparisonHashMap = new HashMap<>();
+
+		Map<Long, PriorityQueue<Integer>> finalBackwardsLowerBounds = new HashMap<>();
+
+		for(DistanceEntry forwardCandidate : forwardNodesToBeAnalyzed) {
+			
+			for(Map.Entry<Long, PriorityQueue<DistanceEntry>> backwardCandidates : backwardNodesToBeAnalyzed.entrySet()) {
+				
+				int localPoILowerBound = Integer.MAX_VALUE;
+				
+				for(DistanceEntry backwardCandidate : backwardCandidates.getValue()) {
+					
+					CHNode lowerBoundSource = graph.getNode(forwardCandidate.getId());
+					CHNode lowerBoundTarget = graph.getNode(backwardCandidate.getId());
+					
+					int lowerBound = (int) Math.sqrt(Math.pow((lowerBoundTarget.getLatitude() - lowerBoundSource.getLatitude()), 2) + Math.pow((lowerBoundTarget.getLongitude() - lowerBoundSource.getLongitude()), 2));
+					
+					if(lowerBound < localPoILowerBound) {
+						localPoILowerBound = lowerBound;
+					}
+				
+				}
+				
+				if(finalBackwardsLowerBounds.get(backwardCandidates.getKey()) == null) {
+					Queue<Integer> teste = new PriorityQueue<>();
+					teste.add(localPoILowerBound);
+					finalBackwardsLowerBounds.put(backwardCandidates.getKey(), (PriorityQueue<Integer>) teste);
+				} else {
+					finalBackwardsLowerBounds.get(backwardCandidates.getKey()).add(localPoILowerBound);
+				}
+				
+			}
+		}
+
+		int lowerBound = 0;
+		
+		for(Map.Entry<Long, PriorityQueue<Integer>> entry : finalBackwardsLowerBounds.entrySet()) {
+			if(entry.getValue().peek() > lowerBound)
+				lowerBound = entry.getValue().peek();
+		}
+		
+		return lowerBound;
 	}
 
 }
