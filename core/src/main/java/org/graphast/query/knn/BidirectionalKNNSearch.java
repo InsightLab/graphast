@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
-import org.graphast.geometry.PoI;
 import org.graphast.model.Edge;
 import org.graphast.model.Node;
 import org.graphast.model.contraction.CHEdge;
@@ -47,7 +46,6 @@ public class BidirectionalKNNSearch {
 	private Map<Long, HashMap<Long, Integer>> backwardsUnsettleNodesAuxHash = new HashMap<>();
 	private Map<Long, Map<Long, Integer>> backwardSettleNodesHash = new HashMap<>();
 	private Map<Long, DistanceEntry> meetingNodeHash = new HashMap<>();
-	private Map<Long, Path> pathHash = new HashMap<>();
 	private Map<Long, HashMap<Long, RouteEntry>> parentsHash = new HashMap<>();
 
 	private Map<Long, Long> backwardAllSettleNodes = new HashMap<>();
@@ -60,7 +58,6 @@ public class BidirectionalKNNSearch {
 
 	private Long currentPoI = -1l;
 	private int kIterator = 1;
-	private int iteratorResult = 1;
 
 	private Map<Integer, Long> nearestNeighborMap = new HashMap<>();
 
@@ -70,9 +67,6 @@ public class BidirectionalKNNSearch {
 	Map<Long, Integer> endCurrList = new HashMap<>();
 
 	private int numberOfPoIs;
-
-	private int expandedNodesForwardSearch = 0;
-	private int expandedNodesBackwardSearch = 0;
 
 	private int forwardsSmallerDistanceForThisIteration = 0;
 	private int backwardsSmallerDistanceForThisIteration = 0;
@@ -203,7 +197,7 @@ public class BidirectionalKNNSearch {
 				
 			}
 
-			if (smallerDistancePoI.size() == 0) {
+			if (smallerDistancePoI.isEmpty()) {
 				break;
 			} else {
 				currentPoI = smallerDistancePoI.peek().getId();
@@ -411,8 +405,6 @@ public class BidirectionalKNNSearch {
 
 		forwardsSettleNodes.put(forwardsRemovedNode.getId(), forwardsRemovedNode.getDistance());
 
-		expandedNodesForwardSearch++;
-
 		logger.debug("\t[FORWARD] Node being analyzed: {}. Distance: {}",
 				graph.getNode(forwardsRemovedNode.getId()).getExternalId(), forwardsRemovedNode.getDistance());
 
@@ -606,8 +598,6 @@ public class BidirectionalKNNSearch {
 		endCurrList.replace(currentPoI, backwardsRemovedNode.getDistance());
 
 		backwardsSettleNodes.put(backwardsRemovedNode.getId(), backwardsRemovedNode.getDistance());
-
-		expandedNodesBackwardSearch++;
 
 		logger.debug("\t[BACKWARD] Node being analyzed: {}. Distance: {}",
 				graph.getNode(backwardsRemovedNode.getId()).getExternalId(), backwardsRemovedNode.getDistance());
@@ -836,24 +826,6 @@ public class BidirectionalKNNSearch {
 	}
 
 	private int calculateCurrentLowerBound() {
-
-		// //Double check if an alteration in the first queue will have impact
-		// in the second
-		// Queue<DistanceEntry> possibleForwardUnsettleNodes = new
-		// PriorityQueue<>(forwardsUnsettleNodes);
-		//
-		// DistanceEntry forwardLowerBoundNode =
-		// possibleForwardUnsettleNodes.poll();
-		// Queue<DistanceEntry> forwardNodesToBeAnalyzed = new
-		// PriorityQueue<>();
-		// forwardNodesToBeAnalyzed.add(forwardLowerBoundNode);
-		//
-		// while(possibleForwardUnsettleNodes.peek() != null &&
-		// possibleForwardUnsettleNodes.peek().getDistance() ==
-		// forwardLowerBoundNode.getDistance()) {
-		// forwardNodesToBeAnalyzed.add(possibleForwardUnsettleNodes.peek());
-		// possibleForwardUnsettleNodes.poll();
-		// }
 
 		Map<Long, PriorityQueue<DistanceEntry>> possibleBackwardUnsettleNodes = new HashMap<>();
 		for (Map.Entry<Long, PriorityQueue<DistanceEntry>> entryToBeCopied : backwardUnsettleNodesHash.entrySet()) {

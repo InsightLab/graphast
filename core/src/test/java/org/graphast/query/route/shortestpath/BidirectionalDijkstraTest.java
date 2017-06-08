@@ -63,7 +63,7 @@ public class BidirectionalDijkstraTest {
 	@Test
 	public void graphHopperExample4Test() {
 
-		CHGraph testGraph = graphMonaco;
+		CHGraph testGraph = graphHopperExample4;
 
 		for (int source = 0; source < testGraph.getNumberOfNodes(); source++) {
 			for (int destination = 0; destination < testGraph.getNumberOfNodes(); destination++) {

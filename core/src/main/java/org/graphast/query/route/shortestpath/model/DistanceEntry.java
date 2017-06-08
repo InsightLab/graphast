@@ -30,7 +30,7 @@ public class DistanceEntry extends EntryImpl implements Comparable<Object> {
 	 */
 	@Override
 	public String toString() {
-		return "Entry [id=" + getId() + ", distance=" + distance
+		return "DistanceEntry [id=" + getId() + ", distance=" + distance
 				+ ", parent=" + getParent() + "]";
 	}
 
