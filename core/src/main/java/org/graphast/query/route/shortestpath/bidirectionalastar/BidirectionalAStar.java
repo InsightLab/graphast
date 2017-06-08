@@ -188,8 +188,6 @@ public class BidirectionalAStar {
 
 		Long2IntMap neighbors = graph.accessNeighborhood(graph.getNode(forwardsRemovedNode.getId()));
 
-//		neighbors.put(forwardsRemovedNode.getId().longValue(), 0);
-
 		for (long vid : neighbors.keySet()) {
 
 			if (graph.getNode(vid).getLevel() < graph.getNode(forwardsRemovedNode.getId()).getLevel()) {
