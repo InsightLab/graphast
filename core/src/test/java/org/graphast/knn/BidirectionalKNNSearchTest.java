@@ -125,7 +125,7 @@ public class BidirectionalKNNSearchTest {
 	public void graphHopperExample4WithPoIsTest() {
 
 //		for (Long source = 0l; source < graphHopperExample4WithPoIs.getNumberOfNodes(); source++) {
-			 Long source = 0l;
+			 Long source = 9l;
 
 			logger.info("SOURCE = {}", source);
 			
@@ -133,7 +133,7 @@ public class BidirectionalKNNSearchTest {
 
 			BidirectionalKNNSearch knn = new BidirectionalKNNSearch(graphHopperExample4WithPoIs);
 
-			finalResult = knn.search(graphHopperExample4WithPoIs.getNode(source), 1);
+			finalResult = knn.search(graphHopperExample4WithPoIs.getNode(source), 4);
 
 			int size = finalResult.size();
 

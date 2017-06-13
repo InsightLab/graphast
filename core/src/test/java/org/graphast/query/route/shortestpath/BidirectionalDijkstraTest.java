@@ -65,9 +65,12 @@ public class BidirectionalDijkstraTest {
 
 		CHGraph testGraph = graphHopperExample4;
 
-		for (int source = 0; source < testGraph.getNumberOfNodes(); source++) {
-			for (int destination = 0; destination < testGraph.getNumberOfNodes(); destination++) {
+//		for (int source = 0; source < testGraph.getNumberOfNodes(); source++) {
+//			for (int destination = 0; destination < testGraph.getNumberOfNodes(); destination++) {
 
+				int source = 0;
+				int destination = 4;
+				
 				logger.info("SOURCE: {}, DESTINATION: {}.", source, destination);
 
 				Dijkstra dijkstra = new DijkstraConstantWeight(testGraph);
@@ -78,8 +81,8 @@ public class BidirectionalDijkstraTest {
 				
 				assertEquals(dijkstraPath.getTotalCost(), finalPath.getTotalCost(), 1);
 
-			}
-		}
+//			}
+//		}
 	}
 
 //	@Test

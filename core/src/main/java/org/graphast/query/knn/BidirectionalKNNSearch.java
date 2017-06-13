@@ -46,7 +46,7 @@ public class BidirectionalKNNSearch {
 	private Map<Long, DistanceEntry> meetingNodeHash = new HashMap<>();
 	private Map<Long, HashMap<Long, RouteEntry>> parentsHash = new HashMap<>();
 
-	private DistanceEntry nextCandidateNNLowerBound = new DistanceEntry(-1, -1, -1);
+	private DistanceEntry nextCandidateNNLowerBound = new DistanceEntry(-1, Integer.MAX_VALUE, -1);
 	// TODO Criar metodos para adicionar pois na estrutura poisFound
 
 	private CHNode source;
@@ -55,7 +55,7 @@ public class BidirectionalKNNSearch {
 	private Long currentPoI = -1l;
 	private int kIterator = 1;
 
-	private Map<Integer, Long> nearestNeighborMap = new HashMap<>();
+	private Map<Integer, SearchEntry> nearestNeighborMap = new HashMap<>();
 
 	int startCurr = 0;
 	int endCurr = 0;
@@ -138,8 +138,7 @@ public class BidirectionalKNNSearch {
 
 		while (!searchEntryQueue.isEmpty() && kIterator < k + 1) {
 
-			if ((numberOfPoIs > backwardsUnsettleNodesAuxHash.size())
-					&& calculateCurrentLowerBound() > nextCandidateNNLowerBound.getDistance()) {
+			if (calculateCurrentLowerBound() > nextCandidateNNLowerBound.getDistance()) {
 
 				CHNode target = graph.getNode(nextCandidateNNLowerBound.getId());
 
@@ -154,7 +153,7 @@ public class BidirectionalKNNSearch {
 					nextCandidateNNLowerBound.setDistance(lowerBoundDistanceSourcePoIs.peek().getDistance());
 				} else {
 					nextCandidateNNLowerBound.setId(-1l);
-					nextCandidateNNLowerBound.setDistance(-1);
+					nextCandidateNNLowerBound.setDistance(Integer.MAX_VALUE);
 				}
 
 			}
@@ -170,7 +169,7 @@ public class BidirectionalKNNSearch {
 				meetingNode.setDistance(0);
 				meetingNode.setParent(currentPoI);
 
-				nearestNeighborMap.put(kIterator, currentPoI);
+				nearestNeighborMap.put(kIterator, searchEntryQueue.poll());
 				kIterator++;
 				smallerDistancePoI.poll();
 				smallerSettleNodes.remove(new DistanceEntry(source.getId(), 0, -1));
@@ -185,9 +184,25 @@ public class BidirectionalKNNSearch {
 
 				if (!forwardSearch.getUnsettleNodes().isEmpty())
 					forwardSearch();
+				
+				if(forwardsRemovedNode.getId() == searchEntryQueue.peek().getSource().getId()) {
+					nearestNeighborMap.put(kIterator, searchEntryQueue.poll());
+					kIterator++;
+					continue;
+				}
 
 				if (!searchEntryQueue.peek().getUnsettleNodes().isEmpty())
 					backwardSearch();
+				
+				if(backwardsRemovedNode.getId() == forwardSearch.getSource().getId()) {
+					nearestNeighborMap.put(kIterator, searchEntryQueue.poll());
+					kIterator++;
+					continue;
+				}
+				
+				SearchEntry transitionElement = searchEntryQueue.poll();
+				searchEntryQueue.add(transitionElement);
+				
 
 			}
 
@@ -199,7 +214,7 @@ public class BidirectionalKNNSearch {
 
 			path = new Path();
 
-			if (meetingNodeHash.get(nearestNeighborMap.get(i)).getId() == -1) {
+			if (nearestNeighborMap.get(i).getMeetingNode().getId() == -1) {
 				Instruction instruction = new Instruction(target.getId().intValue(),
 						"PATH NOT FOUND BETWEEN " + source.getId() + " AND " + target.getId(), 0, 0);
 				List<Instruction> instructions = new ArrayList<>();
@@ -213,9 +228,9 @@ public class BidirectionalKNNSearch {
 				continue;
 			}
 
-			HashMap<Long, RouteEntry> resultParentNodes = joinParents(meetingNodeHash.get(nearestNeighborMap.get(i)),
-					forwardSearch.getParentNodes(), parentsHash.get(nearestNeighborMap.get(i)));
-			path.constructPath(nearestNeighborMap.get(i), resultParentNodes, graph);
+			HashMap<Long, RouteEntry> resultParentNodes = joinParents(nearestNeighborMap.get(i).getMeetingNode(),
+					forwardSearch.getParentNodes(), (HashMap<Long, RouteEntry>) nearestNeighborMap.get(i).getParentNodes());
+			path.constructPath(nearestNeighborMap.get(i).getSource().getId(), resultParentNodes, graph);
 
 			finalResult.add(path);
 
@@ -227,13 +242,30 @@ public class BidirectionalKNNSearch {
 
 	private boolean finished() {
 
-		if (forwardSearch.getUnsettleNodes().isEmpty() && searchEntryQueue.peek().getUnsettleNodes().isEmpty())
-			return true;
+		for (SearchEntry iteratedSearchEntry : searchEntryQueue) {
 
-		DistanceEntry meetingNode = searchEntryQueue.peek().getMeetingNode();
+			if (forwardSearch.getUnsettleNodes().isEmpty() && iteratedSearchEntry.getUnsettleNodes().isEmpty()) {
 
-		return forwardSearch.getUnsettleNodes().peek().getDistance() >= meetingNode.getDistance()
-				&& searchEntryQueue.peek().getUnsettleNodes().peek().getDistance() >= meetingNode.getDistance();
+				nearestNeighborMap.put(kIterator, searchEntryQueue.poll());
+				kIterator++;
+				return true;
+
+			}
+
+			DistanceEntry meetingNode = iteratedSearchEntry.getMeetingNode();
+
+			if (forwardSearch.getUnsettleNodes().peek().getDistance() >= meetingNode.getDistance()
+					&& iteratedSearchEntry.getUnsettleNodes().peek().getDistance() >= meetingNode.getDistance()) {
+
+				nearestNeighborMap.put(kIterator, searchEntryQueue.poll());
+				kIterator++;
+				return true;
+
+			}
+
+		}
+
+		return false;
 
 	}
 
@@ -271,7 +303,7 @@ public class BidirectionalKNNSearch {
 				graph.getNode(forwardsRemovedNode.getId()).getExternalId(), forwardsRemovedNode.getDistance());
 
 		expandVertexForward();
-
+		
 	}
 
 	private void expandVertexForward() {
@@ -285,21 +317,15 @@ public class BidirectionalKNNSearch {
 				continue;
 			}
 
-			logger.debug("Node considered: {}", vid);
-
 			Node lowerBoundSource = graph.getNode(vid);
-			Node lowerBoundTarget = graph.getNode(searchEntryQueue.peek().getUnsettleNodes().peek().getId());
+			Node lowerBoundTarget = searchEntryQueue.peek().getSource();
 
 			int lowerBound = neighbors.get(vid) + forwardsRemovedNode.getDistance()
 					+ (int) Math.sqrt(Math.pow((lowerBoundTarget.getLatitude() - lowerBoundSource.getLatitude()), 2)
-							+ Math.pow((lowerBoundTarget.getLongitude() - lowerBoundSource.getLongitude()), 2))
-					+ searchEntryQueue.peek().getUnsettleNodes().peek().getDistance();
+							+ Math.pow((lowerBoundTarget.getLongitude() - lowerBoundSource.getLongitude()), 2));
 
 			LowerBoundDistanceEntry newEntry = new LowerBoundDistanceEntry(vid,
 					neighbors.get(vid) + forwardsRemovedNode.getDistance(), lowerBound, forwardsRemovedNode.getId());
-
-			logger.debug("\t\tNode considered: {}. Distance: {}", graph.getNode(vid).getExternalId(),
-					newEntry.getDistance());
 
 			Edge edge;
 			int distance;
@@ -307,7 +333,10 @@ public class BidirectionalKNNSearch {
 			if (forwardSearch.getSettleNodes().containsKey(newEntry.getId())) {
 				continue;
 			}
-
+			
+			logger.debug("\t\tNode expanded: {}. Distance: {}", graph.getNode(vid).getExternalId(),
+					newEntry.getDistance());
+			
 			if (!forwardSearch.getForwardUnsettleNodesAux().containsKey(vid)) {
 
 				forwardSearch.getUnsettleNodes().offer(newEntry);
@@ -365,6 +394,8 @@ public class BidirectionalKNNSearch {
 					+ neighbors.get(vid) + searchEntryQueue.peek().getBackwardUnsettleNodesAux().get(vid));
 			searchEntryQueue.peek().getMeetingNode().setParent(forwardsRemovedNode.getId());
 
+			logger.debug("\t\t\tMeeting node: {}", searchEntryQueue.peek().getMeetingNode());
+			
 			// System.out.println("\t\t\tMeeting node: " +
 			// graph.getNode(meetingNode.getId()).getExternalId());
 		}
@@ -381,7 +412,7 @@ public class BidirectionalKNNSearch {
 				graph.getNode(backwardsRemovedNode.getId()).getExternalId(), backwardsRemovedNode.getDistance());
 
 		expandVertexBackward();
-
+		
 	}
 
 	private void expandVertexBackward() {
@@ -396,21 +427,15 @@ public class BidirectionalKNNSearch {
 				continue;
 			}
 
-			logger.debug("Node considered: {}", vid);
-
 			Node lowerBoundSource = graph.getNode(vid);
-			Node lowerBoundTarget = graph.getNode(forwardSearch.getUnsettleNodes().peek().getId());
+			Node lowerBoundTarget = forwardSearch.getSource();
 
 			int lowerBound = neighbors.get(vid) + backwardsRemovedNode.getDistance()
 					+ (int) Math.sqrt(Math.pow((lowerBoundTarget.getLatitude() - lowerBoundSource.getLatitude()), 2)
-							+ Math.pow((lowerBoundTarget.getLongitude() - lowerBoundSource.getLongitude()), 2))
-					+ forwardSearch.getUnsettleNodes().peek().getDistance();
+							+ Math.pow((lowerBoundTarget.getLongitude() - lowerBoundSource.getLongitude()), 2));
 
 			LowerBoundDistanceEntry newEntry = new LowerBoundDistanceEntry(vid,
 					neighbors.get(vid) + backwardsRemovedNode.getDistance(), lowerBound, backwardsRemovedNode.getId());
-
-			logger.debug("\t\tNode considered: {}. Distance: {}", graph.getNode(vid).getExternalId(),
-					newEntry.getDistance());
 
 			Edge edge;
 			int distance;
@@ -418,7 +443,10 @@ public class BidirectionalKNNSearch {
 			if (searchEntryQueue.peek().getBackwardUnsettleNodesAux().containsKey(newEntry.getId())) {
 				continue;
 			}
-
+			
+			logger.debug("\t\tNode expanded: {}. Distance: {}", graph.getNode(vid).getExternalId(),
+					newEntry.getDistance());
+			
 			if (!searchEntryQueue.peek().getBackwardUnsettleNodesAux().containsKey(vid)) {
 
 				searchEntryQueue.peek().getUnsettleNodes().offer(newEntry);
@@ -469,15 +497,17 @@ public class BidirectionalKNNSearch {
 
 	private void verifyMeetingNodeBackwardSearch(long removed, long vid, Long2IntMap neighbors) {
 
-		if (forwardSearch.getBackwardUnsettleNodesAux().containsKey(vid)
+		if (forwardSearch.getForwardUnsettleNodesAux().containsKey(vid)
 				&& searchEntryQueue.peek().getSettleNodes().get(removed) + neighbors.get(vid)
-						+ forwardSearch.getBackwardUnsettleNodesAux().get(vid) < searchEntryQueue.peek()
+						+ forwardSearch.getForwardUnsettleNodesAux().get(vid) < searchEntryQueue.peek()
 								.getMeetingNode().getDistance()) {
 			searchEntryQueue.peek().getMeetingNode().setId(vid);
 			searchEntryQueue.peek().getMeetingNode().setDistance(searchEntryQueue.peek().getSettleNodes().get(removed)
-					+ neighbors.get(vid) + forwardSearch.getBackwardUnsettleNodesAux().get(vid));
+					+ neighbors.get(vid) + forwardSearch.getForwardUnsettleNodesAux().get(vid));
 			searchEntryQueue.peek().getMeetingNode().setParent(backwardsRemovedNode.getId());
 
+			logger.debug("\t\t\tMeeting node: {}", searchEntryQueue.peek().getMeetingNode());
+			
 			// System.out.println("\t\t\tMeeting node: " +
 			// graph.getNode(meetingNode.getId()).getExternalId());
 		}
@@ -564,15 +594,28 @@ public class BidirectionalKNNSearch {
 
 	private int calculateCurrentLowerBound() {
 
-		CHNode lowerBoundSource = graph.getNode(forwardSearch.getUnsettleNodes().peek().getId());
+		
+		CHNode lowerBoundSource = source;
 		CHNode lowerBoundTarget = graph.getNode(searchEntryQueue.peek().getUnsettleNodes().peek().getId());
 
-		int lowerBound = forwardSearch.getUnsettleNodes().peek().getDistance()
-				+ (int) Math.sqrt(Math.pow((lowerBoundTarget.getLatitude() - lowerBoundSource.getLatitude()), 2)
+		int lowerBound = (int) Math.sqrt(Math.pow((lowerBoundTarget.getLatitude() - lowerBoundSource.getLatitude()), 2)
 						+ Math.pow((lowerBoundTarget.getLongitude() - lowerBoundSource.getLongitude()), 2))
 				+ searchEntryQueue.peek().getUnsettleNodes().peek().getDistance();
 
+		logger.debug("LOWER BOUND from {} to {} ({}): {}", lowerBoundSource.getId(), lowerBoundTarget.getId(), searchEntryQueue.peek().getSource().getId(), lowerBound);
+		
 		return lowerBound;
+		
+		
+//		CHNode lowerBoundSource = graph.getNode(forwardSearch.getUnsettleNodes().peek().getId());
+//		CHNode lowerBoundTarget = graph.getNode(searchEntryQueue.peek().getUnsettleNodes().peek().getId());
+//
+//		int lowerBound = forwardSearch.getUnsettleNodes().peek().getDistance()
+//				+ (int) Math.sqrt(Math.pow((lowerBoundTarget.getLatitude() - lowerBoundSource.getLatitude()), 2)
+//						+ Math.pow((lowerBoundTarget.getLongitude() - lowerBoundSource.getLongitude()), 2))
+//				+ searchEntryQueue.peek().getUnsettleNodes().peek().getDistance();
+//
+//		return lowerBound;
 	}
 
 }
