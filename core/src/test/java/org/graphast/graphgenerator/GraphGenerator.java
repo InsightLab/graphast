@@ -2092,7 +2092,7 @@ public class GraphGenerator {
 		node = new CHNodeImpl(6l, 60, 0);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(7l, 70, 10);
+		node = new CHNodeImpl(7l, 70, 10, 4);
 		graph.addNode(node);
 
 		node = new CHNodeImpl(8l, 80, 10);

@@ -179,7 +179,7 @@ public class BidirectionalKNNSearch {
 				if (!forwardSearch.getUnsettleNodes().isEmpty())
 					forwardSearch();
 				
-				if(forwardsRemovedNode.getId() == searchEntryQueue.peek().getSource().getId()) {
+				if(forwardsRemovedNode != null && forwardsRemovedNode.getId() == searchEntryQueue.peek().getSource().getId()) {
 					nearestNeighborMap.put(kIterator, searchEntryQueue.poll());
 					kIterator++;
 					continue;
@@ -249,15 +249,26 @@ public class BidirectionalKNNSearch {
 
 			DistanceEntry meetingNode = iteratedSearchEntry.getMeetingNode();
 
-			if (forwardSearch.getUnsettleNodes().peek().getDistance() >= meetingNode.getDistance()
-					&& iteratedSearchEntry.getUnsettleNodes().peek().getDistance() >= meetingNode.getDistance()) {
+			if(forwardSearch.getUnsettleNodes().peek() == null) {
+				if(iteratedSearchEntry.getUnsettleNodes().peek().getDistance() >= meetingNode.getDistance()) {
+					nearestNeighborMap.put(kIterator, iteratedSearchEntry);
+					searchEntryQueue.remove(iteratedSearchEntry);
+					kIterator++;
+					return true;
+				}
+			} else {
+				if (forwardSearch.getUnsettleNodes().peek().getDistance() >= meetingNode.getDistance()
+						&& iteratedSearchEntry.getUnsettleNodes().peek().getDistance() >= meetingNode.getDistance()) {
 
-				nearestNeighborMap.put(kIterator, iteratedSearchEntry);
-				searchEntryQueue.remove(iteratedSearchEntry);
-				kIterator++;
-				return true;
+					nearestNeighborMap.put(kIterator, iteratedSearchEntry);
+					searchEntryQueue.remove(iteratedSearchEntry);
+					kIterator++;
+					return true;
 
+				}
 			}
+			
+			
 
 		}
 
