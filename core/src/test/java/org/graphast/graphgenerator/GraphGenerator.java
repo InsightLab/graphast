@@ -2083,7 +2083,7 @@ public class GraphGenerator {
 		node = new CHNodeImpl(3l, 30, 10);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(4l, 40, 10, 4);
+		node = new CHNodeImpl(4l, 40, 10);
 		graph.addNode(node);
 
 		node = new CHNodeImpl(5l, 50, 0);
@@ -2098,7 +2098,7 @@ public class GraphGenerator {
 		node = new CHNodeImpl(8l, 80, 10);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(9l, 20, 30);
+		node = new CHNodeImpl(9l, 20, 30, 4);
 		graph.addNode(node);
 
 		node = new CHNodeImpl(10l, 30, 30);
@@ -2110,7 +2110,7 @@ public class GraphGenerator {
 		node = new CHNodeImpl(12l, 50, 20);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(13l, 60, 20, 4);
+		node = new CHNodeImpl(13l, 60, 20);
 		graph.addNode(node);
 
 		node = new CHNodeImpl(14l, 10, 0);
@@ -2119,16 +2119,16 @@ public class GraphGenerator {
 		node = new CHNodeImpl(15l, -10, 10);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(16l, -10, 30);
+		node = new CHNodeImpl(16l, -10, 30, 4);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(17l, 10, 20);
+		node = new CHNodeImpl(17l, 10, 20, 4);
 		graph.addNode(node);
 
 		node = new CHNodeImpl(18l, 10, -10);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(19l, 10, -20, 4);
+		node = new CHNodeImpl(19l, 10, -20);
 		graph.addNode(node);
 
 		node = new CHNodeImpl(20l, 0, -10);
@@ -2149,7 +2149,7 @@ public class GraphGenerator {
 		node = new CHNodeImpl(25l, 50, -10);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(26l, 40, -30, 4);
+		node = new CHNodeImpl(26l, 40, -30);
 		graph.addNode(node);
 
 		node = new CHNodeImpl(27l, 40, -10);
@@ -2170,7 +2170,7 @@ public class GraphGenerator {
 		node = new CHNodeImpl(32l, 70, 30);
 		graph.addNode(node);
 		
-		node = new CHNodeImpl(33l, 10, 50);
+		node = new CHNodeImpl(33l, 10, 50, 4);
 		graph.addNode(node);
 
 		// TODO Create a constructor without the originalEdgeCounter

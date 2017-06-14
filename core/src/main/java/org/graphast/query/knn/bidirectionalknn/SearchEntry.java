@@ -30,7 +30,7 @@ public class SearchEntry implements Comparable<Object> {
 
 		backwardUnsettleNodesAux.put(source.getId(), 0);
 		
-		int lowerBound = (int) Math.sqrt(Math.pow((target.getLatitude() - source.getLatitude()), 2)
+		double lowerBound = Math.sqrt(Math.pow((target.getLatitude() - source.getLatitude()), 2)
 				+ Math.pow((target.getLongitude() - source.getLongitude()), 2));
 		unsettleNodes.add(new LowerBoundDistanceEntry(source.getId(), 0, lowerBound, -1));
 
@@ -102,8 +102,32 @@ public class SearchEntry implements Comparable<Object> {
 
 	@Override
 	public int compareTo(Object o) {
-		return new Integer(unsettleNodes.peek().getLowerBound())
+		return new Double(unsettleNodes.peek().getLowerBound())
 				.compareTo(((SearchEntry) o).unsettleNodes.peek().getLowerBound());
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SearchEntry other = (SearchEntry) obj;
+		if (source.getId() == null) {
+			if (other.source.getId() != null)
+				return false;
+		} else if (!(source.getId()==other.source.getId()))
+			return false;
+		if (target == null) {
+			if (other.target.getId() != null)
+				return false;
+		} else if (!(target.getId()==other.target.getId()))
+			return false;
+		return true;
+	}
+	
+	
 
 }
