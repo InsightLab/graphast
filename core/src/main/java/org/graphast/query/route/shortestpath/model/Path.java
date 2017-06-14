@@ -21,7 +21,7 @@ import org.graphast.util.DistanceUtils;
 public class Path implements Comparable<Path> {
 
 	private List<Point> geometry;
-	private List<Long> edges;
+	private List<Long> edges = new ArrayList<Long>();
 	private List<Instruction> instructions;
 	private List<PoI> listOfPoIs;
 	private long totalDistance;
@@ -159,6 +159,7 @@ public class Path implements Comparable<Path> {
 			instructions.add(verificationQueue.poll());
 		}
 		Collections.reverse(instructions);
+		
 	}
 
 

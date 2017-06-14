@@ -2071,7 +2071,7 @@ public class GraphGenerator {
 		CHEdge edge;
 		CHNode node;
 
-		node = new CHNodeImpl(0l, 10, 30);
+		node = new CHNodeImpl(0l, 10, 30, 4);
 		graph.addNode(node);
 
 		node = new CHNodeImpl(1l, 10, 10);
@@ -2149,7 +2149,7 @@ public class GraphGenerator {
 		node = new CHNodeImpl(25l, 50, -10);
 		graph.addNode(node);
 
-		node = new CHNodeImpl(26l, 40, -30);
+		node = new CHNodeImpl(26l, 40, -30, 4);
 		graph.addNode(node);
 
 		node = new CHNodeImpl(27l, 40, -10);

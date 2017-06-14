@@ -133,7 +133,7 @@ public class BidirectionalKNNSearchTest {
 
 			BidirectionalKNNSearch knn = new BidirectionalKNNSearch(graphHopperExample4WithPoIs);
 
-			finalResult = knn.search(graphHopperExample4WithPoIs.getNode(source), 4);
+			finalResult = knn.search(graphHopperExample4WithPoIs.getNode(source), 1);
 
 			int size = finalResult.size();
 

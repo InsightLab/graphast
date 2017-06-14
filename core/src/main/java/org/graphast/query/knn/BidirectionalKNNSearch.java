@@ -163,16 +163,10 @@ public class BidirectionalKNNSearch {
 			// TODO Review this case
 			if (currentPoI == source.getId()) {
 
-				backwardUnsettleNodesHash.remove(currentPoI);
-
-				meetingNode.setId(currentPoI);
-				meetingNode.setDistance(0);
-				meetingNode.setParent(currentPoI);
+				searchEntryQueue.peek().setMeetingNode(new DistanceEntry(currentPoI, 0, currentPoI));
 
 				nearestNeighborMap.put(kIterator, searchEntryQueue.poll());
 				kIterator++;
-				smallerDistancePoI.poll();
-				smallerSettleNodes.remove(new DistanceEntry(source.getId(), 0, -1));
 				continue;
 			}
 
