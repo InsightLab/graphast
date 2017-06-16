@@ -124,16 +124,19 @@ public class BidirectionalKNNSearchTest {
 	@Test
 	public void graphHopperExample4WithPoIsTest() {
 
-//		for (Long source = 0l; source < graphHopperExample4WithPoIs.getNumberOfNodes(); source++) {
-			 Long source = 8l;
+		for (Long source = 0l; source < graphHopperExample4WithPoIs.getNumberOfNodes(); source++) {
+//			 Long source = 20l;
 
+			 if(source.equals(33l))
+				 continue;
+			 
 			logger.info("SOURCE = {}", source);
 			
 			Queue<Path> finalResult = new PriorityQueue<>();
 
 			BidirectionalKNNSearch knn = new BidirectionalKNNSearch(graphHopperExample4WithPoIs);
 
-			finalResult = knn.search(graphHopperExample4WithPoIs.getNode(source), 7);
+			finalResult = knn.search(graphHopperExample4WithPoIs.getNode(source), 34);
 
 			int size = finalResult.size();
 
@@ -165,7 +168,7 @@ public class BidirectionalKNNSearchTest {
 						poi.getTotalCost(), 0);
 
 			}
-//		}
+		}
 
 	}
 

@@ -38,7 +38,7 @@ public class Path implements Comparable<Path> {
 		LinkedList<Instruction> verificationQueue = new LinkedList<Instruction>();
 		if (parents.get(id) == null) {
 			instructions = new ArrayList<Instruction>();
-			newInstruction = new Instruction(0, "On Start", 0, 0);
+			newInstruction = new Instruction((int) id, "On Start", 0, 0);
 			instructions.add(newInstruction);
 			return;
 		}

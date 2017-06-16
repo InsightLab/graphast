@@ -176,23 +176,46 @@ public class BidirectionalKNNSearch {
 
 				logger.debug("PoI that will be analyzed: {}", graph.getNode(currentPoI).getExternalId());
 
-				if (!forwardSearch.getUnsettleNodes().isEmpty())
-					forwardSearch();
 				
-				if(forwardsRemovedNode != null && forwardsRemovedNode.getId() == searchEntryQueue.peek().getSource().getId()) {
-					nearestNeighborMap.put(kIterator, searchEntryQueue.poll());
-					kIterator++;
-					continue;
-				}
-
-				if (!searchEntryQueue.peek().getUnsettleNodes().isEmpty())
+				
+				if (forwardSearch.getUnsettleNodes().isEmpty()) {
 					backwardSearch();
-				
-				if(backwardsRemovedNode.getId() == forwardSearch.getSource().getId()) {
-					nearestNeighborMap.put(kIterator, searchEntryQueue.poll());
-					kIterator++;
-					continue;
+				} else if (searchEntryQueue.peek().getUnsettleNodes().isEmpty()) {
+					forwardSearch();
+				} else {
+					if (forwardSearch.getUnsettleNodes().peek().getDistance() <= searchEntryQueue.peek().getUnsettleNodes().peek().getDistance()) {
+						forwardSearch();
+					} else {
+						backwardSearch();
+					}
 				}
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+//				if (!forwardSearch.getUnsettleNodes().isEmpty())
+//					forwardSearch();
+//				
+//				if(forwardsRemovedNode != null && forwardsRemovedNode.getId() == searchEntryQueue.peek().getSource().getId()) {
+//					nearestNeighborMap.put(kIterator, searchEntryQueue.poll());
+//					kIterator++;
+//					continue;
+//				}
+//
+//				if (!searchEntryQueue.peek().getUnsettleNodes().isEmpty())
+//					backwardSearch();
+//				
+//				if(backwardsRemovedNode.getId() == forwardSearch.getSource().getId()) {
+//					nearestNeighborMap.put(kIterator, searchEntryQueue.poll());
+//					kIterator++;
+//					continue;
+//				}
 				
 				SearchEntry transitionElement = searchEntryQueue.poll();
 				searchEntryQueue.add(transitionElement);
@@ -456,9 +479,9 @@ public class BidirectionalKNNSearch {
 			Edge edge;
 			int distance;
 
-			if (searchEntryQueue.peek().getBackwardUnsettleNodesAux().containsKey(newEntry.getId())) {
-				continue;
-			}
+//			if (searchEntryQueue.peek().getBackwardUnsettleNodesAux().containsKey(newEntry.getId())) {
+//				continue;
+//			}
 			
 			logger.debug("\t\tNode expanded: {}. Distance: {}", graph.getNode(vid).getExternalId(),
 					newEntry.getDistance());
