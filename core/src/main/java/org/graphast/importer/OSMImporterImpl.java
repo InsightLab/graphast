@@ -321,7 +321,7 @@ public class OSMImporterImpl implements Importer {
 	@Override
 	public CHGraph executeCH() {
 		
-		GraphHopper gh = OSMToGraphHopperReader.createGraph(osmFile, graphHopperDir, true, false);
+		GraphHopper gh = OSMToGraphHopperReader.createGraph(osmFile, graphHopperDir, false, false);
 		return executeCH(gh);
 		
 	}
@@ -336,7 +336,8 @@ public class OSMImporterImpl implements Importer {
 		GraphStorage gs = gh.getGraph();
 		EdgeIterator edgeIterator = gs.getAllEdges();
 		
-		LevelGraphStorage graphLevel = (LevelGraphStorage) gh.getGraph();
+//		LevelGraphStorage graphLevel = (LevelGraphStorage) gh.getGraph();
+		GraphStorage graphLevel = gh.getGraph();
 		
 		Int2LongOpenHashMap hashExternalIdToId = new Int2LongOpenHashMap();
 		int count = 0;
@@ -354,8 +355,8 @@ public class OSMImporterImpl implements Importer {
 			int distance = (int)NumberUtils.round(edgeIterator.getDistance() * 1000, 0); // Convert distance from meters to millimeters
 			String label = edgeIterator.getName();
 
-			int fromNodeLevel = graphLevel.getLevel(externalFromNodeId);
-			int toNodeLevel = graphLevel.getLevel(externalToNodeId);
+//			int fromNodeLevel = graphLevel.getLevel(externalFromNodeId);
+//			int toNodeLevel = graphLevel.getLevel(externalToNodeId);
 			
 			double latitudeFrom = latLongToDouble(latLongToInt(gs.getNodeAccess().getLatitude(externalFromNodeId)));
 			double longitudeFrom = latLongToDouble(latLongToInt(gs.getNodeAccess().getLongitude(externalFromNodeId)));	
@@ -370,7 +371,7 @@ public class OSMImporterImpl implements Importer {
 			if(!hashExternalIdToId.containsKey(externalFromNodeId)){
 
 				fromNode = new CHNodeImpl(externalFromNodeId, latitudeFrom, longitudeFrom);
-				fromNode.setLevel(fromNodeLevel);
+//				fromNode.setLevel(fromNodeLevel);
 				graph.addNode(fromNode);
 				fromNodeId = (long)fromNode.getId();
 				hashExternalIdToId.put(externalFromNodeId, fromNodeId);
@@ -380,7 +381,7 @@ public class OSMImporterImpl implements Importer {
 
 			if(!hashExternalIdToId.containsKey(externalToNodeId)){
 				toNode = new CHNodeImpl(externalToNodeId, latitudeTo, longitudeTo);
-				toNode.setLevel(toNodeLevel);
+//				toNode.setLevel(toNodeLevel);
 				graph.addNode(toNode);
 				toNodeId = (long)toNode.getId();
 				hashExternalIdToId.put(externalToNodeId, toNodeId);

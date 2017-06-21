@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.graphast.model.Edge;
 import org.graphast.model.Node;
@@ -118,7 +120,7 @@ public class BidirectionalKNNSearch {
 
 		while (!searchEntryQueue.isEmpty() && numberOfPoIsFound < k + 1) {
 
-			if (searchEntryQueue.peek().getUnsettleNodes().peek().getLowerBound() > nextCandidateNNLowerBound
+			if (searchEntryQueue.peek().getUnsettleNodes().peek() != null && searchEntryQueue.peek().getUnsettleNodes().peek().getLowerBound() > nextCandidateNNLowerBound
 					.getDistance()) {
 
 				CHNode target = graph.getNode(nextCandidateNNLowerBound.getId());
@@ -170,6 +172,13 @@ public class BidirectionalKNNSearch {
 					}
 				}
 
+				
+
+				if(searchEntryQueue.peek().getUnsettleNodes().peek() == null) {
+					
+					continue;
+				}
+				
 				SearchEntry transitionElement = searchEntryQueue.poll();
 				searchEntryQueue.add(transitionElement);
 
@@ -184,8 +193,8 @@ public class BidirectionalKNNSearch {
 			Path path = new Path();
 
 			if (nearestNeighborMap.get(i).getMeetingNode().getId() == -1) {
-				Instruction instruction = new Instruction(target.getId().intValue(),
-						"PATH NOT FOUND BETWEEN " + source.getId() + " AND " + target.getId(), 0, 0);
+				Instruction instruction = new Instruction(nearestNeighborMap.get(i).getSource().getId().intValue(),
+						"PATH NOT FOUND BETWEEN " + nearestNeighborMap.get(i).getTarget().getId().intValue() + " AND " + nearestNeighborMap.get(i).getSource().getId(), 0, 0);
 				List<Instruction> instructions = new ArrayList<>();
 				instructions.add(instruction);
 				path.setInstructions(instructions);

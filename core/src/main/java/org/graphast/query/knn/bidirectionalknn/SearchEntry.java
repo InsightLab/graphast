@@ -9,9 +9,8 @@ import org.graphast.model.Node;
 import org.graphast.query.route.shortestpath.bidirectionalastar.LowerBoundDistanceEntry;
 import org.graphast.query.route.shortestpath.model.DistanceEntry;
 import org.graphast.query.route.shortestpath.model.RouteEntry;
-import org.graphast.util.DistanceUtils;
 
-public class SearchEntry implements Comparable<Object> {
+public class SearchEntry implements Comparable<SearchEntry> {
 
 	private Queue<LowerBoundDistanceEntry> unsettleNodes = new PriorityQueue<>();
 	private Map<Long, Integer> settleNodes = new HashMap<>();
@@ -101,9 +100,8 @@ public class SearchEntry implements Comparable<Object> {
 	}
 
 	@Override
-	public int compareTo(Object o) {
-		return new Double(unsettleNodes.peek().getLowerBound())
-				.compareTo(((SearchEntry) o).unsettleNodes.peek().getLowerBound());
+	public int compareTo(SearchEntry comparableSearchEntry) {
+		return Double.compare(this.getUnsettleNodes().peek().getLowerBound(), comparableSearchEntry.getUnsettleNodes().peek().getLowerBound());
 	}
 
 	@Override
@@ -128,6 +126,4 @@ public class SearchEntry implements Comparable<Object> {
 		return true;
 	}
 	
-	
-
 }
