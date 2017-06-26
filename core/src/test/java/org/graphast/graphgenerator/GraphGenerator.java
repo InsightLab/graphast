@@ -548,16 +548,17 @@ public class GraphGenerator {
 
 //		POIImporter.importPoIList(graph, "src/test/resources/monaco-latest.csv");
 
-		// System.out.println("#nodes: " + graph.getNumberOfNodes());
-		// System.out.println("#edges: " + graph.getNumberOfEdges());
+		graph.save();
 
-		// graph.createHyperPOIS();
+		return graph;
+	}
+	
+	public CHGraph generateAndorra() {
+		String osmFile = Configuration.USER_HOME + "/graphast/test/andorra-latest.osm.pbf";
+		String graphHopperAndorraDir = Configuration.USER_HOME + "/graphhopper/test/andorra";
+		String graphastAndorraDir = Configuration.USER_HOME + "/graphast/test/andorra";
 
-		// System.out.println("#nodes: " + graph.getNumberOfNodes());
-		// System.out.println("#edges: " + graph.getNumberOfEdges());
-		//
-		// graph.setMaximumEdgeCount((int) graph.getNumberOfEdges());
-		// graph.setMaxLevel((int) (graph.getNumberOfNodes() + 1));
+		CHGraph graph = new OSMImporterImpl(osmFile, graphHopperAndorraDir, graphastAndorraDir).executeCH();
 
 		graph.save();
 
@@ -565,11 +566,11 @@ public class GraphGenerator {
 	}
 
 	public CHGraph generateBerlinCH() {
-		String osmFile = this.getClass().getResource("/monaco-latest.osm.pbf").getPath();
-		String graphHopperMonacoDir = Configuration.USER_HOME + "/graphhopper/test/monaco";
-		String graphastMonacoDir = Configuration.USER_HOME + "/graphast/test/monaco";
+		String osmFile = Configuration.USER_HOME + "/graphast/test/berlin-latest.osm.pbf";
+		String graphHopperBerlinDir = Configuration.USER_HOME + "/graphhopper/test/berlin";
+		String graphastBerlinDir = Configuration.USER_HOME + "/graphast/test/berlin";
 
-		CHGraph graph = new OSMImporterImpl(osmFile, graphHopperMonacoDir, graphastMonacoDir).executeCH();
+		CHGraph graph = new OSMImporterImpl(osmFile, graphHopperBerlinDir, graphastBerlinDir).executeCH();
 
 //		POIImporter.importPoIList(graph, "src/test/resources/monaco-latest.csv");
 
@@ -616,7 +617,7 @@ public class GraphGenerator {
 	}
 
 	public CHGraph generateGreeceCH() {
-		String osmFile = this.getClass().getResource("/greece-latest.osm.pbf").getPath();
+		String osmFile = Configuration.USER_HOME + "/graphast/test/greece-latest.osm.pbf";
 		String graphHopperGreeceDir = Configuration.USER_HOME + "/graphhopper/test/greece";
 		String graphastGreeceDir = Configuration.USER_HOME + "/graphast/test/greece";
 
@@ -1064,18 +1065,6 @@ public class GraphGenerator {
 
 		graph.createBounds();
 		graph.save();
-		return graph;
-
-	}
-
-	public CHGraph generateAndorra() {
-
-		String osmFile = DijkstraConstantWeight.class.getResource("/andorra-150305.osm.pbf").getPath();
-		String graphHopperAndorraDir = Configuration.USER_HOME + "/graphhopper/test/andorra";
-		String graphastAndorraDir = Configuration.USER_HOME + "/graphast/test/andorra";
-
-		CHGraph graph = new OSMImporterImpl(osmFile, graphHopperAndorraDir, graphastAndorraDir).executeCH();
-
 		return graph;
 
 	}

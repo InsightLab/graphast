@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.Set;
-import java.util.TreeSet;
 
 import org.graphast.model.Edge;
 import org.graphast.model.Node;
@@ -21,6 +19,7 @@ import org.graphast.query.route.shortestpath.model.DistanceEntry;
 import org.graphast.query.route.shortestpath.model.Instruction;
 import org.graphast.query.route.shortestpath.model.Path;
 import org.graphast.query.route.shortestpath.model.RouteEntry;
+import org.graphast.util.DistanceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,14 +79,11 @@ public class BidirectionalKNNSearch {
 			// TODO Double check the units in for this distance (this cast may
 			// not be totally correct).
 			// Use this distance for real world maps.
-			// int distance = (int)
-			// DistanceUtils.distanceLatLong(graph.getNode(source).getLatitude(),
-			// graph.getNode(source).getLongitude(), node.getLatitude(),
-			// node.getLongitude());
-			int distance = (int) Math.sqrt(Math.pow((node.getLatitude() - graph.getNode(source).getLatitude()), 2)
-					+ Math.pow((node.getLongitude() - graph.getNode(source).getLongitude()), 2));
+			 double distance = DistanceUtils.distanceLatLong(graph.getNode(source).getLatitude(), graph.getNode(source).getLongitude(), node.getLatitude(), node.getLongitude());
+//			int distance = (int) Math.sqrt(Math.pow((node.getLatitude() - graph.getNode(source).getLatitude()), 2)
+//					+ Math.pow((node.getLongitude() - graph.getNode(source).getLongitude()), 2));
 
-			DistanceEntry lowerBound = new DistanceEntry(node.getId(), distance, -1);
+			LowerBoundDistanceEntry lowerBound = new LowerBoundDistanceEntry(node.getId(), (int) distance, distance, -1l);
 			lowerBoundDistanceSourcePoIs.add(lowerBound);
 		}
 
@@ -141,6 +137,8 @@ public class BidirectionalKNNSearch {
 
 			}
 
+//			System.out.println("Number of PoIs being considered: " + searchEntryQueue.size());
+			
 			currentPoI = searchEntryQueue.peek().getSource().getId();
 
 			// TODO Review this case
