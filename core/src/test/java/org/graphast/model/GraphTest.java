@@ -242,7 +242,10 @@ public class GraphTest {
 		assertEquals(graphExample3.getNodes(), graph2.getNodes());
 		assertEquals(graphExample3.getEdges(), graph2.getEdges());
 		assertEquals(graphExample3.getCosts(), graph2.getCosts());
-
+		
+		Node treeTest = graph2.getNearestNode(10, 10);
+		assertEquals(new Long(0),treeTest.getId());
+	
 		Node node = graphExample3.getNode(0);
 		assertEquals(0, (long)graph2.getNodeId(node.getLatitude(), node.getLongitude()));
 		assertEquals(node.getLatitude(), graph2.getNode(0).getLatitude(),0);

@@ -188,6 +188,12 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 		
 		createNodeIndex();
 		findBBox();
+		
+		for(int i = 0; i<this.getNumberOfNodes();i++){
+			com.github.davidmoten.rtree.geometry.Point p = Geometries.point(this.getNode(i).getLatitude(), this.getNode(i).getLongitude());
+			this.setRTree(this.getRTree().add(i, p));
+		}
+		
 		log.info("nodes: {}", this.getNumberOfNodes());
 		log.info("edges: {}", this.getNumberOfEdges());
 	}
@@ -1459,8 +1465,20 @@ public class GraphImpl implements Graph, GraphBounds, Serializable {
 			list = this.tree.nearest(query, maxDistance, maxCount).toList().toBlocking().single();
 		}
 		
+		Object value = list.get(0).value();
+		
 		Node nearestNode = new NodeImpl();
-		nearestNode = this.getNode((Long) list.get(0).value());
+		
+		if(value instanceof Integer){
+			int id = (int)value;
+			nearestNode = this.getNode((long)id);
+		}
+		else if(value instanceof Long){
+			long id = (long)value;
+			nearestNode = this.getNode(id);
+		}
+		
+		
 		
 		return nearestNode;
 	}
