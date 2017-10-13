@@ -1,107 +1,48 @@
 package org.graphast.model;
 
-public interface Node {
-	
-	/**
-	 * Blocksize length of one node on IntBigArrayBigList.  
-	 */
-	public static final short NODE_BLOCKSIZE = 11;
-	
-	/**
-	 * This method validates an node if latitude and longitude are different from 0 ,
-	 * and if the node has at least one edge connected.
-	 */
-	public abstract void validate();
+import java.util.ArrayList;
 
-	/**
-	 * This method returns the category of this node.
-	 * @return the category
-	 */
-	public abstract int getCategory();
-
-	/**
-	 * this method set a category from a node.
-	 * @param	category a category
-	 */
-	public void setCategory(int category);
+public class Node {
 	
-	/**
-	 * This method returns the externalId of this node.
-	 * @return the externalId
-	 */
-	public abstract long getExternalId();
-
-	/**
-	 * this method set the externalId from a node.
-	 * @param externalId externalId
-	 */
-	public void setExternalId(long externalId);
+	private int id;
 	
-	/**
-	 * This method returns the latitude of this node.
-	 * @return the latitude
-	 */
-	public abstract double getLatitude();
-
-	/**
-	 * this method set the latitude from a node.
-	 * @param latitude latitude
-	 */
-	public void setLatitude(double latitude);
+	private ArrayList<Edge> outEdges = new ArrayList<>();
+	private ArrayList<Edge> inEdges = new ArrayList<>();
 	
-	/**
-	 * This method returns the longitude of this node.
-	 * @return the longitude
-	 */
-	public abstract double getLongitude();
-
-	/**
-	 * this method set the longitude from a node.
-	 * @param longitude longitude
-	 */
-	public void setLongitude(double longitude);
+	public Node(int id) {
+		this.id = id;
+	}
 	
-	/**
-	 * This method returns the id of this node.
-	 * @return the id
-	 */
-	public abstract Long getId();
+	public void addEdge(Edge e) {
+		if (e.isBidirectional()) {
+			inEdges.add(e);
+			outEdges.add(e);
+		}
+		else if (e.getFromNode() == this) {
+			outEdges.add(e);
+		}
+		else if (e.getToNode() == this) {
+			inEdges.add(e);
+		}
+	}
 	
-	/**
-	 * this method set the id from a node.
-	 * @param id id
-	 */
-	public void setId(Long id);
+	public int getId() {
+		return id;
+	}
 	
-	/**
-	 * This method returns the label of this node.
-	 * @return the label
-	 */
-	public abstract String getLabel();
+	public ArrayList<Edge> getOutEdges() {
+		return outEdges;
+	}
 	
-	/**
-	 * this method set the label from a node.
-	 * @param label label
-	 */
-	public void setLabel(String label);
+	public ArrayList<Edge> getInEdges() {
+		return inEdges;
+	}
 	
-	/**
-	 * This method returns the costIndex of this node.
-	 * @return costIndex
-	 */
-	public long getCostsIndex();
-
-	/**
-	 * toString method
-	 * @return String object
-	 */
-	public abstract String toString();
-	
-	public abstract int[] getCosts();
-	
-	public abstract void setCosts(int[] costs);
-	
-	public boolean equals(Node n);
-
+	public ArrayList<Node> getNeighborhood() {
+		ArrayList<Node> neighbors = new ArrayList<>();
+		for (Edge e : this.getOutEdges())
+			neighbors.add((e.getFromNode() == this) ? e.getToNode() : e.getFromNode());
+		return neighbors;
+	}
 
 }
