@@ -1,29 +1,24 @@
 package org.graphast.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
+
+import org.graphast.storage.DefaultGraphStorage;
+import org.graphast.storage.GraphStorage;
 
 public class Graph {
 	
-	private Integer nextId = 0;
-
-	private HashMap<Integer, Integer> idMapping = new HashMap<>();
-	private ArrayList<Node> nodes = new ArrayList<>();
-	private ArrayList<Edge> edges = new ArrayList<>();
+	private GraphStorage storage;
 	
 	public Graph() {
-		
+		this(new DefaultGraphStorage());
 	}
 	
-	private Integer getNextId() {
-		nextId++;
-		return nextId - 1;
+	public Graph(GraphStorage storage) {
+		this.storage = storage;
 	}
 	
 	public void addNode(Node n) {
-		idMapping.put(n.getId(), getNextId());
-		nodes.add(n);
+		storage.addNode(n);
 	}
 	
 	public void addNodes(Node ...nodes) {
@@ -32,9 +27,7 @@ public class Graph {
 	}
 	
 	public void addEdge(Edge e) {
-		edges.add(e);
-		e.getFromNode().addEdge(e);
-		e.getToNode().addEdge(e);
+		storage.addEdge(e);
 	}
 	
 	public void addEdges(Edge ...edges) {
@@ -43,15 +36,40 @@ public class Graph {
 	}
 	
 	public Node getNode(int id) {
-		return nodes.get(idMapping.get(id));
+		return storage.getNode(id);
 	}
 	
 	public Iterator<Node> nodeIterator() {
-		return nodes.iterator();
+		return storage.nodeIterator();
 	}
 	
 	public Iterator<Edge> edgeIterator() {
-		return edges.iterator();
+		return storage.edgeIterator();
+	}
+	
+	public Iterator<Edge> getOutEdges(Node n) {
+		return storage.getOutEdges(n);
+	}
+	
+	public Iterator<Edge> getInEdges(Node n) {
+		return storage.getInEdges(n);
+	}
+	
+	public Iterator<Node> getNeighborhood(final Node n) {
+		return new Iterator<Node>() {
+			Iterator<Edge> iter = storage.getOutEdges(n);
+
+			@Override
+			public boolean hasNext() {
+				return iter.hasNext();
+			}
+
+			@Override
+			public Node next() {
+				Edge e = iter.next();
+				return (e.getFromNode().equals(n)) ? e.getToNode() : e.getFromNode();
+			}
+		};
 	}
 	
 }
