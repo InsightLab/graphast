@@ -7,7 +7,7 @@ import java.util.Iterator;
 import org.graphast.model.Edge;
 import org.graphast.model.Node;
 
-public class DefaultGraphStorage implements GraphStorage {
+public class DefaultGraphStructure implements GraphStructure {
 	
 	private Integer nextId = 0;
 	

@@ -2,18 +2,18 @@ package org.graphast.model;
 
 import java.util.Iterator;
 
-import org.graphast.storage.DefaultGraphStorage;
-import org.graphast.storage.GraphStorage;
+import org.graphast.storage.DefaultGraphStructure;
+import org.graphast.storage.GraphStructure;
 
 public class Graph {
 	
-	private GraphStorage storage;
+	private GraphStructure storage;
 	
 	public Graph() {
-		this(new DefaultGraphStorage());
+		this(new DefaultGraphStructure());
 	}
 	
-	public Graph(GraphStorage storage) {
+	public Graph(GraphStructure storage) {
 		this.storage = storage;
 	}
 	

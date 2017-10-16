@@ -5,7 +5,7 @@ import java.util.Iterator;
 import org.graphast.model.Edge;
 import org.graphast.model.Node;
 
-public interface GraphStorage {
+public interface GraphStructure {
 	
 	public int getNumberOfNodes();
 	public int getNumberOfEdges();
