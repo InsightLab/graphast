@@ -53,5 +53,9 @@ public class Edge {
 	public boolean isBidirectional() {
 		return bidirectional;
 	}
+	
+	public Node getAdjacent(Node n) {
+		return (n.equals(toNode))? fromNode : toNode;
+	}
 
 }

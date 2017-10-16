@@ -17,6 +17,14 @@ public class Graph {
 		this.storage = storage;
 	}
 	
+	public int getNumberOfNodes() {
+		return storage.getNumberOfNodes();
+	}
+	
+	public int getNumberOfEdges() {
+		return storage.getNumberOfEdges();
+	}
+	
 	public void addNode(Node n) {
 		storage.addNode(n);
 	}
