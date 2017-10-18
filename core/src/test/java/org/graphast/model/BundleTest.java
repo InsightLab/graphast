@@ -18,6 +18,7 @@ public class BundleTest {
 		b.putString("string", "Testãooooo");
 		b.putBoolean("bool", true);
 		b.putIntArray("arr", new int[] {3, 2, 1, 6, 5, 4, 9});
+		b.putDoubleArray("doubleArr", new double[] {1.2, 3.4, 5.6});
 	}
 
 	@Test
@@ -54,6 +55,12 @@ public class BundleTest {
 	public void testGetIntArray() {
 		assertArrayEquals("Get int array", new int[] {3, 2, 1, 6, 5, 4, 9}, b.getIntArray("arr"));
 		assertEquals("get int array not found", null, b.getIntArray("x"));
+	}
+	
+	@Test
+	public void testGetDoubleArray() {
+		assertArrayEquals("Get double array", new double[] {1.2, 3.4, 5.6}, b.getDoubleArray("doubleArr"), 0);
+		assertEquals("get double array not found", null, b.getDoubleArray("x"));
 	}
 
 }

@@ -10,6 +10,7 @@ public class Bundle {
 	private HashMap<String, Boolean> bools = null;
 	private HashMap<String, String> strings = null;
 	private HashMap<String, int[]> intArrays = null;
+	private HashMap<String, double[]> doubleArrays = null;
 	
 	public void putInt(String id, int value) {
 		if (ints == null) ints = new HashMap<>();
@@ -41,6 +42,11 @@ public class Bundle {
 		intArrays.put(id, value);
 	}
 	
+	public void putDoubleArray(String id, double[] value) {
+		if (doubleArrays == null) doubleArrays = new HashMap<>();
+		doubleArrays.put(id, value);
+	}
+	
 	public int getInt(String id, int other) {
 		return ints == null || !ints.containsKey(id) ? other : ints.get(id);
 	}
@@ -63,6 +69,10 @@ public class Bundle {
 	
 	public int[] getIntArray(String id) {
 		return intArrays == null || !intArrays.containsKey(id) ? null : intArrays.get(id);
+	}
+	
+	public double[] getDoubleArray(String id) {
+		return doubleArrays == null || !doubleArrays.containsKey(id) ? null : doubleArrays.get(id);
 	}
 
 }
