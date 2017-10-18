@@ -55,7 +55,7 @@ public class Edge {
 	}
 	
 	public Node getAdjacent(Node n) {
-		return (n.equals(toNode))? fromNode : toNode;
+		return n.equals(toNode) ? fromNode : toNode;
 	}
 
 }

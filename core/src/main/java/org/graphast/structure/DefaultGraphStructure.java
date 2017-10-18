@@ -1,4 +1,4 @@
-package org.graphast.storage;
+package org.graphast.structure;
 
 import java.util.ArrayList;
 import java.util.HashMap;

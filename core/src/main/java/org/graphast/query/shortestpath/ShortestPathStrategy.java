@@ -5,7 +5,7 @@ import org.graphast.query.utils.DistanceVector;
 
 public interface ShortestPathStrategy {
 	
-	public DistanceVector run(Node source);
-	public DistanceVector run(Node source, Node target);
+	DistanceVector run(Node source);
+	DistanceVector run(Node source, Node target);
 
 }

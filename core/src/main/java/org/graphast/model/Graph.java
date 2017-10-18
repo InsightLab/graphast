@@ -2,8 +2,8 @@ package org.graphast.model;
 
 import java.util.Iterator;
 
-import org.graphast.storage.DefaultGraphStructure;
-import org.graphast.storage.GraphStructure;
+import org.graphast.structure.DefaultGraphStructure;
+import org.graphast.structure.GraphStructure;
 
 public class Graph {
 	
@@ -75,7 +75,7 @@ public class Graph {
 			@Override
 			public Node next() {
 				Edge e = iter.next();
-				return (e.getFromNode().equals(n)) ? e.getToNode() : e.getFromNode();
+				return e.getFromNode().equals(n) ? e.getToNode() : e.getFromNode();
 			}
 		};
 	}

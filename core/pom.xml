@@ -19,8 +19,8 @@
 
 	<scm>
 		<connection>scm:git:git://github.com/ARiDa/graphast.git</connection>
-		<url>https://github.com/ARiDa/graphast.git</url>
-		<developerConnection>https://github.com/ARiDa/graphast.git</developerConnection>
+		<url>scm:git:git://github.com/ARiDa/graphast.git</url>
+		<developerConnection>scm:git:git://github.com/ARiDa/graphast.git</developerConnection>
 	</scm>
 
 	<developers>
@@ -61,5 +61,15 @@
 		
 
 	</dependencies>
+	
+	<reporting>
+	    <plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<version>3.8</version>
+			</plugin>
+	    </plugins>
+	</reporting>
 
 </project>

@@ -17,5 +17,10 @@ public class Node {
 		if (!(obj instanceof Node)) return false;
 		return ((Node)obj).getId() == id;
  	}
+	
+	@Override
+	public int hashCode() {
+		return id;
+	}
 
 }
