@@ -1,6 +1,6 @@
 package org.graphast.model;
 
-public class Edge {
+public class Edge extends GraphObject {
 	
 	private Node fromNode;
 	private Node toNode;
@@ -12,7 +12,9 @@ public class Edge {
 	}
 	
 	public Edge(Node from, Node to, double cost) {
-		this(from, to, cost, false);
+		this.fromNode = from;
+		this.toNode= to;
+		this.cost = cost;
 	}
 	
 	public Edge(Node from, Node to, boolean bidirectional) {
@@ -20,9 +22,7 @@ public class Edge {
 	}
 	
 	public Edge(Node from, Node to, double cost, boolean bidirectional) {
-		this.fromNode = from;
-		this.toNode= to;
-		this.cost = cost;
+		this(from, to, cost);
 		this.bidirectional = bidirectional;
 	}
 	

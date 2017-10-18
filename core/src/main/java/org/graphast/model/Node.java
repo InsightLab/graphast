@@ -1,6 +1,6 @@
 package org.graphast.model;
 
-public class Node {
+public class Node extends GraphObject {
 	
 	private int id;
 	

@@ -5,7 +5,7 @@ import java.util.Iterator;
 import org.graphast.structure.DefaultGraphStructure;
 import org.graphast.structure.GraphStructure;
 
-public class Graph {
+public class Graph extends GraphObject {
 	
 	private GraphStructure storage;
 	
