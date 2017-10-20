@@ -7,14 +7,14 @@ import org.graphast.structure.GraphStructure;
 
 public class Graph extends GraphObject {
 	
-	private GraphStructure storage;
+	private GraphStructure structure;
 	
 	public Graph() {
 		this(new DefaultGraphStructure());
 	}
 	
-	public Graph(GraphStructure storage) {
-		this.storage = storage;
+	public Graph(GraphStructure structure) {
+		this.structure = structure;
 	}
 	
 	public int getNumberOfNodes() {
