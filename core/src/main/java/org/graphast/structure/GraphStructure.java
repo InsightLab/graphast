@@ -13,11 +13,10 @@ public interface GraphStructure {
 	void addNode(Node n);
 	void addEdge(Edge e);
 	
-	Node getNode(final int id);
 	Iterator<Node> nodeIterator();
 	Iterator<Edge> edgeIterator();
 	
-	Iterator<Edge> getOutEdges(final Node n);
-	Iterator<Edge> getInEdges(final Node n);
+	Iterator<Edge> getOutEdges(final int id);
+	Iterator<Edge> getInEdges(final int id);
 	
 }

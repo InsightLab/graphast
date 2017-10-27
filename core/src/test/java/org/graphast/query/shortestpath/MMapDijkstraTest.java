@@ -2,20 +2,30 @@ package org.graphast.query.shortestpath;
 
 import static org.junit.Assert.*;
 
+import java.io.File;
+
 import org.graphast.model.Edge;
 import org.graphast.model.Graph;
 import org.graphast.model.Node;
 import org.graphast.query.utils.DistanceVector;
-import org.junit.Before;
+import org.graphast.structure.MMapGraphStructure;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class DijkstraTest {
+public class MMapDijkstraTest {
 	
-	private Graph g;
+	private static Graph g;
 
-	@Before
-	public void setUp() throws Exception {
-		g = new Graph();
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		File f = new File("dijkstra_graph/");
+		if (f.exists()) {
+			new File("test_graph/nodes.mmap").delete();
+			new File("test_graph/edges.mmap").delete();
+			f.delete();
+		}
+		
+		g = new Graph(new MMapGraphStructure("dijkstra_graph"));
 		Node n0 = new Node(0);
 		Node n1 = new Node(1);
 		Node n2 = new Node(2);

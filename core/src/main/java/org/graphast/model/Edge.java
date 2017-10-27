@@ -2,35 +2,35 @@ package org.graphast.model;
 
 public class Edge extends GraphObject {
 	
-	private Node fromNode;
-	private Node toNode;
+	private int fromNode;
+	private int toNode;
 	private double cost;
 	private boolean bidirectional;
 	
-	public Edge(Node from, Node to) {
+	public Edge(int from, int to) {
 		this(from, to, 1);
 	}
 	
-	public Edge(Node from, Node to, double cost) {
+	public Edge(int from, int to, double cost) {
 		this.fromNode = from;
 		this.toNode= to;
 		this.cost = cost;
 	}
 	
-	public Edge(Node from, Node to, boolean bidirectional) {
+	public Edge(int from, int to, boolean bidirectional) {
 		this(from, to, 1, bidirectional);
 	}
 	
-	public Edge(Node from, Node to, double cost, boolean bidirectional) {
+	public Edge(int from, int to, double cost, boolean bidirectional) {
 		this(from, to, cost);
 		this.bidirectional = bidirectional;
 	}
 	
-	public Node getFromNode() {
+	public int getFromNodeId() {
 		return fromNode;
 	}
 	
-	public Node getToNode() {
+	public int getToNodeId() {
 		return toNode;
 	}
 	
@@ -38,11 +38,11 @@ public class Edge extends GraphObject {
 		return cost;
 	}
 	
-	public void setFromNode(Node fromNode) {
+	public void setFromNodeId(int fromNode) {
 		this.fromNode = fromNode;
 	}
 	
-	public void setToNode(Node toNode) {
+	public void setToNodeId(int toNode) {
 		this.toNode = toNode;
 	}
 	
@@ -54,8 +54,26 @@ public class Edge extends GraphObject {
 		return bidirectional;
 	}
 	
-	public Node getAdjacent(Node n) {
-		return n.equals(toNode) ? fromNode : toNode;
+	public int getAdjacent(int id) {
+		return id == toNode ? fromNode : toNode;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Edge)) return false;
+		Edge other = (Edge) obj;
+		return (fromNode + "|" + toNode + "|" + cost)
+				.equals(other.getFromNodeId()+"|"+other.getToNodeId()+"|"+other.getCost());
+	}
+	
+	@Override
+	public int hashCode() {
+		return (fromNode + "|" + toNode + "|" + cost).hashCode();
+	}
+	
+	@Override
+	public String toString() {
+		return fromNode + "|" + toNode + "|" + cost;
 	}
 
 }

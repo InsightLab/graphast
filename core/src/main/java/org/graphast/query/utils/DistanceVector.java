@@ -3,50 +3,48 @@ package org.graphast.query.utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.graphast.model.Node;
-
 public class DistanceVector {
-	private HashMap<Node, DistanceElement> vector;
+	private HashMap<Integer, DistanceElement> vector;
 	
-	public DistanceVector(Node source) {
+	public DistanceVector(int sourceId) {
 		vector = new HashMap<>();
-		DistanceElement first = new DistanceElement(source);
+		DistanceElement first = new DistanceElement(sourceId);
 		first.changeDistance(0);
-		vector.put(source, first);
+		vector.put(sourceId, first);
 	}
 
-	public DistanceElement getElement(Node n) {
-		if (!vector.containsKey(n))
-			vector.put(n, new DistanceElement(n));
-		return vector.get(n);
+	public DistanceElement getElement(int id) {
+		if (!vector.containsKey(id))
+			vector.put(id, new DistanceElement(id));
+		return vector.get(id);
 	}
 	
 	public void print() {
-		for (Node n : vector.keySet()) {
+		for (Integer n : vector.keySet()) {
 			DistanceElement element = vector.get(n);
-			System.out.println("Distance to node " + n + ": " + element.getDistance() + " | Previous node: " + element.getParent());
+			System.out.println("Distance to node " + n + ": " + element.getDistance() + " | Previous node: " + element.getParentId());
 		}
 	}
 	
-	public void print(Node source, Node target) {
-		if (getElement(target).getParent() == null) {
+	public void print(int sourceId, int targetId) {
+		if (getElement(targetId).getParentId() == -1) {
 			System.out.println("No path between them");
 			return;
 		}
-		ArrayList<Node> l = new ArrayList<>();
-		l.add(target);
-		Node parent = target;
-		while ((parent = vector.get(parent).getParent()) != null) {
-			l.add(0, parent);
-			if (parent.equals(source)) break;
+		ArrayList<Integer> l = new ArrayList<>();
+		l.add(targetId);
+		int parentId = targetId;
+		while ((parentId = vector.get(parentId).getParentId()) != -1) {
+			l.add(0, parentId);
+			if (parentId == sourceId) break;
 		}
 		
-		for (Node n : l)
-			System.out.print(" -> " + n);
+		for (Integer id : l)
+			System.out.print(" -> " + id);
 		System.out.println();
 	}
 	
-	public double getDistance(Node target) {
-		return vector.get(target).getDistance();
+	public double getDistance(int targetId) {
+		return vector.get(targetId).getDistance();
 	}
 }

@@ -1,12 +1,18 @@
 package org.graphast.model;
 
+import java.util.HashMap;
+
 public abstract class GraphObject {
 	
-	private Bundle b;
+private HashMap<String, Object> data = null;
 	
-	public Bundle getBundle() {
-		if (b == null) b = new Bundle();
-		return b;
+	public void putData(String key, Object value) {
+		if(data == null) data = new HashMap<>();
+		data.put(key, value);
+	}
+	
+	public Object getData(String key) {
+		return data.get(key);
 	}
 
 }

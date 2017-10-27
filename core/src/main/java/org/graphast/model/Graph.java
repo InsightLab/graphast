@@ -17,16 +17,16 @@ public class Graph extends GraphObject {
 		this.structure = structure;
 	}
 	
-	public int getNumberOfNodes() {
-		return storage.getNumberOfNodes();
+	public long getNumberOfNodes() {
+		return structure.getNumberOfNodes();
 	}
 	
-	public int getNumberOfEdges() {
-		return storage.getNumberOfEdges();
+	public long getNumberOfEdges() {
+		return structure.getNumberOfEdges();
 	}
 	
 	public void addNode(Node n) {
-		storage.addNode(n);
+		structure.addNode(n);
 	}
 	
 	public void addNodes(Node ...nodes) {
@@ -35,7 +35,7 @@ public class Graph extends GraphObject {
 	}
 	
 	public void addEdge(Edge e) {
-		storage.addEdge(e);
+		structure.addEdge(e);
 	}
 	
 	public void addEdges(Edge ...edges) {
@@ -43,29 +43,25 @@ public class Graph extends GraphObject {
 			this.addEdge(e);
 	}
 	
-	public Node getNode(int id) {
-		return storage.getNode(id);
-	}
-	
 	public Iterator<Node> nodeIterator() {
-		return storage.nodeIterator();
+		return structure.nodeIterator();
 	}
 	
 	public Iterator<Edge> edgeIterator() {
-		return storage.edgeIterator();
+		return structure.edgeIterator();
 	}
 	
-	public Iterator<Edge> getOutEdges(Node n) {
-		return storage.getOutEdges(n);
+	public Iterator<Edge> getOutEdges(int id) {
+		return structure.getOutEdges(id);
 	}
 	
-	public Iterator<Edge> getInEdges(Node n) {
-		return storage.getInEdges(n);
+	public Iterator<Edge> getInEdges(int id) {
+		return structure.getInEdges(id);
 	}
 	
-	public Iterator<Node> getNeighborhood(final Node n) {
-		return new Iterator<Node>() {
-			Iterator<Edge> iter = storage.getOutEdges(n);
+	public Iterator<Integer> getNeighborhood(final int id) {
+		return new Iterator<Integer>() {
+			Iterator<Edge> iter = structure.getOutEdges(id);
 
 			@Override
 			public boolean hasNext() {
@@ -73,9 +69,9 @@ public class Graph extends GraphObject {
 			}
 
 			@Override
-			public Node next() {
+			public Integer next() {
 				Edge e = iter.next();
-				return e.getFromNode().equals(n) ? e.getToNode() : e.getFromNode();
+				return e.getFromNodeId() == id ? e.getToNodeId() : e.getFromNodeId();
 			}
 		};
 	}

@@ -59,6 +59,11 @@
 		    <version>23.0</version>
 		</dependency>
 		
+		<dependency>
+			<groupId>arida</groupId>
+			<artifactId>huge-data-access</artifactId>
+			<version>0.0.1</version>
+		</dependency>
 
 	</dependencies>
 	

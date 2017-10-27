@@ -1,39 +1,37 @@
 package org.graphast.query.utils;
 
-import org.graphast.model.Node;
-
 public class DistanceElement implements Comparable<DistanceElement>{
 	
-	private Node node;
-	private Node parent;
+	private Integer nodeId;
+	private Integer parentId;
 	private double distance;
 	private boolean visited;
 	
-	public DistanceElement(Node node) {
-		this.node = node;
+	public DistanceElement(Integer nodeId) {
+		this.nodeId = nodeId;
 		this.distance = Double.MAX_VALUE;
-		parent = null;
+		parentId = -1;
 		visited = false;
 	}
 	
-	public void changePrevious(Node newParent) {
-		parent = newParent;
+	public void changePrevious(int newParentId) {
+		parentId = newParentId;
 	}
 	
 	public void changeDistance(double newDistance) {
 		distance = newDistance;
 	}
 	
-	public Node getNode() {
-		return this.node;
+	public int getNodeId() {
+		return this.nodeId;
 	}
 	
 	public double getDistance() {
 		return distance;
 	}
 	
-	public Node getParent() {
-		return parent;
+	public int getParentId() {
+		return parentId;
 	}
 	
 	public boolean isVisited() {

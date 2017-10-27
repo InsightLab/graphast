@@ -17,10 +17,6 @@ public class DefaultGraphStructure implements GraphStructure {
 	private ArrayList<ArrayList<Edge>> outEdges = new ArrayList<>();
 	private ArrayList<ArrayList<Edge>> inEdges = new ArrayList<>();
 	
-	private Integer getNextId() {
-		return nextId++;
-	}
-	
 	@Override
 	public int getNumberOfNodes() {
 		return nodes.size();
@@ -32,30 +28,30 @@ public class DefaultGraphStructure implements GraphStructure {
 	}
 	
 	public void addNode(Node n) {
-		idMapping.put(n.getId(), getNextId());
+		idMapping.put(n.getId(), nextId++);
 		nodes.add(n);
 		outEdges.add(new ArrayList<Edge>());
 		inEdges.add(new ArrayList<Edge>());
 	}
 	
-	private void addEdgeInNode(Edge e, Node n) {
-		int nodeId = idMapping.get(n.getId());
+	private void addAdjacency(int id, Edge e) {
+		int nodeId = idMapping.get(id);
 		if (e.isBidirectional()) {
 			inEdges.get(nodeId).add(e);
 			outEdges.get(nodeId).add(e);
 		}
-		else if (e.getFromNode().getId() == n.getId()) {
+		else if (e.getFromNodeId() == id) {
 			outEdges.get(nodeId).add(e);
 		}
-		else if (e.getToNode().getId() == n.getId()) {
+		else if (e.getToNodeId() == id) {
 			inEdges.get(nodeId).add(e);
 		}
 	}
 	
 	public void addEdge(Edge e) {
 		edges.add(e);
-		addEdgeInNode(e, e.getFromNode());
-		addEdgeInNode(e, e.getToNode());
+		addAdjacency(e.getFromNodeId(), e);
+		addAdjacency(e.getToNodeId(), e);
 	}
 	
 	public Node getNode(final int id) {
@@ -70,12 +66,12 @@ public class DefaultGraphStructure implements GraphStructure {
 		return edges.iterator();
 	}
 	
-	public Iterator<Edge> getOutEdges(final Node n) {
-		return outEdges.get(idMapping.get(n.getId())).iterator();
+	public Iterator<Edge> getOutEdges(final int id) {
+		return outEdges.get(idMapping.get(id)).iterator();
 	}
 	
-	public Iterator<Edge> getInEdges(final Node n) {
-		return inEdges.get(idMapping.get(n.getId())).iterator();
+	public Iterator<Edge> getInEdges(final int id) {
+		return inEdges.get(idMapping.get(id)).iterator();
 	}
 
 }
