@@ -3,12 +3,12 @@ package org.graphast.model;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.junit.Assert.*;
 
-import java.io.File;
 import java.util.Arrays;
 
 import org.graphast.model.Edge;
 import org.graphast.model.Graph;
 import org.graphast.model.Node;
+import org.graphast.storage.StorageUtils;
 import org.graphast.structure.MMapGraphStructure;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -23,14 +23,11 @@ public class MMapGraphTest {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() {
-		File f = new File("test_graph/");
-		if (f.exists()) {
-			new File("test_graph/nodes.mmap").delete();
-			new File("test_graph/edges.mmap").delete();
-			f.delete();
-		}
+		String graphName = "test_graph";
 		
-		g = new Graph(new MMapGraphStructure("test_graph"));
+		StorageUtils.deleteGraph(graphName);
+		
+		g = new Graph(new MMapGraphStructure(graphName));
 		n0 = new Node(0);
 		n1 = new Node(1);
 		n2 = new Node(2);

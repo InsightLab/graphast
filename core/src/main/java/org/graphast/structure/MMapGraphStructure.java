@@ -14,8 +14,8 @@ import hugedataaccess.MMapDataAccess;
 
 public class MMapGraphStructure implements GraphStructure {
 	
-	private static final int NODE_SIZE = 4*3;
-	private static final int EDGE_SIZE = 2*4 + 8 + 2*4;
+	private static final int NODE_SIZE = 4*4;
+	private static final int EDGE_SIZE = 4*8;
 	
 	private int nodePos = 0;
 	private int edgePos = 0;
@@ -68,7 +68,7 @@ public class MMapGraphStructure implements GraphStructure {
 
 	@Override
 	public void addNode(Node n) {
-		if (nodeAccess.getCapacity() < (nodePos+1)*NODE_SIZE)
+		if (nodeAccess.getCapacity() < getNodeIndex(nodePos) + NODE_SIZE)
 			nodeAccess.ensureCapacity(nodeAccess.getCapacity() + 1024*1024l);
 		
 		idMapping.put(n.getId(), nodePos);
@@ -92,11 +92,12 @@ public class MMapGraphStructure implements GraphStructure {
 	}
 	
 	private void addDirectionalEdge(Edge e) {
-		if (edgeAccess.getCapacity() < (edgePos+1)*EDGE_SIZE)
+		if (edgeAccess.getCapacity() < getEdgeIndex(edgePos) + EDGE_SIZE)
 			edgeAccess.ensureCapacity(edgeAccess.getCapacity() + 1024*1024l);
 		
 		int fromId = idMapping.get(e.getFromNodeId());
 		int toId = idMapping.get(e.getToNodeId());
+		
 		long fromIndex = getNodeIndex(fromId);
 		long toIndex = getNodeIndex(toId);
 		
@@ -149,9 +150,11 @@ public class MMapGraphStructure implements GraphStructure {
 
 			@Override
 			public Edge next() {
-				int from    = edgeAccess.getInt    ( getEdgeIndex(pos)     );
-				int to      = edgeAccess.getInt    ( getEdgeIndex(pos) + 4 );
-				double cost = edgeAccess.getDouble ( getEdgeIndex(pos) + 8 );
+				long edgeIndex = getEdgeIndex(pos);
+				
+				int from    = edgeAccess.getInt    ( edgeIndex     );
+				int to      = edgeAccess.getInt    ( edgeIndex + 4 );
+				double cost = edgeAccess.getDouble ( edgeIndex + 8 );
 				
 				pos++;
 				
@@ -173,11 +176,13 @@ public class MMapGraphStructure implements GraphStructure {
 
 			@Override
 			public Edge next() {
-				int from    = edgeAccess.getInt    ( getEdgeIndex(pos)     );
-				int to      = edgeAccess.getInt    ( getEdgeIndex(pos) + 4 );
-				double cost = edgeAccess.getDouble ( getEdgeIndex(pos) + 8 );
+				long edgeIndex = getEdgeIndex(pos);
 				
-				pos = edgeAccess.getInt( getEdgeIndex(pos) + 16 );
+				int from    = edgeAccess.getInt    ( edgeIndex     );
+				int to      = edgeAccess.getInt    ( edgeIndex + 4 );
+				double cost = edgeAccess.getDouble ( edgeIndex + 8 );
+				
+				pos = edgeAccess.getInt( edgeIndex + 16 );
 				
 				return new Edge(getExternalIdByInternalId(from), getExternalIdByInternalId(to), cost);
 			}
@@ -197,11 +202,13 @@ public class MMapGraphStructure implements GraphStructure {
 
 			@Override
 			public Edge next() {
-				int from    = edgeAccess.getInt    ( getEdgeIndex(pos)     );
-				int to      = edgeAccess.getInt    ( getEdgeIndex(pos) + 4 );
-				double cost = edgeAccess.getDouble ( getEdgeIndex(pos) + 8 );
+				long edgeIndex = getEdgeIndex(pos);
 				
-				pos = edgeAccess.getInt( getEdgeIndex(pos) + 20 );
+				int from    = edgeAccess.getInt    ( edgeIndex     );
+				int to      = edgeAccess.getInt    ( edgeIndex + 4 );
+				double cost = edgeAccess.getDouble ( edgeIndex + 8 );
+				
+				pos = edgeAccess.getInt( edgeIndex + 20 );
 				
 				return new Edge(getExternalIdByInternalId(from), getExternalIdByInternalId(to), cost);
 			}
