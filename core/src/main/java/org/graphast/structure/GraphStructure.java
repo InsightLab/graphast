@@ -16,7 +16,7 @@ public interface GraphStructure {
 	Iterator<Node> nodeIterator();
 	Iterator<Edge> edgeIterator();
 	
-	Iterator<Edge> getOutEdges(final int id);
-	Iterator<Edge> getInEdges(final int id);
+	Iterator<Edge> getOutEdges(final long id);
+	Iterator<Edge> getInEdges(final long id);
 	
 }

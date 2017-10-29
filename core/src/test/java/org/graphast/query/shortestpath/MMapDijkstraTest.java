@@ -19,7 +19,7 @@ public class MMapDijkstraTest {
 	public static void setUpBeforeClass() throws Exception {
 		String graphName = "dijkstra_graph";
 		
-		StorageUtils.deleteGraph(graphName);
+		StorageUtils.deleteMMapGraph(graphName);
 		
 		g = new Graph(new MMapGraphStructure(graphName));
 		Node n0 = new Node(0);

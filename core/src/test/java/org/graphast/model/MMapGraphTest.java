@@ -25,7 +25,7 @@ public class MMapGraphTest {
 	public static void setUpBeforeClass() {
 		String graphName = "test_graph";
 		
-		StorageUtils.deleteGraph(graphName);
+		StorageUtils.deleteMMapGraph(graphName);
 		
 		g = new Graph(new MMapGraphStructure(graphName));
 		n0 = new Node(0);
@@ -82,11 +82,11 @@ public class MMapGraphTest {
 
 	@Test
 	public void testGetNeighborhood() {
-		assertThat("Neighborhood Test n0", Arrays.asList(1, 3), containsInAnyOrder(Iterators.toArray(g.getNeighborhood(0), Integer.class)));
-		assertThat("Neighborhood Test n1", Arrays.asList(4, 3), containsInAnyOrder(Iterators.toArray(g.getNeighborhood(1), Integer.class)));
-		assertThat("Neighborhood Test n2", Arrays.asList(4, 3), containsInAnyOrder(Iterators.toArray(g.getNeighborhood(2), Integer.class)));
-		assertThat("Neighborhood Test n3", Arrays.asList(1, 0), containsInAnyOrder(Iterators.toArray(g.getNeighborhood(3), Integer.class)));
-		assertThat("Neighborhood Test n4", Arrays.asList(1, 3), containsInAnyOrder(Iterators.toArray(g.getNeighborhood(4), Integer.class)));
+		assertThat("Neighborhood Test n0", Arrays.asList(1l, 3l), containsInAnyOrder(Iterators.toArray(g.getNeighborhood(0), Long.class)));
+		assertThat("Neighborhood Test n1", Arrays.asList(4l, 3l), containsInAnyOrder(Iterators.toArray(g.getNeighborhood(1), Long.class)));
+		assertThat("Neighborhood Test n2", Arrays.asList(4l, 3l), containsInAnyOrder(Iterators.toArray(g.getNeighborhood(2), Long.class)));
+		assertThat("Neighborhood Test n3", Arrays.asList(1l, 0l), containsInAnyOrder(Iterators.toArray(g.getNeighborhood(3), Long.class)));
+		assertThat("Neighborhood Test n4", Arrays.asList(1l, 3l), containsInAnyOrder(Iterators.toArray(g.getNeighborhood(4), Long.class)));
 	}
 	
 	@Test

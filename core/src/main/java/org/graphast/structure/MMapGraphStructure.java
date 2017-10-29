@@ -20,7 +20,7 @@ public class MMapGraphStructure implements GraphStructure {
 	private int nodePos = 0;
 	private int edgePos = 0;
 	
-	private Map<Integer, Integer> idMapping = new HashMap<>();
+	private Map<Long, Integer> idMapping = new HashMap<>();
 	private String path;
 	private String nodesFile = "nodes.mmap";
 	private String edgesFile = "edges.mmap";
@@ -29,7 +29,7 @@ public class MMapGraphStructure implements GraphStructure {
 	private DataAccess edgeAccess;
 	
 	public MMapGraphStructure(String graphName) {
-		this.path = graphName + "/";
+		this.path = "graphs/MMap/" + graphName + "/";
 		File f = new File(this.path);
 		boolean graphExists = f.exists();
 		if (!graphExists) f.mkdirs();
@@ -40,7 +40,7 @@ public class MMapGraphStructure implements GraphStructure {
 				nodePos = getNumberOfNodes();
 				edgePos = getNumberOfEdges();
 				for (int i = 0; i < nodePos; i++) {
-					idMapping.put(nodeAccess.getInt(getNodeIndex(i)), i);
+					idMapping.put(nodeAccess.getLong(getNodeIndex(i)), i);
 				}	
 			}
 		} catch (IOException e) {
@@ -75,9 +75,9 @@ public class MMapGraphStructure implements GraphStructure {
 		
 		long nodeIndex = getNodeIndex(nodePos);
 		
-		nodeAccess.setInt( nodeIndex     , n.getId() );
-		nodeAccess.setInt( nodeIndex + 4 ,    -1     );
-		nodeAccess.setInt( nodeIndex + 8 ,    -1     );
+		nodeAccess.setLong( nodeIndex      , n.getId() );
+		nodeAccess.setInt ( nodeIndex + 8  ,    -1     );
+		nodeAccess.setInt ( nodeIndex + 12 ,    -1     );
 		
 		nodeAccess.setInt( 0 , ++nodePos );
 	}
@@ -106,17 +106,17 @@ public class MMapGraphStructure implements GraphStructure {
 		edgeAccess.setInt    ( edgeIndex      , fromId );
 		edgeAccess.setInt    ( edgeIndex + 4  , toId );
 		edgeAccess.setDouble ( edgeIndex + 8  , e.getCost() );
-		edgeAccess.setInt    ( edgeIndex + 16 , nodeAccess.getInt(fromIndex + 4) );
-		edgeAccess.setInt    ( edgeIndex + 20 , nodeAccess.getInt(toIndex + 8) );
+		edgeAccess.setInt    ( edgeIndex + 16 , nodeAccess.getInt(fromIndex + 8) );
+		edgeAccess.setInt    ( edgeIndex + 20 , nodeAccess.getInt(toIndex + 12) );
 		
-		nodeAccess.setInt    ( fromIndex + 4 , edgePos);
-		nodeAccess.setInt    ( toIndex   + 8 , edgePos);
+		nodeAccess.setInt    ( fromIndex + 8 , edgePos);
+		nodeAccess.setInt    ( toIndex   + 12 , edgePos);
 		
 		edgeAccess.setInt( 0 , ++edgePos );
 	}
 	
-	private int getExternalIdByInternalId(int internalId) {
-		return nodeAccess.getInt( getNodeIndex(internalId) );
+	private long getExternalIdByInternalId(int internalId) {
+		return nodeAccess.getLong( getNodeIndex(internalId) );
 	}
 
 	@Override
@@ -164,10 +164,10 @@ public class MMapGraphStructure implements GraphStructure {
 	}
 
 	@Override
-	public Iterator<Edge> getOutEdges(final int id) {
+	public Iterator<Edge> getOutEdges(final long id) {
 		return new Iterator<Edge>() {
 			
-			int pos = nodeAccess.getInt( getNodeIndex(id) + 4 );
+			int pos = nodeAccess.getInt( getNodeIndex(idMapping.get(id)) + 8 );
 
 			@Override
 			public boolean hasNext() {
@@ -190,10 +190,10 @@ public class MMapGraphStructure implements GraphStructure {
 	}
 
 	@Override
-	public Iterator<Edge> getInEdges(final int id) {
+	public Iterator<Edge> getInEdges(final long id) {
 		return new Iterator<Edge>() {
 			
-			int pos = nodeAccess.getInt( getNodeIndex(id) + 8 );
+			int pos = nodeAccess.getInt( getNodeIndex(idMapping.get(id)) + 12 );
 
 			@Override
 			public boolean hasNext() {
@@ -203,7 +203,7 @@ public class MMapGraphStructure implements GraphStructure {
 			@Override
 			public Edge next() {
 				long edgeIndex = getEdgeIndex(pos);
-				
+
 				int from    = edgeAccess.getInt    ( edgeIndex     );
 				int to      = edgeAccess.getInt    ( edgeIndex + 4 );
 				double cost = edgeAccess.getDouble ( edgeIndex + 8 );

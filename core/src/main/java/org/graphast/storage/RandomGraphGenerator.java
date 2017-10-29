@@ -13,7 +13,7 @@ public class RandomGraphGenerator {
 		
 		String graphName = "random_graph";
 		
-		StorageUtils.deleteGraph(graphName);
+		StorageUtils.deleteMMapGraph(graphName);
 		
 		Graph g = new Graph(new MMapGraphStructure(graphName));
 		Random r = new Random();

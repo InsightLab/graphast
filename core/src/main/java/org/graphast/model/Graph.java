@@ -51,16 +51,16 @@ public class Graph extends GraphObject {
 		return structure.edgeIterator();
 	}
 	
-	public Iterator<Edge> getOutEdges(int id) {
+	public Iterator<Edge> getOutEdges(long id) {
 		return structure.getOutEdges(id);
 	}
 	
-	public Iterator<Edge> getInEdges(int id) {
+	public Iterator<Edge> getInEdges(long id) {
 		return structure.getInEdges(id);
 	}
 	
-	public Iterator<Integer> getNeighborhood(final int id) {
-		return new Iterator<Integer>() {
+	public Iterator<Long> getNeighborhood(final long id) {
+		return new Iterator<Long>() {
 			Iterator<Edge> iter = structure.getOutEdges(id);
 
 			@Override
@@ -69,7 +69,7 @@ public class Graph extends GraphObject {
 			}
 
 			@Override
-			public Integer next() {
+			public Long next() {
 				Edge e = iter.next();
 				return e.getFromNodeId() == id ? e.getToNodeId() : e.getFromNodeId();
 			}

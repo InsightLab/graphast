@@ -2,35 +2,35 @@ package org.graphast.model;
 
 public class Edge extends GraphObject {
 	
-	private int fromNode;
-	private int toNode;
+	private long fromNode;
+	private long toNode;
 	private double cost;
 	private boolean bidirectional;
 	
-	public Edge(int from, int to) {
+	public Edge(long from, long to) {
 		this(from, to, 1);
 	}
 	
-	public Edge(int from, int to, double cost) {
+	public Edge(long from, long to, double cost) {
 		this.fromNode = from;
 		this.toNode= to;
 		this.cost = cost;
 	}
 	
-	public Edge(int from, int to, boolean bidirectional) {
+	public Edge(long from, long to, boolean bidirectional) {
 		this(from, to, 1, bidirectional);
 	}
 	
-	public Edge(int from, int to, double cost, boolean bidirectional) {
+	public Edge(long from, long to, double cost, boolean bidirectional) {
 		this(from, to, cost);
 		this.bidirectional = bidirectional;
 	}
 	
-	public int getFromNodeId() {
+	public long getFromNodeId() {
 		return fromNode;
 	}
 	
-	public int getToNodeId() {
+	public long getToNodeId() {
 		return toNode;
 	}
 	
@@ -38,11 +38,11 @@ public class Edge extends GraphObject {
 		return cost;
 	}
 	
-	public void setFromNodeId(int fromNode) {
+	public void setFromNodeId(long fromNode) {
 		this.fromNode = fromNode;
 	}
 	
-	public void setToNodeId(int toNode) {
+	public void setToNodeId(long toNode) {
 		this.toNode = toNode;
 	}
 	
@@ -54,7 +54,7 @@ public class Edge extends GraphObject {
 		return bidirectional;
 	}
 	
-	public int getAdjacent(int id) {
+	public long getAdjacent(long id) {
 		return id == toNode ? fromNode : toNode;
 	}
 	

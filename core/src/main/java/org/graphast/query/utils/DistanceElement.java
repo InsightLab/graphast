@@ -2,19 +2,19 @@ package org.graphast.query.utils;
 
 public class DistanceElement implements Comparable<DistanceElement>{
 	
-	private Integer nodeId;
-	private Integer parentId;
+	private Long nodeId;
+	private Long parentId;
 	private double distance;
 	private boolean visited;
 	
-	public DistanceElement(Integer nodeId) {
+	public DistanceElement(Long nodeId) {
 		this.nodeId = nodeId;
 		this.distance = Double.MAX_VALUE;
-		parentId = -1;
+		parentId = -1l;
 		visited = false;
 	}
 	
-	public void changePrevious(int newParentId) {
+	public void changePrevious(long newParentId) {
 		parentId = newParentId;
 	}
 	
@@ -22,7 +22,7 @@ public class DistanceElement implements Comparable<DistanceElement>{
 		distance = newDistance;
 	}
 	
-	public int getNodeId() {
+	public long getNodeId() {
 		return this.nodeId;
 	}
 	
@@ -30,7 +30,7 @@ public class DistanceElement implements Comparable<DistanceElement>{
 		return distance;
 	}
 	
-	public int getParentId() {
+	public long getParentId() {
 		return parentId;
 	}
 	

@@ -11,7 +11,7 @@ public class DefaultGraphStructure implements GraphStructure {
 	
 	private Integer nextId = 0;
 	
-	private HashMap<Integer, Integer> idMapping = new HashMap<>();
+	private HashMap<Long, Integer> idMapping = new HashMap<>();
 	private ArrayList<Node> nodes = new ArrayList<>();
 	private ArrayList<Edge> edges = new ArrayList<>();
 	private ArrayList<ArrayList<Edge>> outEdges = new ArrayList<>();
@@ -34,7 +34,7 @@ public class DefaultGraphStructure implements GraphStructure {
 		inEdges.add(new ArrayList<Edge>());
 	}
 	
-	private void addAdjacency(int id, Edge e) {
+	private void addAdjacency(long id, Edge e) {
 		int nodeId = idMapping.get(id);
 		if (e.isBidirectional()) {
 			inEdges.get(nodeId).add(e);
@@ -54,7 +54,7 @@ public class DefaultGraphStructure implements GraphStructure {
 		addAdjacency(e.getToNodeId(), e);
 	}
 	
-	public Node getNode(final int id) {
+	public Node getNode(final long id) {
 		return nodes.get(idMapping.get(id));
 	}
 	
@@ -66,11 +66,11 @@ public class DefaultGraphStructure implements GraphStructure {
 		return edges.iterator();
 	}
 	
-	public Iterator<Edge> getOutEdges(final int id) {
+	public Iterator<Edge> getOutEdges(final long id) {
 		return outEdges.get(idMapping.get(id)).iterator();
 	}
 	
-	public Iterator<Edge> getInEdges(final int id) {
+	public Iterator<Edge> getInEdges(final long id) {
 		return inEdges.get(idMapping.get(id)).iterator();
 	}
 

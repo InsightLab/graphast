@@ -111,11 +111,11 @@ public class DefaultGraphTest {
 	public void testGetNeighborhood() {
 		g.addNodes(n0, n1, n2, n3, n4);
 		g.addEdges(e0, e2, e4, e1, e6, e5, e3);
-		assertThat("Neighborhood Test n0", Arrays.asList(1, 3), containsInAnyOrder(Iterators.toArray(g.getNeighborhood(0), Integer.class)));
-		assertThat("Neighborhood Test n1", Arrays.asList(4, 3), containsInAnyOrder(Iterators.toArray(g.getNeighborhood(1), Integer.class)));
-		assertThat("Neighborhood Test n2", Arrays.asList(4, 3), containsInAnyOrder(Iterators.toArray(g.getNeighborhood(2), Integer.class)));
-		assertThat("Neighborhood Test n3", Arrays.asList(1, 0), containsInAnyOrder(Iterators.toArray(g.getNeighborhood(3), Integer.class)));
-		assertThat("Neighborhood Test n4", Arrays.asList(1, 3), containsInAnyOrder(Iterators.toArray(g.getNeighborhood(4), Integer.class)));
+		assertThat("Neighborhood Test n0", Arrays.asList(1l, 3l), containsInAnyOrder(Iterators.toArray(g.getNeighborhood(0), Long.class)));
+		assertThat("Neighborhood Test n1", Arrays.asList(4l, 3l), containsInAnyOrder(Iterators.toArray(g.getNeighborhood(1), Long.class)));
+		assertThat("Neighborhood Test n2", Arrays.asList(4l, 3l), containsInAnyOrder(Iterators.toArray(g.getNeighborhood(2), Long.class)));
+		assertThat("Neighborhood Test n3", Arrays.asList(1l, 0l), containsInAnyOrder(Iterators.toArray(g.getNeighborhood(3), Long.class)));
+		assertThat("Neighborhood Test n4", Arrays.asList(1l, 3l), containsInAnyOrder(Iterators.toArray(g.getNeighborhood(4), Long.class)));
 	}
 
 }

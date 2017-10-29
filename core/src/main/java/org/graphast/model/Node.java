@@ -2,13 +2,13 @@ package org.graphast.model;
 
 public class Node extends GraphObject {
 	
-	private int id;
+	private long id;
 	
-	public Node(int id) {
+	public Node(long id) {
 		this.id = id;
 	}
 	
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 	
@@ -20,7 +20,7 @@ public class Node extends GraphObject {
 	
 	@Override
 	public int hashCode() {
-		return id;
+		return Long.valueOf(id).hashCode();
 	}
 
 }

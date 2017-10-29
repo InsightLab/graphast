@@ -18,12 +18,12 @@ public class DijkstraStrategy implements ShortestPathStrategy {
 	}
 
 	@Override
-	public DistanceVector run(int sourceId) {
+	public DistanceVector run(long sourceId) {
 		return this.run(sourceId, -1);
 	}
 
 	@Override
-	public DistanceVector run(int sourceId, int targetId) {
+	public DistanceVector run(long sourceId, long targetId) {
 		
 		DistanceVector vector = new DistanceVector(sourceId);
 		Queue<DistanceElement> toVisit = new PriorityQueue<>();

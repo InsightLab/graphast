@@ -4,12 +4,13 @@ import java.io.File;
 
 public class StorageUtils {
 	
-	public static boolean deleteGraph(String graphName) {
-		File f = new File(graphName + "/");
+	public static boolean deleteMMapGraph(String graphName) {
+		String dir = "graphs/MMap/" + graphName + "/";
+		File f = new File(dir);
 		boolean ok = true;
 		if (f.exists()) {
-			ok = new File(graphName + "/nodes.mmap").delete();
-			ok = new File(graphName + "/edges.mmap").delete() && ok;
+			ok = new File(dir + "nodes.mmap").delete();
+			ok = new File(dir + "edges.mmap").delete() && ok;
 			ok = f.delete() && ok;
 		}
 		return ok;
