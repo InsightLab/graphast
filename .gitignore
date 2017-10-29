@@ -17,4 +17,4 @@ null
 *.aux
 *.synctex*
 bin
-graphs/MMap
+MMap
