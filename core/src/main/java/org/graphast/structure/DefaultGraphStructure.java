@@ -18,12 +18,12 @@ public class DefaultGraphStructure implements GraphStructure {
 	private ArrayList<ArrayList<Edge>> inEdges = new ArrayList<>();
 	
 	@Override
-	public int getNumberOfNodes() {
+	public long getNumberOfNodes() {
 		return nodes.size();
 	}
 	
 	@Override
-	public int getNumberOfEdges() {
+	public long getNumberOfEdges() {
 		return edges.size();
 	}
 	

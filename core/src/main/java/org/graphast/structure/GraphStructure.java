@@ -7,8 +7,8 @@ import org.graphast.model.Node;
 
 public interface GraphStructure {
 	
-	int getNumberOfNodes();
-	int getNumberOfEdges();
+	long getNumberOfNodes();
+	long getNumberOfEdges();
 
 	void addNode(Node n);
 	void addEdge(Edge e);

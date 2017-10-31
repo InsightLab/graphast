@@ -18,6 +18,7 @@ public class OSMGraphStorageTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		StorageUtils.deleteMMapGraph("graphs/MMap/monaco");
 		storage = GraphStorageFactory.getOSMGraphStorage();
 		g = storage.load("graphs/OSM/monaco-latest.osm.pbf", new MMapGraphStructure("graphs/MMap/monaco"));
 	}
