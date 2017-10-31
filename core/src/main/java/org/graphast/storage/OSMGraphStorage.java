@@ -34,8 +34,8 @@ public class OSMGraphStorage implements GraphStorage {
 	private OSMGraphStorage() {}
 
 	@Override
-	public Graph loadGraph(String graphName, GraphStructure structure) {
-		File file = new File("graphs/OSM/" + graphName); // the input file
+	public Graph load(String path, GraphStructure structure) {
+		File file = new File(path); // the input file
 		
 		Graph g = new Graph(structure);
 
@@ -79,7 +79,7 @@ public class OSMGraphStorage implements GraphStorage {
 	}
 
 	@Override
-	public void saveGraph(String graphName, Graph g) {
+	public void save(String path, Graph g) {
 		// TODO Auto-generated method stub
 		
 	}

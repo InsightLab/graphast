@@ -3,6 +3,7 @@ package org.graphast.model;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.junit.Assert.*;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 import org.graphast.model.Edge;
@@ -22,12 +23,12 @@ public class MMapGraphTest {
 	private static Edge e0, e1, e2, e3, e4, e5, e6;
 	
 	@BeforeClass
-	public static void setUpBeforeClass() {
-		String graphName = "test_graph";
+	public static void setUpBeforeClass() throws IOException {
+		String graphPath = "graphs/MMap/test_graph";
 		
-		StorageUtils.deleteMMapGraph(graphName);
+		StorageUtils.deleteMMapGraph(graphPath);
+		g = new Graph(new MMapGraphStructure(graphPath));
 		
-		g = new Graph(new MMapGraphStructure(graphName));
 		n0 = new Node(0);
 		n1 = new Node(1);
 		n2 = new Node(2);
@@ -90,8 +91,8 @@ public class MMapGraphTest {
 	}
 	
 	@Test
-	public void testReopenGraph() {
-		Graph g2 = new Graph(new MMapGraphStructure("test_graph"));
+	public void testReopenGraph() throws IOException {
+		Graph g2 = new Graph(new MMapGraphStructure("graphs/MMap/test_graph"));
 		assertEquals("Reoppened graph number of nodes", 5, g2.getNumberOfNodes());
 		assertEquals("Reoppened graph number of edges", 10, g2.getNumberOfEdges());
 		

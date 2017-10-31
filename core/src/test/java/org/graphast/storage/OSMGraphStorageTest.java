@@ -19,7 +19,7 @@ public class OSMGraphStorageTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		storage = GraphStorageFactory.getOSMGraphStorage();
-		g = storage.loadGraph("monaco-latest.osm.pbf", new MMapGraphStructure("monaco"));
+		g = storage.load("graphs/OSM/monaco-latest.osm.pbf", new MMapGraphStructure("graphs/MMap/monaco"));
 	}
 
 	@Test

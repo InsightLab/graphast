@@ -17,7 +17,7 @@ public class RandomGraphGeneratorTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		g = RandomGraphGenerator.generateRandomMMapGraph(nNodes, density);
+		g = RandomGraphGenerator.generateRandomMMapGraph("random_graph", nNodes, density);
 	}
 
 	@Test

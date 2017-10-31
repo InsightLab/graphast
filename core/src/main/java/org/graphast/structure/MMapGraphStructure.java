@@ -28,8 +28,9 @@ public class MMapGraphStructure implements GraphStructure {
 	private DataAccess nodeAccess;
 	private DataAccess edgeAccess;
 	
-	public MMapGraphStructure(String graphName) {
-		this.path = "graphs/MMap/" + graphName + "/";
+	public MMapGraphStructure(String path) {
+		if (!path.endsWith("/")) path += "/";
+		this.path = path;
 		File f = new File(this.path);
 		boolean graphExists = f.exists();
 		if (!graphExists) f.mkdirs();

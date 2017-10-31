@@ -17,11 +17,11 @@ public class MMapDijkstraTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		String graphName = "dijkstra_graph";
+		String graphPath = "graphs/MMap/dijkstra_graph";
 		
-		StorageUtils.deleteMMapGraph(graphName);
+		StorageUtils.deleteMMapGraph(graphPath);
+		g = new Graph(new MMapGraphStructure(graphPath));
 		
-		g = new Graph(new MMapGraphStructure(graphName));
 		Node n0 = new Node(0);
 		Node n1 = new Node(1);
 		Node n2 = new Node(2);

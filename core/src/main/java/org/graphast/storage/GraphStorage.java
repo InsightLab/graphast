@@ -5,7 +5,7 @@ import org.graphast.structure.GraphStructure;
 
 public interface GraphStorage {
 	
-	Graph loadGraph(String graphName, GraphStructure structure);
-	void saveGraph(String graphName, Graph g);
+	Graph load(String path, GraphStructure structure);
+	void save(String path, Graph g);
 	
 }

@@ -9,13 +9,14 @@ import org.graphast.structure.MMapGraphStructure;
 
 public class RandomGraphGenerator {
 	
-	public static Graph generateRandomMMapGraph(int size, float dens) {
+	public static Graph generateRandomMMapGraph(String graphName, int size, float dens) {
 		
-		String graphName = "random_graph";
+		Graph g = null;
+		String dir = "graphs/MMap/" + graphName;
 		
-		StorageUtils.deleteMMapGraph(graphName);
+		StorageUtils.deleteMMapGraph(dir);
+		g = new Graph(new MMapGraphStructure(dir));
 		
-		Graph g = new Graph(new MMapGraphStructure(graphName));
 		Random r = new Random();
 		
 		for (int i = 0; i < size; i++)
