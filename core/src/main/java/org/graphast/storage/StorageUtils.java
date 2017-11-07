@@ -11,6 +11,7 @@ public class StorageUtils {
 		if (f.exists()) {
 			ok = new File(path + "nodes.mmap").delete();
 			ok = new File(path + "edges.mmap").delete() && ok;
+			ok = new File(path + "treeMap.mmap").delete() && ok;
 			ok = f.delete() && ok;
 		}
 		return ok;

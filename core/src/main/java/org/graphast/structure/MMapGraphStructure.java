@@ -2,15 +2,15 @@ package org.graphast.structure;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import org.graphast.model.Edge;
 import org.graphast.model.Node;
 
 import hugedataaccess.DataAccess;
 import hugedataaccess.MMapDataAccess;
+import hugedataaccess.structures.MMapMap;
+import hugedataaccess.structures.MMapTreeMap;
 
 public class MMapGraphStructure implements GraphStructure {
 	
@@ -20,7 +20,7 @@ public class MMapGraphStructure implements GraphStructure {
 	private long nodePos = 0;
 	private long edgePos = 0;
 	
-	private Map<Long, Long> idMapping = new HashMap<>();
+	private MMapMap idMapping;
 	private String path;
 	private String nodesFile = "nodes.mmap";
 	private String edgesFile = "edges.mmap";
@@ -30,6 +30,7 @@ public class MMapGraphStructure implements GraphStructure {
 	
 	public MMapGraphStructure(String path) {
 		if (!path.endsWith("/")) path += "/";
+		idMapping = new MMapTreeMap(path);
 		this.path = path;
 		File f = new File(this.path);
 		boolean graphExists = f.exists();

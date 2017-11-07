@@ -6,6 +6,7 @@ import org.graphast.model.Graph;
 import org.graphast.query.shortestpath.DijkstraStrategy;
 import org.graphast.query.shortestpath.ShortestPathStrategy;
 import org.graphast.query.utils.DistanceVector;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -30,6 +31,11 @@ public class RandomGraphGeneratorTest {
 		ShortestPathStrategy strategy = new DijkstraStrategy(g);
 		DistanceVector vector = strategy.run(10);
 		vector.print(10, 40);
+	}
+	
+	@AfterClass
+	public static void tearDownAfterClass() {
+		StorageUtils.deleteMMapGraph("graphs/MMap/random_graph");
 	}
 
 }
