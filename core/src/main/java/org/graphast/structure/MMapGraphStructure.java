@@ -36,8 +36,8 @@ public class MMapGraphStructure implements GraphStructure {
 		boolean graphExists = f.exists();
 		if (!graphExists) f.mkdirs();
 		try {
-			nodeAccess = new MMapDataAccess(path + nodesFile, 1024*1024l);
-			edgeAccess = new MMapDataAccess(path + edgesFile, 1024*1024l);
+			nodeAccess = new MMapDataAccess(path + nodesFile, 1024*1024*32l);
+			edgeAccess = new MMapDataAccess(path + edgesFile, 1024*1024*32l);
 			if (graphExists) {
 				nodePos = getNumberOfNodes();
 				edgePos = getNumberOfEdges();
@@ -71,7 +71,7 @@ public class MMapGraphStructure implements GraphStructure {
 	@Override
 	public void addNode(Node n) {
 		if (nodeAccess.getCapacity() < getNodeIndex(nodePos) + NODE_SIZE)
-			nodeAccess.ensureCapacity(nodeAccess.getCapacity() + 1024*1024l);
+			nodeAccess.ensureCapacity(nodeAccess.getCapacity() + 1024*1024*32l);
 		
 		idMapping.put(n.getId(), nodePos);
 		
@@ -95,7 +95,7 @@ public class MMapGraphStructure implements GraphStructure {
 	
 	private void addDirectionalEdge(Edge e) {
 		if (edgeAccess.getCapacity() < getEdgeIndex(edgePos) + EDGE_SIZE)
-			edgeAccess.ensureCapacity(edgeAccess.getCapacity() + 1024*1024l);
+			edgeAccess.ensureCapacity(edgeAccess.getCapacity() + 1024*1024*32l);
 		
 		long fromId = idMapping.get(e.getFromNodeId());
 		long toId = idMapping.get(e.getToNodeId());
@@ -136,6 +136,11 @@ public class MMapGraphStructure implements GraphStructure {
 			public Node next() {
 				return new Node(getExternalIdByInternalId(id++));
 			}
+			
+			@Override
+			public void remove() {
+				Iterator.super.remove();
+			}
 		};
 	}
 
@@ -161,6 +166,11 @@ public class MMapGraphStructure implements GraphStructure {
 				pos++;
 				
 				return new Edge(getExternalIdByInternalId(from), getExternalIdByInternalId(to), cost);
+			}
+			
+			@Override
+			public void remove() {
+				Iterator.super.remove();
 			}
 		};
 	}
@@ -188,6 +198,11 @@ public class MMapGraphStructure implements GraphStructure {
 				
 				return new Edge(getExternalIdByInternalId(from), getExternalIdByInternalId(to), cost);
 			}
+			
+			@Override
+			public void remove() {
+				Iterator.super.remove();
+			}
 		};
 	}
 
@@ -213,6 +228,11 @@ public class MMapGraphStructure implements GraphStructure {
 				pos = edgeAccess.getLong( edgeIndex + 32 );
 				
 				return new Edge(getExternalIdByInternalId(from), getExternalIdByInternalId(to), cost);
+			}
+			
+			@Override
+			public void remove() {
+				Iterator.super.remove();
 			}
 		};
 	}
