@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.graphast.exceptions.NodeNotFoundException;
 import org.graphast.model.Edge;
 import org.graphast.model.Node;
 
@@ -35,7 +36,12 @@ public class DefaultGraphStructure implements GraphStructure {
 	}
 	
 	private void addAdjacency(long id, Edge e) {
-		int nodeId = idMapping.get(id);
+		int nodeId = idMapping.getOrDefault(id,-1);
+		
+		if(nodeId==-1){
+			throw new NodeNotFoundException(id);
+		}
+		
 		if (e.isBidirectional()) {
 			inEdges.get(nodeId).add(e);
 			outEdges.get(nodeId).add(e);
@@ -49,9 +55,9 @@ public class DefaultGraphStructure implements GraphStructure {
 	}
 	
 	public void addEdge(Edge e) {
-		edges.add(e);
 		addAdjacency(e.getFromNodeId(), e);
 		addAdjacency(e.getToNodeId(), e);
+		edges.add(e);
 	}
 	
 	public Node getNode(final long id) {
