@@ -2,6 +2,7 @@ package org.graphast.query.shortestpath;
 
 import static org.junit.Assert.*;
 
+import org.graphast.exceptions.NodeNotFoundException;
 import org.graphast.model.Edge;
 import org.graphast.model.Graph;
 import org.graphast.model.Node;
@@ -51,6 +52,18 @@ public class DijkstraTest {
 		assertEquals("One to One distance test n1", 6, vector.getDistance(1), 0);
 		assertEquals("One to One Parent test n5", -1, vector.getElement(5).getParentId());
 		assertEquals("One to One Parent test n1", 2, vector.getElement(1).getParentId());
+	}
+	
+	@Test(expected = NodeNotFoundException.class)
+	public void testNoNodeToAllException(){
+		ShortestPathStrategy strategy = new DijkstraStrategy(g);
+		DistanceVector vector = strategy.run(6);
+	}
+	
+	@Test(expected = NodeNotFoundException.class)
+	public void testOneToNoNodeException(){
+		ShortestPathStrategy strategy = new DijkstraStrategy(g);
+		DistanceVector vector = strategy.run(0,6);
 	}
 
 }
