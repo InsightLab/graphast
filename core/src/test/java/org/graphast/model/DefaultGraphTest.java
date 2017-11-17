@@ -122,6 +122,18 @@ public class DefaultGraphTest {
 		assertThat("Neighborhood Test n4", Arrays.asList(1l, 3l), containsInAnyOrder(Iterators.toArray(g.getNeighborhood(4), Long.class)));
 	}
 	
+	@Test
+	public void testContainsNode(){
+		g.addNode(n0);
+		g.addNode(n1);
+		g.addNode(n2);
+		
+		assertEquals("Contains Test n0",g.containsNode(n0.getId()),true);
+		assertEquals("Contains Test n1",g.containsNode(n1.getId()),true);
+		assertEquals("Contains Test n2",g.containsNode(n2.getId()),true);
+		assertEquals("Contains Test n3",g.containsNode(n3.getId()),false);
+	}
+	
 	@Test(expected = DuplicatedNodeException.class)
 	public void testAddNodeException(){
 		g.addNode(n0);
