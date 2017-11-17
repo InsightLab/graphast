@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.graphast.exceptions.DuplicatedNodeException;
 import org.graphast.exceptions.NodeNotFoundException;
 import org.graphast.model.Edge;
 import org.graphast.model.Node;
@@ -29,6 +30,9 @@ public class DefaultGraphStructure implements GraphStructure {
 	}
 	
 	public void addNode(Node n) {
+		if(idMapping.get(n.getId())!=null)
+			throw new DuplicatedNodeException(n.getId());
+		
 		idMapping.put(n.getId(), nextId++);
 		nodes.add(n);
 		outEdges.add(new ArrayList<Edge>());
