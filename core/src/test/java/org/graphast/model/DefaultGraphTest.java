@@ -6,10 +6,14 @@ import static org.junit.Assert.*;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import org.graphast.exceptions.DuplicatedNodeException;
+import org.graphast.exceptions.NodeNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.collect.Iterators;
+
+import hugedataaccess.DataAccessException;
 
 public class DefaultGraphTest {
 
@@ -116,6 +120,19 @@ public class DefaultGraphTest {
 		assertThat("Neighborhood Test n2", Arrays.asList(4l, 3l), containsInAnyOrder(Iterators.toArray(g.getNeighborhood(2), Long.class)));
 		assertThat("Neighborhood Test n3", Arrays.asList(1l, 0l), containsInAnyOrder(Iterators.toArray(g.getNeighborhood(3), Long.class)));
 		assertThat("Neighborhood Test n4", Arrays.asList(1l, 3l), containsInAnyOrder(Iterators.toArray(g.getNeighborhood(4), Long.class)));
+	}
+	
+	@Test(expected = DuplicatedNodeException.class)
+	public void testAddNodeException(){
+		g.addNode(n0);
+		g.addNode(n1);
+		g.addNode(n0);
+	}
+	
+	@Test(expected = NodeNotFoundException.class)
+	public void testAddEdgeException(){
+		g.addNode(n0);
+		g.addEdge(e2);
 	}
 
 }
