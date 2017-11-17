@@ -13,6 +13,8 @@ public interface GraphStructure {
 	void addNode(Node n);
 	void addEdge(Edge e);
 	
+	boolean containsNode(final long id);
+	
 	Iterator<Node> nodeIterator();
 	Iterator<Edge> edgeIterator();
 	

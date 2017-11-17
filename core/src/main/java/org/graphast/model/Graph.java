@@ -25,13 +25,22 @@ public class Graph extends GraphObject {
 		return structure.getNumberOfEdges();
 	}
 	
+	public void addNode(long id) {
+		this.addNode(new Node(id));
+	}
+	
 	public void addNode(Node n) {
-		structure.addNode(n);
+		if (!structure.containsNode(n.getId()))
+			structure.addNode(n);
 	}
 	
 	public void addNodes(Node ...nodes) {
 		for (Node n : nodes)
 			this.addNode(n);
+	}
+	
+	public boolean containsNode(long id) {
+		return structure.containsNode(id);
 	}
 	
 	public void addEdge(Edge e) {

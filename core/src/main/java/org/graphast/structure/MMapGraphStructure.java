@@ -237,4 +237,9 @@ public class MMapGraphStructure implements GraphStructure {
 		};
 	}
 
+	@Override
+	public boolean containsNode(long id) {
+		return idMapping.containsKey(id);
+	}
+
 }

@@ -12,7 +12,6 @@ import org.graphast.model.Graph;
 import org.graphast.structure.GraphStructure;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
-import org.openstreetmap.osmosis.core.domain.v0_6.Node;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.task.v0_6.RunnableSource;
@@ -87,6 +86,7 @@ public class OSMGraphStorage implements GraphStorage {
 	private class MySink implements Sink {
 		
 		private Graph g;
+		private long counter = 0;
 		
 		public MySink(Graph g) {
 			this.g = g;
@@ -94,19 +94,21 @@ public class OSMGraphStorage implements GraphStorage {
 		
 		public void process(EntityContainer entityContainer) {
 	        Entity entity = entityContainer.getEntity();
-	        if (entity instanceof Node) {
-	        	long id = ((Node)entity).getId();
-	            g.addNode(new org.graphast.model.Node(id));
-	        } else if (entity instanceof Way) {
+	        if (entity instanceof Way) {
 	        	Way w = (Way) entity;
 	        	List<WayNode> wayNodeList = w.getWayNodes();
-	        	for (int i = 0; i < wayNodeList.size()-1; i++) {
-	        		long idFrom = wayNodeList.get(i).getNodeId();
-	        		long idTo = wayNodeList.get(i+1).getNodeId();
-	        		if (idFrom != idTo) {
-		        		g.addEdge(new Edge(idFrom, idTo));
-	        		}
+	        	if (wayNodeList.size() < 2 || w.getTags().isEmpty()) return;
+	        	
+	        	g.addNode(wayNodeList.get(0).getNodeId());
+	        	
+	        	for (int i = 1; i < wayNodeList.size(); i++) {
+	        		g.addNode(wayNodeList.get(i).getNodeId());
+	        		WayNode from = wayNodeList.get(i-1);
+	        		WayNode to = wayNodeList.get(i);
+	        		//if ((counter++)%1000 == 0) System.out.println(from.getNodeId());
+	        		g.addEdge(new Edge(from.getNodeId(), to.getNodeId()));
 	        	}
+        		
 	        }
 	    }
 	    public void complete() {}

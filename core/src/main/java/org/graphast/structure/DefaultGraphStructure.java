@@ -74,4 +74,9 @@ public class DefaultGraphStructure implements GraphStructure {
 		return inEdges.get(idMapping.get(id)).iterator();
 	}
 
+	@Override
+	public boolean containsNode(long id) {
+		return idMapping.containsKey(id);
+	}
+
 }
