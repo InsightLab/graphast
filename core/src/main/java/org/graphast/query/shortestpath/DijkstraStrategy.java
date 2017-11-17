@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
+import org.graphast.exceptions.NodeNotFoundException;
 import org.graphast.model.Edge;
 import org.graphast.model.Graph;
 import org.graphast.query.utils.DistanceElement;
@@ -24,6 +25,10 @@ public class DijkstraStrategy implements ShortestPathStrategy {
 
 	@Override
 	public DistanceVector run(long sourceId, long targetId) {
+		if(!g.containsNode(sourceId))
+			throw new NodeNotFoundException(sourceId);
+		if(targetId != -1 && !g.containsNode(targetId))
+			throw new NodeNotFoundException(targetId);
 		
 		DistanceVector vector = new DistanceVector(sourceId);
 		Queue<DistanceElement> toVisit = new PriorityQueue<>();
