@@ -40,11 +40,7 @@ public class DefaultGraphStructure implements GraphStructure {
 	}
 	
 	private void addAdjacency(long id, Edge e) {
-		int nodeId = idMapping.getOrDefault(id,-1);
-		
-		if(nodeId==-1){
-			throw new NodeNotFoundException(id);
-		}
+		int nodeId = idMapping.get(id);
 		
 		if (e.isBidirectional()) {
 			inEdges.get(nodeId).add(e);
@@ -59,6 +55,14 @@ public class DefaultGraphStructure implements GraphStructure {
 	}
 	
 	public void addEdge(Edge e) {
+		
+		if(!containsNode(e.getFromNodeId())){
+			throw new NodeNotFoundException(e.getFromNodeId());
+		}
+		if(!containsNode(e.getToNodeId())){
+			throw new NodeNotFoundException(e.getToNodeId());
+		}
+		
 		addAdjacency(e.getFromNodeId(), e);
 		addAdjacency(e.getToNodeId(), e);
 		edges.add(e);
