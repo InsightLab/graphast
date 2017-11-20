@@ -1,13 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>org.graphast</groupId>
+	<groupId>insightlab</groupId>
 	<artifactId>graphast-core</artifactId>
 	<version>2.1.4</version>
 	<packaging>jar</packaging>
 	<name>graphast-core</name>
 	<description>Graphast Core API</description>
-	<url>https://github.com/ARiDa/graphast</url>
+	<url>http://insightlab.ufc.br</url>
 
 	<licenses>
 		<license>
@@ -18,15 +18,15 @@
 	</licenses>
 
 	<scm>
-		<connection>scm:git:git://github.com/ARiDa/graphast.git</connection>
+		<connection>scm:git:git://github.com/InsightLab/graphast.git</connection>
 		<url>scm:git:git://github.com/ARiDa/graphast.git</url>
 		<developerConnection>scm:git:git://github.com/ARiDa/graphast.git</developerConnection>
 	</scm>
 
 	<developers>
 		<developer>
-			<id>graphast</id>
-			<name>Graphast</name>
+			<id>InsightLab</id>
+			<name>Insight Data Science Lab</name>
 		</developer>
 	</developers>
 
