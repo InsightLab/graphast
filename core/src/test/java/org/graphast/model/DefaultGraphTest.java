@@ -147,4 +147,27 @@ public class DefaultGraphTest {
 		g.addEdge(e2);
 	}
 
+	@Test
+	public void testNeighborhoodPertinenceOnException(){
+		g.addNode(n0);
+		g.addNode(n1);
+		g.addNode(n2);
+		
+		g.addEdge(e2);
+		try{
+			g.addEdge(e6);
+		}catch(NodeNotFoundException e){
+			Iterator<Long> neighbors = g.getNeighborhood(n0.getId());
+			assertEquals("First neighbor must be 1", new Long(1), neighbors.next());
+			assertEquals("Iterator must end", false, neighbors.hasNext());
+			
+			Iterator<Edge> inEdges = g.getInEdges(n0.getId());
+			assertEquals("Should be no in edge on n0", false, inEdges.hasNext());
+			
+			Iterator<Edge> outEdges = g.getOutEdges(n0.getId());
+			assertEquals("Should be a out edge on n0", true, outEdges.hasNext());
+			assertEquals("The out edge of n0 should be to node 1", 1l, outEdges.next().getToNodeId());
+			assertEquals("Should be no other out edge on n0", false, outEdges.hasNext());
+		}
+	}
 }
