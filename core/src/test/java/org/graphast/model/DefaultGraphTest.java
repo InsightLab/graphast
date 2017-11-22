@@ -122,6 +122,18 @@ public class DefaultGraphTest {
 		assertThat("Neighborhood Test n4", Arrays.asList(1l, 3l), containsInAnyOrder(Iterators.toArray(g.getNeighborhood(4), Long.class)));
 	}
 	
+	@Test
+	public void testContainsNode(){
+		g.addNode(n0);
+		g.addNode(n1);
+		g.addNode(n2);
+		
+		assertEquals("Contains Test n0",g.containsNode(n0.getId()),true);
+		assertEquals("Contains Test n1",g.containsNode(n1.getId()),true);
+		assertEquals("Contains Test n2",g.containsNode(n2.getId()),true);
+		assertEquals("Contains Test n3",g.containsNode(n3.getId()),false);
+	}
+	
 	@Test(expected = DuplicatedNodeException.class)
 	public void testAddNodeException(){
 		g.addNode(n0);
@@ -135,4 +147,27 @@ public class DefaultGraphTest {
 		g.addEdge(e2);
 	}
 
+	@Test
+	public void testNeighborhoodPertinenceOnException(){
+		g.addNode(n0);
+		g.addNode(n1);
+		g.addNode(n2);
+		
+		g.addEdge(e2);
+		try{
+			g.addEdge(e6);
+		}catch(NodeNotFoundException e){
+			Iterator<Long> neighbors = g.getNeighborhood(n0.getId());
+			assertEquals("First neighbor must be 1", new Long(1), neighbors.next());
+			assertEquals("Iterator must end", false, neighbors.hasNext());
+			
+			Iterator<Edge> inEdges = g.getInEdges(n0.getId());
+			assertEquals("Should be no in edge on n0", false, inEdges.hasNext());
+			
+			Iterator<Edge> outEdges = g.getOutEdges(n0.getId());
+			assertEquals("Should be a out edge on n0", true, outEdges.hasNext());
+			assertEquals("The out edge of n0 should be to node 1", 1l, outEdges.next().getToNodeId());
+			assertEquals("Should be no other out edge on n0", false, outEdges.hasNext());
+		}
+	}
 }

@@ -30,8 +30,7 @@ public class Graph extends GraphObject {
 	}
 	
 	public void addNode(Node n) {
-		if (!structure.containsNode(n.getId()))
-			structure.addNode(n);
+		structure.addNode(n);
 	}
 	
 	public void addNodes(Node ...nodes) {
