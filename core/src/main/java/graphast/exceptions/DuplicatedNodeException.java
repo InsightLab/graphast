@@ -1,4 +1,4 @@
-package org.graphast.exceptions;
+package graphast.exceptions;
 
 public class DuplicatedNodeException extends RuntimeException {
 	

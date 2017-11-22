@@ -1,4 +1,4 @@
-package org.graphast.storage;
+package graphast.storage;
 
 
 import java.io.File;
@@ -7,9 +7,6 @@ import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Map;
 
-import org.graphast.model.Edge;
-import org.graphast.model.Graph;
-import org.graphast.structure.GraphStructure;
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
@@ -20,6 +17,9 @@ import org.openstreetmap.osmosis.xml.common.CompressionMethod;
 import org.openstreetmap.osmosis.xml.v0_6.XmlReader;
 
 import crosby.binary.osmosis.OsmosisReader;
+import graphast.model.Edge;
+import graphast.model.Graph;
+import graphast.structure.GraphStructure;
 
 public class OSMGraphStorage implements GraphStorage {
 	

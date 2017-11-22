@@ -1,9 +1,9 @@
-package org.graphast.structure;
+package graphast.structure;
 
 import java.util.Iterator;
 
-import org.graphast.model.Edge;
-import org.graphast.model.Node;
+import graphast.model.Edge;
+import graphast.model.Node;
 
 public interface GraphStructure {
 	

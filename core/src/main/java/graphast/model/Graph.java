@@ -1,9 +1,9 @@
-package org.graphast.model;
+package graphast.model;
 
 import java.util.Iterator;
 
-import org.graphast.structure.DefaultGraphStructure;
-import org.graphast.structure.GraphStructure;
+import graphast.structure.DefaultGraphStructure;
+import graphast.structure.GraphStructure;
 
 public class Graph extends GraphObject {
 	

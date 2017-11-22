@@ -1,4 +1,4 @@
-package org.graphast.model;
+package graphast.model;
 
 public class Node extends GraphObject {
 	

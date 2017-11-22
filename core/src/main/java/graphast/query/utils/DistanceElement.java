@@ -1,4 +1,4 @@
-package org.graphast.query.utils;
+package graphast.query.utils;
 
 public class DistanceElement implements Comparable<DistanceElement>{
 	

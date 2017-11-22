@@ -1,14 +1,14 @@
-package org.graphast.query.shortestpath;
+package graphast.query.shortestpath;
 
 import java.util.Iterator;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
-import org.graphast.exceptions.NodeNotFoundException;
-import org.graphast.model.Edge;
-import org.graphast.model.Graph;
-import org.graphast.query.utils.DistanceElement;
-import org.graphast.query.utils.DistanceVector;
+import graphast.exceptions.NodeNotFoundException;
+import graphast.model.Edge;
+import graphast.model.Graph;
+import graphast.query.utils.DistanceElement;
+import graphast.query.utils.DistanceVector;
 
 public class DijkstraStrategy implements ShortestPathStrategy {
 	

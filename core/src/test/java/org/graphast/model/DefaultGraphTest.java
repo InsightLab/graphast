@@ -6,13 +6,16 @@ import static org.junit.Assert.*;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import org.graphast.exceptions.DuplicatedNodeException;
-import org.graphast.exceptions.NodeNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.google.common.collect.Iterators;
 
+import graphast.exceptions.DuplicatedNodeException;
+import graphast.exceptions.NodeNotFoundException;
+import graphast.model.Edge;
+import graphast.model.Graph;
+import graphast.model.Node;
 import hugedataaccess.DataAccessException;
 
 public class DefaultGraphTest {

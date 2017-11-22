@@ -6,15 +6,16 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.util.Arrays;
 
-import org.graphast.model.Edge;
-import org.graphast.model.Graph;
-import org.graphast.model.Node;
-import org.graphast.storage.StorageUtils;
-import org.graphast.structure.MMapGraphStructure;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.google.common.collect.Iterators;
+
+import graphast.model.Edge;
+import graphast.model.Graph;
+import graphast.model.Node;
+import graphast.storage.StorageUtils;
+import graphast.structure.MMapGraphStructure;
 
 public class MMapGraphTest {
 

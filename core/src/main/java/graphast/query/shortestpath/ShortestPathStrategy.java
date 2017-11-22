@@ -1,6 +1,6 @@
-package org.graphast.query.shortestpath;
+package graphast.query.shortestpath;
 
-import org.graphast.query.utils.DistanceVector;
+import graphast.query.utils.DistanceVector;
 
 public interface ShortestPathStrategy {
 	

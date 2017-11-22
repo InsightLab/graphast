@@ -1,4 +1,4 @@
-package org.graphast.query.utils;
+package graphast.query.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

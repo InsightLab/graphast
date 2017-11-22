@@ -2,13 +2,16 @@ package org.graphast.query.shortestpath;
 
 import static org.junit.Assert.*;
 
-import org.graphast.exceptions.NodeNotFoundException;
-import org.graphast.model.Edge;
-import org.graphast.model.Graph;
-import org.graphast.model.Node;
-import org.graphast.query.utils.DistanceVector;
 import org.junit.Before;
 import org.junit.Test;
+
+import graphast.exceptions.NodeNotFoundException;
+import graphast.model.Edge;
+import graphast.model.Graph;
+import graphast.model.Node;
+import graphast.query.shortestpath.DijkstraStrategy;
+import graphast.query.shortestpath.ShortestPathStrategy;
+import graphast.query.utils.DistanceVector;
 
 public class DijkstraTest {
 	

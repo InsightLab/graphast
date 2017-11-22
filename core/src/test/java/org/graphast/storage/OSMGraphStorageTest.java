@@ -3,13 +3,17 @@ package org.graphast.storage;
 
 import static org.junit.Assert.assertEquals;
 
-import org.graphast.model.Graph;
-import org.graphast.query.shortestpath.DijkstraStrategy;
-import org.graphast.query.shortestpath.ShortestPathStrategy;
-import org.graphast.query.utils.DistanceVector;
-import org.graphast.structure.MMapGraphStructure;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import graphast.model.Graph;
+import graphast.query.shortestpath.DijkstraStrategy;
+import graphast.query.shortestpath.ShortestPathStrategy;
+import graphast.query.utils.DistanceVector;
+import graphast.storage.GraphStorage;
+import graphast.storage.GraphStorageFactory;
+import graphast.storage.StorageUtils;
+import graphast.structure.MMapGraphStructure;
 
 public class OSMGraphStorageTest {
 	

@@ -1,12 +1,11 @@
-package org.graphast.structure;
+package graphast.structure;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 
-import org.graphast.model.Edge;
-import org.graphast.model.Node;
-
+import graphast.model.Edge;
+import graphast.model.Node;
 import hugedataaccess.DataAccess;
 import hugedataaccess.MMapDataAccess;
 import hugedataaccess.structures.MMapMap;

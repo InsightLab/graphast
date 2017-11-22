@@ -1,11 +1,11 @@
-package org.graphast.storage;
+package graphast.storage;
 
 import java.util.Random;
 
-import org.graphast.model.Edge;
-import org.graphast.model.Graph;
-import org.graphast.model.Node;
-import org.graphast.structure.MMapGraphStructure;
+import graphast.model.Edge;
+import graphast.model.Graph;
+import graphast.model.Node;
+import graphast.structure.MMapGraphStructure;
 
 public class RandomGraphGenerator {
 	

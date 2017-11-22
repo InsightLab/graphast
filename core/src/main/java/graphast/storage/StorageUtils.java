@@ -1,4 +1,4 @@
-package org.graphast.storage;
+package graphast.storage;
 
 import java.io.File;
 

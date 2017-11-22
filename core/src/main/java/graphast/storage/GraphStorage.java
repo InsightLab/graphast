@@ -1,7 +1,7 @@
-package org.graphast.storage;
+package graphast.storage;
 
-import org.graphast.model.Graph;
-import org.graphast.structure.GraphStructure;
+import graphast.model.Graph;
+import graphast.structure.GraphStructure;
 
 public interface GraphStorage {
 	

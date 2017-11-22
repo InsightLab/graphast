@@ -2,13 +2,16 @@ package org.graphast.storage;
 
 import static org.junit.Assert.*;
 
-import org.graphast.model.Graph;
-import org.graphast.query.shortestpath.DijkstraStrategy;
-import org.graphast.query.shortestpath.ShortestPathStrategy;
-import org.graphast.query.utils.DistanceVector;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import graphast.model.Graph;
+import graphast.query.shortestpath.DijkstraStrategy;
+import graphast.query.shortestpath.ShortestPathStrategy;
+import graphast.query.utils.DistanceVector;
+import graphast.storage.RandomGraphGenerator;
+import graphast.storage.StorageUtils;
 
 public class RandomGraphGeneratorTest {
 	

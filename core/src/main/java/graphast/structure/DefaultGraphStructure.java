@@ -1,13 +1,13 @@
-package org.graphast.structure;
+package graphast.structure;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.graphast.exceptions.DuplicatedNodeException;
-import org.graphast.exceptions.NodeNotFoundException;
-import org.graphast.model.Edge;
-import org.graphast.model.Node;
+import graphast.exceptions.DuplicatedNodeException;
+import graphast.exceptions.NodeNotFoundException;
+import graphast.model.Edge;
+import graphast.model.Node;
 
 public class DefaultGraphStructure implements GraphStructure {
 	
