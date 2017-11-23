@@ -8,6 +8,9 @@ jdk:
 
 # run tests, findbugs, pmd and friends using Ant, Maven or Gradle
 # script: cd core && mvn test install
-
+install:
+  - cd core && mvn install
 script:
-  - cd core && mvn test install coveralls:report -DrepoToken=$repoToken
+  - mvn test jacoco:report
+after_success:
+  - mvn coveralls:report -DrepoToken=$repoToken
