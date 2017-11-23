@@ -7,4 +7,7 @@ jdk:
   - oraclejdk8
 
 # run tests, findbugs, pmd and friends using Ant, Maven or Gradle
-script: cd core && mvn test install
+# script: cd core && mvn test install
+
+script:
+  - mvn test install coveralls:report -DrepoToken=$repoToken
