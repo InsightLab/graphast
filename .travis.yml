@@ -3,7 +3,7 @@ language: java
 
 # JDK versios support
 jdk:
-  - oraclejdk7
+  #- oraclejdk7
   - oraclejdk8
 
 # run tests, findbugs, pmd and friends using Ant, Maven or Gradle
