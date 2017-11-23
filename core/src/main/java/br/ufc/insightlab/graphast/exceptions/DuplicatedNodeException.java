@@ -2,6 +2,11 @@ package br.ufc.insightlab.graphast.exceptions;
 
 public class DuplicatedNodeException extends RuntimeException {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6087521298798774395L;
+
 	public DuplicatedNodeException() {
 		super();
 	}

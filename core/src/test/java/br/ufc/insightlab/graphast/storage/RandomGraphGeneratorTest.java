@@ -31,9 +31,13 @@ public class RandomGraphGeneratorTest {
 	
 	@Test
 	public void testDijkstra() {
-		ShortestPathStrategy strategy = new DijkstraStrategy(g);
-		DistanceVector vector = strategy.run(10);
-		vector.print(10, 40);
+		try {
+			ShortestPathStrategy strategy = new DijkstraStrategy(g);
+			DistanceVector vector = strategy.run(10);
+			vector.print(10, 40);
+		} catch (Exception e) {
+			fail("It shouldn't throw any exception");
+		}
 	}
 	
 	@AfterClass

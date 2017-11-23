@@ -25,7 +25,7 @@ public class OSMGraphStorage implements GraphStorage {
 	
 	private static GraphStorage instance = null;
 	
-	static GraphStorage getInstance() {
+	public static GraphStorage getInstance() {
 		if (instance == null) instance = new OSMGraphStorage();
 		return instance;
 	}
@@ -86,7 +86,7 @@ public class OSMGraphStorage implements GraphStorage {
 	private class MySink implements Sink {
 		
 		private Graph g;
-		private long counter = 0;
+		// private long counter = 0;
 		
 		public MySink(Graph g) {
 			this.g = g;
@@ -105,15 +105,15 @@ public class OSMGraphStorage implements GraphStorage {
 	        		g.addNode(wayNodeList.get(i).getNodeId());
 	        		WayNode from = wayNodeList.get(i-1);
 	        		WayNode to = wayNodeList.get(i);
-	        		//if ((counter++)%1000 == 0) System.out.println(from.getNodeId());
+	        		// if ((counter++)%1000 == 0) System.out.println(from.getNodeId());
 	        		g.addEdge(new Edge(from.getNodeId(), to.getNodeId()));
 	        	}
         		
 	        }
 	    }
-	    public void complete() {}
-		public void initialize(Map<String, Object> arg0) {}
-		public void close() {}
+		public void initialize(Map<String, Object> arg0) {System.out.println("Reading OSM data");}
+		public void complete() {System.out.println("Finished reading OSM");}
+		public void close() {System.out.println("Closing Task");}
 		
 	}
 

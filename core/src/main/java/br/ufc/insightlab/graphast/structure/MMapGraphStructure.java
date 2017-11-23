@@ -20,7 +20,6 @@ public class MMapGraphStructure implements GraphStructure {
 	private long edgePos = 0;
 	
 	private MMapMap idMapping;
-	private String path;
 	private String nodesFile = "nodes.mmap";
 	private String edgesFile = "edges.mmap";
 	
@@ -28,15 +27,15 @@ public class MMapGraphStructure implements GraphStructure {
 	private DataAccess edgeAccess;
 	
 	public MMapGraphStructure(String path) {
-		if (!path.endsWith("/")) path += "/";
-		idMapping = new MMapTreeMap(path);
-		this.path = path;
-		File f = new File(this.path);
+		String directory = path;
+		if (!directory.endsWith("/")) directory += "/";
+		idMapping = new MMapTreeMap(directory);
+		File f = new File(directory);
 		boolean graphExists = f.exists();
 		if (!graphExists) f.mkdirs();
 		try {
-			nodeAccess = new MMapDataAccess(path + nodesFile, 1024*1024*32l);
-			edgeAccess = new MMapDataAccess(path + edgesFile, 1024*1024*32l);
+			nodeAccess = new MMapDataAccess(directory + nodesFile, 1024*1024*32l);
+			edgeAccess = new MMapDataAccess(directory + edgesFile, 1024*1024*32l);
 			if (graphExists) {
 				nodePos = getNumberOfNodes();
 				edgePos = getNumberOfEdges();
@@ -87,8 +86,7 @@ public class MMapGraphStructure implements GraphStructure {
 	public void addEdge(Edge e) {
 		addDirectionalEdge(e);
 		if (e.isBidirectional()) {
-			e = new Edge(e.getToNodeId(), e.getFromNodeId(), e.getCost());
-			addDirectionalEdge(e);
+			addDirectionalEdge(new Edge(e.getToNodeId(), e.getFromNodeId(), e.getCost()));
 		}
 	}
 	
