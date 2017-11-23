@@ -2,6 +2,11 @@ package br.ufc.insightlab.graphast.exceptions;
 
 public class NodeNotFoundException extends RuntimeException {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4697887137944949430L;
+
 	public NodeNotFoundException() {
 		super();
 	}

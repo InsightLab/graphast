@@ -4,6 +4,8 @@ import java.io.File;
 
 public class StorageUtils {
 	
+	private StorageUtils(){}
+	
 	public static boolean deleteMMapGraph(String path) {
 		if (!path.endsWith("/")) path += "/";
 		File f = new File(path);

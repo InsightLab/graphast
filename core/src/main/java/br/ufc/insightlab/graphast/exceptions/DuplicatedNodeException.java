@@ -7,11 +7,11 @@ public class DuplicatedNodeException extends RuntimeException {
 	}
 	
 	public DuplicatedNodeException(long i) {
-		super("Node "+i+" not found");
+		super("Node "+i+" already exists");
 	}
 	
 	public DuplicatedNodeException(long i, Throwable cause) {
-		super("Node "+i+" not found", cause);
+		super("Node "+i+" already exists", cause);
 	}
 
 	public DuplicatedNodeException(String message, Throwable cause,

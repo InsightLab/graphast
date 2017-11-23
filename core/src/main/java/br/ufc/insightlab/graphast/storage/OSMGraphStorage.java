@@ -16,6 +16,7 @@ import org.openstreetmap.osmosis.core.task.v0_6.Sink;
 import org.openstreetmap.osmosis.xml.common.CompressionMethod;
 import org.openstreetmap.osmosis.xml.v0_6.XmlReader;
 
+import br.ufc.insightlab.graphast.exceptions.OSMFormatNotSupported;
 import br.ufc.insightlab.graphast.model.Edge;
 import br.ufc.insightlab.graphast.model.Graph;
 import br.ufc.insightlab.graphast.structure.GraphStructure;
@@ -33,11 +34,12 @@ public class OSMGraphStorage implements GraphStorage {
 	private OSMGraphStorage() {}
 
 	@Override
-	public Graph load(String path, GraphStructure structure) {
+	public Graph load(String path, GraphStructure structure) throws FileNotFoundException {
 		File file = new File(path); // the input file
-		
+		if(!file.exists())
+			throw new FileNotFoundException("File "+path+" not exists");
 		Graph g = new Graph(structure);
-
+	
 		Sink sinkImplementation = new MySink(g);
 
 		boolean pbf = false;
@@ -45,33 +47,33 @@ public class OSMGraphStorage implements GraphStorage {
 
 		if (file.getName().endsWith(".pbf")) {
 		    pbf = true;
-		} else if (file.getName().endsWith(".gz")) {
-		    compression = CompressionMethod.GZip;
 		} else if (file.getName().endsWith(".bz2")) {
 		    compression = CompressionMethod.BZip2;
+		} else {
+			sinkImplementation.close();
+			throw new OSMFormatNotSupported("Format of file"+file.getName()+" not supported");
 		}
+	
+		RunnableSource reader;
+
+		if (pbf) {
+			reader = new OsmosisReader(new FileInputStream(file));
+		} else {
+		    reader = new XmlReader(file, false, compression);
+		}
+
+		reader.setSink(sinkImplementation);
+
+		Thread readerThread = new Thread(reader);
+		readerThread.start();
 		
 		try {
-
-			RunnableSource reader;
-	
-			if (pbf) {
-				reader = new OsmosisReader(new FileInputStream(file));
-			} else {
-			    reader = new XmlReader(file, false, compression);
-			}
-	
-			reader.setSink(sinkImplementation);
-	
-			Thread readerThread = new Thread(reader);
-			readerThread.start();
-	
 			while (readerThread.isAlive()) {
 				readerThread.join();
 			}
-		
-		} catch (InterruptedException|FileNotFoundException e) {
+		} catch(InterruptedException e){
 			e.printStackTrace();
+			g = null;
 		}
 		
 		return g;
@@ -99,10 +101,12 @@ public class OSMGraphStorage implements GraphStorage {
 	        	List<WayNode> wayNodeList = w.getWayNodes();
 	        	if (wayNodeList.size() < 2 || w.getTags().isEmpty()) return;
 	        	
-	        	g.addNode(wayNodeList.get(0).getNodeId());
+	        	if(!g.containsNode(wayNodeList.get(0).getNodeId()))
+	        		g.addNode(wayNodeList.get(0).getNodeId());
 	        	
 	        	for (int i = 1; i < wayNodeList.size(); i++) {
-	        		g.addNode(wayNodeList.get(i).getNodeId());
+	        		if(!g.containsNode(wayNodeList.get(i).getNodeId()))
+	        			g.addNode(wayNodeList.get(i).getNodeId());
 	        		WayNode from = wayNodeList.get(i-1);
 	        		WayNode to = wayNodeList.get(i);
 	        		//if ((counter++)%1000 == 0) System.out.println(from.getNodeId());
