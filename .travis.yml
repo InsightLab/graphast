@@ -10,4 +10,4 @@ jdk:
 # script: cd core && mvn test install
 
 script:
-  - mvn test install coveralls:report -DrepoToken=$repoToken
+  - cd core && mvn test install coveralls:report -DrepoToken=$repoToken
