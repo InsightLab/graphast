@@ -60,13 +60,15 @@ public class DijkstraTest {
 	@Test(expected = NodeNotFoundException.class)
 	public void testNoNodeToAllException(){
 		ShortestPathStrategy strategy = new DijkstraStrategy(g);
-		DistanceVector vector = strategy.run(6);
+		strategy.run(6);
+		fail();
 	}
 	
 	@Test(expected = NodeNotFoundException.class)
 	public void testOneToNoNodeException(){
 		ShortestPathStrategy strategy = new DijkstraStrategy(g);
-		DistanceVector vector = strategy.run(0,6);
+		strategy.run(0,6);
+		fail();
 	}
 
 }

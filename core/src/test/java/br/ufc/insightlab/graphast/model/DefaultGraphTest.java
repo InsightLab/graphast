@@ -16,7 +16,6 @@ import br.ufc.insightlab.graphast.exceptions.NodeNotFoundException;
 import br.ufc.insightlab.graphast.model.Edge;
 import br.ufc.insightlab.graphast.model.Graph;
 import br.ufc.insightlab.graphast.model.Node;
-import hugedataaccess.DataAccessException;
 
 public class DefaultGraphTest {
 

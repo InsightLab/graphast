@@ -19,12 +19,12 @@ public class DijkstraStrategy implements ShortestPathStrategy {
 	}
 
 	@Override
-	public DistanceVector run(long sourceId) {
+	public DistanceVector run(long sourceId) throws NodeNotFoundException {
 		return this.run(sourceId, -1);
 	}
 
 	@Override
-	public DistanceVector run(long sourceId, long targetId) {
+	public DistanceVector run(long sourceId, long targetId) throws NodeNotFoundException {
 		if(!g.containsNode(sourceId))
 			throw new NodeNotFoundException(sourceId);
 		if(targetId != -1 && !g.containsNode(targetId))
@@ -34,31 +34,38 @@ public class DijkstraStrategy implements ShortestPathStrategy {
 		Queue<DistanceElement> toVisit = new PriorityQueue<>();
 		
 		toVisit.add(vector.getElement(sourceId));
+		
 		while(!toVisit.isEmpty()){
 			DistanceElement min = toVisit.poll();
-			if(targetId != -1 && targetId == min.getNodeId()){
-				return vector;
-			}
 			
-			if(min.isVisited()) continue;
-			min.setVisited(true);
-			//System.out.println(min.getIndex());
-			Iterator<Edge> it = g.getOutEdges(min.getNodeId());
-			while(it.hasNext()) {
-				Edge e = it.next();
-				DistanceElement neighbor = vector.getElement(e.getAdjacent(min.getNodeId()));
-				if (neighbor.isVisited()) continue;
-				
-				double newDistance = min.getDistance() + e.getCost();
-				if(neighbor.getDistance() > newDistance && !neighbor.isVisited()) {
-					neighbor.changeDistance(newDistance);
-					neighbor.changePrevious(min.getNodeId());
-					toVisit.add(neighbor);
-				}
-			}
+			if(targetId != -1 && targetId == min.getNodeId())
+				return vector;
+			
+			if(!min.isVisited()) visitNode(min, vector, toVisit);
 		}
 		//System.out.println(vector.getDistance(target));
 		return vector;
+	}
+	
+	private void visitNode(DistanceElement node, DistanceVector vector, Queue<DistanceElement> toVisit) {
+		node.setVisited(true);
+		//System.out.println(min.getIndex());
+		Iterator<Edge> it = g.getOutEdges(node.getNodeId());
+		while(it.hasNext()) {
+			Edge e = it.next();
+			DistanceElement neighbor = vector.getElement(e.getAdjacent(node.getNodeId()));
+			
+			if (!neighbor.isVisited()) relaxPath(e, node, neighbor, toVisit);
+		}
+	}
+	
+	private void relaxPath(Edge e, DistanceElement node, DistanceElement neighbor, Queue<DistanceElement> toVisit) {
+		double newDistance = node.getDistance() + e.getCost();
+		if(neighbor.getDistance() > newDistance && !neighbor.isVisited()) {
+			neighbor.changeDistance(newDistance);
+			neighbor.changePrevious(node.getNodeId());
+			toVisit.add(neighbor);
+		}
 	}
 
 }
