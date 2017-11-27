@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>br.ufc.insightlab</groupId>
+	<groupId>org.insightlab</groupId>
 	<artifactId>graphast-core</artifactId>
 	<version>2.1.4</version>
 	<packaging>jar</packaging>
@@ -60,9 +60,9 @@
 		</dependency>
 		
 		<dependency>
-		  <groupId>br.ufc.insightlab</groupId>
-		  <artifactId>huge-data-access</artifactId>
-		  <version>0.1.1</version>
+		    <groupId>org.insightlab</groupId>
+		    <artifactId>huge-data-access</artifactId>
+		    <version>0.1.1</version>
 		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/org.openstreetmap.osmosis/osmosis-core -->
