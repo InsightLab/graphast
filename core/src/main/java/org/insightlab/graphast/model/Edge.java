@@ -63,7 +63,9 @@ public class Edge extends GraphObject {
 		if (!(obj instanceof Edge)) return false;
 		Edge other = (Edge) obj;
 		return (this.fromNode==other.fromNode && this.toNode==other.toNode &&
-				this.cost==other.cost && this.bidirectional==other.bidirectional);
+				this.cost==other.cost);
+//		return (fromNode + "|" + toNode + "|" + cost)
+//				.equals(other.getFromNodeId()+"|"+other.getToNodeId()+"|"+other.getCost());
 	}
 	
 	@Override
