@@ -27,6 +27,7 @@ public class DistanceVectorTest {
 	public void testPrint() {
 		vector.print();
 		vector.print(0l, 1l);
+		vector.print(0l, 2l);
 	}
 	
 	@Test
