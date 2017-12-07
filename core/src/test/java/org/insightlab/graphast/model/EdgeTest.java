@@ -14,6 +14,41 @@ public class EdgeTest {
 	}
 	
 	@Test
+	public void testConstructor1(){
+		e = new Edge(0,1);
+		assertEquals(0l, e.getFromNodeId());
+		assertEquals(1l, e.getToNodeId());
+		assertEquals(1l, e.getCost(),0);
+		assertEquals(false, e.isBidirectional());
+	}
+	
+	@Test
+	public void testConstructor2(){
+		e = new Edge(0,1,3);
+		assertEquals(0l, e.getFromNodeId());
+		assertEquals(1l, e.getToNodeId());
+		assertEquals(3l, e.getCost(),0);
+		assertEquals(false, e.isBidirectional());
+	}
+	
+	@Test
+	public void testConstructor3(){
+		e = new Edge(0, 1, true); 
+		assertEquals(0l, e.getFromNodeId());
+		assertEquals(1l, e.getToNodeId());
+		assertEquals(1l, e.getCost(),0);
+		assertEquals(true, e.isBidirectional());
+	}
+	
+	@Test
+	public void testConstructor4(){ 
+		assertEquals(0l, e.getFromNodeId());
+		assertEquals(1l, e.getToNodeId());
+		assertEquals(3l, e.getCost(),0);
+		assertEquals(true, e.isBidirectional());
+	}
+	
+	@Test
 	public void testFromNode() {
 		assertEquals("From node is wrong",0l,e.getFromNodeId());
 	}
@@ -55,5 +90,33 @@ public class EdgeTest {
 	public void testGetAdjacent(){
 		assertEquals("From adjacent not right",1l,e.getAdjacent(0));
 		assertEquals("To adjacent not right",0l,e.getAdjacent(1));
+	}
+	
+	@Test
+	public void testEquals(){
+		Edge e1 = new Edge(0,1,3,true);
+		Edge e2 = new Edge(0,2,3,true);
+		Edge e3 = new Edge(3,1,3,true);
+		Edge e4 = new Edge(0,1,4,true);
+		Edge e5 = new Edge(0,1,3,false);
+		
+		assertEquals(false, e.equals(new Long(5)));
+		
+		assertEquals(true, e.equals(e1));
+		
+		assertEquals(false, e.equals(e2));
+		assertEquals(false, e.equals(e3));
+		assertEquals(false, e.equals(e4));
+		assertEquals(false, e.equals(e5));
+	}
+	
+	@Test
+	public void testToString(){
+		assertEquals("0|1|3.0", e.toString());
+	}
+	
+	@Test
+	public void testHashCode(){
+		assertEquals("0|1|3.0".hashCode(), e.hashCode());
 	}
 }
