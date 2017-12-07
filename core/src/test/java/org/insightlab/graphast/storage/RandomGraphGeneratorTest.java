@@ -20,7 +20,8 @@ public class RandomGraphGeneratorTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		g = RandomGraphGenerator.generateRandomMMapGraph("random_graph", nNodes, density);
+		RandomGraphGenerator generator = new RandomGraphGenerator();
+		g = generator.generateRandomMMapGraph("random_graph", nNodes, density);
 	}
 
 	@Test
@@ -30,13 +31,9 @@ public class RandomGraphGeneratorTest {
 	
 	@Test
 	public void testDijkstra() {
-		try {
-			ShortestPathStrategy strategy = new DijkstraStrategy(g);
-			DistanceVector vector = strategy.run(10);
-			vector.print(10, 40);
-		} catch (Exception e) {
-			fail("It shouldn't throw any exception");
-		}
+		ShortestPathStrategy strategy = new DijkstraStrategy(g);
+		DistanceVector vector = strategy.run(10);
+		vector.print(10, 40);
 	}
 	
 	@AfterClass
