@@ -125,6 +125,12 @@
 			            </goals>
 			        </execution>
 			    </executions>
+			    
+			    <configuration>
+			    	<excludes>
+			    		<exclude>**/org/insightlab/graphast/exceptions/*</exclude>
+			    	</excludes>
+			    </configuration>
 			</plugin>
 		
 			<plugin>
