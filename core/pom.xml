@@ -128,11 +128,8 @@
 			    
 			    <configuration>
 			    	<excludes>
+						<exclude>**/org/insightlab/graphast/storage/GraphStorageFactory.*</exclude>
 			    		<exclude>**/org/insightlab/graphast/exceptions/*</exclude>
-			    	</excludes>
-			    	
-			    	<excludes>
-			    		<exclude>**/org/insightlab/graphast/storage/GraphStorageFactory.*</exclude>
 			    	</excludes>
 			    </configuration>
 			</plugin>
