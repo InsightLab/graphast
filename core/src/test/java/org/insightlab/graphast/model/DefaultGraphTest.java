@@ -90,6 +90,24 @@ public class DefaultGraphTest {
 	}
 	
 	@Test
+	public void testGetNumberOfNodes(){
+		g.addNodes(n0,n1);
+		assertEquals(2l, g.getNumberOfNodes());
+		g.addNode(n2);
+		assertEquals(3l, g.getNumberOfNodes());
+	}
+	
+	@Test
+	public void testGetNumberOfEdges(){
+		g.addNodes(n0,n1,n2,n3,n4);
+		g.addEdges(e0,e1);
+		assertEquals(2l, g.getNumberOfEdges());
+		g.addEdge(e2);
+		assertEquals(3l, g.getNumberOfEdges());
+	}
+	
+	
+	@Test
 	public void testGetOutEdges() {
 		g.addNodes(n0, n1, n2, n3, n4);
 		g.addEdges(e0, e2, e4, e1, e6, e5, e3);

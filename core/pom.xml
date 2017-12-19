@@ -125,6 +125,13 @@
 			            </goals>
 			        </execution>
 			    </executions>
+			    
+			    <configuration>
+			    	<excludes>
+						<exclude>**/org/insightlab/graphast/storage/GraphStorageFactory.*</exclude>
+			    		<exclude>**/org/insightlab/graphast/exceptions/*</exclude>
+			    	</excludes>
+			    </configuration>
 			</plugin>
 		
 			<plugin>

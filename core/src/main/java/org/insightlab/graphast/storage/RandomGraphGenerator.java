@@ -9,7 +9,9 @@ import org.insightlab.graphast.structure.MMapGraphStructure;
 
 public class RandomGraphGenerator {
 	
-	public static Graph generateRandomMMapGraph(String graphName, int size, float dens) {
+	public RandomGraphGenerator(){}
+	
+	public Graph generateRandomMMapGraph(String graphName, int size, float dens) {
 		
 		Graph g = null;
 		String dir = "graphs/MMap/" + graphName;

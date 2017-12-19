@@ -150,8 +150,10 @@ public class Edge extends GraphObject {
 	public boolean equals(Object obj) {
 		if (!(obj instanceof Edge)) return false;
 		Edge other = (Edge) obj;
-		return (fromNode + "|" + toNode + "|" + cost)
-				.equals(other.getFromNodeId()+"|"+other.getToNodeId()+"|"+other.getCost());
+		return (this.fromNode==other.fromNode && this.toNode==other.toNode &&
+				this.cost==other.cost);
+//		return (fromNode + "|" + toNode + "|" + cost)
+//				.equals(other.getFromNodeId()+"|"+other.getToNodeId()+"|"+other.getCost());
 	}
 	
 	/**
