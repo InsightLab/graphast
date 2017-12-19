@@ -1,7 +1,9 @@
 package org.insightlab.graphast.query.utils;
 
 /**
- * The Class DistanceElement.
+ * The Distance Element class. It represents a node in the graph during the shortest path strategy calculation.
+ * It implements the Comparable interface, this way the distance attribute can be compared between the differents
+ * instances of this class easily.
  */
 public class DistanceElement implements Comparable<DistanceElement>{
 	
@@ -11,9 +13,10 @@ public class DistanceElement implements Comparable<DistanceElement>{
 	private boolean visited;
 	
 	/**
-	 * Instantiates a new distance element.
+	 * Instantiates a new distance element, given a node id. The distance is initially set to the max double value, 
+	 * the parent id of this node is set to -1 and it is initially not visited by any strategy.
 	 *
-	 * @param nodeId the node id
+	 * @param nodeId the node id of the instantiated element.
 	 */
 	public DistanceElement(Long nodeId) {
 		this.nodeId = nodeId;
@@ -23,73 +26,78 @@ public class DistanceElement implements Comparable<DistanceElement>{
 	}
 	
 	/**
-	 * Change previous.
+	 * Change previous function. In this function a new parent node id is set to this element.
 	 *
-	 * @param newParentId the new parent id
+	 * @param newParentId the new parent node id.
 	 */
 	public void changePrevious(long newParentId) {
 		parentId = newParentId;
 	}
 	
 	/**
-	 * Change distance.
+	 * Change distance function. This functions sets a new value for the distance attribute of this element.
 	 *
-	 * @param newDistance the new distance
+	 * @param newDistance the new distance value.
 	 */
 	public void changeDistance(double newDistance) {
 		distance = newDistance;
 	}
 	
 	/**
-	 * Gets the node id.
+	 * This function returns the id of the node represented by this element.
 	 *
-	 * @return the node id
+	 * @return the node id of this element.
 	 */
 	public long getNodeId() {
 		return this.nodeId;
 	}
 	
 	/**
-	 * Gets the distance.
+	 * This functions gets the value for the distance attribute of this element.
 	 *
-	 * @return the distance
+	 * @return the distance value.
 	 */
 	public double getDistance() {
 		return distance;
 	}
 	
 	/**
-	 * Gets the parent id.
+	 * This function returns the parent node id of this element.
 	 *
-	 * @return the parent id
+	 * @return the parent node id.
 	 */
 	public long getParentId() {
 		return parentId;
 	}
 	
 	/**
-	 * Checks if is visited.
+	 * This function checks whether this element has been visited or not by some shortest path strategy.
 	 *
-	 * @return true, if is visited
+	 * @return true, if the node represented by this element has been visited. false, otherwise.
 	 */
 	public boolean isVisited() {
 		return visited;
 	}
 	
 	/**
-	 * Sets the visited.
+	 * This function sets a new value for the visited attribute, indicating whether this element was
+	 * visited or not.
 	 *
-	 * @param b the new visited
+	 * @param b the new visited value.
 	 */
 	public void setVisited(boolean b) {
 		visited = b;
 	}
 
 	/**
-	 * Compare to.
+	 * Compare to function (overridden). It takes another DistanceElement object as input and compares
+	 * their distances to indicate which one has the smaller distance value. It is an implementation
+	 * of the Comparable interface's method, to indicate how to compare two objects of the same class.
 	 *
-	 * @param o the o
-	 * @return the int
+	 * @param o the DistanceElement object to compare with the onde calling this function.
+	 * @return the value 0 if this object's distance is numerically equal to o's; 
+	 * a value less than 0 if this object's distance is numerically less than o's; 
+	 * and a value greater than 0 if this object's distance is numerically greater than o's.
 	 */
 	@Override
 	public int compareTo(DistanceElement o) {
