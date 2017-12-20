@@ -38,32 +38,15 @@ public class DefaultGraphStructure implements GraphStructure {
 	private Integer nextId = 0;
 	
 	private HashMap<Long, Integer> idMapping = new HashMap<>();
+	
 	private ArrayList<Node> nodes = new ArrayList<>();
 	private ArrayList<Edge> edges = new ArrayList<>();
+	
 	private ArrayList<ArrayList<Edge>> outEdges = new ArrayList<>();
-	private ArrayList<ArrayList<Edge>> inEdges = new ArrayList<>();
-	
-	@Override
-	public long getNumberOfNodes() {
-		return nodes.size();
-	}
-	
-	@Override
-	public long getNumberOfEdges() {
-		return edges.size();
-	}
-	
-	public void addNode(Node n) {
-		if(idMapping.get(n.getId())!=null)
-			throw new DuplicatedNodeException(n.getId());
-		
-		idMapping.put(n.getId(), nextId++);
-		nodes.add(n);
-		outEdges.add(new ArrayList<Edge>());
-		inEdges.add(new ArrayList<Edge>());
-	}
+	private ArrayList<ArrayList<Edge>> inEdges  = new ArrayList<>();
 	
 	private void addAdjacency(long id, Edge e) {
+		
 		int nodeId = idMapping.get(id);
 		
 		if (e.isBidirectional()) {
@@ -76,24 +59,42 @@ public class DefaultGraphStructure implements GraphStructure {
 		else if (e.getToNodeId() == id) {
 			inEdges.get(nodeId).add(e);
 		}
+		
+	}
+	
+	public void addNode(Node node) {
+		
+		if (idMapping.get(node.getId()) != null)
+			throw new DuplicatedNodeException(node.getId());
+		
+		idMapping.put(node.getId(), nextId++);
+		nodes.add(node);
+		
+		outEdges.add(new ArrayList<Edge>());
+		inEdges.add(new ArrayList<Edge>());
+	
 	}
 	
 	public void addEdge(Edge e) {
 		
-		if(!containsNode(e.getFromNodeId())){
+		if (!containsNode(e.getFromNodeId())) {
 			throw new NodeNotFoundException(e.getFromNodeId());
 		}
-		if(!containsNode(e.getToNodeId())){
+		
+		if (!containsNode(e.getToNodeId())) {
 			throw new NodeNotFoundException(e.getToNodeId());
 		}
 		
 		addAdjacency(e.getFromNodeId(), e);
-		addAdjacency(e.getToNodeId(), e);
+		addAdjacency(e.getToNodeId(),   e);
+		
 		edges.add(e);
+		
 	}
 	
-	public Node getNode(final long id) {
-		return nodes.get(idMapping.get(id));
+	@Override
+	public boolean containsNode(long id) {
+		return idMapping.containsKey(id);
 	}
 	
 	public Iterator<Node> nodeIterator() {
@@ -104,17 +105,26 @@ public class DefaultGraphStructure implements GraphStructure {
 		return edges.iterator();
 	}
 	
+	@Override
+	public long getNumberOfNodes() {
+		return nodes.size();
+	}
+	
+	@Override
+	public long getNumberOfEdges() {
+		return edges.size();
+	}
+	
+	public Node getNode(final long id) {
+		return nodes.get(idMapping.get(id));
+	}
+	
 	public Iterator<Edge> getOutEdges(final long id) {
 		return outEdges.get(idMapping.get(id)).iterator();
 	}
 	
 	public Iterator<Edge> getInEdges(final long id) {
 		return inEdges.get(idMapping.get(id)).iterator();
-	}
-
-	@Override
-	public boolean containsNode(long id) {
-		return idMapping.containsKey(id);
 	}
 
 }

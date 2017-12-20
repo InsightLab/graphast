@@ -31,17 +31,17 @@ import org.insightlab.graphast.model.Node;
 
 public interface GraphStructure {
 	
-	long getNumberOfNodes();
-	long getNumberOfEdges();
-
-	void addNode(Node n);
-	void addEdge(Edge e);
+	void addNode(Node node);
+	void addEdge(Edge edge);
 	
 	boolean containsNode(final long id);
 	
 	Iterator<Node> nodeIterator();
 	Iterator<Edge> edgeIterator();
 	
+	long getNumberOfNodes();
+	long getNumberOfEdges();
+
 	Iterator<Edge> getOutEdges(final long id);
 	Iterator<Edge> getInEdges(final long id);
 	
