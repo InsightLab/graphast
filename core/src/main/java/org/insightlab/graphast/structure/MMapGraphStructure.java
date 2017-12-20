@@ -35,6 +35,10 @@ import org.insightlab.hugedataaccess.MMapDataAccess;
 import org.insightlab.hugedataaccess.structures.MMapMap;
 import org.insightlab.hugedataaccess.structures.MMapTreeMap;
 
+/**
+ * This class implements a MMap graph structure using the interface GraphStructure.
+ *
+ */
 public class MMapGraphStructure implements GraphStructure {
 	
 	private static final int NODE_SIZE = 4*8;
@@ -50,6 +54,10 @@ public class MMapGraphStructure implements GraphStructure {
 	private DataAccess nodeAccess;
 	private DataAccess edgeAccess;
 	
+	/**
+	 * Create a new MMapGraphStructure for the given path.
+	 * @param path the graph's path where the graph will be read or saved.
+	 */
 	public MMapGraphStructure(String path) {
 		
 		String directory = path;
@@ -87,18 +95,34 @@ public class MMapGraphStructure implements GraphStructure {
 		
 	}
 
+	/**
+	 * returns the index of the node which has the given id.
+	 * @param id the node's id.
+	 */
 	private long getNodeIndex(long id) {
 		return 8 + id*NODE_SIZE;
 	}
 	
+	/**
+	 * returns the index of the edge which has the given id.
+	 * @param id the edge's id.
+	 */
 	private long getEdgeIndex(long id) {
 		return 8 + id*EDGE_SIZE;
 	}
 	
+	/**
+	 * returns the external id of the node which has the given internal id.
+	 * @param internalId the node's internal id.
+	 */
 	private long getExternalIdByInternalId(long internalId) {
 		return nodeAccess.getLong( getNodeIndex(internalId) );
 	}
 	
+	/**
+	 * Add a new directional edge into the graph.
+	 * @param e the edge that will be added into the graph.
+	 */
 	private void addDirectionalEdge(Edge e) {
 		
 		if (edgeAccess.getCapacity() < getEdgeIndex(edgePos) + EDGE_SIZE)
@@ -125,6 +149,10 @@ public class MMapGraphStructure implements GraphStructure {
 		
 	}
 	
+	/**
+	 * Add a new node into the graph.
+	 * @param the node that will be added.
+	 */
 	@Override
 	public void addNode(Node n) {
 		
@@ -143,6 +171,10 @@ public class MMapGraphStructure implements GraphStructure {
 		
 	}
 
+	/**
+	 * Add a new edge into the graph.
+	 * @param e the edge that will be added into the graph.
+	 */
 	@Override
 	public void addEdge(Edge e) {
 		
@@ -152,11 +184,18 @@ public class MMapGraphStructure implements GraphStructure {
 			addDirectionalEdge(new Edge(e.getToNodeId(), e.getFromNodeId(), e.getCost()));
 	}
 
+	/**
+	 * Verify whether the node which has the given id is in the graph or not.
+	 * @param id the node's id.
+	 */
 	@Override
 	public boolean containsNode(long id) {
 		return idMapping.containsKey(id);
 	}
 	
+	/**
+	 * returns an iterator to graph's nodes.
+	 */
 	@Override
 	public Iterator<Node> nodeIterator() {
 		
@@ -182,6 +221,9 @@ public class MMapGraphStructure implements GraphStructure {
 		
 	}
 
+	/**
+	 * returns an iterator to graph's edges.
+	 */
 	@Override
 	public Iterator<Edge> edgeIterator() {
 		
@@ -217,16 +259,26 @@ public class MMapGraphStructure implements GraphStructure {
 		
 	}
 
+	/**
+	 * returns the number of graph's nodes.
+	 */
 	@Override
 	public long getNumberOfNodes() {
 		return nodeAccess.getLong(0);
 	}
 
+	/**
+	 * returns the number of graph's edges.
+	 */
 	@Override
 	public long getNumberOfEdges() {
 		return edgeAccess.getLong(0);
 	}
 	
+	/**
+	 * returns the out edges of the node which has the given id.
+	 * @param id the node's id.
+	 */
 	@Override
 	public Iterator<Edge> getOutEdges(final long id) {
 		
@@ -262,6 +314,10 @@ public class MMapGraphStructure implements GraphStructure {
 		
 	}
 
+	/**
+	 * returns the in edges of the node which has the given id.
+	 * @param id the node's id.
+	 */
 	@Override
 	public Iterator<Edge> getInEdges(final long id) {
 		

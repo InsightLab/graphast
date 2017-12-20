@@ -33,6 +33,10 @@ import org.insightlab.graphast.exceptions.NodeNotFoundException;
 import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Node;
 
+/**
+ * This class implements a default graph structure using the interface GraphStructure.
+ *
+ */
 public class DefaultGraphStructure implements GraphStructure {
 	
 	private Integer nextId = 0;
@@ -45,6 +49,11 @@ public class DefaultGraphStructure implements GraphStructure {
 	private ArrayList<ArrayList<Edge>> outEdges = new ArrayList<>();
 	private ArrayList<ArrayList<Edge>> inEdges  = new ArrayList<>();
 	
+	/**
+	 * Add a new adjacency between two vertices.
+	 * @param id the first vertex of the adjacency.
+	 * @param e edge that represents the adjacency between the vertices.
+	 */
 	private void addAdjacency(long id, Edge e) {
 		
 		int nodeId = idMapping.get(id);
@@ -62,6 +71,10 @@ public class DefaultGraphStructure implements GraphStructure {
 		
 	}
 	
+	/**
+	 * Add a new node into the graph.
+	 * @param the node that will be added.
+	 */
 	public void addNode(Node node) {
 		
 		if (idMapping.get(node.getId()) != null)
@@ -75,6 +88,10 @@ public class DefaultGraphStructure implements GraphStructure {
 	
 	}
 	
+	/**
+	 * Add a new edge into the graph.
+	 * @param e the edge that will be added into the graph.
+	 */
 	public void addEdge(Edge e) {
 		
 		if (!containsNode(e.getFromNodeId())) {
@@ -92,37 +109,65 @@ public class DefaultGraphStructure implements GraphStructure {
 		
 	}
 	
+	/**
+	 * Verify whether the node which has the given id is in the graph or not.
+	 * @param id the node's id.
+	 */
 	@Override
 	public boolean containsNode(long id) {
 		return idMapping.containsKey(id);
 	}
 	
+	/**
+	 * returns an iterator to graph's nodes.
+	 */
 	public Iterator<Node> nodeIterator() {
 		return nodes.iterator();
 	}
 	
+	/**
+	 * returns an iterator to graph's edges.
+	 */
 	public Iterator<Edge> edgeIterator() {
 		return edges.iterator();
 	}
 	
+	/**
+	 * returns the number of graph's nodes.
+	 */
 	@Override
 	public long getNumberOfNodes() {
 		return nodes.size();
 	}
 	
+	/**
+	 * returns the number of graph's edges.
+	 */
 	@Override
 	public long getNumberOfEdges() {
 		return edges.size();
 	}
 	
+	/**
+	 * returns the node which has the given id.
+	 * @param id the node's id.
+	 */
 	public Node getNode(final long id) {
 		return nodes.get(idMapping.get(id));
 	}
 	
+	/**
+	 * returns the out edges of the node which has the given id.
+	 * @param id the node's id.
+	 */
 	public Iterator<Edge> getOutEdges(final long id) {
 		return outEdges.get(idMapping.get(id)).iterator();
 	}
 	
+	/**
+	 * returns the in edges of the node which has the given id.
+	 * @param id the node's id.
+	 */
 	public Iterator<Edge> getInEdges(final long id) {
 		return inEdges.get(idMapping.get(id)).iterator();
 	}
