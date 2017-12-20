@@ -60,8 +60,12 @@ public class Node extends GraphObject {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof Node)) return false;
+		
+		if (!(obj instanceof Node))
+			return false;
+		
 		return ((Node)obj).getId() == id;
+		
  	}
 	
 	/**

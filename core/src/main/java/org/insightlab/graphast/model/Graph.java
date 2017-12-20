@@ -59,24 +59,6 @@ public class Graph extends GraphObject {
 	}
 	
 	/**
-	 * Gets the number of nodes of the graph.
-	 *
-	 * @return the number of nodes of the graph.
-	 */
-	public long getNumberOfNodes() {
-		return structure.getNumberOfNodes();
-	}
-	
-	/**
-	 * Gets the number of edges of the graph.
-	 *
-	 * @return the number of edges of the graph.s
-	 */
-	public long getNumberOfEdges() {
-		return structure.getNumberOfEdges();
-	}
-	
-	/**
 	 * Adds a new node to the graph, given a new id. If a node already
 	 * exists with the given id, a DuplicatedNodeException is thrown.
 	 *
@@ -103,20 +85,10 @@ public class Graph extends GraphObject {
 	 * @param nodes the Node objects to be added to the graph. 
 	 */
 	public void addNodes(Node ...nodes) {
+		
 		for (Node n : nodes)
 			this.addNode(n);
-	}
-	
-	/**
-	 * Contains node. This function checks if a node with the given id already exists
-	 * within the graph structure.
-	 *
-	 * @param id the id of the node to checked.
-	 * @return true, if the graph structure already contains a Node object with the given id.
-	 * false, otherwise.
-	 */
-	public boolean containsNode(long id) {
-		return structure.containsNode(id);
+		
 	}
 	
 	/**
@@ -138,8 +110,22 @@ public class Graph extends GraphObject {
 	 * @param edges the new edges to be added to the graph.
 	 */
 	public void addEdges(Edge ...edges) {
+		
 		for (Edge e : edges)
 			this.addEdge(e);
+		
+	}
+	
+	/**
+	 * Contains node. This function checks if a node with the given id already exists
+	 * within the graph structure.
+	 *
+	 * @param id the id of the node to checked.
+	 * @return true, if the graph structure already contains a Node object with the given id.
+	 * false, otherwise.
+	 */
+	public boolean containsNode(long id) {
+		return structure.containsNode(id);
 	}
 	
 	/**
@@ -158,6 +144,24 @@ public class Graph extends GraphObject {
 	 */
 	public Iterator<Edge> edgeIterator() {
 		return structure.edgeIterator();
+	}
+	
+	/**
+	 * Gets the number of nodes of the graph.
+	 *
+	 * @return the number of nodes of the graph.
+	 */
+	public long getNumberOfNodes() {
+		return structure.getNumberOfNodes();
+	}
+	
+	/**
+	 * Gets the number of edges of the graph.
+	 *
+	 * @return the number of edges of the graph.s
+	 */
+	public long getNumberOfEdges() {
+		return structure.getNumberOfEdges();
 	}
 	
 	/**
@@ -197,7 +201,9 @@ public class Graph extends GraphObject {
 	 * which the node given in the function points to.
 	 */
 	public Iterator<Long> getNeighborhood(final long id) {
+		
 		return new Iterator<Long>() {
+			
 			Iterator<Edge> iter = structure.getOutEdges(id);
 
 			@Override
@@ -210,7 +216,9 @@ public class Graph extends GraphObject {
 				Edge e = iter.next();
 				return e.getFromNodeId() == id ? e.getToNodeId() : e.getFromNodeId();
 			}
+			
 		};
+		
 	}
 	
 }

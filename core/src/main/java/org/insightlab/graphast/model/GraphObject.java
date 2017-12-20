@@ -32,7 +32,7 @@ import java.util.HashMap;
  */
 public abstract class GraphObject {
 	
-private HashMap<String, Object> data = null;
+	private HashMap<String, Object> data = null;
 	
 	/**
 	 * Put data function. Given a key and a value, represented by an object,
@@ -43,8 +43,12 @@ private HashMap<String, Object> data = null;
 	 * @param value value to be associated with the specified key.
 	 */
 	public void putData(String key, Object value) {
-		if(data == null) data = new HashMap<>();
+		
+		if (data == null)
+			data = new HashMap<>();
+		
 		data.put(key, value);
+		
 	}
 	
 	/**

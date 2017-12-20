@@ -54,8 +54,8 @@ public class Edge extends GraphObject {
 	 */
 	public Edge(long from, long to, double cost) {
 		this.fromNode = from;
-		this.toNode= to;
-		this.cost = cost;
+		this.toNode   = to;
+		this.cost     = cost;
 	}
 	
 	/**
@@ -172,12 +172,21 @@ public class Edge extends GraphObject {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof Edge)) return false;
+		
+		if (!(obj instanceof Edge)) 
+			return false;
+		
 		Edge other = (Edge) obj;
-		return (this.fromNode==other.fromNode && this.toNode==other.toNode &&
-				this.cost==other.cost);
+		
+		boolean okFromNode = this.fromNode == other.fromNode;
+		boolean okToNode   = this.toNode   == other.toNode;
+		boolean okCost     = this.cost     == other.cost;
+		
+		return okFromNode && okToNode && okCost;
+		
 //		return (fromNode + "|" + toNode + "|" + cost)
 //				.equals(other.getFromNodeId()+"|"+other.getToNodeId()+"|"+other.getCost());
+		
 	}
 	
 	/**
