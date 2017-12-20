@@ -43,10 +43,13 @@ public class DistanceElement implements Comparable<DistanceElement>{
 	 * @param nodeId the node id of the instantiated element.
 	 */
 	public DistanceElement(Long nodeId) {
+		
 		this.nodeId = nodeId;
 		this.distance = Double.MAX_VALUE;
+		
 		parentId = -1l;
 		visited = false;
+		
 	}
 	
 	/**
