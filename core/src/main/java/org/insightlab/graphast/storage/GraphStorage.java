@@ -8,6 +8,6 @@ import org.insightlab.graphast.structure.GraphStructure;
 public interface GraphStorage {
 	
 	Graph load(String path, GraphStructure structure) throws FileNotFoundException;
-	void save(String path, Graph g);
+	void save(String path, Graph graph);
 	
 }
