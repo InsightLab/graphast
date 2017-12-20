@@ -46,18 +46,30 @@ import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Graph;
 import org.insightlab.graphast.structure.GraphStructure;
 
+/**
+ * This class implements a OSMGraphStorage. OpenStreetMap (OSM) is a manner to represents graphs.
+ *
+ */
 public class OSMGraphStorage implements GraphStorage {
 	
 	private static GraphStorage instance = null;
 	
 	private OSMGraphStorage() {}
 	
+	/**
+	 * returns the current GraphStorage's instance.
+	 */
 	public static GraphStorage getInstance() {
 		if (instance == null) instance = new OSMGraphStorage();
 		
 		return instance;
 	}
 
+	/**
+	 * Load a graph from the given path and structure.
+	 * @param path to search the file that contains the graph.
+	 * @param structure that represents the structure of the graph.
+	 */
 	@Override
 	public Graph load(String path, GraphStructure structure) throws FileNotFoundException {
 		
@@ -113,21 +125,38 @@ public class OSMGraphStorage implements GraphStorage {
 		return graph;
 	}
 
+	/**
+	 * Save the graph into the given path.
+	 * @param path to save the file that contains the graph.
+	 * @param graph that will be saved.
+	 */
 	@Override
 	public void save(String path, Graph graph) {
 		// TODO Auto-generated method stub
 		
 	}
 	
+	/**
+	 * This class is used to encapsulate a graph.
+	 *
+	 */
 	private class MySink implements Sink {
 		
 		private Graph graph;
 		// private long counter = 0;
 		
+		/**
+		 * Create a new MySink for the given graph.
+		 * @param graph that will be encapsulated.
+		 */
 		public MySink(Graph graph) {
 			this.graph = graph;
 		}
 		
+		/**
+		 * This method will be process tasks over the graph.
+		 * @param entityContainer the container that is responsible by the graph.
+		 */
 		public void process(EntityContainer entityContainer) {
 			
 	        Entity entity = entityContainer.getEntity();
@@ -138,12 +167,12 @@ public class OSMGraphStorage implements GraphStorage {
 	        	
 	        	if (wayNodeList.size() < 2 || w.getTags().isEmpty()) return;
 	        	
-	        	if(!graph.containsNode(wayNodeList.get(0).getNodeId()))
+	        	if (!graph.containsNode(wayNodeList.get(0).getNodeId()))
 	        		graph.addNode(wayNodeList.get(0).getNodeId());
 	        	
 	        	for (int i = 1; i < wayNodeList.size(); i++) {
 	        		
-	        		if(!graph.containsNode(wayNodeList.get(i).getNodeId()))
+	        		if (!graph.containsNode(wayNodeList.get(i).getNodeId()))
 	        			graph.addNode(wayNodeList.get(i).getNodeId());
 	        		
 	        		WayNode from = wayNodeList.get(i - 1);
@@ -158,10 +187,20 @@ public class OSMGraphStorage implements GraphStorage {
 	        
 	    }
 		
+		/**
+		 * This method will be initialize the process of reading the data's graph.
+		 * @param arg0???
+		 */
 		public void initialize(Map<String, Object> arg0) { System.out.println("Reading OSM data"); }
 		
+		/**
+		 * This method will be complete the process of reading the data's graph.
+		 */
 		public void complete() { System.out.println("Finished reading OSM"); }
 		
+		/**
+		 * This method will be close the task.
+		 */
 		public void close() { System.out.println("Closing Task"); }
 		
 	}

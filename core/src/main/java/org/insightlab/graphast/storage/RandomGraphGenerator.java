@@ -31,10 +31,23 @@ import org.insightlab.graphast.model.Graph;
 import org.insightlab.graphast.model.Node;
 import org.insightlab.graphast.structure.MMapGraphStructure;
 
+/**
+ * This class implements a generator for random graphs.
+ *
+ */
 public class RandomGraphGenerator {
 	
+	/**
+	 * Create a new RandomGraphGenerator using no information.
+	 */
 	public RandomGraphGenerator() {}
 	
+	/**
+	 * Create a new Graph which has the given graphName, size and dens.
+	 * @param graphName the graph's name.
+	 * @param size the graph's size.
+	 * @param dens the graph's dens.
+	 */
 	public Graph generateRandomMMapGraph(String graphName, int size, float dens) {
 		
 		Graph graph = null;

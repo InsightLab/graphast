@@ -26,10 +26,19 @@ package org.insightlab.graphast.storage;
 
 import java.io.File;
 
+/**
+ * This utility class implements a method that delete graph's data.
+ *
+ */
+
 public class StorageUtils {
 	
 	private StorageUtils() {}
 	
+	/**
+	 * Delete a graph from the given path.
+	 * @param path to search the file that contains the graph that will be deleted.
+	 */
 	public static boolean deleteMMapGraph(String path) {
 		String directory = path;
 		

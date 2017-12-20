@@ -29,9 +29,24 @@ import java.io.FileNotFoundException;
 import org.insightlab.graphast.model.Graph;
 import org.insightlab.graphast.structure.GraphStructure;
 
+/**
+ * The GraphStorage interface. This interface contains declarations of general methods
+ * for different GraphStorage's implementations.
+ */
 public interface GraphStorage {
 	
+	/**
+	 * Load a graph from the given path and structure.
+	 * @param path to search the file that contains the graph.
+	 * @param structure that represents the structure of the graph.
+	 */
 	Graph load(String path, GraphStructure structure) throws FileNotFoundException;
+	
+	/**
+	 * Save the graph into the given path.
+	 * @param path to save the file that contains the graph.
+	 * @param graph that will be saved.
+	 */
 	void save(String path, Graph graph);
 	
 }

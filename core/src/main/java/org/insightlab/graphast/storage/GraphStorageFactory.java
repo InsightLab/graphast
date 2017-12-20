@@ -24,8 +24,15 @@
 
 package org.insightlab.graphast.storage;
 
+/**
+ * This class implements a factory for a GraphStorage.
+ *
+ */
 public class GraphStorageFactory {
 	
+	/**
+	 * returns the current GraphStorage's instance.
+	 */
 	public static GraphStorage getOSMGraphStorage() {
 		
 		return OSMGraphStorage.getInstance();
