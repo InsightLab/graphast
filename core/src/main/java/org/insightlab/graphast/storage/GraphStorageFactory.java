@@ -31,7 +31,7 @@ package org.insightlab.graphast.storage;
 public class GraphStorageFactory {
 	
 	/**
-	 * returns the current GraphStorage's instance.
+	 * @return the current GraphStorage's instance.
 	 */
 	public static GraphStorage getOSMGraphStorage() {
 		

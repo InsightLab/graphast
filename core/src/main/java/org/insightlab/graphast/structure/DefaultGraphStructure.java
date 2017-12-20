@@ -70,10 +70,10 @@ public class DefaultGraphStructure implements GraphStructure {
 		}
 		
 	}
-	
+
 	/**
 	 * Add a new node into the graph.
-	 * @param the node that will be added.
+	 * @param node the node that will be added.
 	 */
 	public void addNode(Node node) {
 		
@@ -119,21 +119,21 @@ public class DefaultGraphStructure implements GraphStructure {
 	}
 	
 	/**
-	 * returns an iterator to graph's nodes.
+	 * @return an iterator to graph's nodes.
 	 */
 	public Iterator<Node> nodeIterator() {
 		return nodes.iterator();
 	}
 	
 	/**
-	 * returns an iterator to graph's edges.
+	 * @return an iterator to graph's edges.
 	 */
 	public Iterator<Edge> edgeIterator() {
 		return edges.iterator();
 	}
 	
 	/**
-	 * returns the number of graph's nodes.
+	 * @return the number of graph's nodes.
 	 */
 	@Override
 	public long getNumberOfNodes() {
@@ -141,7 +141,7 @@ public class DefaultGraphStructure implements GraphStructure {
 	}
 	
 	/**
-	 * returns the number of graph's edges.
+	 * @return the number of graph's edges.
 	 */
 	@Override
 	public long getNumberOfEdges() {
@@ -151,22 +151,23 @@ public class DefaultGraphStructure implements GraphStructure {
 	/**
 	 * returns the node which has the given id.
 	 * @param id the node's id.
+	 * @return the node
 	 */
 	public Node getNode(final long id) {
 		return nodes.get(idMapping.get(id));
 	}
 	
 	/**
-	 * returns the out edges of the node which has the given id.
 	 * @param id the node's id.
+	 * @return the out edges of the node which has the given id.
 	 */
 	public Iterator<Edge> getOutEdges(final long id) {
 		return outEdges.get(idMapping.get(id)).iterator();
 	}
 	
 	/**
-	 * returns the in edges of the node which has the given id.
 	 * @param id the node's id.
+	 * @return the in edges of the node which has the given id.
 	 */
 	public Iterator<Edge> getInEdges(final long id) {
 		return inEdges.get(idMapping.get(id)).iterator();

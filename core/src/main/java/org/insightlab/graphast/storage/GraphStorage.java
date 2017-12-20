@@ -39,6 +39,7 @@ public interface GraphStorage {
 	 * Load a graph from the given path and structure.
 	 * @param path to search the file that contains the graph.
 	 * @param structure that represents the structure of the graph.
+	 * @return the graph loaded.
 	 */
 	Graph load(String path, GraphStructure structure) throws FileNotFoundException;
 	

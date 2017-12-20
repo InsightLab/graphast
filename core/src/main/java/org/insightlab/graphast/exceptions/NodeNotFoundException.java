@@ -42,7 +42,7 @@ public class NodeNotFoundException extends RuntimeException {
 
 	/**
 	 * Create a new NodeNotFoundException for the given node's id.
-	 * @param node's id.
+	 * @param i node's id.
 	 */
 	public NodeNotFoundException(long i) {
 		super("Node "+i+" not found");
@@ -50,7 +50,7 @@ public class NodeNotFoundException extends RuntimeException {
 	
 	/**
 	 * Create a new NodeNotFoundException for the given node's id and cause.
-	 * @param node's id.
+	 * @param i node's id.
 	 * @param cause the reason that raise this exception.
 	 */
 	public NodeNotFoundException(long i, Throwable cause) {

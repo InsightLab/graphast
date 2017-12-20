@@ -151,7 +151,7 @@ public class MMapGraphStructure implements GraphStructure {
 	
 	/**
 	 * Add a new node into the graph.
-	 * @param the node that will be added.
+	 * @param n the node that will be added.
 	 */
 	@Override
 	public void addNode(Node n) {
@@ -194,7 +194,7 @@ public class MMapGraphStructure implements GraphStructure {
 	}
 	
 	/**
-	 * returns an iterator to graph's nodes.
+	 * @return an iterator to graph's nodes.
 	 */
 	@Override
 	public Iterator<Node> nodeIterator() {
@@ -222,7 +222,7 @@ public class MMapGraphStructure implements GraphStructure {
 	}
 
 	/**
-	 * returns an iterator to graph's edges.
+	 * @return an iterator to graph's edges.
 	 */
 	@Override
 	public Iterator<Edge> edgeIterator() {
@@ -260,7 +260,7 @@ public class MMapGraphStructure implements GraphStructure {
 	}
 
 	/**
-	 * returns the number of graph's nodes.
+	 * @return the number of graph's nodes.
 	 */
 	@Override
 	public long getNumberOfNodes() {
@@ -268,7 +268,7 @@ public class MMapGraphStructure implements GraphStructure {
 	}
 
 	/**
-	 * returns the number of graph's edges.
+	 * @return the number of graph's edges.
 	 */
 	@Override
 	public long getNumberOfEdges() {
@@ -276,8 +276,8 @@ public class MMapGraphStructure implements GraphStructure {
 	}
 	
 	/**
-	 * returns the out edges of the node which has the given id.
 	 * @param id the node's id.
+	 * @return the out edges of the node which has the given id.
 	 */
 	@Override
 	public Iterator<Edge> getOutEdges(final long id) {
@@ -315,8 +315,8 @@ public class MMapGraphStructure implements GraphStructure {
 	}
 
 	/**
-	 * returns the in edges of the node which has the given id.
 	 * @param id the node's id.
+	 * @return the in edges of the node which has the given id.
 	 */
 	@Override
 	public Iterator<Edge> getInEdges(final long id) {

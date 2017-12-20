@@ -47,6 +47,7 @@ public class RandomGraphGenerator {
 	 * @param graphName the graph's name.
 	 * @param size the graph's size.
 	 * @param dens the graph's dens.
+	 * @return the graph generated.
 	 */
 	public Graph generateRandomMMapGraph(String graphName, int size, float dens) {
 		

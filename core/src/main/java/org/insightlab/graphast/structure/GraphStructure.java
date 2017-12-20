@@ -37,13 +37,13 @@ public interface GraphStructure {
 	
 	/**
 	 * Add a new node into the graph.
-	 * @param the node that will be added.
+	 * @param node the node that will be added.
 	 */
 	void addNode(Node node);
 	
 	/**
 	 * Add a new edge into the graph.
-	 * @param e the edge that will be added into the graph.
+	 * @param edge the edge that will be added into the graph.
 	 */
 	void addEdge(Edge edge);
 	
@@ -54,34 +54,34 @@ public interface GraphStructure {
 	boolean containsNode(final long id);
 	
 	/**
-	 * returns an iterator to graph's nodes.
+	 * @return an iterator to graph's nodes.
 	 */
 	Iterator<Node> nodeIterator();
 	
 	/**
-	 * returns an iterator to graph's edges.
+	 * @return an iterator to graph's edges.
 	 */
 	Iterator<Edge> edgeIterator();
 	
 	/**
-	 * returns the number of graph's nodes.
+	 * @return the number of graph's nodes.
 	 */
 	long getNumberOfNodes();
 	
 	/**
-	 * returns the number of graph's edges.
+	 * @return the number of graph's edges.
 	 */
 	long getNumberOfEdges();
 
 	/**
-	 * returns the out edges of the node which has the given id.
+	 * @return the out edges of the node which has the given id.
 	 * @param id the node's id.
 	 */
 	Iterator<Edge> getOutEdges(final long id);
 	
 	/**
-	 * returns the in edges of the node which has the given id.
 	 * @param id the node's id.
+	 * @return the in edges of the node which has the given id.
 	 */
 	Iterator<Edge> getInEdges(final long id);
 	

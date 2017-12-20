@@ -57,7 +57,7 @@ public class OSMGraphStorage implements GraphStorage {
 	private OSMGraphStorage() {}
 	
 	/**
-	 * returns the current GraphStorage's instance.
+	 * @return the current GraphStorage's instance.
 	 */
 	public static GraphStorage getInstance() {
 		if (instance == null) instance = new OSMGraphStorage();
@@ -69,6 +69,7 @@ public class OSMGraphStorage implements GraphStorage {
 	 * Load a graph from the given path and structure.
 	 * @param path to search the file that contains the graph.
 	 * @param structure that represents the structure of the graph.
+	 * @return the graph loaded.
 	 */
 	@Override
 	public Graph load(String path, GraphStructure structure) throws FileNotFoundException {
@@ -189,7 +190,7 @@ public class OSMGraphStorage implements GraphStorage {
 		
 		/**
 		 * This method will be initialize the process of reading the data's graph.
-		 * @param arg0???
+		 * @param arg0 ???
 		 */
 		public void initialize(Map<String, Object> arg0) { System.out.println("Reading OSM data"); }
 		
