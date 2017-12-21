@@ -88,7 +88,6 @@ public class Graph extends GraphObject {
 		
 		for (Node n : nodes)
 			this.addNode(n);
-		
 	}
 	
 	/**
@@ -113,7 +112,6 @@ public class Graph extends GraphObject {
 		
 		for (Edge e : edges)
 			this.addEdge(e);
-		
 	}
 	
 	/**
@@ -218,7 +216,6 @@ public class Graph extends GraphObject {
 			}
 			
 		};
-		
 	}
 	
 }

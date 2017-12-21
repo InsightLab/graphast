@@ -60,7 +60,8 @@ public class OSMGraphStorage implements GraphStorage {
 	 * @return the current GraphStorage's instance.
 	 */
 	public static GraphStorage getInstance() {
-		if (instance == null) instance = new OSMGraphStorage();
+		if (instance == null) 
+			instance = new OSMGraphStorage();
 		
 		return instance;
 	}
@@ -166,7 +167,8 @@ public class OSMGraphStorage implements GraphStorage {
 	        	Way w = (Way) entity;
 	        	List<WayNode> wayNodeList = w.getWayNodes();
 	        	
-	        	if (wayNodeList.size() < 2 || w.getTags().isEmpty()) return;
+	        	if (wayNodeList.size() < 2 || w.getTags().isEmpty()) 
+	        		return;
 	        	
 	        	if (!graph.containsNode(wayNodeList.get(0).getNodeId()))
 	        		graph.addNode(wayNodeList.get(0).getNodeId());

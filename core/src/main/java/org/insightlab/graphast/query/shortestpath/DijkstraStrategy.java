@@ -114,12 +114,9 @@ public class DijkstraStrategy implements ShortestPathStrategy {
 			
 			if (!min.isVisited()) 
 				visitNode(min, vector, toVisit);
-			
 		}
 		
-		//System.out.println(vector.getDistance(target));
-		return vector;
-		
+		return vector;	
 	}
 	
 	/**
@@ -136,7 +133,6 @@ public class DijkstraStrategy implements ShortestPathStrategy {
 		
 		node.setVisited(true);
 		
-		//System.out.println(min.getIndex());
 		Iterator<Edge> it = g.getOutEdges(node.getNodeId());
 		
 		while (it.hasNext()) {
@@ -146,9 +142,7 @@ public class DijkstraStrategy implements ShortestPathStrategy {
 			
 			if (!neighbor.isVisited())
 				relaxPath(e, node, neighbor, toVisit);
-			
 		}
-		
 	}
 	
 	/**
@@ -164,6 +158,7 @@ public class DijkstraStrategy implements ShortestPathStrategy {
 	 * @param toVisit the queue containing all the nodes in the graph that weren't still visited.
 	 */
 	private void relaxPath(Edge e, DistanceElement node, DistanceElement neighbor, Queue<DistanceElement> toVisit) {
+		
 		double newDistance = node.getDistance() + e.getCost();
 		
 		if (neighbor.getDistance() > newDistance && !neighbor.isVisited()) {
@@ -172,7 +167,6 @@ public class DijkstraStrategy implements ShortestPathStrategy {
 			neighbor.changePrevious(node.getNodeId());
 			
 			toVisit.add(neighbor);
-			
 		}
 	}
 

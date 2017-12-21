@@ -42,19 +42,19 @@ public class NodeNotFoundException extends RuntimeException {
 
 	/**
 	 * Create a new NodeNotFoundException for the given node's id.
-	 * @param i node's id.
+	 * @param id node's id.
 	 */
-	public NodeNotFoundException(long i) {
-		super("Node "+i+" not found");
+	public NodeNotFoundException(long id) {
+		super("Node " + id + " not found");
 	}
 	
 	/**
 	 * Create a new NodeNotFoundException for the given node's id and cause.
-	 * @param i node's id.
+	 * @param id node's id.
 	 * @param cause the reason that raise this exception.
 	 */
-	public NodeNotFoundException(long i, Throwable cause) {
-		super("Node "+i+" not found", cause);
+	public NodeNotFoundException(long id, Throwable cause) {
+		super("Node " + id + " not found", cause);
 	}
 
 	/**

@@ -51,7 +51,6 @@ public class DistanceVector {
 		
 		first.changeDistance(0);
 		vector.put(sourceId, first);
-		
 	}
 
 	/**
@@ -68,7 +67,6 @@ public class DistanceVector {
 			vector.put(id, new DistanceElement(id));
 		
 		return vector.get(id);
-		
 	}
 	
 	/**
@@ -80,7 +78,6 @@ public class DistanceVector {
 			DistanceElement element = vector.get(n);
 			System.out.println("Distance to node " + n + ": " + element.getDistance() + " | Previous node: " + element.getParentId());
 		}
-		
 	}
 	
 	/**
@@ -98,7 +95,6 @@ public class DistanceVector {
 		}
 		
 		ArrayList<Long> l = new ArrayList<>();
-		
 		l.add(targetId);
 		
 		long parentId = targetId;
@@ -109,14 +105,12 @@ public class DistanceVector {
 			
 			if (parentId == sourceId) 
 				break;
-			
 		}
 		
 		for (Long id : l)
 			System.out.print(" -> " + id);
 		
 		System.out.println();
-		
 	}
 	
 	/**
