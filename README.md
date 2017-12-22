@@ -9,3 +9,4 @@
 
 ### [Publications](https://github.com/ARiDa/graphast/wiki/publications)
 
+### [License](https://github.com/InsightLab/graphast/blob/develop/LICENSE)
