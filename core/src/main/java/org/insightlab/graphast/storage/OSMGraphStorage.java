@@ -27,11 +27,16 @@ package org.insightlab.graphast.storage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
+import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.task.v0_6.RunnableSource;
@@ -143,8 +148,23 @@ public class OSMGraphStorage implements GraphStorage {
 	 *
 	 */
 	private class MySink implements Sink {
+			
+		private final String[] highways = new String[] {
+				"motorway", "motorway_link",
+				"trunk", "trunk_link",
+				"primary", "primary_link",
+				"secondary", "secondary_link",
+				"tertiary", "tertiary_link",
+				"unclassified", "unclassified_link",
+				"residential", "residential_link",
+				"service", "service_link",
+				"living_street",
+				"track",
+				"path"
+		};
 		
 		private Graph graph;
+		private Set<String> allowedHighways = new HashSet<>(Arrays.asList(highways));
 		// private long counter = 0;
 		
 		/**
@@ -159,6 +179,47 @@ public class OSMGraphStorage implements GraphStorage {
 		 * This method will be process tasks over the graph.
 		 * @param entityContainer the container that is responsible by the graph.
 		 */
+		
+		private Map<String, String> getImportantTags(Way w) {
+			Map<String, String> map = new HashMap<>();
+			if (!w.getTags().isEmpty()) {
+				for (Tag t : w.getTags()) {
+					switch (t.getKey()) {
+					case "highway":
+					case "access":
+					case "oneway":
+					case "motor_vehicle":
+					case "motorcar":
+						map.put(t.getKey(), t.getValue());
+					}
+						
+				}
+			}
+			return map;
+		}
+		
+		private boolean isValid(Map<String, String> tags) {
+			
+			if (!tags.containsKey("highway")) return false;
+			if (!allowedHighways.contains(tags.get("highway"))) return false;
+			
+			if (tags.get("highway").equals("path")) {
+				if (!(
+						(tags.containsKey("motor_vehicle") && tags.get("motor_vehicle").equals("yes")) || 
+						(tags.containsKey("motorcar") && tags.get("motorcar").equals("yes"))
+					))
+					return false;
+			}
+			
+			if (tags.containsKey("access")) {
+				String accessValue = tags.get("access");
+				if (!(accessValue.equals("yes") || accessValue.equals("permissive")))
+					return false;
+			}
+
+        	return true;
+		}
+		
 		public void process(EntityContainer entityContainer) {
 			
 	        Entity entity = entityContainer.getEntity();
@@ -166,24 +227,25 @@ public class OSMGraphStorage implements GraphStorage {
 	        if (entity instanceof Way) {
 	        	Way w = (Way) entity;
 	        	List<WayNode> wayNodeList = w.getWayNodes();
+	        	Map<String, String> wayTags = getImportantTags(w);
 	        	
-	        	if (wayNodeList.size() < 2 || w.getTags().isEmpty()) 
+	        	if (wayNodeList.size() < 2 || w.getTags().isEmpty() || !isValid(wayTags))
 	        		return;
 	        	
-	        	if (!graph.containsNode(wayNodeList.get(0).getNodeId()))
-	        		graph.addNode(wayNodeList.get(0).getNodeId());
+	        	WayNode from, to = wayNodeList.get(0);
+        		
+	        	if (!graph.containsNode(to.getNodeId()))
+	        		graph.addNode(to.getNodeId());
 	        	
 	        	for (int i = 1; i < wayNodeList.size(); i++) {
 	        		
-	        		if (!graph.containsNode(wayNodeList.get(i).getNodeId()))
-	        			graph.addNode(wayNodeList.get(i).getNodeId());
+	        		from = to;
+	        		to = wayNodeList.get(i);
 	        		
-	        		WayNode from = wayNodeList.get(i - 1);
-	        		WayNode to   = wayNodeList.get(i);
+	        		if (!graph.containsNode(to.getNodeId()))
+	        			graph.addNode(to.getNodeId());
 	        		
-	        		// if ((counter++)%1000 == 0) System.out.println(from.getNodeId());
 	        		graph.addEdge(new Edge(from.getNodeId(), to.getNodeId()));
-	        	
 	        	}
         		
 	        }

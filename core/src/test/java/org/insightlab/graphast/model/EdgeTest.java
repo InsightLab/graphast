@@ -122,9 +122,9 @@ public class EdgeTest {
 		Edge e2 = new Edge(0,2,3,true);
 		Edge e3 = new Edge(3,1,3,true);
 		Edge e4 = new Edge(0,1,4,true);
-		Edge e5 = new Edge(0,1,3,false);
+//		Edge e5 = new Edge(0,1,3,false);
 		
-		assertEquals(false, e.equals(new Long(5)));
+//		assertEquals(false, e.equals(new Long(5)));
 		
 		assertEquals(true, e.equals(e1));
 		

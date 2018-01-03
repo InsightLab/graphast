@@ -44,6 +44,9 @@ public class MMapGraphStructure implements GraphStructure {
 	private static final int NODE_SIZE = 4*8;
 	private static final int EDGE_SIZE = 4*16;
 	
+	private static final long INITIAL_NODE_FILE_SIZE = 1024*1024*8l;
+	private static final long INITIAL_EDGE_FILE_SIZE = 1024*1024*8l;
+	
 	private long nodePos = 0;
 	private long edgePos = 0;
 	
@@ -75,8 +78,8 @@ public class MMapGraphStructure implements GraphStructure {
 		
 		try {
 			
-			nodeAccess = new MMapDataAccess(directory + nodesFile, 1024*1024*32l);
-			edgeAccess = new MMapDataAccess(directory + edgesFile, 1024*1024*32l);
+			nodeAccess = new MMapDataAccess(directory + nodesFile, INITIAL_NODE_FILE_SIZE);
+			edgeAccess = new MMapDataAccess(directory + edgesFile, INITIAL_EDGE_FILE_SIZE);
 			
 			if (graphExists) {
 				
@@ -126,7 +129,7 @@ public class MMapGraphStructure implements GraphStructure {
 	private void addDirectionalEdge(Edge e) {
 		
 		if (edgeAccess.getCapacity() < getEdgeIndex(edgePos) + EDGE_SIZE)
-			edgeAccess.ensureCapacity(edgeAccess.getCapacity() + 1024*1024*32l);
+			edgeAccess.ensureCapacity(edgeAccess.getCapacity() + INITIAL_EDGE_FILE_SIZE);
 		
 		long fromId = idMapping.get(e.getFromNodeId());
 		long toId   = idMapping.get(e.getToNodeId());
@@ -155,10 +158,8 @@ public class MMapGraphStructure implements GraphStructure {
 	 */
 	@Override
 	public void addNode(Node n) {
-		
 		if (nodeAccess.getCapacity() < getNodeIndex(nodePos) + NODE_SIZE)
-			nodeAccess.ensureCapacity(nodeAccess.getCapacity() + 1024*1024*32l);
-		
+			nodeAccess.ensureCapacity(nodeAccess.getCapacity() + INITIAL_NODE_FILE_SIZE);
 		idMapping.put(n.getId(), nodePos);
 		
 		long nodeIndex = getNodeIndex(nodePos);
