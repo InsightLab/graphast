@@ -26,6 +26,7 @@ package org.insightlab.graphast.model;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.insightlab.graphast.cards.NodeCard;
 
@@ -67,6 +68,10 @@ public class Node extends GraphObject {
 		if (nodeCards == null || !nodeCards.containsKey(cardName))
 			return null;
 		return nodeCards.get(cardName);
+	}
+	
+	public Set<String> getAllCardNames() {
+		return nodeCards.keySet();
 	}
 	
 	/**

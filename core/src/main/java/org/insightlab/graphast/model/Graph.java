@@ -25,6 +25,7 @@
 package org.insightlab.graphast.model;
 
 import java.util.Iterator;
+import java.util.Set;
 
 import org.insightlab.graphast.cards.GraphCard;
 import org.insightlab.graphast.structure.DefaultGraphStructure;
@@ -86,7 +87,6 @@ public class Graph extends GraphObject {
 	 * @param nodes the Node objects to be added to the graph. 
 	 */
 	public void addNodes(Node ...nodes) {
-		
 		for (Node n : nodes)
 			this.addNode(n);
 	}
@@ -194,6 +194,10 @@ public class Graph extends GraphObject {
 	
 	public void setCard(String cardName, GraphCard card) {
 		structure.setCard(cardName, card);
+	}
+	
+	public Set<String> getAllCardNames() {
+		return structure.getAllCardNames();
 	}
 	
 	

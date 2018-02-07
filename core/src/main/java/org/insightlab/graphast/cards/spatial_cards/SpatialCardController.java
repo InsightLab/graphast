@@ -6,7 +6,11 @@ import org.insightlab.graphast.model.Node;
 
 public class SpatialCardController {
 	
-	private static String cardName = "SpatialCard";
+	private static final String cardName = "SpatialCard";
+	
+	public static String getCardName() {
+		return cardName;
+	}
 	
 	public static SpatialGraphCard getCard(Graph g) {
 		return (SpatialGraphCard) g.getCard(cardName);
@@ -21,15 +25,15 @@ public class SpatialCardController {
 	}
 	
 	public static void setCard(Graph g) {
-		g.setCard(cardName, new SpatialGraphCard());
+		g.setCard(cardName, new SpatialGraphCard(g));
 	}
 	
-	public static void setCard(Node n, int lat, int lng) {
-		n.setCard(cardName, new SpatialNodeCard(new Point(lat, lng)));
+	public static void setCard(Node n, Point p) {
+		n.setCard(cardName, new SpatialNodeCard(n, p));
 	}
 	
 	public static void setCard(Edge e, Geometry geometry) {
-		e.setCard(cardName, new SpatialEdgeCard(geometry));
+		e.setCard(cardName, new SpatialEdgeCard(e, geometry));
 	}
 	
 }

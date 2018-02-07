@@ -25,6 +25,7 @@
 package org.insightlab.graphast.structure;
 
 import java.util.Iterator;
+import java.util.Set;
 
 import org.insightlab.graphast.cards.GraphCard;
 import org.insightlab.graphast.model.Edge;
@@ -85,6 +86,9 @@ public interface GraphStructure {
 	 * @return the in edges of the node which has the given id.
 	 */
 	Iterator<Edge> getInEdges(final long id);
+	
+	
+	Set<String> getAllCardNames();
 	
 	
 	GraphCard getCard(String cardName);

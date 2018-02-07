@@ -26,6 +26,7 @@ package org.insightlab.graphast.model;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.insightlab.graphast.cards.EdgeCard;
 
@@ -176,6 +177,10 @@ public class Edge extends GraphObject {
 		if (edgeCards == null || !edgeCards.containsKey(cardName))
 			return null;
 		return edgeCards.get(cardName);
+	}
+	
+	public Set<String> getAllCardNames() {
+		return edgeCards.keySet();
 	}
 	
 	/**

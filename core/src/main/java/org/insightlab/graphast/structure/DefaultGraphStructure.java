@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import org.insightlab.graphast.cards.GraphCard;
 import org.insightlab.graphast.exceptions.DuplicatedNodeException;
@@ -189,6 +190,13 @@ public class DefaultGraphStructure implements GraphStructure {
 		if (graphCards == null || !graphCards.containsKey(cardName))
 			return null;
 		return graphCards.get(cardName);
+	}
+
+	@Override
+	public Set<String> getAllCardNames() {
+		if (graphCards == null)
+			return null;
+		return graphCards.keySet();
 	}
 
 }

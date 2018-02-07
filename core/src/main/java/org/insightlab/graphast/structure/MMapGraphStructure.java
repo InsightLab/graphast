@@ -27,6 +27,7 @@ package org.insightlab.graphast.structure;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.insightlab.graphast.cards.GraphCard;
 import org.insightlab.graphast.model.Edge;
@@ -364,7 +365,12 @@ public class MMapGraphStructure implements GraphStructure {
 	@Override
 	public void setCard(String cardName, GraphCard card) {
 		// TODO Auto-generated method stub
-		
+	}
+	
+	@Override
+	public Set<String> getAllCardNames() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
