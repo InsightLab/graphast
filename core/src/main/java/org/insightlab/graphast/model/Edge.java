@@ -24,11 +24,18 @@
 
 package org.insightlab.graphast.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.insightlab.graphast.cards.EdgeCard;
+
 /**
  * The Edge class. It represents the model of a graph edge.
  * It extends the GraphObject abstract class.
  */
 public class Edge extends GraphObject {
+	
+	private Map<String, EdgeCard> edgeCards = null;
 	
 	private long fromNode;
 	private long toNode;
@@ -157,6 +164,18 @@ public class Edge extends GraphObject {
 	 */
 	public long getAdjacent(long id) {
 		return id == toNode ? fromNode : toNode;
+	}
+	
+	public void setCard(String cardName, EdgeCard card) {
+		if (edgeCards == null)
+			edgeCards = new HashMap<>();
+		edgeCards.put(cardName, card);
+	}
+	
+	public EdgeCard getCard(String cardName) {
+		if (edgeCards == null || !edgeCards.containsKey(cardName))
+			return null;
+		return edgeCards.get(cardName);
 	}
 	
 	/**

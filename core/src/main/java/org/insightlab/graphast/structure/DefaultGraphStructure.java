@@ -27,7 +27,9 @@ package org.insightlab.graphast.structure;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
+import org.insightlab.graphast.cards.GraphCard;
 import org.insightlab.graphast.exceptions.DuplicatedNodeException;
 import org.insightlab.graphast.exceptions.NodeNotFoundException;
 import org.insightlab.graphast.model.Edge;
@@ -38,6 +40,8 @@ import org.insightlab.graphast.model.Node;
  *
  */
 public class DefaultGraphStructure implements GraphStructure {
+	
+	private Map<String, GraphCard> graphCards = null;
 	
 	private Integer nextId = 0;
 	
@@ -171,6 +175,20 @@ public class DefaultGraphStructure implements GraphStructure {
 	 */
 	public Iterator<Edge> getInEdges(final long id) {
 		return inEdges.get(idMapping.get(id)).iterator();
+	}
+
+	@Override
+	public void setCard(String cardName, GraphCard card) {
+		if (graphCards == null)
+			graphCards = new HashMap<>();
+		graphCards.put(cardName, card);
+	}
+	
+	@Override
+	public GraphCard getCard(String cardName) {
+		if (graphCards == null || !graphCards.containsKey(cardName))
+			return null;
+		return graphCards.get(cardName);
 	}
 
 }

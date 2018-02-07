@@ -26,6 +26,7 @@ package org.insightlab.graphast.model;
 
 import java.util.Iterator;
 
+import org.insightlab.graphast.cards.GraphCard;
 import org.insightlab.graphast.structure.DefaultGraphStructure;
 import org.insightlab.graphast.structure.GraphStructure;
 
@@ -185,6 +186,16 @@ public class Graph extends GraphObject {
 	public Iterator<Edge> getInEdges(long id) {
 		return structure.getInEdges(id);
 	}
+	
+	
+	public GraphCard getCard(String cardName) {
+		return structure.getCard(cardName);
+	}
+	
+	public void setCard(String cardName, GraphCard card) {
+		structure.setCard(cardName, card);
+	}
+	
 	
 	/**
 	 * Gets the neighborhood from a node represented by a given id. If the graph 

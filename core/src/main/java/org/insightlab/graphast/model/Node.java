@@ -24,11 +24,18 @@
 
 package org.insightlab.graphast.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.insightlab.graphast.cards.NodeCard;
+
 /**
  * The Node class. It represents the model of a graph node.
  * It extends the GraphObject abstract class.
  */
 public class Node extends GraphObject {
+	
+	private Map<String, NodeCard> nodeCards = null;
 	
 	private long id;
 	
@@ -48,6 +55,18 @@ public class Node extends GraphObject {
 	 */
 	public long getId() {
 		return id;
+	}
+	
+	public void setCard(String cardName, NodeCard card) {
+		if (nodeCards == null)
+			nodeCards = new HashMap<>();
+		nodeCards.put(cardName, card);
+	}
+	
+	public NodeCard getCard(String cardName) {
+		if (nodeCards == null || !nodeCards.containsKey(cardName))
+			return null;
+		return nodeCards.get(cardName);
 	}
 	
 	/**
