@@ -5,8 +5,8 @@ import static org.junit.Assert.*;
 //import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Graph;
 import org.insightlab.graphast.model.Node;
-import org.insightlab.graphast.model.cards.spatial_cards.Point;
-import org.insightlab.graphast.model.cards.spatial_cards.SpatialComponentController;
+import org.insightlab.graphast.model.components.spatial_components.Point;
+import org.insightlab.graphast.model.components.spatial_components.SpatialComponentController;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -29,6 +29,7 @@ public class SpatialCardTest {
 		controller.setCard(n2, new Point(14, 2));
 		n3 = new Node(3);
 		controller.setCard(n3, new Point(15, 1));
+		
 //		e0 = new Edge(1, 2, true);
 //		e1 = new Edge(2, 3);
 //		e2 = new Edge(0, 1);
@@ -37,8 +38,9 @@ public class SpatialCardTest {
 
 	@Test
 	public void test() {
-		assertEquals("N1 lat test", 13, controller.getCard(n1).getLat());
-		assertEquals("N3 lng test", 1, controller.getCard(n3).getLng());
+		assertEquals("N1 lat test", 13, controller.getComponent(n1).getLat());
+		assertEquals("N3 lng test", 1, controller.getComponent(n3).getLng());
+
 	}
 
 }

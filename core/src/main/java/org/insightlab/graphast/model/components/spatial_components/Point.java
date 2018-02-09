@@ -1,4 +1,4 @@
-package org.insightlab.graphast.model.cards.spatial_cards;
+package org.insightlab.graphast.model.components.spatial_components;
 
 public class Point {
 	

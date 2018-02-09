@@ -1,7 +1,7 @@
-package org.insightlab.graphast.model.cards.spatial_cards;
+package org.insightlab.graphast.model.components.spatial_components;
 
 import org.insightlab.graphast.model.Edge;
-import org.insightlab.graphast.model.cards.EdgeComponent;
+import org.insightlab.graphast.model.components.EdgeComponent;
 
 public class SpatialEdgeComponent extends EdgeComponent {
 	

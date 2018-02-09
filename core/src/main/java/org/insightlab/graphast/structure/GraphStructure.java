@@ -29,7 +29,7 @@ import java.util.Set;
 
 import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Node;
-import org.insightlab.graphast.model.cards.GraphComponent;
+import org.insightlab.graphast.model.components.GraphComponent;
 
 /**
  * The GraphStructure interface. This interface contains declarations of general methods
@@ -88,12 +88,12 @@ public interface GraphStructure {
 	Iterator<Edge> getInEdges(final long id);
 	
 	
-	Set<String> getAllCardNames();
+	Set<Class<? extends GraphComponent>> getAllComponentClasses();
 	
 	
-	GraphComponent getCard(String cardName);
+	GraphComponent getComponent(Class<? extends GraphComponent> componentClass);
 	
 	
-	void setCard(String cardName, GraphComponent card);
+	void setComponent(GraphComponent component);
 	
 }

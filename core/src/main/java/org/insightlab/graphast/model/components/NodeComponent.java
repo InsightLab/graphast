@@ -1,4 +1,4 @@
-package org.insightlab.graphast.model.cards;
+package org.insightlab.graphast.model.components;
 
 import org.insightlab.graphast.model.Node;
 

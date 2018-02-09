@@ -1,7 +1,7 @@
-package org.insightlab.graphast.model.cards.spatial_cards;
+package org.insightlab.graphast.model.components.spatial_components;
 
 import org.insightlab.graphast.model.Node;
-import org.insightlab.graphast.model.cards.NodeComponent;
+import org.insightlab.graphast.model.components.NodeComponent;
 
 public class SpatialNodeComponent extends NodeComponent {
 	

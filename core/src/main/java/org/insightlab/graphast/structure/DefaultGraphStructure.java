@@ -34,7 +34,7 @@ import org.insightlab.graphast.exceptions.DuplicatedNodeException;
 import org.insightlab.graphast.exceptions.NodeNotFoundException;
 import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Node;
-import org.insightlab.graphast.model.cards.GraphComponent;
+import org.insightlab.graphast.model.components.GraphComponent;
 
 /**
  * This class implements a default graph structure using the interface GraphStructure.
@@ -42,7 +42,7 @@ import org.insightlab.graphast.model.cards.GraphComponent;
  */
 public class DefaultGraphStructure implements GraphStructure {
 	
-	private Map<String, GraphComponent> graphCards = null;
+	private Map<Class<? extends GraphComponent>, GraphComponent> graphComponents = null;
 	
 	private Integer nextId = 0;
 	
@@ -179,24 +179,24 @@ public class DefaultGraphStructure implements GraphStructure {
 	}
 
 	@Override
-	public void setCard(String cardName, GraphComponent card) {
-		if (graphCards == null)
-			graphCards = new HashMap<>();
-		graphCards.put(cardName, card);
+	public void setComponent(GraphComponent component) {
+		if (graphComponents == null)
+			graphComponents = new HashMap<>();
+		graphComponents.put(component.getClass(), component);
 	}
 	
 	@Override
-	public GraphComponent getCard(String cardName) {
-		if (graphCards == null || !graphCards.containsKey(cardName))
+	public GraphComponent getComponent(Class<? extends GraphComponent> componentClass) {
+		if (graphComponents == null || !graphComponents.containsKey(componentClass))
 			return null;
-		return graphCards.get(cardName);
+		return graphComponents.get(componentClass);
 	}
 
 	@Override
-	public Set<String> getAllCardNames() {
-		if (graphCards == null)
+	public Set<Class<? extends GraphComponent>> getAllComponentClasses() {
+		if (graphComponents == null)
 			return null;
-		return graphCards.keySet();
+		return graphComponents.keySet();
 	}
 
 }

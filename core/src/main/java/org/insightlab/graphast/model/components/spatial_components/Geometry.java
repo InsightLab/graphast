@@ -1,4 +1,4 @@
-package org.insightlab.graphast.model.cards.spatial_cards;
+package org.insightlab.graphast.model.components.spatial_components;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,22 +6,22 @@ import java.util.List;
 
 public class Geometry {
 	
-	private List<Point> geometry;
+	private List<Point> points;
 	
 	public Geometry() {
-		geometry = new ArrayList<>();
+		this.points = new ArrayList<>();
 	}
 	
 	public Geometry(Point ...points) {
-		geometry.addAll(Arrays.asList(points));
+		this.points.addAll(Arrays.asList(points));
 	}
 	
 	public void addPoint(Point p) {
-		geometry.add(p);
+		this.points.add(p);
 	}
 	
 	public List<Point> getGeometry() {
-		return geometry;
+		return this.points;
 	}
 
 }
