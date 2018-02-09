@@ -1,13 +1,13 @@
-package org.insightlab.graphast.cards.spatial_cards;
+package org.insightlab.graphast.model.cards.spatial_cards;
 
-import org.insightlab.graphast.cards.NodeCard;
 import org.insightlab.graphast.model.Node;
+import org.insightlab.graphast.model.cards.NodeComponent;
 
-public class SpatialNodeCard extends NodeCard {
+public class SpatialNodeComponent extends NodeComponent {
 	
 	private Point point;
 	
-	public SpatialNodeCard(Node n, Point p) {
+	public SpatialNodeComponent(Node n, Point p) {
 		this.setNode(n);
 		this.point = p;
 	}

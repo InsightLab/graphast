@@ -1,8 +1,8 @@
-package org.insightlab.graphast.cards;
+package org.insightlab.graphast.model.cards;
 
 import org.insightlab.graphast.model.Node;
 
-public abstract class NodeCard {
+public abstract class NodeComponent {
 
 	private Node node = null;
 	

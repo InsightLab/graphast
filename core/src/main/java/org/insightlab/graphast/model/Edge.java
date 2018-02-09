@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.insightlab.graphast.cards.EdgeCard;
+import org.insightlab.graphast.model.cards.EdgeComponent;
 
 /**
  * The Edge class. It represents the model of a graph edge.
@@ -36,7 +36,7 @@ import org.insightlab.graphast.cards.EdgeCard;
  */
 public class Edge extends GraphObject {
 	
-	private Map<String, EdgeCard> edgeCards = null;
+	private Map<String, EdgeComponent> edgeCards = null;
 	
 	private long fromNode;
 	private long toNode;
@@ -167,13 +167,13 @@ public class Edge extends GraphObject {
 		return id == toNode ? fromNode : toNode;
 	}
 	
-	public void setCard(String cardName, EdgeCard card) {
+	public void setCard(String cardName, EdgeComponent card) {
 		if (edgeCards == null)
 			edgeCards = new HashMap<>();
 		edgeCards.put(cardName, card);
 	}
 	
-	public EdgeCard getCard(String cardName) {
+	public EdgeComponent getCard(String cardName) {
 		if (edgeCards == null || !edgeCards.containsKey(cardName))
 			return null;
 		return edgeCards.get(cardName);

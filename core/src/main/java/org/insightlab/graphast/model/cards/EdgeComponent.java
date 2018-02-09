@@ -1,8 +1,8 @@
-package org.insightlab.graphast.cards;
+package org.insightlab.graphast.model.cards;
 
 import org.insightlab.graphast.model.Edge;
 
-public abstract class EdgeCard {
+public abstract class EdgeComponent {
 	
 	private Edge edge = null;
 	

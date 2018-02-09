@@ -1,4 +1,4 @@
-package org.insightlab.graphast.cards.spatial_cards;
+package org.insightlab.graphast.model.cards.spatial_cards;
 
 import java.util.ArrayList;
 import java.util.Arrays;

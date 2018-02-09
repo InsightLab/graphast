@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.insightlab.graphast.cards.NodeCard;
+import org.insightlab.graphast.model.cards.NodeComponent;
 
 /**
  * The Node class. It represents the model of a graph node.
@@ -36,7 +36,7 @@ import org.insightlab.graphast.cards.NodeCard;
  */
 public class Node extends GraphObject {
 	
-	private Map<String, NodeCard> nodeCards = null;
+	private Map<String, NodeComponent> nodeCards = null;
 	
 	private long id;
 	
@@ -58,13 +58,13 @@ public class Node extends GraphObject {
 		return id;
 	}
 	
-	public void setCard(String cardName, NodeCard card) {
+	public void setCard(String cardName, NodeComponent card) {
 		if (nodeCards == null)
 			nodeCards = new HashMap<>();
 		nodeCards.put(cardName, card);
 	}
 	
-	public NodeCard getCard(String cardName) {
+	public NodeComponent getCard(String cardName) {
 		if (nodeCards == null || !nodeCards.containsKey(cardName))
 			return null;
 		return nodeCards.get(cardName);

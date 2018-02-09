@@ -27,7 +27,7 @@ package org.insightlab.graphast.model;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.insightlab.graphast.cards.GraphCard;
+import org.insightlab.graphast.model.cards.GraphComponent;
 import org.insightlab.graphast.structure.DefaultGraphStructure;
 import org.insightlab.graphast.structure.GraphStructure;
 
@@ -188,11 +188,11 @@ public class Graph extends GraphObject {
 	}
 	
 	
-	public GraphCard getCard(String cardName) {
+	public GraphComponent getCard(String cardName) {
 		return structure.getCard(cardName);
 	}
 	
-	public void setCard(String cardName, GraphCard card) {
+	public void setCard(String cardName, GraphComponent card) {
 		structure.setCard(cardName, card);
 	}
 	

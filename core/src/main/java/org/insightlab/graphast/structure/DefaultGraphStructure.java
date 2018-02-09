@@ -30,11 +30,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import org.insightlab.graphast.cards.GraphCard;
 import org.insightlab.graphast.exceptions.DuplicatedNodeException;
 import org.insightlab.graphast.exceptions.NodeNotFoundException;
 import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Node;
+import org.insightlab.graphast.model.cards.GraphComponent;
 
 /**
  * This class implements a default graph structure using the interface GraphStructure.
@@ -42,7 +42,7 @@ import org.insightlab.graphast.model.Node;
  */
 public class DefaultGraphStructure implements GraphStructure {
 	
-	private Map<String, GraphCard> graphCards = null;
+	private Map<String, GraphComponent> graphCards = null;
 	
 	private Integer nextId = 0;
 	
@@ -179,14 +179,14 @@ public class DefaultGraphStructure implements GraphStructure {
 	}
 
 	@Override
-	public void setCard(String cardName, GraphCard card) {
+	public void setCard(String cardName, GraphComponent card) {
 		if (graphCards == null)
 			graphCards = new HashMap<>();
 		graphCards.put(cardName, card);
 	}
 	
 	@Override
-	public GraphCard getCard(String cardName) {
+	public GraphComponent getCard(String cardName) {
 		if (graphCards == null || !graphCards.containsKey(cardName))
 			return null;
 		return graphCards.get(cardName);

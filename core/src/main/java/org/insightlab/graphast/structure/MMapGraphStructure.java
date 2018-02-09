@@ -29,9 +29,9 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.insightlab.graphast.cards.GraphCard;
 import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Node;
+import org.insightlab.graphast.model.cards.GraphComponent;
 import org.insightlab.hugedataaccess.DataAccess;
 import org.insightlab.hugedataaccess.MMapDataAccess;
 import org.insightlab.hugedataaccess.structures.MMapMap;
@@ -357,13 +357,13 @@ public class MMapGraphStructure implements GraphStructure {
 	}
 
 	@Override
-	public GraphCard getCard(String cardName) {
+	public GraphComponent getCard(String cardName) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void setCard(String cardName, GraphCard card) {
+	public void setCard(String cardName, GraphComponent card) {
 		// TODO Auto-generated method stub
 	}
 	
