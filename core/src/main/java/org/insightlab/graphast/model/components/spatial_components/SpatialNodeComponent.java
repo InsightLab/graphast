@@ -1,14 +1,12 @@
 package org.insightlab.graphast.model.components.spatial_components;
 
-import org.insightlab.graphast.model.Node;
 import org.insightlab.graphast.model.components.NodeComponent;
 
 public class SpatialNodeComponent extends NodeComponent {
 	
 	private Point point;
 	
-	public SpatialNodeComponent(Node n, Point p) {
-		this.setNode(n);
+	public SpatialNodeComponent(Point p) {
 		this.point = p;
 	}
 	

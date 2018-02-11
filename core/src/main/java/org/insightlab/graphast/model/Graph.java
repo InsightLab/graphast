@@ -188,12 +188,13 @@ public class Graph extends GraphObject {
 	}
 	
 	
-	public GraphComponent getComponent(Class<? extends GraphComponent> componentClass) {
-		return structure.getComponent(componentClass);
+	public <C extends GraphComponent> C getComponent(Class<C> componentClass) {
+		return componentClass.cast(structure.getComponent(componentClass));
 	}
 	
 	public void setComponent(GraphComponent component) {
 		structure.setComponent(component);
+		component.setGraph(this);
 	}
 	
 	public Set<Class<? extends GraphComponent>> getAllCardNames() {

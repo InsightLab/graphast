@@ -25,5 +25,13 @@ public class Point {
 	public void setLng(int lng) {
 		this.lng = lng;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Point))
+			return false;
+		Point other = (Point) obj;
+		return lat == other.getLat() && lng == other.getLng();
+	}
 
 }

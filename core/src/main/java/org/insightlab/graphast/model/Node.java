@@ -62,12 +62,13 @@ public class Node extends GraphObject {
 		if (nodeComponents == null)
 			nodeComponents = new HashMap<>();
 		nodeComponents.put(component.getClass(), component);
+		component.setNode(this);
 	}
 	
-	public NodeComponent getComponent(Class<? extends NodeComponent> componentClass) {
+	public <C extends NodeComponent> C getComponent(Class<C> componentClass) {
 		if (nodeComponents == null || !nodeComponents.containsKey(componentClass))
 			return null;
-		return nodeComponents.get(componentClass);
+		return componentClass.cast(nodeComponents.get(componentClass));
 	}
 	
 	public Set<Class<? extends NodeComponent>> getAllComponentClasses() {

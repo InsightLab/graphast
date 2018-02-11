@@ -13,6 +13,7 @@ public class Geometry {
 	}
 	
 	public Geometry(Point ...points) {
+		this();
 		this.points.addAll(Arrays.asList(points));
 	}
 	
@@ -20,7 +21,7 @@ public class Geometry {
 		this.points.add(p);
 	}
 	
-	public List<Point> getGeometry() {
+	public List<Point> getPoints() {
 		return this.points;
 	}
 

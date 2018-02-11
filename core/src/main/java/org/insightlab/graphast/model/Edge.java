@@ -171,12 +171,13 @@ public class Edge extends GraphObject {
 		if (edgeComponent == null)
 			edgeComponent = new HashMap<>();
 		edgeComponent.put(component.getClass(), component);
+		component.setEdge(this);
 	}
 	
-	public EdgeComponent getComponent(Class<? extends EdgeComponent> componentClass) {
+	public <C extends EdgeComponent> C getComponent(Class<C> componentClass) {
 		if (edgeComponent == null || !edgeComponent.containsKey(componentClass))
 			return null;
-		return edgeComponent.get(componentClass);
+		return componentClass.cast(edgeComponent.get(componentClass));
 	}
 	
 	public Set<Class<? extends EdgeComponent>> getAllComponentClasses() {
