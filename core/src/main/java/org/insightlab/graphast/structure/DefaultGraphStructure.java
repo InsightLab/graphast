@@ -179,7 +179,7 @@ public class DefaultGraphStructure implements GraphStructure {
 	}
 
 	@Override
-	public void setComponent(GraphComponent component) {
+	public void addComponent(GraphComponent component) {
 		if (graphComponents == null)
 			graphComponents = new HashMap<>();
 		graphComponents.put(component.getClass(), component);

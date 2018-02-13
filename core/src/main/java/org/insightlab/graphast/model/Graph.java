@@ -192,8 +192,8 @@ public class Graph extends GraphObject {
 		return componentClass.cast(structure.getComponent(componentClass));
 	}
 	
-	public void setComponent(GraphComponent component) {
-		structure.setComponent(component);
+	public void addComponent(GraphComponent component) {
+		structure.addComponent(component);
 		component.setGraph(this);
 	}
 	

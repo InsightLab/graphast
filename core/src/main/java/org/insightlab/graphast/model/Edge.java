@@ -167,7 +167,7 @@ public class Edge extends GraphObject {
 		return id == toNodeId ? fromNodeId : toNodeId;
 	}
 	
-	public void setComponent(EdgeComponent component) {
+	public void addComponent(EdgeComponent component) {
 		if (edgeComponent == null)
 			edgeComponent = new HashMap<>();
 		edgeComponent.put(component.getClass(), component);

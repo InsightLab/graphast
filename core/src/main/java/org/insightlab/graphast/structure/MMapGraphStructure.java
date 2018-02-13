@@ -369,7 +369,7 @@ public class MMapGraphStructure implements GraphStructure {
 	}
 
 	@Override
-	public void setComponent(GraphComponent component) {
+	public void addComponent(GraphComponent component) {
 		// TODO Auto-generated method stub
 		
 	}

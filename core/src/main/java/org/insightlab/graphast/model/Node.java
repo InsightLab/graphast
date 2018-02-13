@@ -58,7 +58,7 @@ public class Node extends GraphObject {
 		return id;
 	}
 	
-	public void setComponent(NodeComponent component) {
+	public void addComponent(NodeComponent component) {
 		if (nodeComponents == null)
 			nodeComponents = new HashMap<>();
 		nodeComponents.put(component.getClass(), component);

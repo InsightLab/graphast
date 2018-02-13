@@ -94,6 +94,6 @@ public interface GraphStructure {
 	GraphComponent getComponent(Class<? extends GraphComponent> componentClass);
 	
 	
-	void setComponent(GraphComponent component);
+	void addComponent(GraphComponent component);
 	
 }
