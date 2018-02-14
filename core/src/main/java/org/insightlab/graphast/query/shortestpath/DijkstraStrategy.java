@@ -31,6 +31,8 @@ import java.util.Queue;
 import org.insightlab.graphast.exceptions.NodeNotFoundException;
 import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Graph;
+import org.insightlab.graphast.query.cost_functions.CostFunction;
+import org.insightlab.graphast.query.cost_functions.DefaultCostFunction;
 import org.insightlab.graphast.query.utils.DistanceElement;
 import org.insightlab.graphast.query.utils.DistanceVector;
 
@@ -44,6 +46,7 @@ import org.insightlab.graphast.query.utils.DistanceVector;
 public class DijkstraStrategy implements ShortestPathStrategy {
 	
 	private Graph g;
+	private CostFunction costFunction;
 	
 	/**
 	 * Instantiates a new DijkstraStrategy class, given a Graph object.
@@ -52,6 +55,11 @@ public class DijkstraStrategy implements ShortestPathStrategy {
 	 */
 	public DijkstraStrategy(Graph g) {
 		this.g = g;
+		costFunction = new DefaultCostFunction();
+	}
+	
+	public void setCostFunction(CostFunction costFunction) {
+		this.costFunction = costFunction;
 	}
 
 	/**
@@ -159,7 +167,13 @@ public class DijkstraStrategy implements ShortestPathStrategy {
 	 */
 	private void relaxPath(Edge e, DistanceElement node, DistanceElement neighbor, Queue<DistanceElement> toVisit) {
 		
-		double newDistance = node.getDistance() + e.getCost();
+		double newDistance;
+		try {
+			newDistance = node.getDistance() + costFunction.getCost(e);
+		} catch (Exception e1) {
+			System.err.println(e1.getMessage() + ", using edge default cost intead.");
+			newDistance = e.getCost();
+		}
 		
 		if (neighbor.getDistance() > newDistance && !neighbor.isVisited()) {
 			
@@ -168,6 +182,7 @@ public class DijkstraStrategy implements ShortestPathStrategy {
 			
 			toVisit.add(neighbor);
 		}
+		
 	}
 
 }

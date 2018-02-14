@@ -25,6 +25,7 @@
 package org.insightlab.graphast.query.shortestpath;
 
 import org.insightlab.graphast.exceptions.NodeNotFoundException;
+import org.insightlab.graphast.query.cost_functions.CostFunction;
 import org.insightlab.graphast.query.utils.DistanceVector;
 
 /**
@@ -32,6 +33,8 @@ import org.insightlab.graphast.query.utils.DistanceVector;
  * for different shortest path strategies' implementations.
  */
 public interface ShortestPathStrategy {
+	
+	void setCostFunction(CostFunction costFunction);
 	
 	/**
 	 * Run method. This method serves as a declaration to a general shortest path strategy calculation.
@@ -60,6 +63,6 @@ public interface ShortestPathStrategy {
 	 * of nodes (DistanceElement objects) and their respective parameters, e.g. the distance value for each node.
 	 * @throws NodeNotFoundException exception thrown if a node id given in the function call is not found in the graph.
 	 */
-	DistanceVector run(long sourceId, long targetId) throws NodeNotFoundException;;
+	DistanceVector run(long sourceId, long targetId) throws NodeNotFoundException;
 
 }

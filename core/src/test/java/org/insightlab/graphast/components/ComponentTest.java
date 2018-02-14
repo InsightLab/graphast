@@ -12,6 +12,10 @@ import org.insightlab.graphast.model.components.spatial_components.SpatialEdgeCo
 import org.insightlab.graphast.model.components.spatial_components.SpatialGraphComponent;
 import org.insightlab.graphast.model.components.spatial_components.SpatialNodeComponent;
 import org.insightlab.graphast.model.components.temporal_components.TemporalEdgeComponent;
+import org.insightlab.graphast.query.cost_functions.TemporalSpecificCostFunction;
+import org.insightlab.graphast.query.shortestpath.DijkstraStrategy;
+import org.insightlab.graphast.query.shortestpath.ShortestPathStrategy;
+import org.insightlab.graphast.query.utils.DistanceVector;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -49,6 +53,9 @@ public class ComponentTest {
 		e3 = new Edge(3, 0, true);
 		e3.addComponent(new SpatialEdgeComponent(new Geometry()));
 		e3.addComponent(new TemporalEdgeComponent(2., 1., 2., 4., 8., 4., 2.));
+		
+		g.addNodes(n0, n1, n2, n3);
+		g.addEdges(e0, e1, e2, e3);
 	}
 
 	@Test
@@ -65,6 +72,19 @@ public class ComponentTest {
 		assertEquals("E2 specific cost test", 4., e2.getComponent(TemporalEdgeComponent.class).getSpecificCost(5), 0.);
 		assertEquals("E1 mean cost test", 2.571, e1.getComponent(TemporalEdgeComponent.class).getMeanCost(), 0.001);
 		assertEquals("E3 mean cost test", 3.286, e3.getComponent(TemporalEdgeComponent.class).getMeanCost(), 0.001);
+	}
+	
+	@Test
+	public void temporalDijkstraTest() {
+		ShortestPathStrategy dijkstra = new DijkstraStrategy(g);
+		
+		dijkstra.setCostFunction(new TemporalSpecificCostFunction(2));
+		DistanceVector result = dijkstra.run(2);
+		result.print();
+		
+		dijkstra.setCostFunction(new TemporalSpecificCostFunction(3));
+		result = dijkstra.run(2);
+		result.print();
 	}
 
 }
