@@ -2,27 +2,27 @@ package org.insightlab.graphast.model.components.spatial_components;
 
 public class Point {
 	
-	private int lat;
-	private int lng;
+	private double lat;
+	private double lng;
 	
-	public Point(int lat, int lng) {
+	public Point(double lat, double lng) {
 		this.lat = lat;
 		this.lng = lng;
 	}
 	
-	public int getLat() {
+	public double getLat() {
 		return lat;
 	}
 	
-	public int getLng() {
+	public double getLng() {
 		return lng;
 	}
 	
-	public void setLat(int lat) {
+	public void setLat(double lat) {
 		this.lat = lat;
 	}
 	
-	public void setLng(int lng) {
+	public void setLng(double lng) {
 		this.lng = lng;
 	}
 	

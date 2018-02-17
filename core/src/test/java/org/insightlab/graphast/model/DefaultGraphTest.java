@@ -66,11 +66,11 @@ public class DefaultGraphTest {
 	@Test
 	public void testAddNode() {
 		g.addNode(n0);
-		Iterator<Node> it = g.nodeIterator();
+		Iterator<Node> it = g.getNodeIterator();
 		assertEquals("Add node n0", n0, it.next());
 		g.addNode(n1);
 		g.addNode(n3);
-		it = g.nodeIterator();
+		it = g.getNodeIterator();
 		it.next();
 		assertEquals("Add node n1", n1, it.next());
 		assertEquals("Add node n3", n3, it.next());
@@ -79,7 +79,7 @@ public class DefaultGraphTest {
 	@Test
 	public void testAddNodes() {
 		g.addNodes(n0, n1, n3);
-		Iterator<Node> it = g.nodeIterator();
+		Iterator<Node> it = g.getNodeIterator();
 		assertEquals("Add nodes n0", n0, it.next());
 		assertEquals("Add nodes n1", n1, it.next());
 		assertEquals("Add nodes n3", n3, it.next());
@@ -89,11 +89,11 @@ public class DefaultGraphTest {
 	public void testAddEdge() {
 		g.addNodes(n0, n1, n2, n3, n4);
 		g.addEdge(e0);
-		Iterator<Edge> it = g.edgeIterator();
+		Iterator<Edge> it = g.getEdgeIterator();
 		assertEquals("Add edge e0", e0, it.next());
 		g.addEdge(e2);
 		g.addEdge(e5);
-		it = g.edgeIterator();
+		it = g.getEdgeIterator();
 		it.next();
 		assertEquals("Add edge e2", e2, it.next());
 		assertEquals("Add edge e5", e5, it.next());
@@ -103,7 +103,7 @@ public class DefaultGraphTest {
 	public void testAddEdges() {
 		g.addNodes(n0, n1, n2, n3, n4);
 		g.addEdges(e0, e2, e4, e1, e6, e5, e3);
-		Iterator<Edge> it = g.edgeIterator();
+		Iterator<Edge> it = g.getEdgeIterator();
 		assertEquals("Add edges e0", e0, it.next());
 		assertEquals("Add edges e2", e2, it.next());
 		assertEquals("Add edges e4", e4, it.next());

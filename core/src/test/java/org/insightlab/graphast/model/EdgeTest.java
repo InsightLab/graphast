@@ -42,7 +42,7 @@ public class EdgeTest {
 		e = new Edge(0,1);
 		assertEquals(0l, e.getFromNodeId());
 		assertEquals(1l, e.getToNodeId());
-		assertEquals(1l, e.getCost(),0);
+		assertEquals(1l, e.getWeight(),0);
 		assertEquals(false, e.isBidirectional());
 	}
 	
@@ -51,7 +51,7 @@ public class EdgeTest {
 		e = new Edge(0,1,3);
 		assertEquals(0l, e.getFromNodeId());
 		assertEquals(1l, e.getToNodeId());
-		assertEquals(3l, e.getCost(),0);
+		assertEquals(3l, e.getWeight(),0);
 		assertEquals(false, e.isBidirectional());
 	}
 	
@@ -60,7 +60,7 @@ public class EdgeTest {
 		e = new Edge(0, 1, true); 
 		assertEquals(0l, e.getFromNodeId());
 		assertEquals(1l, e.getToNodeId());
-		assertEquals(1l, e.getCost(),0);
+		assertEquals(1l, e.getWeight(),0);
 		assertEquals(true, e.isBidirectional());
 	}
 	
@@ -68,7 +68,7 @@ public class EdgeTest {
 	public void testConstructor4(){ 
 		assertEquals(0l, e.getFromNodeId());
 		assertEquals(1l, e.getToNodeId());
-		assertEquals(3l, e.getCost(),0);
+		assertEquals(3l, e.getWeight(),0);
 		assertEquals(true, e.isBidirectional());
 	}
 	
@@ -84,7 +84,7 @@ public class EdgeTest {
 	
 	@Test
 	public void testCost() {
-		assertEquals("Cost is wrong",3.0,e.getCost(),0);
+		assertEquals("Cost is wrong",3.0,e.getWeight(),0);
 	}
 	
 	@Test
@@ -106,8 +106,8 @@ public class EdgeTest {
 	
 	@Test
 	public void testSetCost(){
-		e.setCost(100);;
-		assertEquals("Cost was not updated",100,e.getCost(),0);
+		e.setWeight(100);;
+		assertEquals("Cost was not updated",100,e.getWeight(),0);
 	}
 	
 	@Test

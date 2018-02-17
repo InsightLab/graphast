@@ -143,7 +143,7 @@ public class MMapGraphStructure implements GraphStructure {
 		
 		edgeAccess.setLong   ( edgeIndex      , fromId );
 		edgeAccess.setLong   ( edgeIndex + 8  , toId );
-		edgeAccess.setDouble ( edgeIndex + 16 , e.getCost() );
+		edgeAccess.setDouble ( edgeIndex + 16 , e.getWeight() );
 		edgeAccess.setLong   ( edgeIndex + 24 , nodeAccess.getLong(fromIndex + 8) );
 		edgeAccess.setLong   ( edgeIndex + 32 , nodeAccess.getLong(toIndex + 16) );
 		
@@ -184,7 +184,7 @@ public class MMapGraphStructure implements GraphStructure {
 		addDirectionalEdge(e);
 		
 		if (e.isBidirectional())
-			addDirectionalEdge(new Edge(e.getToNodeId(), e.getFromNodeId(), e.getCost()));
+			addDirectionalEdge(new Edge(e.getToNodeId(), e.getFromNodeId(), e.getWeight()));
 	}
 
 	/**

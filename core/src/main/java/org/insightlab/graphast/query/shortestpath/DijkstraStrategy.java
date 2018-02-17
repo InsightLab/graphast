@@ -172,7 +172,7 @@ public class DijkstraStrategy implements ShortestPathStrategy {
 			newDistance = node.getDistance() + costFunction.getCost(e);
 		} catch (Exception e1) {
 			System.err.println(e1.getMessage() + ", using edge default cost intead.");
-			newDistance = e.getCost();
+			newDistance = e.getWeight();
 		}
 		
 		if (neighbor.getDistance() > newDistance && !neighbor.isVisited()) {

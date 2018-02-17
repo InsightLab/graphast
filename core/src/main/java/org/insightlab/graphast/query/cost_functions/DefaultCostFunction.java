@@ -6,7 +6,7 @@ public class DefaultCostFunction implements CostFunction {
 
 	@Override
 	public double getCost(Edge e) {
-		return e.getCost();
+		return e.getWeight();
 	}	
 	
 }

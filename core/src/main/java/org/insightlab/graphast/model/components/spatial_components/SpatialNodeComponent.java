@@ -6,23 +6,27 @@ public class SpatialNodeComponent extends NodeComponent {
 	
 	private Point point;
 	
-	public SpatialNodeComponent(Point p) {
-		this.point = p;
+	public SpatialNodeComponent(double lat, double lng) {
+		this(new Point(lat, lng));
 	}
 	
-	public int getLat() {
+	public SpatialNodeComponent(Point point) {
+		this.point = point;
+	}
+	
+	public double getLat() {
 		return point.getLat();
 	}
 	
-	public int getLng() {
+	public double getLng() {
 		return point.getLng();
 	}
 	
-	public void setLat(int lat) {
+	public void setLat(double lat) {
 		point.setLat(lat);
 	}
 	
-	public void setLng(int lng) {
+	public void setLng(double lng) {
 		point.setLng(lng);
 	}
 

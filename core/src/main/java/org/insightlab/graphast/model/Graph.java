@@ -132,8 +132,17 @@ public class Graph extends GraphObject {
 	 *
 	 * @return the iterator of the list of nodes contained in this graph.
 	 */
-	public Iterator<Node> nodeIterator() {
+	public Iterator<Node> getNodeIterator() {
 		return structure.nodeIterator();
+	}
+	
+	public Iterable<Node> getNodes() {
+		return new Iterable<Node>() {
+			@Override
+			public Iterator<Node> iterator() {
+				return getNodeIterator();
+			}
+		};
 	}
 	
 	/**
@@ -141,8 +150,17 @@ public class Graph extends GraphObject {
 	 *
 	 * @return the iterator of the list of edges contained in this graph.
 	 */
-	public Iterator<Edge> edgeIterator() {
+	public Iterator<Edge> getEdgeIterator() {
 		return structure.edgeIterator();
+	}
+	
+	public Iterable<Edge> getEdges() {
+		return new Iterable<Edge>() {
+			@Override
+			public Iterator<Edge> iterator() {
+				return getEdgeIterator();
+			}
+		};
 	}
 	
 	/**

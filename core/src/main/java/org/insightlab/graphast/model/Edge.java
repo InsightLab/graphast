@@ -40,7 +40,7 @@ public class Edge extends GraphObject {
 	
 	private long fromNodeId;
 	private long toNodeId;
-	private double cost;
+	private double weight;
 	private boolean bidirectional;
 	
 	/**
@@ -63,7 +63,7 @@ public class Edge extends GraphObject {
 	public Edge(long from, long to, double cost) {
 		this.fromNodeId = from;
 		this.toNodeId   = to;
-		this.cost     = cost;
+		this.weight     = cost;
 	}
 	
 	/**
@@ -113,8 +113,8 @@ public class Edge extends GraphObject {
 	 *
 	 * @return the cost of the edge (double).
 	 */
-	public double getCost() {
-		return cost;
+	public double getWeight() {
+		return weight;
 	}
 	
 	/**
@@ -136,12 +136,12 @@ public class Edge extends GraphObject {
 	}
 	
 	/**
-	 * Sets the cost value of the edge.
+	 * Sets the weight value of the edge.
 	 *
-	 * @param cost the new cost of the edge.
+	 * @param weight the new weight of the edge.
 	 */
-	public void setCost(double cost) {
-		this.cost = cost;
+	public void setWeight(double weight) {
+		this.weight = weight;
 	}
 	
 	/**
@@ -205,7 +205,7 @@ public class Edge extends GraphObject {
 		
 		boolean okFromNode = this.fromNodeId == other.fromNodeId;
 		boolean okToNode   = this.toNodeId   == other.toNodeId;
-		boolean okCost     = this.cost     == other.cost;
+		boolean okCost     = this.weight     == other.weight;
 		
 		return okFromNode && okToNode && okCost;
 		
@@ -222,7 +222,7 @@ public class Edge extends GraphObject {
 	 */
 	@Override
 	public int hashCode() {
-		return (fromNodeId + "|" + toNodeId + "|" + cost).hashCode();
+		return (fromNodeId + "|" + toNodeId + "|" + weight).hashCode();
 	}
 	
 	/**
@@ -232,7 +232,7 @@ public class Edge extends GraphObject {
 	 */
 	@Override
 	public String toString() {
-		return fromNodeId + "|" + toNodeId + "|" + cost;
+		return fromNodeId + "|" + toNodeId + "|" + weight;
 	}
 
 }

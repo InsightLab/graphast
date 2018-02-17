@@ -80,9 +80,9 @@ public class MMapGraphTest {
 	
 	@Test
 	public void testGetOutEdges() {
-		Edge e0Inv = new Edge(e0.getToNodeId(), e0.getFromNodeId(), e0.getCost());
-		Edge e3Inv = new Edge(e3.getToNodeId(), e3.getFromNodeId(), e3.getCost());
-		Edge e6Inv = new Edge(e6.getToNodeId(), e6.getFromNodeId(), e6.getCost());
+		Edge e0Inv = new Edge(e0.getToNodeId(), e0.getFromNodeId(), e0.getWeight());
+		Edge e3Inv = new Edge(e3.getToNodeId(), e3.getFromNodeId(), e3.getWeight());
+		Edge e6Inv = new Edge(e6.getToNodeId(), e6.getFromNodeId(), e6.getWeight());
 		assertThat("Out Edges Test n0", Arrays.asList(e2, e6Inv), containsInAnyOrder(Iterators.toArray(g.getOutEdges(0), Edge.class)));
 		assertThat("Out Edges Test n1", Arrays.asList(e0, e3Inv), containsInAnyOrder(Iterators.toArray(g.getOutEdges(1), Edge.class)));
 		assertThat("Out Edges Test n2", Arrays.asList(e1, e4), containsInAnyOrder(Iterators.toArray(g.getOutEdges(2), Edge.class)));
@@ -93,9 +93,9 @@ public class MMapGraphTest {
 
 	@Test
 	public void testGetInEdges() {
-		Edge e0Inv = new Edge(e0.getToNodeId(), e0.getFromNodeId(), e0.getCost());
-		Edge e3Inv = new Edge(e3.getToNodeId(), e3.getFromNodeId(), e3.getCost());
-		Edge e6Inv = new Edge(e6.getToNodeId(), e6.getFromNodeId(), e6.getCost());
+		Edge e0Inv = new Edge(e0.getToNodeId(), e0.getFromNodeId(), e0.getWeight());
+		Edge e3Inv = new Edge(e3.getToNodeId(), e3.getFromNodeId(), e3.getWeight());
+		Edge e6Inv = new Edge(e6.getToNodeId(), e6.getFromNodeId(), e6.getWeight());
 		assertThat("In Edges Test n0", Arrays.asList(e6), containsInAnyOrder(Iterators.toArray(g.getInEdges(0), Edge.class)));
 		assertThat("In Edges Test n1", Arrays.asList(e0Inv, e2, e3), containsInAnyOrder(Iterators.toArray(g.getInEdges(1), Edge.class)));
 		assertThat("In Edges Test n2", Arrays.<Edge>asList(), containsInAnyOrder(Iterators.toArray(g.getInEdges(2), Edge.class)));
@@ -118,9 +118,9 @@ public class MMapGraphTest {
 		assertEquals("Reoppened graph number of nodes", 5, g2.getNumberOfNodes());
 		assertEquals("Reoppened graph number of edges", 10, g2.getNumberOfEdges());
 		
-		Edge e0Inv = new Edge(e0.getToNodeId(), e0.getFromNodeId(), e0.getCost());
-		Edge e3Inv = new Edge(e3.getToNodeId(), e3.getFromNodeId(), e3.getCost());
-		Edge e6Inv = new Edge(e6.getToNodeId(), e6.getFromNodeId(), e6.getCost());
+		Edge e0Inv = new Edge(e0.getToNodeId(), e0.getFromNodeId(), e0.getWeight());
+		Edge e3Inv = new Edge(e3.getToNodeId(), e3.getFromNodeId(), e3.getWeight());
+		Edge e6Inv = new Edge(e6.getToNodeId(), e6.getFromNodeId(), e6.getWeight());
 		
 		assertThat("Reoppened Graph Out Edges Test n0", Arrays.asList(e2, e6Inv), containsInAnyOrder(Iterators.toArray(g2.getOutEdges(0), Edge.class)));
 		assertThat("Reoppened Graph Out Edges Test n1", Arrays.asList(e0, e3Inv), containsInAnyOrder(Iterators.toArray(g2.getOutEdges(1), Edge.class)));
