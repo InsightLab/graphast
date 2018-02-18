@@ -32,7 +32,7 @@ import org.insightlab.graphast.exceptions.NodeNotFoundException;
 import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Graph;
 import org.insightlab.graphast.query.cost_functions.CostFunction;
-import org.insightlab.graphast.query.cost_functions.DefaultCostFunction;
+import org.insightlab.graphast.query.cost_functions.CostFunctionFactory;
 import org.insightlab.graphast.query.utils.DistanceElement;
 import org.insightlab.graphast.query.utils.DistanceVector;
 
@@ -55,7 +55,7 @@ public class DijkstraStrategy implements ShortestPathStrategy {
 	 */
 	public DijkstraStrategy(Graph g) {
 		this.g = g;
-		costFunction = new DefaultCostFunction();
+		costFunction = CostFunctionFactory.getDefaultCostFunction();
 	}
 	
 	public void setCostFunction(CostFunction costFunction) {
