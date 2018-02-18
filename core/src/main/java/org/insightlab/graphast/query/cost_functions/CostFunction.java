@@ -4,6 +4,6 @@ import org.insightlab.graphast.model.Edge;
 
 public interface CostFunction {
 	
-	double getCost(Edge e) throws Exception;  //TODO Create specific exception
+	double getCost(Edge e) throws RuntimeException;  //TODO Create specific exception
 
 }

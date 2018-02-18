@@ -13,8 +13,9 @@ import org.insightlab.graphast.model.components.spatial_components.Point;
 import org.insightlab.graphast.model.components.spatial_components.SpatialEdgeComponent;
 import org.insightlab.graphast.model.components.spatial_components.SpatialGraphComponent;
 import org.insightlab.graphast.model.components.spatial_components.SpatialNodeComponent;
-import org.insightlab.graphast.query.cost_functions.TemporalLinearCostFunction;
-import org.insightlab.graphast.query.cost_functions.TemporalSpecificCostFunction;
+import org.insightlab.graphast.query.cost_functions.CostFunctionFactory;
+import org.insightlab.graphast.query.cost_functions.InterpolationMethod;
+import org.insightlab.graphast.query.cost_functions.TimeDependentCostFunction;
 import org.insightlab.graphast.query.shortestpath.DijkstraStrategy;
 import org.insightlab.graphast.query.shortestpath.ShortestPathStrategy;
 import org.insightlab.graphast.query.utils.DistanceVector;
@@ -83,26 +84,13 @@ public class ComponentTest {
 	}
 	
 	@Test
-	public void temporalDijkstraTest() {
-		ShortestPathStrategy dijkstra = new DijkstraStrategy(g);
-		DistanceVector result;
-		
-		dijkstra.setCostFunction(new TemporalSpecificCostFunction(2));
-		result = dijkstra.run(2);
-		assertEquals("Temporal dijkstra test index 2", 3, result.getDistance(0), 0); 
-		
-		dijkstra.setCostFunction(new TemporalSpecificCostFunction(3));
-		result = dijkstra.run(2);
-		assertEquals("Temporal dijkstra test index 3", 8, result.getDistance(0), 0); 
-	}
-	
-	@Test
-	public void temporalDijkstraTestExample4() {
+	public void linearTimeDependentDijkstraTest() {
 		ShortestPathStrategy dijkstra = new DijkstraStrategy(graphExample4);
-		TemporalLinearCostFunction costFunction = new TemporalLinearCostFunction(6, 0);
+		TimeDependentCostFunction costFunction = CostFunctionFactory.getTimeDependentCostFunction(InterpolationMethod.LINEAR);
 		dijkstra.setCostFunction(costFunction);
 		DistanceVector result;
 
+		costFunction.setTime(6, 0);
 		result = dijkstra.run(0, 6);
 		assertEquals("Temporal dijkstra example4 6:00", 14, result.getDistance(6), 0);
 		result.print(0, 6);
@@ -122,6 +110,25 @@ public class ComponentTest {
 		assertEquals("Temporal dijkstra example4 20:00", 14, result.getDistance(6), 0); 
 		result.print(0, 6);
 		
+	}
+	
+	@Test
+	public void stepTimeDependentDijkstraTest() {
+		ShortestPathStrategy dijkstra = new DijkstraStrategy(graphExample4);
+		TimeDependentCostFunction costFunction = CostFunctionFactory.getTimeDependentCostFunction(InterpolationMethod.STEP);
+		dijkstra.setCostFunction(costFunction);
+		DistanceVector result;
+
+		costFunction.setTime(6, 0);
+		result = dijkstra.run(0, 6);
+		assertEquals("Temporal dijkstra example4 6:00", 14, result.getDistance(6), 0);
+		result.print(0, 6);
+		
+		costFunction.setTime(18, 0);
+		result = dijkstra.run(0, 6);
+		assertEquals("Temporal dijkstra example4 18:00", 12, result.getDistance(6), 0);
+		result.print(0, 6);
+
 	}
 
 }
