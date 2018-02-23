@@ -55,7 +55,7 @@ import org.insightlab.graphast.structure.GraphStructure;
  * This class implements a OSMGraphStorage. OpenStreetMap (OSM) is a manner to represents graphs.
  *
  */
-public class OSMGraphStorage implements GraphStorage {
+public class OSMGraphStorage extends GraphStorage {
 	
 	private static GraphStorage instance = null;
 	

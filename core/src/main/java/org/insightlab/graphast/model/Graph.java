@@ -41,6 +41,11 @@ import org.insightlab.graphast.structure.GraphStructure;
  */
 public class Graph extends GraphObject {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3661942047360629183L;
+	
 	private GraphStructure structure;
 	
 	/**
@@ -68,6 +73,11 @@ public class Graph extends GraphObject {
 	 */
 	public void addNode(long id) {
 		this.addNode(new Node(id));
+	}
+	
+	public void addNodes(long ...ids) {
+		for (long id : ids)
+			this.addNode(id);
 	}
 	
 	/**
@@ -215,7 +225,16 @@ public class Graph extends GraphObject {
 		component.setGraph(this);
 	}
 	
-	public Set<Class<? extends GraphComponent>> getAllCardNames() {
+	public Iterable<GraphComponent> getAllComponents() {
+		return new Iterable<GraphComponent>() {
+			@Override
+			public Iterator<GraphComponent> iterator() {
+				return structure.getAllComponents();
+			}
+		};
+	}
+	
+	public Set<Class<? extends GraphComponent>> getAllComponentNames() {
 		return structure.getAllComponentClasses();
 	}
 	

@@ -36,6 +36,11 @@ import org.insightlab.graphast.model.components.NodeComponent;
  */
 public class Node extends GraphObject {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8614831471786755717L;
+
 	private Map<Class<? extends NodeComponent>, NodeComponent> nodeComponents = null;
 	
 	private long id;

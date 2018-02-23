@@ -4,6 +4,11 @@ import org.insightlab.graphast.model.components.NodeComponent;
 
 public class SpatialNodeComponent extends NodeComponent {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4231579086439483117L;
+	
 	private Point point;
 	
 	public SpatialNodeComponent(double lat, double lng) {

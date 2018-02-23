@@ -7,6 +7,11 @@ import org.insightlab.graphast.model.components.NodeComponent;
 
 public class CostListNodeComponent extends NodeComponent {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4909900732877399952L;
+	
 	private List<Double> costList;
 	
 	public CostListNodeComponent(Double ...costs) {

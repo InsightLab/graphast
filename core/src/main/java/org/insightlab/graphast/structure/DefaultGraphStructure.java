@@ -199,4 +199,20 @@ public class DefaultGraphStructure implements GraphStructure {
 		return graphComponents.keySet();
 	}
 
+	@Override
+	public Iterator<GraphComponent> getAllComponents() {
+		return (graphComponents != null) ? 
+				graphComponents.values().iterator() :
+				new Iterator<GraphComponent>() {
+					@Override
+					public boolean hasNext() {
+						return false;
+					}
+					@Override
+					public GraphComponent next() {
+						return null;
+					}
+				};
+	}
+
 }

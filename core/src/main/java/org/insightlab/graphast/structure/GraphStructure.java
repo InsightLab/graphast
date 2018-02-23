@@ -95,5 +95,7 @@ public interface GraphStructure {
 	
 	
 	void addComponent(GraphComponent component);
+
+	Iterator<GraphComponent> getAllComponents();
 	
 }

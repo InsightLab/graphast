@@ -1,9 +1,16 @@
 package org.insightlab.graphast.model.components;
 
+import java.io.Serializable;
+
 import org.insightlab.graphast.model.Graph;
 
-public abstract class GraphComponent {
+public abstract class GraphComponent implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5846392764694019776L;
+	
 	private Graph graph = null;
 	
 	public void setGraph(Graph graph) {

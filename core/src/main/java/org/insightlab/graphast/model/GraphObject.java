@@ -24,14 +24,19 @@
 
 package org.insightlab.graphast.model;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  * The abstract class GraphObject. The basic models of graph elements 
  * in the project extend from this class.
  */
-public abstract class GraphObject {
+public abstract class GraphObject implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5380199647561475338L;
 	private HashMap<String, Object> data = null;
 	
 	/**

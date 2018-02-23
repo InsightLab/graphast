@@ -35,16 +35,19 @@ public class StorageUtils {
 	
 	private StorageUtils() {}
 	
+	public static String ensureDirectory(String path) {
+		if (!path.endsWith("/"))
+			return path + "/";
+		return path;
+	}
+	
 	/**
 	 * Delete a graph from the given path.
 	 * @param path to search the file that contains the graph that will be deleted.
 	 */
 	public static boolean deleteMMapGraph(String path) {
-		String directory = path;
-		
-		if (!directory.endsWith("/"))
-			directory += "/";
-		
+		String directory = ensureDirectory(path);
+
 		File f = new File(directory);
 		boolean ok = true;
 		
@@ -52,6 +55,23 @@ public class StorageUtils {
 			ok = new File(directory + "nodes.mmap").delete();
 			ok = new File(directory + "edges.mmap").delete() && ok;
 			ok = new File(directory + "treeMap.mmap").delete() && ok;
+			ok = f.delete() && ok;
+		}
+		
+		return ok;
+	}
+	
+	
+	public static boolean deleteSerializedGraph(String path) {
+		String directory = ensureDirectory(path);
+		
+		File f = new File(directory);
+		boolean ok = true;
+		
+		if (f.exists()) {
+			ok = new File(directory + "nodes.gobj").delete();
+			ok = new File(directory + "edges.gobj").delete() && ok;
+			ok = new File(directory + "graph_components.gobj").delete() && ok;
 			ok = f.delete() && ok;
 		}
 		

@@ -7,6 +7,11 @@ import org.insightlab.graphast.model.components.EdgeComponent;
 
 public class CostListEdgeComponent extends EdgeComponent {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2801818017386915449L;
+	
 	private List<Double> costList;
 	
 	public CostListEdgeComponent(Double ...costs) {

@@ -1,6 +1,13 @@
 package org.insightlab.graphast.model.components.spatial_components;
 
-public class Point {
+import java.io.Serializable;
+
+public class Point implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7597535743107576754L;
 	
 	private double lat;
 	private double lng;

@@ -1,10 +1,16 @@
 package org.insightlab.graphast.model.components.spatial_components;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Geometry {
+public class Geometry implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 955338995597901145L;
 	
 	private List<Point> points;
 	

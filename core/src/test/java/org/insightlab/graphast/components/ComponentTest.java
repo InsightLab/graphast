@@ -87,7 +87,9 @@ public class ComponentTest {
 	public void linearTimeDependentDijkstraTest() {
 		ShortestPathStrategy dijkstra = new DijkstraStrategy(graphExample4);
 		TimeDependentCostFunction costFunction = CostFunctionFactory.getTimeDependentCostFunction(InterpolationMethod.LINEAR);
+		
 		dijkstra.setCostFunction(costFunction);
+		
 		DistanceVector result;
 
 		costFunction.setTime(6, 0);

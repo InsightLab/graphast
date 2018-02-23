@@ -36,6 +36,11 @@ import org.insightlab.graphast.model.components.EdgeComponent;
  */
 public class Edge extends GraphObject {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3414011816257456570L;
+
 	private Map<Class<? extends EdgeComponent>, EdgeComponent> edgeComponent = null;
 	
 	private long fromNodeId;

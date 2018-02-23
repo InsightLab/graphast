@@ -374,5 +374,11 @@ public class MMapGraphStructure implements GraphStructure {
 		
 	}
 
+	@Override
+	public Iterator<GraphComponent> getAllComponents() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }
