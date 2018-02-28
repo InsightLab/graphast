@@ -11,6 +11,10 @@ public class SpatialNodeComponent extends NodeComponent {
 	
 	private Point point;
 	
+	public SpatialNodeComponent() {
+		this(new Point());
+	}
+	
 	public SpatialNodeComponent(double lat, double lng) {
 		this(new Point(lat, lng));
 	}

@@ -11,6 +11,10 @@ public class SpatialEdgeComponent extends EdgeComponent {
 	
 	private Geometry geometry;
 	
+	public SpatialEdgeComponent() {
+		this(new Geometry());
+	}
+	
 	public SpatialEdgeComponent(Geometry geometry) {
 		this.geometry = geometry;
 	}

@@ -48,6 +48,9 @@ public class Edge extends GraphObject {
 	private double weight;
 	private boolean bidirectional;
 	
+	public Edge() {
+		this.weight = 1;
+	}
 	/**
 	 * Instantiates a new edge.
 	 *

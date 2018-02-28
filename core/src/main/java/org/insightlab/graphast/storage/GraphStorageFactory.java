@@ -40,11 +40,20 @@ public class GraphStorageFactory {
 	}
 	
 	/**
-	 * @return the Serialized GraphStorage's instance.
+	 * @return the Java Serializable GraphStorage's instance.
 	 */
-	public static GraphStorage getSerializedGraphStorage() {
+	public static GraphStorage getJavaSerializableGraphStorage() {
 		
-		return SerializedStorage.getInstance();
+		return JavaSerializationStorage.getInstance();
+		
+	}
+	
+	/**
+	 * @return the Kryo GraphStorage's instance.
+	 */
+	public static GraphStorage getKryoGraphStorage() {
+		
+		return KryoStorage.getInstance();
 		
 	}
 

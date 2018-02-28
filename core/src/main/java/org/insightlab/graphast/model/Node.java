@@ -45,6 +45,8 @@ public class Node extends GraphObject {
 	
 	private long id;
 	
+	public Node() {}
+	
 	/**
 	 * Instantiates a new node.
 	 *
@@ -61,6 +63,10 @@ public class Node extends GraphObject {
 	 */
 	public long getId() {
 		return id;
+	}
+	
+	public void setId(long id) {
+		this.id = id;
 	}
 	
 	public void addComponent(NodeComponent component) {

@@ -13,26 +13,27 @@ import org.insightlab.graphast.query.shortestpath.DijkstraStrategy;
 import org.insightlab.graphast.query.shortestpath.ShortestPathStrategy;
 import org.insightlab.graphast.query.utils.DistanceVector;
 import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
-public class SerializedStorageTest {
-	
-	private static GraphStorage storage;
+public abstract class StorageTest {
+
+	protected static GraphStorage storage;
 	private static Graph original, reloaded;
 	private static final String PATH = "serialized_graphs/";
-
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		storage = GraphStorageFactory.getSerializedGraphStorage();
-		original = GraphGenerator.getInstance().generateExample4();
-		storage.save(PATH, original);
-		
-		try {
-			reloaded = storage.load(PATH);	
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			fail("File Not Found!");
+	
+	@Before
+	public void setup() {
+		if (reloaded == null) {
+			original = GraphGenerator.getInstance().generateExample4();
+			storage.save(PATH, original);
+			
+			try {
+				reloaded = storage.load(PATH);	
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				fail("File Not Found!");
+			}
 		}
 	}
 	

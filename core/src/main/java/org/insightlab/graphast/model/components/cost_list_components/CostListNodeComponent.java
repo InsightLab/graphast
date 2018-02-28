@@ -1,5 +1,6 @@
 package org.insightlab.graphast.model.components.cost_list_components;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -13,6 +14,10 @@ public class CostListNodeComponent extends NodeComponent {
 	private static final long serialVersionUID = -4909900732877399952L;
 	
 	private List<Double> costList;
+	
+	public CostListNodeComponent() {
+		costList = new ArrayList<>();
+	}
 	
 	public CostListNodeComponent(Double ...costs) {
 		costList = Arrays.asList(costs);

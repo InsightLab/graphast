@@ -14,18 +14,18 @@ import org.insightlab.graphast.model.Node;
 import org.insightlab.graphast.model.components.GraphComponent;
 import org.insightlab.graphast.structure.GraphStructure;
 
-public class SerializedStorage extends GraphStorage {
+public class JavaSerializationStorage extends GraphStorage {
 	
-private static GraphStorage instance = null;
+	private static GraphStorage instance = null;
 	
-	private SerializedStorage() {}
+	private JavaSerializationStorage() {}
 	
 	/**
 	 * @return the current GraphStorage's instance.
 	 */
 	public static GraphStorage getInstance() {
 		if (instance == null) 
-			instance = new SerializedStorage();
+			instance = new JavaSerializationStorage();
 		
 		return instance;
 	}
