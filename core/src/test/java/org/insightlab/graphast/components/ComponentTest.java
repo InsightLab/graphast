@@ -66,10 +66,12 @@ public class ComponentTest {
 
 	@Test
 	public void spatialTest() {
-		assertEquals("N0 lat test", 4, n0.getComponent(SpatialNodeComponent.class).getLng(), 0);
+		assertEquals("N0 lng test", 4, n0.getComponent(SpatialNodeComponent.class).getLng(), 0);
 		assertEquals("N1 lat test", 13, n1.getComponent(SpatialNodeComponent.class).getLat(), 0);
-		assertEquals("N2 lng test", 14, n2.getComponent(SpatialNodeComponent.class).getLat(), 0);
+		assertEquals("N2 lat test", 14, n2.getComponent(SpatialNodeComponent.class).getLat(), 0);
 		assertEquals("N3 lng test", 1, n3.getComponent(SpatialNodeComponent.class).getLng(), 0);
+		
+		assertEquals("get node 0 lat test", 12, g.getNode(0).getComponent(SpatialNodeComponent.class).getLat(), 0);
 		
 		e3.getComponent(SpatialEdgeComponent.class).getGeometry();
 		e3.getComponent(CostListEdgeComponent.class).getMeanCost();

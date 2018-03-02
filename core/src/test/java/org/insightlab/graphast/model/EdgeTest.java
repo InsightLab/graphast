@@ -30,7 +30,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class EdgeTest {
-	Edge e;
+	
+	private Edge e;
 	
 	@Before
 	public void setUp() throws Exception {
@@ -106,7 +107,7 @@ public class EdgeTest {
 	
 	@Test
 	public void testSetCost(){
-		e.setWeight(100);;
+		e.setWeight(100);
 		assertEquals("Cost was not updated",100,e.getWeight(),0);
 	}
 	

@@ -43,6 +43,8 @@ public interface GraphStructure {
 	 */
 	void addNode(Node node);
 	
+	Node getNode(final long id);
+	
 	/**
 	 * Add a new edge into the graph.
 	 * @param edge the edge that will be added into the graph.

@@ -186,6 +186,10 @@ public class MMapGraphStructure implements GraphStructure {
 		if (e.isBidirectional())
 			addDirectionalEdge(new Edge(e.getToNodeId(), e.getFromNodeId(), e.getWeight()));
 	}
+	
+	public Node getNode(final long id) {
+		return new Node(id);
+	}
 
 	/**
 	 * Verify whether the node which has the given id is in the graph or not.

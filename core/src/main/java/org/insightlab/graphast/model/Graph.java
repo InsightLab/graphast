@@ -137,6 +137,10 @@ public class Graph extends GraphObject {
 		return structure.containsNode(id);
 	}
 	
+	public Node getNode(final long id) {
+		return structure.getNode(id);
+	}
+	
 	/**
 	 * It returns an Iterator object of the Node elements contained in this graph.
 	 *
