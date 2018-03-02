@@ -24,8 +24,8 @@ import org.junit.Test;
 
 public class ComponentTest {
 
-	Graph g;
-	Graph graphExample4;
+	private Graph g;
+	private Graph graphExample4;
 	private Node n0, n1, n2, n3;
 	private Edge e0, e1, e2, e3;
 	
@@ -66,7 +66,9 @@ public class ComponentTest {
 
 	@Test
 	public void spatialTest() {
+		assertEquals("N0 lat test", 4, n0.getComponent(SpatialNodeComponent.class).getLng(), 0);
 		assertEquals("N1 lat test", 13, n1.getComponent(SpatialNodeComponent.class).getLat(), 0);
+		assertEquals("N2 lng test", 14, n2.getComponent(SpatialNodeComponent.class).getLat(), 0);
 		assertEquals("N3 lng test", 1, n3.getComponent(SpatialNodeComponent.class).getLng(), 0);
 		
 		e3.getComponent(SpatialEdgeComponent.class).getGeometry();
@@ -95,22 +97,18 @@ public class ComponentTest {
 		costFunction.setTime(6, 0);
 		result = dijkstra.run(0, 6);
 		assertEquals("Temporal dijkstra example4 6:00", 14, result.getDistance(6), 0);
-		result.print(0, 6);
 		
 		costFunction.setTime(12, 0);
 		result = dijkstra.run(0, 6);
 		assertEquals("Temporal dijkstra example4 12:00", 12, result.getDistance(6), 0);
-		result.print(0, 6);
 		
 		costFunction.setTime(15, 0);
 		result = dijkstra.run(0, 6);
 		assertEquals("Temporal dijkstra example4 15:00", 13, result.getDistance(6), 0); 
-		result.print(0, 6);
 		
 		costFunction.setTime(20, 0);
 		result = dijkstra.run(0, 6);
 		assertEquals("Temporal dijkstra example4 20:00", 14, result.getDistance(6), 0); 
-		result.print(0, 6);
 		
 	}
 	
@@ -124,12 +122,10 @@ public class ComponentTest {
 		costFunction.setTime(6, 0);
 		result = dijkstra.run(0, 6);
 		assertEquals("Temporal dijkstra example4 6:00", 14, result.getDistance(6), 0);
-		result.print(0, 6);
 		
 		costFunction.setTime(18, 0);
 		result = dijkstra.run(0, 6);
 		assertEquals("Temporal dijkstra example4 18:00", 12, result.getDistance(6), 0);
-		result.print(0, 6);
 
 	}
 

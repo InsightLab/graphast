@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import org.insightlab.graphast.model.Edge;
 
-public abstract class EdgeComponent implements Serializable {
+public abstract class EdgeComponent implements Component, Serializable {
 	
 	/**
 	 * 

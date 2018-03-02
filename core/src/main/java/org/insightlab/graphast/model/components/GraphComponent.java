@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import org.insightlab.graphast.model.Graph;
 
-public abstract class GraphComponent implements Serializable {
+public abstract class GraphComponent implements Component, Serializable {
 
 	/**
 	 * 

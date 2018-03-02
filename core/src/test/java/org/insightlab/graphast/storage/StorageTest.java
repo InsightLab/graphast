@@ -23,7 +23,7 @@ public abstract class StorageTest {
 	private static final String PATH = "serialized_graphs/";
 	
 	@Before
-	public void setup() {
+	public void setUp() {
 		if (reloaded == null) {
 			original = GraphGenerator.getInstance().generateExample4();
 			storage.save(PATH, original);

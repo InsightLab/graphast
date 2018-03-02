@@ -2,6 +2,7 @@ package org.insightlab.graphast.query.cost_functions;
 
 import java.util.List;
 
+import org.insightlab.graphast.exceptions.ComponentNotFoundException;
 import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.components.cost_list_components.CostListEdgeComponent;
 
@@ -24,7 +25,7 @@ public class TimeDependentStepCostFunction extends TimeDependentCostFunction {
 	public double getCost(Edge e) throws RuntimeException {
 		CostListEdgeComponent component = e.getComponent(CostListEdgeComponent.class);
 		if (component == null)
-			throw new RuntimeException("Temporal component not found");
+			throw new ComponentNotFoundException(CostListEdgeComponent.class);
 		
 		return getStepCost(component.getCostList());
 	}
