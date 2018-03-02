@@ -198,11 +198,10 @@ public class OSMGraphStorage extends GraphStorage {
 			if (!tags.containsKey("highway")) return false;
 			if (!allowedHighways.contains(tags.get("highway"))) return false;
 			
-			if (tags.get("highway").equals("path")) {
-				if (!(tags.containsKey("motor_vehicle") && tags.get("motor_vehicle").equals("yes")) &&
-					!(tags.containsKey("motorcar") && tags.get("motorcar").equals("yes")))
-					return false;
-			}
+			if (tags.get("highway").equals("path") &&
+				!(tags.containsKey("motor_vehicle") && "yes".equals(tags.get("motor_vehicle"))) &&
+				!(tags.containsKey("motorcar") && "yes".equals(tags.get("motorcar"))))
+				return false;
 			
 			if (tags.containsKey("access")) {
 				String accessValue = tags.get("access");
