@@ -38,5 +38,13 @@ public class SpatialNodeComponent extends NodeComponent {
 	public void setLng(double lng) {
 		point.setLng(lng);
 	}
+	
+	public Point getPoint() {
+		return point;
+	}
+	
+	public void setPoint(Point point) {
+		this.point = point;
+	}
 
 }

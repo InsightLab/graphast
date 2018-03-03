@@ -57,7 +57,7 @@ public class RandomGraphGeneratorTest {
 	public void testDijkstra() {
 		ShortestPathStrategy strategy = new DijkstraStrategy(g);
 		DistanceVector vector = strategy.run(10);
-		vector.print(10, 40);
+		vector.printPathTo(40);
 	}
 	
 	@AfterClass

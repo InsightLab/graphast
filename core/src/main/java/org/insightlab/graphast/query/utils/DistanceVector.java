@@ -35,6 +35,7 @@ import java.util.HashMap;
  */
 public class DistanceVector {
 	
+	private long sourceId;
 	private HashMap<Long, DistanceElement> vector;
 	
 	/**
@@ -45,6 +46,8 @@ public class DistanceVector {
 	 * @param sourceId the source node id of the distance vector.
 	 */
 	public DistanceVector(long sourceId) {
+		
+		this.sourceId = sourceId;
 		
 		vector = new HashMap<>();
 		DistanceElement first = new DistanceElement(sourceId);
@@ -72,7 +75,7 @@ public class DistanceVector {
 	/**
 	 * This function prints the current state of the distance vector, e.g. the nodes constituting this vector and their attributes.
 	 */
-	public void print() {
+	public void printAll() {
 		
 		for (Long n : vector.keySet()) {
 			DistanceElement element = vector.get(n);
@@ -87,30 +90,27 @@ public class DistanceVector {
 	 * @param sourceId the id of the source node in the graph.
 	 * @param targetId the id of the target node in the graph.
 	 */
-	public void print(long sourceId, long targetId) {
+	public void printPathTo(long targetId) {
 		
 		if (getElement(targetId).getParentId() == -1) {
 			System.out.println("No path between them");
 			return;
 		}
 		
-		ArrayList<Long> l = new ArrayList<>();
-		l.add(targetId);
+		ArrayList<Long> path = new ArrayList<>();
+		path.add(targetId);
 		
 		long parentId = targetId;
 		
 		while ((parentId = vector.get(parentId).getParentId()) != -1l) {
 			
-			l.add(0, parentId);
+			path.add(0, parentId);
 			
 			if (parentId == sourceId) 
 				break;
 		}
-		
-		for (Long id : l)
-			System.out.print(" -> " + id);
-		
-		System.out.println();
+	
+		System.out.println(path.stream().map(String::valueOf).reduce((s1, s2) -> s1 + " -> " + s2).get());
 	}
 	
 	/**
