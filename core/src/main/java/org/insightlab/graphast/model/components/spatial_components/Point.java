@@ -42,6 +42,11 @@ public class Point implements Serializable {
 	}
 	
 	@Override
+	public String toString() {
+		return "( " + lat + ", " + lng + " )";
+	}
+	
+	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof Point))
 			return false;
