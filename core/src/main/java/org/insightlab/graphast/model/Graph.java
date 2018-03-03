@@ -27,6 +27,7 @@ package org.insightlab.graphast.model;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.insightlab.graphast.exceptions.DuplicatedNodeException;
 import org.insightlab.graphast.model.components.GraphComponent;
 import org.insightlab.graphast.structure.DefaultGraphStructure;
 import org.insightlab.graphast.structure.GraphStructure;
@@ -45,6 +46,8 @@ public class Graph extends GraphObject {
 	 * 
 	 */
 	private static final long serialVersionUID = -3661942047360629183L;
+	
+	private long duplicatedNodesCounter = 0;
 	
 	private GraphStructure structure;
 	
@@ -87,7 +90,15 @@ public class Graph extends GraphObject {
 	 * @param n the new node to be added to the graph.
 	 */
 	public void addNode(Node n) {
-		structure.addNode(n);
+		try {
+			structure.addNode(n);
+		} catch (DuplicatedNodeException e) {
+			duplicatedNodesCounter++;
+		}
+	}
+	
+	public long getDuplicatedNodesCounter() {
+		return duplicatedNodesCounter;
 	}
 	
 	/**

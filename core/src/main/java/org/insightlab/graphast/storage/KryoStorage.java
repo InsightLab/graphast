@@ -42,6 +42,7 @@ public class KryoStorage extends GraphStorage {
 
 	@Override
 	public Graph load(String path, GraphStructure structure) throws FileNotFoundException {
+		long startTime = System.currentTimeMillis();
 		Graph g = new Graph(structure);
 		
 		String directory = StorageUtils.ensureDirectory(path);
@@ -74,6 +75,10 @@ public class KryoStorage extends GraphStorage {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		long totalTime = System.currentTimeMillis() - startTime;
+		
+		System.out.println("Time to load using kryo: " + (totalTime/1000.) + " s");
 		
 		return g;
 	}

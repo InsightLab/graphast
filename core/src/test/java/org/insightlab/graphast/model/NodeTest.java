@@ -55,7 +55,6 @@ public class NodeTest {
 		
 		assertEquals(true, n.equals(n1));
 		assertEquals(false, n.equals(n2));
-		assertEquals(false, n.equals(new Long(0)));
 	}
 
 }

@@ -18,9 +18,12 @@ public class Geometry implements Serializable {
 		this.points = new ArrayList<>();
 	}
 	
+	public Geometry(List<Point> points) {
+		this.points = points;
+	}
+	
 	public Geometry(Point ...points) {
-		this();
-		this.points.addAll(Arrays.asList(points));
+		this(Arrays.asList(points));
 	}
 	
 	public void addPoint(Point p) {

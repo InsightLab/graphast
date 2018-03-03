@@ -42,7 +42,8 @@ public class ComponentTest {
 		n3 = new Node(3);
 		n3.addComponent(new SpatialNodeComponent(15, 1));
 		
-		e0 = new Edge(1, 2, true);
+		e0 = new Edge(1, 2);
+		e0.setBidirectional(true);
 		e0.addComponent(new SpatialEdgeComponent(new Geometry(new Point(1, 2))));
 		e0.addComponent(new CostListEdgeComponent(2., 3., 1., 5., 6., 3., 1.));
 		
@@ -54,7 +55,8 @@ public class ComponentTest {
 		e2.addComponent(new SpatialEdgeComponent(new Geometry(new Point(1, 3))));
 		e2.addComponent(new CostListEdgeComponent(3., 4., 2., 6., 6., 4., 3.));
 		
-		e3 = new Edge(3, 0, true);
+		e3 = new Edge(3, 0);
+		e3.setBidirectional(true);
 		e3.addComponent(new SpatialEdgeComponent(new Geometry()));
 		e3.addComponent(new CostListEdgeComponent(2., 1., 2., 4., 8., 4., 2.));
 		

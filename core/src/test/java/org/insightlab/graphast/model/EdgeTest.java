@@ -35,7 +35,8 @@ public class EdgeTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		e = new Edge(0, 1, 3, true); 
+		e = new Edge(0, 1, 3); 
+		e.setBidirectional(true);
 	}
 	
 	@Test
@@ -58,7 +59,8 @@ public class EdgeTest {
 	
 	@Test
 	public void testConstructor3(){
-		e = new Edge(0, 1, true); 
+		e = new Edge(0, 1); 
+		e.setBidirectional(true);
 		assertEquals(0l, e.getFromNodeId());
 		assertEquals(1l, e.getToNodeId());
 		assertEquals(1l, e.getWeight(),0);
@@ -119,16 +121,19 @@ public class EdgeTest {
 	
 	@Test
 	public void testEquals(){
-		Edge e1 = new Edge(0,1,3,true);
-		Edge e2 = new Edge(0,2,3,true);
-		Edge e3 = new Edge(3,1,3,true);
-		Edge e4 = new Edge(0,1,4,true);
+		Edge e1 = new Edge(0,1,3);
+		e1.setBidirectional(true);
+		Edge e2 = new Edge(0,2,3);
+		e2.setBidirectional(true);
+		Edge e3 = new Edge(3,1,3);
+		e3.setBidirectional(true);
+		Edge e4 = new Edge(0,1,4);
+		e4.setBidirectional(true);
 //		Edge e5 = new Edge(0,1,3,false);
 		
 //		assertEquals(false, e.equals(new Long(5)));
 		
 		assertEquals(true, e.equals(e1));
-		
 		assertEquals(false, e.equals(e2));
 		assertEquals(false, e.equals(e3));
 		assertEquals(false, e.equals(e4));

@@ -56,13 +56,16 @@ public class MMapGraphTest {
 		n2 = new Node(2);
 		n3 = new Node(3);
 		n4 = new Node(4);
-		e0 = new Edge(1, 4, true);
+		e0 = new Edge(1, 4);
+		e0.setBidirectional(true);
 		e1 = new Edge(2, 4);
 		e2 = new Edge(0, 1);
-		e3 = new Edge(3, 1, true);
+		e3 = new Edge(3, 1);
+		e3.setBidirectional(true);
 		e4 = new Edge(2, 3);
 		e5 = new Edge(4, 3);
-		e6 = new Edge(3, 0, true);
+		e6 = new Edge(3, 0);
+		e6.setBidirectional(true);
 		g.addNodes(n0, n1, n2, n3, n4);
 		g.addEdges(e0, e2, e4, e1, e6, e5, e3);
 		

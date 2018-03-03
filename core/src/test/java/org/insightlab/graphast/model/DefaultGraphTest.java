@@ -30,7 +30,6 @@ import static org.junit.Assert.*;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import org.insightlab.graphast.exceptions.DuplicatedNodeException;
 import org.insightlab.graphast.exceptions.NodeNotFoundException;
 import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Graph;
@@ -54,13 +53,16 @@ public class DefaultGraphTest {
 		n2 = new Node(2);
 		n3 = new Node(3);
 		n4 = new Node(4);
-		e0 = new Edge(1, 4, true);
+		e0 = new Edge(1, 4);
+		e0.setBidirectional(true);
 		e1 = new Edge(2, 4);
 		e2 = new Edge(0, 1);
-		e3 = new Edge(3, 1, true);
+		e3 = new Edge(3, 1);
+		e3.setBidirectional(true);
 		e4 = new Edge(2, 3);
 		e5 = new Edge(4, 3);
-		e6 = new Edge(3, 0, true);
+		e6 = new Edge(3, 0);
+		e6.setBidirectional(true);
 	}
 
 	@Test
@@ -175,13 +177,6 @@ public class DefaultGraphTest {
 		assertEquals("Contains Test n1",g.containsNode(n1.getId()),true);
 		assertEquals("Contains Test n2",g.containsNode(n2.getId()),true);
 		assertEquals("Contains Test n3",g.containsNode(n3.getId()),false);
-	}
-	
-	@Test(expected = DuplicatedNodeException.class)
-	public void testAddNodeException(){
-		g.addNode(n0);
-		g.addNode(n1);
-		g.addNode(n0);
 	}
 	
 	@Test(expected = NodeNotFoundException.class)

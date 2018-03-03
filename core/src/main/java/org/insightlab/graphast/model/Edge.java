@@ -43,6 +43,7 @@ public class Edge extends GraphObject {
 
 	private Map<Class<? extends EdgeComponent>, EdgeComponent> edgeComponent = null;
 	
+	private long id;
 	private long fromNodeId;
 	private long toNodeId;
 	private double weight;
@@ -51,6 +52,7 @@ public class Edge extends GraphObject {
 	public Edge() {
 		this.weight = 1;
 	}
+	
 	/**
 	 * Instantiates a new edge.
 	 *
@@ -74,28 +76,12 @@ public class Edge extends GraphObject {
 		this.weight     = cost;
 	}
 	
-	/**
-	 * Instantiates a new edge.
-	 *
-	 * @param from the id from the outgoing node.
-	 * @param to the id from the incoming node.
-	 * @param bidirectional true, if the edge is bidirectional. false, otherwise.
-	 */
-	public Edge(long from, long to, boolean bidirectional) {
-		this(from, to, 1, bidirectional);
+	public long getId() {
+		return id;
 	}
 	
-	/**
-	 * Instantiates a new edge.
-	 *
-	 * @param from the id from the outgoing node.
-	 * @param to the id from the incoming node.
-	 * @param cost the cost value of the edge.
-	 * @param bidirectional true, if the edge is bidirectional. false, otherwise.
-	 */
-	public Edge(long from, long to, double cost, boolean bidirectional) {
-		this(from, to, cost);
-		this.bidirectional = bidirectional;
+	public void setId(long id) {
+		this.id = id;
 	}
 	
 	/**
@@ -152,6 +138,10 @@ public class Edge extends GraphObject {
 		this.weight = weight;
 	}
 	
+	public void setBidirectional(boolean bidirectional) {
+		this.bidirectional = bidirectional;
+	}
+	
 	/**
 	 * Checks if the edge is bidirectional, e.g. the 
 	 * edge points both in and outward its two nodes.
@@ -160,6 +150,12 @@ public class Edge extends GraphObject {
 	 */
 	public boolean isBidirectional() {
 		return bidirectional;
+	}
+	
+	public void invert() {
+		long aux = this.fromNodeId;
+		this.fromNodeId = this.toNodeId;
+		this.toNodeId = aux;
 	}
 	
 	/**
