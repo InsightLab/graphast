@@ -49,9 +49,9 @@ public class DistanceVectorTest {
 	
 	@Test
 	public void testPrint() {
-		vector.print();
-		vector.print(0l, 1l);
-		vector.print(0l, 2l);
+		vector.printAll();
+		vector.printPathTo(1l);
+		vector.printPathTo(2l);
 	}
 	
 	@Test
