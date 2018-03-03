@@ -24,16 +24,34 @@
 
 package org.insightlab.graphast.model;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import org.insightlab.graphast.model.components.EdgeComponent;
+
 /**
  * The Edge class. It represents the model of a graph edge.
  * It extends the GraphObject abstract class.
  */
 public class Edge extends GraphObject {
 	
-	private long fromNode;
-	private long toNode;
-	private double cost;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3414011816257456570L;
+
+	private Map<Class<? extends EdgeComponent>, EdgeComponent> edgeComponent = null;
+	
+	private long id;
+	private long fromNodeId;
+	private long toNodeId;
+	private double weight;
 	private boolean bidirectional;
+	
+	public Edge() {
+		this.weight = 1;
+	}
 	
 	/**
 	 * Instantiates a new edge.
@@ -53,33 +71,17 @@ public class Edge extends GraphObject {
 	 * @param cost the cost value of the edge.
 	 */
 	public Edge(long from, long to, double cost) {
-		this.fromNode = from;
-		this.toNode   = to;
-		this.cost     = cost;
+		this.fromNodeId = from;
+		this.toNodeId   = to;
+		this.weight     = cost;
 	}
 	
-	/**
-	 * Instantiates a new edge.
-	 *
-	 * @param from the id from the outgoing node.
-	 * @param to the id from the incoming node.
-	 * @param bidirectional true, if the edge is bidirectional. false, otherwise.
-	 */
-	public Edge(long from, long to, boolean bidirectional) {
-		this(from, to, 1, bidirectional);
+	public long getId() {
+		return id;
 	}
 	
-	/**
-	 * Instantiates a new edge.
-	 *
-	 * @param from the id from the outgoing node.
-	 * @param to the id from the incoming node.
-	 * @param cost the cost value of the edge.
-	 * @param bidirectional true, if the edge is bidirectional. false, otherwise.
-	 */
-	public Edge(long from, long to, double cost, boolean bidirectional) {
-		this(from, to, cost);
-		this.bidirectional = bidirectional;
+	public void setId(long id) {
+		this.id = id;
 	}
 	
 	/**
@@ -88,7 +90,7 @@ public class Edge extends GraphObject {
 	 * @return the id from the outing node of the edge.
 	 */
 	public long getFromNodeId() {
-		return fromNode;
+		return fromNodeId;
 	}
 	
 	/**
@@ -97,7 +99,7 @@ public class Edge extends GraphObject {
 	 * @return the id from the incoming node of the edge.
 	 */
 	public long getToNodeId() {
-		return toNode;
+		return toNodeId;
 	}
 	
 	/**
@@ -105,8 +107,8 @@ public class Edge extends GraphObject {
 	 *
 	 * @return the cost of the edge (double).
 	 */
-	public double getCost() {
-		return cost;
+	public double getWeight() {
+		return weight;
 	}
 	
 	/**
@@ -115,7 +117,7 @@ public class Edge extends GraphObject {
 	 * @param fromNode the new id from the outing node of the edge.
 	 */
 	public void setFromNodeId(long fromNode) {
-		this.fromNode = fromNode;
+		this.fromNodeId = fromNode;
 	}
 	
 	/**
@@ -124,16 +126,20 @@ public class Edge extends GraphObject {
 	 * @param toNode the new id from the incoming node of the edge.
 	 */
 	public void setToNodeId(long toNode) {
-		this.toNode = toNode;
+		this.toNodeId = toNode;
 	}
 	
 	/**
-	 * Sets the cost value of the edge.
+	 * Sets the weight value of the edge.
 	 *
-	 * @param cost the new cost of the edge.
+	 * @param weight the new weight of the edge.
 	 */
-	public void setCost(double cost) {
-		this.cost = cost;
+	public void setWeight(double weight) {
+		this.weight = weight;
+	}
+	
+	public void setBidirectional(boolean bidirectional) {
+		this.bidirectional = bidirectional;
 	}
 	
 	/**
@@ -146,6 +152,12 @@ public class Edge extends GraphObject {
 		return bidirectional;
 	}
 	
+	public void invert() {
+		long aux = this.fromNodeId;
+		this.fromNodeId = this.toNodeId;
+		this.toNodeId = aux;
+	}
+	
 	/**
 	 * Gets the id from a node adjacent to this edge in the graph, give a node id.
 	 * The given id is compared to the value of the incoming node id from this edge.
@@ -156,7 +168,24 @@ public class Edge extends GraphObject {
 	 * @return the id from the adjacent node, based on the given id.
 	 */
 	public long getAdjacent(long id) {
-		return id == toNode ? fromNode : toNode;
+		return id == toNodeId ? fromNodeId : toNodeId;
+	}
+	
+	public void addComponent(EdgeComponent component) {
+		if (edgeComponent == null)
+			edgeComponent = new HashMap<>();
+		edgeComponent.put(component.getClass(), component);
+		component.setEdge(this);
+	}
+	
+	public <C extends EdgeComponent> C getComponent(Class<C> componentClass) {
+		if (edgeComponent == null || !edgeComponent.containsKey(componentClass))
+			return null;
+		return componentClass.cast(edgeComponent.get(componentClass));
+	}
+	
+	public Set<Class<? extends EdgeComponent>> getAllComponentClasses() {
+		return edgeComponent.keySet();
 	}
 	
 	/**
@@ -178,9 +207,9 @@ public class Edge extends GraphObject {
 		
 		Edge other = (Edge) obj;
 		
-		boolean okFromNode = this.fromNode == other.fromNode;
-		boolean okToNode   = this.toNode   == other.toNode;
-		boolean okCost     = this.cost     == other.cost;
+		boolean okFromNode = this.fromNodeId == other.fromNodeId;
+		boolean okToNode   = this.toNodeId   == other.toNodeId;
+		boolean okCost     = this.weight     == other.weight;
 		
 		return okFromNode && okToNode && okCost;
 		
@@ -197,7 +226,7 @@ public class Edge extends GraphObject {
 	 */
 	@Override
 	public int hashCode() {
-		return (fromNode + "|" + toNode + "|" + cost).hashCode();
+		return (fromNodeId + "|" + toNodeId + "|" + weight).hashCode();
 	}
 	
 	/**
@@ -207,7 +236,7 @@ public class Edge extends GraphObject {
 	 */
 	@Override
 	public String toString() {
-		return fromNode + "|" + toNode + "|" + cost;
+		return fromNodeId + "|" + toNodeId + "|" + weight;
 	}
 
 }

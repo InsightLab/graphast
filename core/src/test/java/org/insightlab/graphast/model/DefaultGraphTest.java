@@ -30,7 +30,6 @@ import static org.junit.Assert.*;
 import java.util.Arrays;
 import java.util.Iterator;
 
-import org.insightlab.graphast.exceptions.DuplicatedNodeException;
 import org.insightlab.graphast.exceptions.NodeNotFoundException;
 import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Graph;
@@ -54,23 +53,26 @@ public class DefaultGraphTest {
 		n2 = new Node(2);
 		n3 = new Node(3);
 		n4 = new Node(4);
-		e0 = new Edge(1, 4, true);
+		e0 = new Edge(1, 4);
+		e0.setBidirectional(true);
 		e1 = new Edge(2, 4);
 		e2 = new Edge(0, 1);
-		e3 = new Edge(3, 1, true);
+		e3 = new Edge(3, 1);
+		e3.setBidirectional(true);
 		e4 = new Edge(2, 3);
 		e5 = new Edge(4, 3);
-		e6 = new Edge(3, 0, true);
+		e6 = new Edge(3, 0);
+		e6.setBidirectional(true);
 	}
 
 	@Test
 	public void testAddNode() {
 		g.addNode(n0);
-		Iterator<Node> it = g.nodeIterator();
+		Iterator<Node> it = g.getNodeIterator();
 		assertEquals("Add node n0", n0, it.next());
 		g.addNode(n1);
 		g.addNode(n3);
-		it = g.nodeIterator();
+		it = g.getNodeIterator();
 		it.next();
 		assertEquals("Add node n1", n1, it.next());
 		assertEquals("Add node n3", n3, it.next());
@@ -79,7 +81,7 @@ public class DefaultGraphTest {
 	@Test
 	public void testAddNodes() {
 		g.addNodes(n0, n1, n3);
-		Iterator<Node> it = g.nodeIterator();
+		Iterator<Node> it = g.getNodeIterator();
 		assertEquals("Add nodes n0", n0, it.next());
 		assertEquals("Add nodes n1", n1, it.next());
 		assertEquals("Add nodes n3", n3, it.next());
@@ -89,11 +91,11 @@ public class DefaultGraphTest {
 	public void testAddEdge() {
 		g.addNodes(n0, n1, n2, n3, n4);
 		g.addEdge(e0);
-		Iterator<Edge> it = g.edgeIterator();
+		Iterator<Edge> it = g.getEdgeIterator();
 		assertEquals("Add edge e0", e0, it.next());
 		g.addEdge(e2);
 		g.addEdge(e5);
-		it = g.edgeIterator();
+		it = g.getEdgeIterator();
 		it.next();
 		assertEquals("Add edge e2", e2, it.next());
 		assertEquals("Add edge e5", e5, it.next());
@@ -103,7 +105,7 @@ public class DefaultGraphTest {
 	public void testAddEdges() {
 		g.addNodes(n0, n1, n2, n3, n4);
 		g.addEdges(e0, e2, e4, e1, e6, e5, e3);
-		Iterator<Edge> it = g.edgeIterator();
+		Iterator<Edge> it = g.getEdgeIterator();
 		assertEquals("Add edges e0", e0, it.next());
 		assertEquals("Add edges e2", e2, it.next());
 		assertEquals("Add edges e4", e4, it.next());
@@ -175,13 +177,6 @@ public class DefaultGraphTest {
 		assertEquals("Contains Test n1",g.containsNode(n1.getId()),true);
 		assertEquals("Contains Test n2",g.containsNode(n2.getId()),true);
 		assertEquals("Contains Test n3",g.containsNode(n3.getId()),false);
-	}
-	
-	@Test(expected = DuplicatedNodeException.class)
-	public void testAddNodeException(){
-		g.addNode(n0);
-		g.addNode(n1);
-		g.addNode(n0);
 	}
 	
 	@Test(expected = NodeNotFoundException.class)

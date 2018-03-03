@@ -30,11 +30,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class EdgeTest {
-	Edge e;
+	
+	private Edge e;
 	
 	@Before
 	public void setUp() throws Exception {
-		e = new Edge(0, 1, 3, true); 
+		e = new Edge(0, 1, 3); 
+		e.setBidirectional(true);
 	}
 	
 	@Test
@@ -42,7 +44,7 @@ public class EdgeTest {
 		e = new Edge(0,1);
 		assertEquals(0l, e.getFromNodeId());
 		assertEquals(1l, e.getToNodeId());
-		assertEquals(1l, e.getCost(),0);
+		assertEquals(1l, e.getWeight(),0);
 		assertEquals(false, e.isBidirectional());
 	}
 	
@@ -51,16 +53,17 @@ public class EdgeTest {
 		e = new Edge(0,1,3);
 		assertEquals(0l, e.getFromNodeId());
 		assertEquals(1l, e.getToNodeId());
-		assertEquals(3l, e.getCost(),0);
+		assertEquals(3l, e.getWeight(),0);
 		assertEquals(false, e.isBidirectional());
 	}
 	
 	@Test
 	public void testConstructor3(){
-		e = new Edge(0, 1, true); 
+		e = new Edge(0, 1); 
+		e.setBidirectional(true);
 		assertEquals(0l, e.getFromNodeId());
 		assertEquals(1l, e.getToNodeId());
-		assertEquals(1l, e.getCost(),0);
+		assertEquals(1l, e.getWeight(),0);
 		assertEquals(true, e.isBidirectional());
 	}
 	
@@ -68,7 +71,7 @@ public class EdgeTest {
 	public void testConstructor4(){ 
 		assertEquals(0l, e.getFromNodeId());
 		assertEquals(1l, e.getToNodeId());
-		assertEquals(3l, e.getCost(),0);
+		assertEquals(3l, e.getWeight(),0);
 		assertEquals(true, e.isBidirectional());
 	}
 	
@@ -84,7 +87,7 @@ public class EdgeTest {
 	
 	@Test
 	public void testCost() {
-		assertEquals("Cost is wrong",3.0,e.getCost(),0);
+		assertEquals("Cost is wrong",3.0,e.getWeight(),0);
 	}
 	
 	@Test
@@ -106,8 +109,8 @@ public class EdgeTest {
 	
 	@Test
 	public void testSetCost(){
-		e.setCost(100);;
-		assertEquals("Cost was not updated",100,e.getCost(),0);
+		e.setWeight(100);
+		assertEquals("Cost was not updated",100,e.getWeight(),0);
 	}
 	
 	@Test
@@ -118,16 +121,19 @@ public class EdgeTest {
 	
 	@Test
 	public void testEquals(){
-		Edge e1 = new Edge(0,1,3,true);
-		Edge e2 = new Edge(0,2,3,true);
-		Edge e3 = new Edge(3,1,3,true);
-		Edge e4 = new Edge(0,1,4,true);
+		Edge e1 = new Edge(0,1,3);
+		e1.setBidirectional(true);
+		Edge e2 = new Edge(0,2,3);
+		e2.setBidirectional(true);
+		Edge e3 = new Edge(3,1,3);
+		e3.setBidirectional(true);
+		Edge e4 = new Edge(0,1,4);
+		e4.setBidirectional(true);
 //		Edge e5 = new Edge(0,1,3,false);
 		
 //		assertEquals(false, e.equals(new Long(5)));
 		
 		assertEquals(true, e.equals(e1));
-		
 		assertEquals(false, e.equals(e2));
 		assertEquals(false, e.equals(e3));
 		assertEquals(false, e.equals(e4));

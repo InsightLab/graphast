@@ -31,11 +31,29 @@ package org.insightlab.graphast.storage;
 public class GraphStorageFactory {
 	
 	/**
-	 * @return the current GraphStorage's instance.
+	 * @return the OSM GraphStorage's instance.
 	 */
 	public static GraphStorage getOSMGraphStorage() {
 		
 		return OSMGraphStorage.getInstance();
+		
+	}
+	
+	/**
+	 * @return the Java Serializable GraphStorage's instance.
+	 */
+	public static GraphStorage getJavaSerializableGraphStorage() {
+		
+		return JavaSerializationStorage.getInstance();
+		
+	}
+	
+	/**
+	 * @return the Kryo GraphStorage's instance.
+	 */
+	public static GraphStorage getKryoGraphStorage() {
+		
+		return KryoStorage.getInstance();
 		
 	}
 

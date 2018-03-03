@@ -67,7 +67,8 @@ public class RandomGraphGenerator {
 				
 				if (rand.nextFloat() < dens) {
 					int randomCost = Math.abs(rand.nextInt(50)) + 1;
-					Edge e = new Edge(i, j, randomCost, rand.nextBoolean());
+					Edge e = new Edge(i, j, randomCost);
+					e.setBidirectional(rand.nextBoolean());
 					
 					graph.addEdge(e);
 				}

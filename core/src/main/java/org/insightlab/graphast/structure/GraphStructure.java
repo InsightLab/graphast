@@ -25,9 +25,11 @@
 package org.insightlab.graphast.structure;
 
 import java.util.Iterator;
+import java.util.Set;
 
 import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Node;
+import org.insightlab.graphast.model.components.GraphComponent;
 
 /**
  * The GraphStructure interface. This interface contains declarations of general methods
@@ -40,6 +42,8 @@ public interface GraphStructure {
 	 * @param node the node that will be added.
 	 */
 	void addNode(Node node);
+	
+	Node getNode(final long id);
 	
 	/**
 	 * Add a new edge into the graph.
@@ -84,5 +88,16 @@ public interface GraphStructure {
 	 * @return the in edges of the node which has the given id.
 	 */
 	Iterator<Edge> getInEdges(final long id);
+	
+	
+	Set<Class<? extends GraphComponent>> getAllComponentClasses();
+	
+	
+	GraphComponent getComponent(Class<? extends GraphComponent> componentClass);
+	
+	
+	void addComponent(GraphComponent component);
+
+	Iterator<GraphComponent> getAllComponents();
 	
 }

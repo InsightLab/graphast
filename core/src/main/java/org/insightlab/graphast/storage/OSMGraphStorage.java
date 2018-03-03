@@ -36,7 +36,6 @@ import java.util.Set;
 
 import org.openstreetmap.osmosis.core.container.v0_6.EntityContainer;
 import org.openstreetmap.osmosis.core.domain.v0_6.Entity;
-import org.openstreetmap.osmosis.core.domain.v0_6.Tag;
 import org.openstreetmap.osmosis.core.domain.v0_6.Way;
 import org.openstreetmap.osmosis.core.domain.v0_6.WayNode;
 import org.openstreetmap.osmosis.core.task.v0_6.RunnableSource;
@@ -55,11 +54,15 @@ import org.insightlab.graphast.structure.GraphStructure;
  * This class implements a OSMGraphStorage. OpenStreetMap (OSM) is a manner to represents graphs.
  *
  */
-public class OSMGraphStorage implements GraphStorage {
+public class OSMGraphStorage extends GraphStorage {
 	
 	private static GraphStorage instance = null;
+	private static HashSet<String> importantTags = new HashSet<>();
 	
-	private OSMGraphStorage() {}
+	private OSMGraphStorage() {
+		String[] tags = new String[] { "highway", "access", "oneway", "motor_vehicle", "motorcar"};
+		Arrays.stream(tags).forEach(importantTags::add);
+	}
 	
 	/**
 	 * @return the current GraphStorage's instance.
@@ -183,17 +186,9 @@ public class OSMGraphStorage implements GraphStorage {
 		private Map<String, String> getImportantTags(Way w) {
 			Map<String, String> map = new HashMap<>();
 			if (!w.getTags().isEmpty()) {
-				for (Tag t : w.getTags()) {
-					switch (t.getKey()) {
-					case "highway":
-					case "access":
-					case "oneway":
-					case "motor_vehicle":
-					case "motorcar":
-						map.put(t.getKey(), t.getValue());
-					}
-						
-				}
+				w.getTags().stream()
+					.filter(tag -> importantTags.contains(tag.getKey()))
+					.forEach(t -> map.put(t.getKey(), t.getValue()));
 			}
 			return map;
 		}
@@ -203,17 +198,14 @@ public class OSMGraphStorage implements GraphStorage {
 			if (!tags.containsKey("highway")) return false;
 			if (!allowedHighways.contains(tags.get("highway"))) return false;
 			
-			if (tags.get("highway").equals("path")) {
-				if (!(
-						(tags.containsKey("motor_vehicle") && tags.get("motor_vehicle").equals("yes")) || 
-						(tags.containsKey("motorcar") && tags.get("motorcar").equals("yes"))
-					))
-					return false;
-			}
+			if (tags.get("highway").equals("path") &&
+				!(tags.containsKey("motor_vehicle") && "yes".equals(tags.get("motor_vehicle"))) &&
+				!(tags.containsKey("motorcar") && "yes".equals(tags.get("motorcar"))))
+				return false;
 			
 			if (tags.containsKey("access")) {
 				String accessValue = tags.get("access");
-				if (!(accessValue.equals("yes") || accessValue.equals("permissive")))
+				if (!("yes".equals(accessValue) || "permissive".equals(accessValue)))
 					return false;
 			}
 
@@ -232,7 +224,8 @@ public class OSMGraphStorage implements GraphStorage {
 	        	if (wayNodeList.size() < 2 || w.getTags().isEmpty() || !isValid(wayTags))
 	        		return;
 	        	
-	        	WayNode from, to = wayNodeList.get(0);
+	        	WayNode from;
+	        	WayNode to = wayNodeList.get(0);
         		
 	        	if (!graph.containsNode(to.getNodeId()))
 	        		graph.addNode(to.getNodeId());

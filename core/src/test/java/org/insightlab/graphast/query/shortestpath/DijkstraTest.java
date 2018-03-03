@@ -49,12 +49,18 @@ public class DijkstraTest {
 		Node n3 = new Node(3);
 		Node n4 = new Node(4);
 		Node n5 = new Node(5);
-		Edge e0 = new Edge(0, 1, 3, true);
-		Edge e1 = new Edge(1, 2, 3, true);
-		Edge e2 = new Edge(2, 3, 3, true);
-		Edge e3 = new Edge(0, 4, 5, true);
-		Edge e4 = new Edge(4, 3, 5, true);
-		Edge e5 = new Edge(0, 5, 15, true);
+		Edge e0 = new Edge(0, 1, 3);
+		e0.setBidirectional(true);
+		Edge e1 = new Edge(1, 2, 3);
+		e1.setBidirectional(true);
+		Edge e2 = new Edge(2, 3, 3);
+		e2.setBidirectional(true);
+		Edge e3 = new Edge(0, 4, 5);
+		e3.setBidirectional(true);
+		Edge e4 = new Edge(4, 3, 5);
+		e4.setBidirectional(true);
+		Edge e5 = new Edge(0, 5, 15);
+		e5.setBidirectional(true);
 		g.addNodes(n0, n1, n2, n3, n4, n5);
 		g.addEdges(e0, e1, e2, e3, e4, e5);
 	}

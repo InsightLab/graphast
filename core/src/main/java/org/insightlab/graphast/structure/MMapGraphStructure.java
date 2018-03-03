@@ -27,9 +27,11 @@ package org.insightlab.graphast.structure;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Node;
+import org.insightlab.graphast.model.components.GraphComponent;
 import org.insightlab.hugedataaccess.DataAccess;
 import org.insightlab.hugedataaccess.MMapDataAccess;
 import org.insightlab.hugedataaccess.structures.MMapMap;
@@ -141,7 +143,7 @@ public class MMapGraphStructure implements GraphStructure {
 		
 		edgeAccess.setLong   ( edgeIndex      , fromId );
 		edgeAccess.setLong   ( edgeIndex + 8  , toId );
-		edgeAccess.setDouble ( edgeIndex + 16 , e.getCost() );
+		edgeAccess.setDouble ( edgeIndex + 16 , e.getWeight() );
 		edgeAccess.setLong   ( edgeIndex + 24 , nodeAccess.getLong(fromIndex + 8) );
 		edgeAccess.setLong   ( edgeIndex + 32 , nodeAccess.getLong(toIndex + 16) );
 		
@@ -182,7 +184,11 @@ public class MMapGraphStructure implements GraphStructure {
 		addDirectionalEdge(e);
 		
 		if (e.isBidirectional())
-			addDirectionalEdge(new Edge(e.getToNodeId(), e.getFromNodeId(), e.getCost()));
+			addDirectionalEdge(new Edge(e.getToNodeId(), e.getFromNodeId(), e.getWeight()));
+	}
+	
+	public Node getNode(final long id) {
+		return new Node(id);
 	}
 
 	/**
@@ -353,5 +359,30 @@ public class MMapGraphStructure implements GraphStructure {
 		};
 		
 	}
+
+	@Override
+	public Set<Class<? extends GraphComponent>> getAllComponentClasses() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public GraphComponent getComponent(Class<? extends GraphComponent> componentClass) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void addComponent(GraphComponent component) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Iterator<GraphComponent> getAllComponents() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

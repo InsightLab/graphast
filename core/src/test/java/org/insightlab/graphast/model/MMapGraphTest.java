@@ -56,13 +56,16 @@ public class MMapGraphTest {
 		n2 = new Node(2);
 		n3 = new Node(3);
 		n4 = new Node(4);
-		e0 = new Edge(1, 4, true);
+		e0 = new Edge(1, 4);
+		e0.setBidirectional(true);
 		e1 = new Edge(2, 4);
 		e2 = new Edge(0, 1);
-		e3 = new Edge(3, 1, true);
+		e3 = new Edge(3, 1);
+		e3.setBidirectional(true);
 		e4 = new Edge(2, 3);
 		e5 = new Edge(4, 3);
-		e6 = new Edge(3, 0, true);
+		e6 = new Edge(3, 0);
+		e6.setBidirectional(true);
 		g.addNodes(n0, n1, n2, n3, n4);
 		g.addEdges(e0, e2, e4, e1, e6, e5, e3);
 		
@@ -80,9 +83,9 @@ public class MMapGraphTest {
 	
 	@Test
 	public void testGetOutEdges() {
-		Edge e0Inv = new Edge(e0.getToNodeId(), e0.getFromNodeId(), e0.getCost());
-		Edge e3Inv = new Edge(e3.getToNodeId(), e3.getFromNodeId(), e3.getCost());
-		Edge e6Inv = new Edge(e6.getToNodeId(), e6.getFromNodeId(), e6.getCost());
+		Edge e0Inv = new Edge(e0.getToNodeId(), e0.getFromNodeId(), e0.getWeight());
+		Edge e3Inv = new Edge(e3.getToNodeId(), e3.getFromNodeId(), e3.getWeight());
+		Edge e6Inv = new Edge(e6.getToNodeId(), e6.getFromNodeId(), e6.getWeight());
 		assertThat("Out Edges Test n0", Arrays.asList(e2, e6Inv), containsInAnyOrder(Iterators.toArray(g.getOutEdges(0), Edge.class)));
 		assertThat("Out Edges Test n1", Arrays.asList(e0, e3Inv), containsInAnyOrder(Iterators.toArray(g.getOutEdges(1), Edge.class)));
 		assertThat("Out Edges Test n2", Arrays.asList(e1, e4), containsInAnyOrder(Iterators.toArray(g.getOutEdges(2), Edge.class)));
@@ -93,9 +96,9 @@ public class MMapGraphTest {
 
 	@Test
 	public void testGetInEdges() {
-		Edge e0Inv = new Edge(e0.getToNodeId(), e0.getFromNodeId(), e0.getCost());
-		Edge e3Inv = new Edge(e3.getToNodeId(), e3.getFromNodeId(), e3.getCost());
-		Edge e6Inv = new Edge(e6.getToNodeId(), e6.getFromNodeId(), e6.getCost());
+		Edge e0Inv = new Edge(e0.getToNodeId(), e0.getFromNodeId(), e0.getWeight());
+		Edge e3Inv = new Edge(e3.getToNodeId(), e3.getFromNodeId(), e3.getWeight());
+		Edge e6Inv = new Edge(e6.getToNodeId(), e6.getFromNodeId(), e6.getWeight());
 		assertThat("In Edges Test n0", Arrays.asList(e6), containsInAnyOrder(Iterators.toArray(g.getInEdges(0), Edge.class)));
 		assertThat("In Edges Test n1", Arrays.asList(e0Inv, e2, e3), containsInAnyOrder(Iterators.toArray(g.getInEdges(1), Edge.class)));
 		assertThat("In Edges Test n2", Arrays.<Edge>asList(), containsInAnyOrder(Iterators.toArray(g.getInEdges(2), Edge.class)));
@@ -118,9 +121,9 @@ public class MMapGraphTest {
 		assertEquals("Reoppened graph number of nodes", 5, g2.getNumberOfNodes());
 		assertEquals("Reoppened graph number of edges", 10, g2.getNumberOfEdges());
 		
-		Edge e0Inv = new Edge(e0.getToNodeId(), e0.getFromNodeId(), e0.getCost());
-		Edge e3Inv = new Edge(e3.getToNodeId(), e3.getFromNodeId(), e3.getCost());
-		Edge e6Inv = new Edge(e6.getToNodeId(), e6.getFromNodeId(), e6.getCost());
+		Edge e0Inv = new Edge(e0.getToNodeId(), e0.getFromNodeId(), e0.getWeight());
+		Edge e3Inv = new Edge(e3.getToNodeId(), e3.getFromNodeId(), e3.getWeight());
+		Edge e6Inv = new Edge(e6.getToNodeId(), e6.getFromNodeId(), e6.getWeight());
 		
 		assertThat("Reoppened Graph Out Edges Test n0", Arrays.asList(e2, e6Inv), containsInAnyOrder(Iterators.toArray(g2.getOutEdges(0), Edge.class)));
 		assertThat("Reoppened Graph Out Edges Test n1", Arrays.asList(e0, e3Inv), containsInAnyOrder(Iterators.toArray(g2.getOutEdges(1), Edge.class)));

@@ -25,7 +25,10 @@
 package org.insightlab.graphast.model;
 
 import java.util.Iterator;
+import java.util.Set;
 
+import org.insightlab.graphast.exceptions.DuplicatedNodeException;
+import org.insightlab.graphast.model.components.GraphComponent;
 import org.insightlab.graphast.structure.DefaultGraphStructure;
 import org.insightlab.graphast.structure.GraphStructure;
 
@@ -38,6 +41,13 @@ import org.insightlab.graphast.structure.GraphStructure;
  * 
  */
 public class Graph extends GraphObject {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3661942047360629183L;
+	
+	private long duplicatedNodesCounter = 0;
 	
 	private GraphStructure structure;
 	
@@ -68,6 +78,11 @@ public class Graph extends GraphObject {
 		this.addNode(new Node(id));
 	}
 	
+	public void addNodes(long ...ids) {
+		for (long id : ids)
+			this.addNode(id);
+	}
+	
 	/**
 	 * Adds a new node to the graph, given the Node object. If a node already
 	 * exists with an id equal to the given node, a DuplicatedNodeException is thrown.
@@ -75,7 +90,15 @@ public class Graph extends GraphObject {
 	 * @param n the new node to be added to the graph.
 	 */
 	public void addNode(Node n) {
-		structure.addNode(n);
+		try {
+			structure.addNode(n);
+		} catch (DuplicatedNodeException e) {
+			duplicatedNodesCounter++;
+		}
+	}
+	
+	public long getDuplicatedNodesCounter() {
+		return duplicatedNodesCounter;
 	}
 	
 	/**
@@ -85,7 +108,6 @@ public class Graph extends GraphObject {
 	 * @param nodes the Node objects to be added to the graph. 
 	 */
 	public void addNodes(Node ...nodes) {
-		
 		for (Node n : nodes)
 			this.addNode(n);
 	}
@@ -126,13 +148,26 @@ public class Graph extends GraphObject {
 		return structure.containsNode(id);
 	}
 	
+	public Node getNode(final long id) {
+		return structure.getNode(id);
+	}
+	
 	/**
 	 * It returns an Iterator object of the Node elements contained in this graph.
 	 *
 	 * @return the iterator of the list of nodes contained in this graph.
 	 */
-	public Iterator<Node> nodeIterator() {
+	public Iterator<Node> getNodeIterator() {
 		return structure.nodeIterator();
+	}
+	
+	public Iterable<Node> getNodes() {
+		return new Iterable<Node>() {
+			@Override
+			public Iterator<Node> iterator() {
+				return getNodeIterator();
+			}
+		};
 	}
 	
 	/**
@@ -140,8 +175,17 @@ public class Graph extends GraphObject {
 	 *
 	 * @return the iterator of the list of edges contained in this graph.
 	 */
-	public Iterator<Edge> edgeIterator() {
+	public Iterator<Edge> getEdgeIterator() {
 		return structure.edgeIterator();
+	}
+	
+	public Iterable<Edge> getEdges() {
+		return new Iterable<Edge>() {
+			@Override
+			public Iterator<Edge> iterator() {
+				return getEdgeIterator();
+			}
+		};
 	}
 	
 	/**
@@ -185,6 +229,30 @@ public class Graph extends GraphObject {
 	public Iterator<Edge> getInEdges(long id) {
 		return structure.getInEdges(id);
 	}
+	
+	
+	public <C extends GraphComponent> C getComponent(Class<C> componentClass) {
+		return componentClass.cast(structure.getComponent(componentClass));
+	}
+	
+	public void addComponent(GraphComponent component) {
+		structure.addComponent(component);
+		component.setGraph(this);
+	}
+	
+	public Iterable<GraphComponent> getAllComponents() {
+		return new Iterable<GraphComponent>() {
+			@Override
+			public Iterator<GraphComponent> iterator() {
+				return structure.getAllComponents();
+			}
+		};
+	}
+	
+	public Set<Class<? extends GraphComponent>> getAllComponentNames() {
+		return structure.getAllComponentClasses();
+	}
+	
 	
 	/**
 	 * Gets the neighborhood from a node represented by a given id. If the graph 

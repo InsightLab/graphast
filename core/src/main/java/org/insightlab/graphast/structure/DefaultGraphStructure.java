@@ -27,17 +27,22 @@ package org.insightlab.graphast.structure;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import org.insightlab.graphast.exceptions.DuplicatedNodeException;
 import org.insightlab.graphast.exceptions.NodeNotFoundException;
 import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Node;
+import org.insightlab.graphast.model.components.GraphComponent;
 
 /**
  * This class implements a default graph structure using the interface GraphStructure.
  *
  */
 public class DefaultGraphStructure implements GraphStructure {
+	
+	private Map<Class<? extends GraphComponent>, GraphComponent> graphComponents = null;
 	
 	private Integer nextId = 0;
 	
@@ -171,6 +176,43 @@ public class DefaultGraphStructure implements GraphStructure {
 	 */
 	public Iterator<Edge> getInEdges(final long id) {
 		return inEdges.get(idMapping.get(id)).iterator();
+	}
+
+	@Override
+	public void addComponent(GraphComponent component) {
+		if (graphComponents == null)
+			graphComponents = new HashMap<>();
+		graphComponents.put(component.getClass(), component);
+	}
+	
+	@Override
+	public GraphComponent getComponent(Class<? extends GraphComponent> componentClass) {
+		if (graphComponents == null || !graphComponents.containsKey(componentClass))
+			return null;
+		return graphComponents.get(componentClass);
+	}
+
+	@Override
+	public Set<Class<? extends GraphComponent>> getAllComponentClasses() {
+		if (graphComponents == null)
+			return null;
+		return graphComponents.keySet();
+	}
+
+	@Override
+	public Iterator<GraphComponent> getAllComponents() {
+		return (graphComponents != null) ? 
+				graphComponents.values().iterator() :
+				new Iterator<GraphComponent>() {
+					@Override
+					public boolean hasNext() {
+						return false;
+					}
+					@Override
+					public GraphComponent next() {
+						return null;
+					}
+				};
 	}
 
 }

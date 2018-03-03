@@ -24,13 +24,28 @@
 
 package org.insightlab.graphast.model;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import org.insightlab.graphast.model.components.NodeComponent;
+
 /**
  * The Node class. It represents the model of a graph node.
  * It extends the GraphObject abstract class.
  */
 public class Node extends GraphObject {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8614831471786755717L;
+
+	private Map<Class<? extends NodeComponent>, NodeComponent> nodeComponents = null;
+	
 	private long id;
+	
+	public Node() {}
 	
 	/**
 	 * Instantiates a new node.
@@ -48,6 +63,27 @@ public class Node extends GraphObject {
 	 */
 	public long getId() {
 		return id;
+	}
+	
+	public void setId(long id) {
+		this.id = id;
+	}
+	
+	public void addComponent(NodeComponent component) {
+		if (nodeComponents == null)
+			nodeComponents = new HashMap<>();
+		nodeComponents.put(component.getClass(), component);
+		component.setNode(this);
+	}
+	
+	public <C extends NodeComponent> C getComponent(Class<C> componentClass) {
+		if (nodeComponents == null || !nodeComponents.containsKey(componentClass))
+			return null;
+		return componentClass.cast(nodeComponents.get(componentClass));
+	}
+	
+	public Set<Class<? extends NodeComponent>> getAllComponentClasses() {
+		return nodeComponents.keySet();
 	}
 	
 	/**
