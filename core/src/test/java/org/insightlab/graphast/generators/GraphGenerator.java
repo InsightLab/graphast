@@ -1,7 +1,5 @@
 package org.insightlab.graphast.generators;
 
-import java.io.FileNotFoundException;
-
 import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Graph;
 import org.insightlab.graphast.model.Node;
@@ -11,10 +9,6 @@ import org.insightlab.graphast.model.components.spatial_components.Geometry;
 import org.insightlab.graphast.model.components.spatial_components.Point;
 import org.insightlab.graphast.model.components.spatial_components.SpatialEdgeComponent;
 import org.insightlab.graphast.model.components.spatial_components.SpatialNodeComponent;
-import org.insightlab.graphast.storage.GraphStorage;
-import org.insightlab.graphast.storage.GraphStorageFactory;
-import org.insightlab.graphast.storage.OSMGraphStorageTest;
-import org.insightlab.graphast.structure.DefaultGraphStructure;
 
 public class GraphGenerator {
 	
@@ -191,20 +185,5 @@ public class GraphGenerator {
 		
 		return graph;
 	}
-	
-	public Graph generateMonaco() {
-		GraphStorage storage = GraphStorageFactory.getOSMGraphStorage();
-		String path = OSMGraphStorageTest.class.getClassLoader().getResource("monaco-latest.osm.pbf").getPath();
-		try{
-			Graph g = storage.load(path, new DefaultGraphStructure());
-			CostsGenerator.getInstance().generateTemporalCosts(g);
-			return g;
-		} catch(FileNotFoundException e){
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
-	
 
 }

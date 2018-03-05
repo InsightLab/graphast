@@ -22,13 +22,14 @@
  * SOFTWARE.
 */
 
-package org.insightlab.graphast.storage;
+package org.insightlab.graphast.utils;
 
 import java.util.Random;
 
 import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Graph;
 import org.insightlab.graphast.model.Node;
+import org.insightlab.graphast.serialization.SerializationUtils;
 import org.insightlab.graphast.structure.MMapGraphStructure;
 
 /**
@@ -54,7 +55,7 @@ public class RandomGraphGenerator {
 		Graph graph = null;
 		String dir = "graphs/MMap/" + graphName;
 		
-		StorageUtils.deleteMMapGraph(dir);
+		SerializationUtils.deleteMMapGraph(dir);
 		graph = new Graph(new MMapGraphStructure(dir));
 		
 		Random rand = new Random();

@@ -90,7 +90,7 @@ public class DistanceVector {
 	public void print(long sourceId, long targetId) {
 		
 		if (getElement(targetId).getParentId() == -1) {
-			System.out.println("No path between them");
+			System.out.println("No path between '" + sourceId + "' and '" + targetId + "'");
 			return;
 		}
 		

@@ -31,7 +31,7 @@ import static org.junit.Assert.assertThat;
 import java.io.IOException;
 import java.util.Arrays;
 
-import org.insightlab.graphast.storage.StorageUtils;
+import org.insightlab.graphast.serialization.SerializationUtils;
 import org.insightlab.graphast.structure.MMapGraphStructure;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -48,7 +48,7 @@ public class MMapGraphTest {
 	public static void setUpBeforeClass() throws IOException {
 		String graphPath = "graphs/MMap/test_graph";
 		
-		StorageUtils.deleteMMapGraph(graphPath);
+		SerializationUtils.deleteMMapGraph(graphPath);
 		g = new Graph(new MMapGraphStructure(graphPath));
 		
 		n0 = new Node(0);

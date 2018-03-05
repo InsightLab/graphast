@@ -30,7 +30,7 @@ import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Graph;
 import org.insightlab.graphast.model.Node;
 import org.insightlab.graphast.query.utils.DistanceVector;
-import org.insightlab.graphast.storage.StorageUtils;
+import org.insightlab.graphast.serialization.SerializationUtils;
 import org.insightlab.graphast.structure.MMapGraphStructure;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -43,7 +43,7 @@ public class MMapDijkstraTest {
 	public static void setUpBeforeClass() throws Exception {
 		String graphPath = "graphs/MMap/dijkstra_graph";
 		
-		StorageUtils.deleteMMapGraph(graphPath);
+		SerializationUtils.deleteMMapGraph(graphPath);
 		g = new Graph(new MMapGraphStructure(graphPath));
 		
 		Node n0 = new Node(0);

@@ -1,4 +1,4 @@
-package org.insightlab.graphast.storage;
+package org.insightlab.graphast.serialization;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,12 +20,12 @@ import de.javakaffee.kryoserializers.ArraysAsListSerializer;
 
 import com.esotericsoftware.kryo.io.Input;
 
-public class KryoStorage extends GraphStorage {
+public class KryoSerializer extends GraphSerializer {
 	
-	private static GraphStorage instance = null;
+	private static GraphSerializer instance = null;
 	private Kryo kryo;
 	
-	private KryoStorage() {
+	private KryoSerializer() {
 		kryo = new Kryo();
 		kryo.register( Arrays.asList( "" ).getClass(), new ArraysAsListSerializer() );
 	}
@@ -33,9 +33,9 @@ public class KryoStorage extends GraphStorage {
 	/**
 	 * @return the current GraphStorage's instance.
 	 */
-	public static GraphStorage getInstance() {
+	public static GraphSerializer getInstance() {
 		if (instance == null) 
-			instance = new KryoStorage();
+			instance = new KryoSerializer();
 		
 		return instance;
 	}
@@ -45,7 +45,7 @@ public class KryoStorage extends GraphStorage {
 		long startTime = System.currentTimeMillis();
 		Graph g = new Graph(structure);
 		
-		String directory = StorageUtils.ensureDirectory(path);
+		String directory = SerializationUtils.ensureDirectory(path);
 		Input in;
 		
 		File f = new File(directory);
@@ -57,17 +57,17 @@ public class KryoStorage extends GraphStorage {
 		
 		try {
 			
-			in = new Input(new FileInputStream(directory + "nodes.bin"));
+			in = new Input(new FileInputStream(directory + "nodes.phast"));
 			while(!in.eof())
 				g.addNode(kryo.readObject(in, Node.class));
 			in.close();
 			
-			in = new Input(new FileInputStream(directory + "edges.bin"));
+			in = new Input(new FileInputStream(directory + "edges.phast"));
 			while(!in.eof())
 				g.addEdge(kryo.readObject(in, Edge.class));
 			in.close();
 			
-			in = new Input(new FileInputStream(directory + "graph_components.bin"));
+			in = new Input(new FileInputStream(directory + "graph_components.phast"));
 			while(!in.eof())
 				g.addComponent(kryo.readObject(in, GraphComponent.class));
 			in.close();
@@ -85,7 +85,7 @@ public class KryoStorage extends GraphStorage {
 
 	@Override
 	public void save(String path, Graph graph) {
-		String directory = StorageUtils.ensureDirectory(path);
+		String directory = SerializationUtils.ensureDirectory(path);
 		Output out;
 		
 		File f = new File(directory);
@@ -96,15 +96,15 @@ public class KryoStorage extends GraphStorage {
 			f.mkdirs();
 		
 		try {
-			out = new Output(new FileOutputStream(directory + "nodes.bin"));
+			out = new Output(new FileOutputStream(directory + "nodes.phast"));
 			for (Node n : graph.getNodes())
 				kryo.writeObject(out, n);
 			out.close();
-			out = new Output(new FileOutputStream(directory + "edges.bin"));
+			out = new Output(new FileOutputStream(directory + "edges.phast"));
 			for (Edge e : graph.getEdges())
 				kryo.writeObject(out, e);
 			out.close();
-			out = new Output(new FileOutputStream(directory + "graph_components.bin"));
+			out = new Output(new FileOutputStream(directory + "graph_components.phast"));
 			for (GraphComponent component : graph.getAllComponents())
 				kryo.writeObject(out, component);
 			out.close();

@@ -22,39 +22,42 @@
  * SOFTWARE.
 */
 
-package org.insightlab.graphast.storage;
+package org.insightlab.graphast.serialization;
+
+import java.io.FileNotFoundException;
+
+import org.insightlab.graphast.model.Graph;
+import org.insightlab.graphast.structure.DefaultGraphStructure;
+import org.insightlab.graphast.structure.GraphStructure;
 
 /**
- * This class implements a factory for a GraphStorage.
- *
+ * The GraphStorage interface. This interface contains declarations of general methods
+ * for different GraphStorage's implementations.
  */
-public class GraphStorageFactory {
+public abstract class GraphSerializer {
 	
 	/**
-	 * @return the OSM GraphStorage's instance.
+	 * Load a graph from the given path and structure.
+	 * @param path to search the file that contains the graph.
+	 * @param structure that represents the structure of the graph.
+	 * @return the graph loaded.
 	 */
-	public static GraphStorage getOSMGraphStorage() {
-		
-		return OSMGraphStorage.getInstance();
-		
+	
+	public static GraphSerializer getInstance() {
+		return KryoSerializer.getInstance();
+	}
+	
+	public abstract Graph load(String path, GraphStructure structure) throws FileNotFoundException;
+	
+	public Graph load(String path) throws FileNotFoundException {
+		return load(path, new DefaultGraphStructure());
 	}
 	
 	/**
-	 * @return the Java Serializable GraphStorage's instance.
+	 * Save the graph into the given path.
+	 * @param path to save the file that contains the graph.
+	 * @param graph that will be saved.
 	 */
-	public static GraphStorage getJavaSerializableGraphStorage() {
-		
-		return JavaSerializationStorage.getInstance();
-		
-	}
+	public abstract void save(String path, Graph graph);
 	
-	/**
-	 * @return the Kryo GraphStorage's instance.
-	 */
-	public static GraphStorage getKryoGraphStorage() {
-		
-		return KryoStorage.getInstance();
-		
-	}
-
 }

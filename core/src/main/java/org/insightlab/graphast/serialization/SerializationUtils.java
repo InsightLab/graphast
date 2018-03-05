@@ -22,7 +22,7 @@
  * SOFTWARE.
 */
 
-package org.insightlab.graphast.storage;
+package org.insightlab.graphast.serialization;
 
 import java.io.File;
 
@@ -31,9 +31,9 @@ import java.io.File;
  *
  */
 
-public class StorageUtils {
+public class SerializationUtils {
 	
-	private StorageUtils() {}
+	private SerializationUtils() {}
 	
 	public static String ensureDirectory(String path) {
 		if (!path.endsWith("/"))
@@ -69,9 +69,9 @@ public class StorageUtils {
 		boolean ok = true;
 		
 		if (f.exists()) {
-			ok = new File(directory + "nodes.gobj").delete();
-			ok = new File(directory + "edges.gobj").delete() && ok;
-			ok = new File(directory + "graph_components.gobj").delete() && ok;
+			ok = new File(directory + "nodes.phast").delete();
+			ok = new File(directory + "edges.phast").delete() && ok;
+			ok = new File(directory + "graph_components.phast").delete() && ok;
 			ok = f.delete() && ok;
 		}
 		

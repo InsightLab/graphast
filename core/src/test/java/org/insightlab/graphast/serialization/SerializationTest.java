@@ -1,4 +1,4 @@
-package org.insightlab.graphast.storage;
+package org.insightlab.graphast.serialization;
 
 import static org.junit.Assert.*;
 
@@ -12,24 +12,27 @@ import org.insightlab.graphast.query.cost_functions.TimeDependentCostFunction;
 import org.insightlab.graphast.query.shortestpath.DijkstraStrategy;
 import org.insightlab.graphast.query.shortestpath.ShortestPathStrategy;
 import org.insightlab.graphast.query.utils.DistanceVector;
+import org.insightlab.graphast.serialization.GraphSerializer;
+import org.insightlab.graphast.serialization.SerializationUtils;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
-public abstract class StorageTest {
+public abstract class SerializationTest {
 
-	protected static GraphStorage storage;
+	protected static GraphSerializer serializer;
 	private static Graph original, reloaded;
 	private static final String PATH = "serialized_graphs/";
 	
 	@Before
 	public void setUp() {
 		if (reloaded == null) {
+			serializer = GraphSerializer.getInstance();
 			original = GraphGenerator.getInstance().generateExample4();
-			storage.save(PATH, original);
+			serializer.save(PATH, original);
 			
 			try {
-				reloaded = storage.load(PATH);	
+				reloaded = serializer.load(PATH);	
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 				fail("File Not Found!");
@@ -93,7 +96,7 @@ public abstract class StorageTest {
 	
 	@AfterClass
 	public static void tearDownAfterClass() {
-		StorageUtils.deleteSerializedGraph(PATH);
+		SerializationUtils.deleteSerializedGraph(PATH);
 	}
 
 }
