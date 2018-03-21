@@ -24,11 +24,11 @@
 
 package org.insightlab.graphast.serialization;
 
-import java.io.FileNotFoundException;
-
 import org.insightlab.graphast.model.Graph;
 import org.insightlab.graphast.structure.DefaultGraphStructure;
 import org.insightlab.graphast.structure.GraphStructure;
+
+import java.io.FileNotFoundException;
 
 /**
  * The GraphStorage interface. This interface contains declarations of general methods

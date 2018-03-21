@@ -24,17 +24,13 @@
 
 package org.insightlab.graphast.structure;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
 import org.insightlab.graphast.exceptions.DuplicatedNodeException;
 import org.insightlab.graphast.exceptions.NodeNotFoundException;
 import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Node;
 import org.insightlab.graphast.model.components.GraphComponent;
+
+import java.util.*;
 
 /**
  * This class implements a default graph structure using the interface GraphStructure.

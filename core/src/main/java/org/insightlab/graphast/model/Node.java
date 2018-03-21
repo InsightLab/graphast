@@ -24,11 +24,11 @@
 
 package org.insightlab.graphast.model;
 
+import org.insightlab.graphast.model.components.NodeComponent;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import org.insightlab.graphast.model.components.NodeComponent;
 
 /**
  * The Node class. It represents the model of a graph node.

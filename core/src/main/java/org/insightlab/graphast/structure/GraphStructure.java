@@ -24,12 +24,12 @@
 
 package org.insightlab.graphast.structure;
 
-import java.util.Iterator;
-import java.util.Set;
-
 import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Node;
 import org.insightlab.graphast.model.components.GraphComponent;
+
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * The GraphStructure interface. This interface contains declarations of general methods

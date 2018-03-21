@@ -24,11 +24,6 @@
 
 package org.insightlab.graphast.structure;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.Set;
-
 import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Node;
 import org.insightlab.graphast.model.components.GraphComponent;
@@ -36,6 +31,11 @@ import org.insightlab.hugedataaccess.DataAccess;
 import org.insightlab.hugedataaccess.MMapDataAccess;
 import org.insightlab.hugedataaccess.structures.MMapMap;
 import org.insightlab.hugedataaccess.structures.MMapTreeMap;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * This class implements a MMap graph structure using the interface GraphStructure.

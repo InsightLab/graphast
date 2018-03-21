@@ -24,20 +24,17 @@
 
 package org.insightlab.graphast.model;
 
-import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
-import static org.junit.Assert.*;
+import com.google.common.collect.Iterators;
+import org.insightlab.graphast.exceptions.NodeNotFoundException;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Iterator;
 
-import org.insightlab.graphast.exceptions.NodeNotFoundException;
-import org.insightlab.graphast.model.Edge;
-import org.insightlab.graphast.model.Graph;
-import org.insightlab.graphast.model.Node;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.google.common.collect.Iterators;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class DefaultGraphTest {
 

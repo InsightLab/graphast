@@ -24,11 +24,11 @@
 
 package org.insightlab.graphast.model;
 
+import org.insightlab.graphast.model.components.EdgeComponent;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import org.insightlab.graphast.model.components.EdgeComponent;
 
 /**
  * The Edge class. It represents the model of a graph edge.

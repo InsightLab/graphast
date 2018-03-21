@@ -24,13 +24,13 @@
 
 package org.insightlab.graphast.utils;
 
-import java.util.Random;
-
 import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Graph;
 import org.insightlab.graphast.model.Node;
 import org.insightlab.graphast.serialization.SerializationUtils;
 import org.insightlab.graphast.structure.MMapGraphStructure;
+
+import java.util.Random;
 
 /**
  * This class implements a generator for random graphs.

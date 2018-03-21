@@ -1,10 +1,10 @@
 package org.insightlab.graphast.query.cost_functions;
 
-import java.util.List;
-
 import org.insightlab.graphast.exceptions.ComponentNotFoundException;
 import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.components.cost_list_components.CostListEdgeComponent;
+
+import java.util.List;
 
 public class TimeDependentLinearCostFunction extends TimeDependentCostFunction {
 

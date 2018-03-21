@@ -24,13 +24,13 @@
 
 package org.insightlab.graphast.model;
 
-import java.util.Iterator;
-import java.util.Set;
-
 import org.insightlab.graphast.exceptions.DuplicatedNodeException;
 import org.insightlab.graphast.model.components.GraphComponent;
 import org.insightlab.graphast.structure.DefaultGraphStructure;
 import org.insightlab.graphast.structure.GraphStructure;
+
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * The Graph class. It represents the model of a graph.

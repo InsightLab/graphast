@@ -24,10 +24,6 @@
 
 package org.insightlab.graphast.query.shortestpath;
 
-import java.util.Iterator;
-import java.util.PriorityQueue;
-import java.util.Queue;
-
 import org.insightlab.graphast.exceptions.NodeNotFoundException;
 import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Graph;
@@ -35,6 +31,9 @@ import org.insightlab.graphast.query.cost_functions.CostFunction;
 import org.insightlab.graphast.query.cost_functions.CostFunctionFactory;
 import org.insightlab.graphast.query.utils.DistanceElement;
 import org.insightlab.graphast.query.utils.DistanceVector;
+
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 /**
  * This class is an implementation of the ShortestPathStrategy interface and it implements the Dijkstra strategy.

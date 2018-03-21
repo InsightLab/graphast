@@ -1,10 +1,10 @@
 package org.insightlab.graphast.generators;
 
-import java.util.Random;
-
 import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Graph;
 import org.insightlab.graphast.model.components.cost_list_components.CostListEdgeComponent;
+
+import java.util.Random;
 
 public class CostsGenerator {
 	

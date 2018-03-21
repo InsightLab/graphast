@@ -24,17 +24,16 @@
 
 package org.insightlab.graphast.query.shortestpath;
 
-import static org.junit.Assert.*;
-
 import org.insightlab.graphast.exceptions.NodeNotFoundException;
 import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Graph;
 import org.insightlab.graphast.model.Node;
-import org.insightlab.graphast.query.shortestpath.DijkstraStrategy;
-import org.insightlab.graphast.query.shortestpath.ShortestPathStrategy;
 import org.insightlab.graphast.query.utils.DistanceVector;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class DijkstraTest {
 	

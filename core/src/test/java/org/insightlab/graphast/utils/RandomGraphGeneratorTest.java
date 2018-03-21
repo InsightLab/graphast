@@ -24,17 +24,16 @@
 
 package org.insightlab.graphast.utils;
 
-import static org.junit.Assert.*;
-
 import org.insightlab.graphast.model.Graph;
 import org.insightlab.graphast.query.shortestpath.DijkstraStrategy;
 import org.insightlab.graphast.query.shortestpath.ShortestPathStrategy;
 import org.insightlab.graphast.query.utils.DistanceVector;
 import org.insightlab.graphast.serialization.SerializationUtils;
-import org.insightlab.graphast.utils.RandomGraphGenerator;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class RandomGraphGeneratorTest {
 	

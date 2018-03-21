@@ -24,19 +24,18 @@
 
 package org.insightlab.graphast.model;
 
-import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-
-import java.io.IOException;
-import java.util.Arrays;
-
+import com.google.common.collect.Iterators;
 import org.insightlab.graphast.serialization.SerializationUtils;
 import org.insightlab.graphast.structure.MMapGraphStructure;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.google.common.collect.Iterators;
+import java.io.IOException;
+import java.util.Arrays;
+
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class MMapGraphTest {
 

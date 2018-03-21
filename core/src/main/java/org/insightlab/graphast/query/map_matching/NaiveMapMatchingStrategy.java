@@ -4,7 +4,6 @@ import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Graph;
 import org.insightlab.graphast.model.Node;
 import org.insightlab.graphast.model.components.spatial_components.Point;
-import org.insightlab.graphast.model.components.spatial_components.SpatialEdgeComponent;
 import org.insightlab.graphast.model.components.spatial_components.SpatialNodeComponent;
 
 public class NaiveMapMatchingStrategy implements MapMatchingStrategy {

@@ -1,18 +1,11 @@
 package org.insightlab.graphast.components;
 
-import static org.junit.Assert.*;
-
 import org.insightlab.graphast.generators.GraphGenerator;
 import org.insightlab.graphast.model.Edge;
-//import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Graph;
 import org.insightlab.graphast.model.Node;
 import org.insightlab.graphast.model.components.cost_list_components.CostListEdgeComponent;
-import org.insightlab.graphast.model.components.spatial_components.Geometry;
-import org.insightlab.graphast.model.components.spatial_components.Point;
-import org.insightlab.graphast.model.components.spatial_components.SpatialEdgeComponent;
-import org.insightlab.graphast.model.components.spatial_components.SpatialGraphComponent;
-import org.insightlab.graphast.model.components.spatial_components.SpatialNodeComponent;
+import org.insightlab.graphast.model.components.spatial_components.*;
 import org.insightlab.graphast.query.cost_functions.CostFunctionFactory;
 import org.insightlab.graphast.query.cost_functions.InterpolationMethod;
 import org.insightlab.graphast.query.cost_functions.TimeDependentCostFunction;
@@ -21,6 +14,11 @@ import org.insightlab.graphast.query.shortestpath.ShortestPathStrategy;
 import org.insightlab.graphast.query.utils.DistanceVector;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+
+//import org.insightlab.graphast.model.Edge;
 
 public class ComponentTest {
 
