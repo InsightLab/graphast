@@ -24,8 +24,6 @@
 
 package org.insightlab.graphast.query.shortestpath;
 
-import static org.junit.Assert.assertEquals;
-
 import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Graph;
 import org.insightlab.graphast.model.Node;
@@ -34,6 +32,8 @@ import org.insightlab.graphast.serialization.SerializationUtils;
 import org.insightlab.graphast.structure.MMapGraphStructure;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 public class MMapDijkstraTest {
 	

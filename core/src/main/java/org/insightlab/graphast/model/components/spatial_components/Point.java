@@ -37,6 +37,15 @@ public class Point implements Serializable {
 		this.lng = lng;
 	}
 	
+	public double distanceTo(Point p) {
+		return Math.sqrt(Math.pow(p.getLat() - this.lat, 2) + Math.pow(p.getLng() - this.lng, 2));
+	}
+	
+	@Override
+	public String toString() {
+		return "( " + lat + ", " + lng + " )";
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (!(obj instanceof Point))

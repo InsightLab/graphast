@@ -1,8 +1,8 @@
 package org.insightlab.graphast.model.components;
 
-import java.io.Serializable;
-
 import org.insightlab.graphast.model.Node;
+
+import java.io.Serializable;
 
 public abstract class NodeComponent implements Component, Serializable {
 

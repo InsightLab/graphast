@@ -24,28 +24,28 @@
 
 package org.insightlab.graphast.serialization;
 
-import java.io.FileNotFoundException;
-
 import org.insightlab.graphast.model.Graph;
 import org.insightlab.graphast.structure.DefaultGraphStructure;
 import org.insightlab.graphast.structure.GraphStructure;
+
+import java.io.FileNotFoundException;
 
 /**
  * The GraphStorage interface. This interface contains declarations of general methods
  * for different GraphStorage's implementations.
  */
 public abstract class GraphSerializer {
-	
+
+	public static GraphSerializer getInstance() {
+		return KryoSerializer.getInstance();
+	}
+
 	/**
 	 * Load a graph from the given path and structure.
 	 * @param path to search the file that contains the graph.
 	 * @param structure that represents the structure of the graph.
 	 * @return the graph loaded.
 	 */
-	
-	public static GraphSerializer getInstance() {
-		return KryoSerializer.getInstance();
-	}
 	
 	public abstract Graph load(String path, GraphStructure structure) throws FileNotFoundException;
 	

@@ -24,13 +24,13 @@
 
 package org.insightlab.graphast.model;
 
-import java.util.Iterator;
-import java.util.Set;
-
 import org.insightlab.graphast.exceptions.DuplicatedNodeException;
 import org.insightlab.graphast.model.components.GraphComponent;
 import org.insightlab.graphast.structure.DefaultGraphStructure;
 import org.insightlab.graphast.structure.GraphStructure;
+
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * The Graph class. It represents the model of a graph.
@@ -170,6 +170,15 @@ public class Graph extends GraphObject {
 		};
 	}
 	
+	public Edge getEdge(long from, long to) {
+		if (!(this.containsNode(from) && containsNode(to))) 
+			return null;
+		for (Edge out : getOutEdges(from))
+			if (out.getAdjacent(from) == to)
+				return out;
+		return null;
+	}
+	
 	/**
 	 * It returns an Iterator object of the Edge elements contained in this graph.
 	 *
@@ -214,8 +223,19 @@ public class Graph extends GraphObject {
 	 * @param id the id of the node from which the outgoing edges are wish to be returned.
 	 * @return an Iterator object of the list of outgoing edges of the node with the given id.
 	 */
-	public Iterator<Edge> getOutEdges(long id) {
+	public Iterator<Edge> getOutEdgesIterator(long id) {
 		return structure.getOutEdges(id);
+	}
+	
+	public Iterable<Edge> getOutEdges(long id) {
+		return new Iterable<Edge>() {
+
+			@Override
+			public Iterator<Edge> iterator() {
+				return getOutEdgesIterator(id);
+			}
+			
+		};
 	}
 	
 	/**
@@ -226,10 +246,20 @@ public class Graph extends GraphObject {
 	 * @param id the id of the node from which the incoming edges are wish to be returned.
 	 * @return an Iterator object of the list of incoming edges of the node with the given id.
 	 */
-	public Iterator<Edge> getInEdges(long id) {
+	public Iterator<Edge> getInEdgesIterator(long id) {
 		return structure.getInEdges(id);
 	}
 	
+	public Iterable<Edge> getInEdges(long id) {
+		return new Iterable<Edge>() {
+
+			@Override
+			public Iterator<Edge> iterator() {
+				return getInEdgesIterator(id);
+			}
+			
+		};
+	}
 	
 	public <C extends GraphComponent> C getComponent(Class<C> componentClass) {
 		return componentClass.cast(structure.getComponent(componentClass));

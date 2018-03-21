@@ -1,9 +1,5 @@
 package org.insightlab.graphast.serialization;
 
-import static org.junit.Assert.*;
-
-import java.io.FileNotFoundException;
-
 import org.insightlab.graphast.generators.GraphGenerator;
 import org.insightlab.graphast.model.Graph;
 import org.insightlab.graphast.query.cost_functions.CostFunctionFactory;
@@ -12,11 +8,14 @@ import org.insightlab.graphast.query.cost_functions.TimeDependentCostFunction;
 import org.insightlab.graphast.query.shortestpath.DijkstraStrategy;
 import org.insightlab.graphast.query.shortestpath.ShortestPathStrategy;
 import org.insightlab.graphast.query.utils.DistanceVector;
-import org.insightlab.graphast.serialization.GraphSerializer;
-import org.insightlab.graphast.serialization.SerializationUtils;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.FileNotFoundException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public abstract class SerializationTest {
 

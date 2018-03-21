@@ -24,25 +24,24 @@
 
 package org.insightlab.graphast.query.shortestpath;
 
-import static org.junit.Assert.*;
-
 import org.insightlab.graphast.exceptions.NodeNotFoundException;
 import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Graph;
 import org.insightlab.graphast.model.Node;
-import org.insightlab.graphast.query.shortestpath.DijkstraStrategy;
-import org.insightlab.graphast.query.shortestpath.ShortestPathStrategy;
 import org.insightlab.graphast.query.utils.DistanceVector;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 public class DijkstraTest {
 	
-	private Graph g;
+	private Graph graph;
 
 	@Before
 	public void setUp() throws Exception {
-		g = new Graph();
+		graph = new Graph();
 		Node n0 = new Node(0);
 		Node n1 = new Node(1);
 		Node n2 = new Node(2);
@@ -61,13 +60,13 @@ public class DijkstraTest {
 		e4.setBidirectional(true);
 		Edge e5 = new Edge(0, 5, 15);
 		e5.setBidirectional(true);
-		g.addNodes(n0, n1, n2, n3, n4, n5);
-		g.addEdges(e0, e1, e2, e3, e4, e5);
+		graph.addNodes(n0, n1, n2, n3, n4, n5);
+		graph.addEdges(e0, e1, e2, e3, e4, e5);
 	}
 
 	@Test
 	public void testOneToAll() {
-		ShortestPathStrategy strategy = new DijkstraStrategy(g);
+		ShortestPathStrategy strategy = new DijkstraStrategy(graph);
 		DistanceVector vector = strategy.run(0);
 		assertEquals("One to All distance test n3", 9, vector.getDistance(3), 0);
 		assertEquals("One to All distance test n2", 6, vector.getDistance(2), 0);
@@ -79,7 +78,7 @@ public class DijkstraTest {
 
 	@Test
 	public void testOneToOne() {
-		ShortestPathStrategy strategy = new DijkstraStrategy(g);
+		ShortestPathStrategy strategy = new DijkstraStrategy(graph);
 		DistanceVector vector = strategy.run(3, 1);
 		assertEquals("One to One distance test n1", 6, vector.getDistance(1), 0);
 		assertEquals("One to One Parent test n5", -1, vector.getElement(5).getParentId());
@@ -88,14 +87,14 @@ public class DijkstraTest {
 	
 	@Test(expected = NodeNotFoundException.class)
 	public void testNoNodeToAllException(){
-		ShortestPathStrategy strategy = new DijkstraStrategy(g);
+		ShortestPathStrategy strategy = new DijkstraStrategy(graph);
 		strategy.run(6);
 		fail();
 	}
 	
 	@Test(expected = NodeNotFoundException.class)
 	public void testOneToNoNodeException(){
-		ShortestPathStrategy strategy = new DijkstraStrategy(g);
+		ShortestPathStrategy strategy = new DijkstraStrategy(graph);
 		strategy.run(0,6);
 		fail();
 	}

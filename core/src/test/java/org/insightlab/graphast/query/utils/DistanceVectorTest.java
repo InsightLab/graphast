@@ -24,34 +24,27 @@
 
 package org.insightlab.graphast.query.utils;
 
-import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+
 public class DistanceVectorTest {
-	DistanceVector vector;
-	DistanceElement el;
+	private DistanceVector vector;
+	private DistanceElement el;
 	
 	@Before
 	public void setUp(){
 		vector = new DistanceVector(0);
-		el = vector.getElement(1l);
+		el = vector.getElement(1L);
 		el.changeDistance(2);
-		el.changePrevious(0l);
+		el.changePrevious(0L);
 		
 	}
 	
 	@Test
 	public void testGetElement() {
-		assertEquals(el, vector.getElement(1l));		
-	}
-	
-	@Test
-	public void testPrint() {
-		vector.print();
-		vector.print(0l, 1l);
-		vector.print(0l, 2l);
+		assertEquals(el, vector.getElement(1L));
 	}
 	
 	@Test

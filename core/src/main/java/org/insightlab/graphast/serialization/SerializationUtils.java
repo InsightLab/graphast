@@ -44,6 +44,7 @@ public class SerializationUtils {
 	/**
 	 * Delete a graph from the given path.
 	 * @param path to search the file that contains the graph that will be deleted.
+	 * @return true if the MMap Graph was deleted without problems, false otherwise.
 	 */
 	public static boolean deleteMMapGraph(String path) {
 		String directory = ensureDirectory(path);

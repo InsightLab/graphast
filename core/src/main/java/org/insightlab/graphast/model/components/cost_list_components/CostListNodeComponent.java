@@ -1,10 +1,10 @@
 package org.insightlab.graphast.model.components.cost_list_components;
 
+import org.insightlab.graphast.model.components.NodeComponent;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import org.insightlab.graphast.model.components.NodeComponent;
 
 public class CostListNodeComponent extends NodeComponent {
 	

@@ -1,24 +1,17 @@
 package org.insightlab.graphast.serialization;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Arrays;
-
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
+import de.javakaffee.kryoserializers.ArraysAsListSerializer;
 import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Graph;
 import org.insightlab.graphast.model.Node;
 import org.insightlab.graphast.model.components.GraphComponent;
 import org.insightlab.graphast.structure.GraphStructure;
 
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Output;
-
-import de.javakaffee.kryoserializers.ArraysAsListSerializer;
-
-import com.esotericsoftware.kryo.io.Input;
+import java.io.*;
+import java.util.Arrays;
 
 public class KryoSerializer extends GraphSerializer {
 	

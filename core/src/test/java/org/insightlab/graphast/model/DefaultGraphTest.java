@@ -24,20 +24,17 @@
 
 package org.insightlab.graphast.model;
 
-import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
-import static org.junit.Assert.*;
+import com.google.common.collect.Iterators;
+import org.insightlab.graphast.exceptions.NodeNotFoundException;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.Iterator;
 
-import org.insightlab.graphast.exceptions.NodeNotFoundException;
-import org.insightlab.graphast.model.Edge;
-import org.insightlab.graphast.model.Graph;
-import org.insightlab.graphast.model.Node;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.google.common.collect.Iterators;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class DefaultGraphTest {
 
@@ -137,11 +134,11 @@ public class DefaultGraphTest {
 	public void testGetOutEdges() {
 		g.addNodes(n0, n1, n2, n3, n4);
 		g.addEdges(e0, e2, e4, e1, e6, e5, e3);
-		assertThat("Out Edges Test n0", Arrays.asList(e2, e6), containsInAnyOrder(Iterators.toArray(g.getOutEdges(0), Edge.class)));
-		assertThat("Out Edges Test n1", Arrays.asList(e0, e3), containsInAnyOrder(Iterators.toArray(g.getOutEdges(1), Edge.class)));
-		assertThat("Out Edges Test n2", Arrays.asList(e1, e4), containsInAnyOrder(Iterators.toArray(g.getOutEdges(2), Edge.class)));
-		assertThat("Out Edges Test n3", Arrays.asList(e3, e6), containsInAnyOrder(Iterators.toArray(g.getOutEdges(3), Edge.class)));
-		assertThat("Out Edges Test n4", Arrays.asList(e0, e5), containsInAnyOrder(Iterators.toArray(g.getOutEdges(4), Edge.class)));
+		assertThat("Out Edges Test n0", Arrays.asList(e2, e6), containsInAnyOrder(Iterators.toArray(g.getOutEdgesIterator(0), Edge.class)));
+		assertThat("Out Edges Test n1", Arrays.asList(e0, e3), containsInAnyOrder(Iterators.toArray(g.getOutEdgesIterator(1), Edge.class)));
+		assertThat("Out Edges Test n2", Arrays.asList(e1, e4), containsInAnyOrder(Iterators.toArray(g.getOutEdgesIterator(2), Edge.class)));
+		assertThat("Out Edges Test n3", Arrays.asList(e3, e6), containsInAnyOrder(Iterators.toArray(g.getOutEdgesIterator(3), Edge.class)));
+		assertThat("Out Edges Test n4", Arrays.asList(e0, e5), containsInAnyOrder(Iterators.toArray(g.getOutEdgesIterator(4), Edge.class)));
 		
 	}
 
@@ -149,11 +146,11 @@ public class DefaultGraphTest {
 	public void testGetInEdges() {
 		g.addNodes(n0, n1, n2, n3, n4);
 		g.addEdges(e0, e2, e4, e1, e6, e5, e3);
-		assertThat("In Edges Test n0", Arrays.asList(e6), containsInAnyOrder(Iterators.toArray(g.getInEdges(0), Edge.class)));
-		assertThat("In Edges Test n1", Arrays.asList(e0, e2, e3), containsInAnyOrder(Iterators.toArray(g.getInEdges(1), Edge.class)));
-		assertThat("In Edges Test n2", Arrays.<Edge>asList(), containsInAnyOrder(Iterators.toArray(g.getInEdges(2), Edge.class)));
-		assertThat("In Edges Test n3", Arrays.asList(e3, e4, e5, e6), containsInAnyOrder(Iterators.toArray(g.getInEdges(3), Edge.class)));
-		assertThat("In Edges Test n4", Arrays.asList(e0, e1), containsInAnyOrder(Iterators.toArray(g.getInEdges(4), Edge.class)));
+		assertThat("In Edges Test n0", Arrays.asList(e6), containsInAnyOrder(Iterators.toArray(g.getInEdgesIterator(0), Edge.class)));
+		assertThat("In Edges Test n1", Arrays.asList(e0, e2, e3), containsInAnyOrder(Iterators.toArray(g.getInEdgesIterator(1), Edge.class)));
+		assertThat("In Edges Test n2", Arrays.<Edge>asList(), containsInAnyOrder(Iterators.toArray(g.getInEdgesIterator(2), Edge.class)));
+		assertThat("In Edges Test n3", Arrays.asList(e3, e4, e5, e6), containsInAnyOrder(Iterators.toArray(g.getInEdgesIterator(3), Edge.class)));
+		assertThat("In Edges Test n4", Arrays.asList(e0, e1), containsInAnyOrder(Iterators.toArray(g.getInEdgesIterator(4), Edge.class)));
 	}
 
 	@Test
@@ -199,10 +196,10 @@ public class DefaultGraphTest {
 			assertEquals("First neighbor must be 1", new Long(1), neighbors.next());
 			assertEquals("Iterator must end", false, neighbors.hasNext());
 			
-			Iterator<Edge> inEdges = g.getInEdges(n0.getId());
+			Iterator<Edge> inEdges = g.getInEdgesIterator(n0.getId());
 			assertEquals("Should be no in edge on n0", false, inEdges.hasNext());
 			
-			Iterator<Edge> outEdges = g.getOutEdges(n0.getId());
+			Iterator<Edge> outEdges = g.getOutEdgesIterator(n0.getId());
 			assertEquals("Should be a out edge on n0", true, outEdges.hasNext());
 			assertEquals("The out edge of n0 should be to node 1", 1l, outEdges.next().getToNodeId());
 			assertEquals("Should be no other out edge on n0", false, outEdges.hasNext());
