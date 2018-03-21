@@ -54,6 +54,7 @@ public interface GraphStructure {
 	/**
 	 * Verify whether the node which has the given id is in the graph or not.
 	 * @param id the node's id.
+	 * @return true if Node with passed id is in the graph, false otherwise.
 	 */
 	boolean containsNode(final long id);
 	

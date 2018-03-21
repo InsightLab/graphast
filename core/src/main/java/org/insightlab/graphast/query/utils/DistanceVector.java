@@ -87,7 +87,6 @@ public class DistanceVector {
 	 * Prints the path between a source node and a target node, if it exists. If it does not exist, a message indicating this is shown.
 	 * Is a path does exist, a sequence of nodes is printed to show the path that the nodes share.
 	 *
-	 * @param sourceId the id of the source node in the graph.
 	 * @param targetId the id of the target node in the graph.
 	 */
 	public void printPathTo(long targetId) {
