@@ -140,14 +140,10 @@ public class DijkstraStrategy implements ShortestPathStrategy {
 	private void visitNode(DistanceElement node, DistanceVector vector, Queue<DistanceElement> toVisit) {
 		
 		node.setVisited(true);
-		
-		Iterator<Edge> it = g.getOutEdges(node.getNodeId());
-		
-		while (it.hasNext()) {
-			
-			Edge e = it.next();
+
+		for (Edge e : g.getOutEdges(node.getNodeId())) {
 			DistanceElement neighbor = vector.getElement(e.getAdjacent(node.getNodeId()));
-			
+
 			if (!neighbor.isVisited())
 				relaxPath(e, node, neighbor, toVisit);
 		}
