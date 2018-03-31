@@ -64,28 +64,7 @@
 		    <artifactId>huge-data-access</artifactId>
 		    <version>0.1.1</version>
 		</dependency>
-		
-		<!-- https://mvnrepository.com/artifact/org.openstreetmap.osmosis/osmosis-core -->
-		<dependency>
-		    <groupId>org.openstreetmap.osmosis</groupId>
-		    <artifactId>osmosis-core</artifactId>
-		    <version>0.46</version>
-		</dependency>
-		
-		<!-- https://mvnrepository.com/artifact/org.openstreetmap.osmosis/osmosis-xml -->
-		<dependency>
-		    <groupId>org.openstreetmap.osmosis</groupId>
-		    <artifactId>osmosis-xml</artifactId>
-		    <version>0.46</version>
-		</dependency>
-		
-		<!-- https://mvnrepository.com/artifact/org.openstreetmap.osmosis/osmosis-pbf -->
-		<dependency>
-		    <groupId>org.openstreetmap.osmosis</groupId>
-		    <artifactId>osmosis-pbf</artifactId>
-		    <version>0.46</version>
-		</dependency>
-		
+
 		<dependency>
 	        <groupId>com.esotericsoftware</groupId>
 	        <artifactId>kryo</artifactId>
@@ -97,7 +76,15 @@
             <artifactId>kryo-serializers</artifactId>
             <version>0.41</version>
         </dependency>
-		
+
+		<!-- https://mvnrepository.com/artifact/me.lyh/xgboost4j -->
+		<dependency>
+			<groupId>me.lyh</groupId>
+			<artifactId>xgboost4j</artifactId>
+			<version>0.7-20171122-70a4c419</version>
+		</dependency>
+
+
 	</dependencies>
 	
 	<reporting>
