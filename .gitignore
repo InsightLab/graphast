@@ -1,4 +1,10 @@
 *.bak
+
+.idea
+graphast-core.iml
+core/.idea
+core/serialized_graphs
+
 .metadata
 .settings
 .classpath
