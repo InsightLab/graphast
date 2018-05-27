@@ -26,10 +26,14 @@ package org.insightlab.graphast.model;
 
 import org.insightlab.graphast.exceptions.DuplicatedNodeException;
 import org.insightlab.graphast.model.components.GraphComponent;
+import org.insightlab.graphast.model.listeners.EdgeListener;
+import org.insightlab.graphast.model.listeners.NodeListener;
 import org.insightlab.graphast.structure.DefaultGraphStructure;
 import org.insightlab.graphast.structure.GraphStructure;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -50,7 +54,10 @@ public class Graph extends GraphObject {
 	private long duplicatedNodesCounter = 0;
 	
 	private GraphStructure structure;
-	
+
+	private List<NodeListener> nodeListeners = new ArrayList<>();
+	private List<EdgeListener> edgeListeners = new ArrayList<>();
+
 	/**
 	 * Instantiates a new empty graph.
 	 */
@@ -66,6 +73,16 @@ public class Graph extends GraphObject {
 	 */
 	public Graph(GraphStructure structure) {
 		this.structure = structure;
+	}
+
+	public void addNodeListener(NodeListener listener) {
+		listener.setGraph(this);
+		nodeListeners.add(listener);
+	}
+
+	public void addEdgeListener(EdgeListener listener) {
+		listener.setGraph(this);
+		edgeListeners.add(listener);
 	}
 	
 	/**
@@ -92,13 +109,18 @@ public class Graph extends GraphObject {
 	public void addNode(Node n) {
 		try {
 			structure.addNode(n);
+			for (NodeListener listener : nodeListeners)
+				listener.onInsert(n);
 		} catch (DuplicatedNodeException e) {
 			duplicatedNodesCounter++;
 		}
 	}
 
 	public Node removeNode(final long id) {
-		return structure.removeNode(id);
+		Node n = structure.removeNode(id);
+		for (NodeListener listener : nodeListeners)
+			listener.onRemove(n);
+		return n;
 	}
 	
 	public long getDuplicatedNodesCounter() {
@@ -126,14 +148,22 @@ public class Graph extends GraphObject {
 	 */
 	public void addEdge(Edge e) {
 		structure.addEdge(e);
+		for (EdgeListener listener : edgeListeners)
+			listener.onInsert(e);
 	}
 
 	public Edge removeEdge(final long id) {
-		return structure.removeEdge(id);
+		Edge e = structure.removeEdge(id);
+		for (EdgeListener listener : edgeListeners)
+			listener.onRemove(e);
+		return e;
 	}
 
 	public Edge removeEdge(final long fromId, final long toId) {
-		return structure.removeEdge(fromId, toId);
+		Edge e = structure.removeEdge(fromId, toId);
+		for (EdgeListener listener : edgeListeners)
+			listener.onRemove(e);
+		return e;
 	}
 	
 	/**
