@@ -35,7 +35,8 @@ import java.util.Set;
  * It extends the GraphObject abstract class.
  */
 public class Edge extends GraphObject {
-	
+
+	private static Integer nextId = 0;
 	/**
 	 * 
 	 */
@@ -51,6 +52,7 @@ public class Edge extends GraphObject {
 	
 	public Edge() {
 		this.weight = 1;
+		this.id = nextId++;
 	}
 	
 	/**
@@ -71,6 +73,7 @@ public class Edge extends GraphObject {
 	 * @param cost the cost value of the edge.
 	 */
 	public Edge(long from, long to, double cost) {
+		this.id = nextId++;
 		this.fromNodeId = from;
 		this.toNodeId   = to;
 		this.weight     = cost;

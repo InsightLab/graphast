@@ -24,12 +24,14 @@
 
 package org.insightlab.graphast.structure;
 
+import org.insightlab.graphast.exceptions.DuplicatedEdgeException;
 import org.insightlab.graphast.exceptions.DuplicatedNodeException;
 import org.insightlab.graphast.exceptions.NodeNotFoundException;
 import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Node;
 import org.insightlab.graphast.model.components.GraphComponent;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -40,9 +42,11 @@ public class DefaultGraphStructure implements GraphStructure {
 	
 	private Map<Class<? extends GraphComponent>, GraphComponent> graphComponents = null;
 	
-	private Integer nextId = 0;
+	private Integer nextNodeId = 0;
+	private Integer nextEdgeId = 0;
 	
-	private HashMap<Long, Integer> idMapping = new HashMap<>();
+	private HashMap<Long, Integer> nodeIdMapping = new HashMap<>();
+	private HashMap<Long, Integer> edgeIdMapping = new HashMap<>();
 	
 	private ArrayList<Node> nodes = new ArrayList<>();
 	private ArrayList<Edge> edges = new ArrayList<>();
@@ -57,7 +61,7 @@ public class DefaultGraphStructure implements GraphStructure {
 	 */
 	private void addAdjacency(long id, Edge e) {
 		
-		int nodeId = idMapping.get(id);
+		int nodeId = nodeIdMapping.get(id);
 		
 		if (e.isBidirectional()) {
 			inEdges.get(nodeId).add(e);
@@ -78,14 +82,14 @@ public class DefaultGraphStructure implements GraphStructure {
 	 */
 	public void addNode(Node node) {
 		
-		if (idMapping.get(node.getId()) != null)
+		if (nodeIdMapping.get(node.getId()) != null)
 			throw new DuplicatedNodeException(node.getId());
 		
-		idMapping.put(node.getId(), nextId++);
+		nodeIdMapping.put(node.getId(), nextNodeId++);
 		nodes.add(node);
 		
-		outEdges.add(new ArrayList<Edge>());
-		inEdges.add(new ArrayList<Edge>());
+		outEdges.add(new ArrayList<>());
+		inEdges.add(new ArrayList<>());
 	
 	}
 	
@@ -102,6 +106,11 @@ public class DefaultGraphStructure implements GraphStructure {
 		if (!containsNode(e.getToNodeId())) {
 			throw new NodeNotFoundException(e.getToNodeId());
 		}
+
+		if (edgeIdMapping.get(e.getId()) != null)
+			throw new DuplicatedEdgeException(e.getId());
+
+		edgeIdMapping.put(e.getId(), nextEdgeId++);
 		
 		addAdjacency(e.getFromNodeId(), e);
 		addAdjacency(e.getToNodeId(),   e);
@@ -109,27 +118,27 @@ public class DefaultGraphStructure implements GraphStructure {
 		edges.add(e);
 		
 	}
-	
+
 	/**
 	 * Verify whether the node which has the given id is in the graph or not.
 	 * @param id the node's id.
 	 */
 	@Override
 	public boolean containsNode(long id) {
-		return idMapping.containsKey(id);
+		return nodeIdMapping.containsKey(id);
 	}
 	
 	/**
 	 * @return an iterator to graph's nodes.
 	 */
-	public Iterator<Node> nodeIterator() {
+	public Iterator<Node> allNodesIterator() {
 		return nodes.iterator();
 	}
 	
 	/**
 	 * @return an iterator to graph's edges.
 	 */
-	public Iterator<Edge> edgeIterator() {
+	public Iterator<Edge> allEdgesIterator() {
 		return edges.iterator();
 	}
 	
@@ -155,23 +164,27 @@ public class DefaultGraphStructure implements GraphStructure {
 	 * @return the node
 	 */
 	public Node getNode(final long id) {
-		return nodes.get(idMapping.get(id));
+		return nodes.get(nodeIdMapping.get(id));
+	}
+
+	public Edge getEdge(final long id) {
+		return edges.get(edgeIdMapping.get(id));
 	}
 	
 	/**
 	 * @param id the node's id.
 	 * @return the out edges of the node which has the given id.
 	 */
-	public Iterator<Edge> getOutEdges(final long id) {
-		return outEdges.get(idMapping.get(id)).iterator();
+	public Iterator<Edge> getAllOutEdgesIterator(final long id) {
+		return outEdges.get(nodeIdMapping.get(id)).iterator();
 	}
 	
 	/**
 	 * @param id the node's id.
 	 * @return the in edges of the node which has the given id.
 	 */
-	public Iterator<Edge> getInEdges(final long id) {
-		return inEdges.get(idMapping.get(id)).iterator();
+	public Iterator<Edge> getAllInEdgesIterator(final long id) {
+		return inEdges.get(nodeIdMapping.get(id)).iterator();
 	}
 
 	@Override
@@ -196,7 +209,8 @@ public class DefaultGraphStructure implements GraphStructure {
 	}
 
 	@Override
-	public Iterator<GraphComponent> getAllComponents() {
+	@Nonnull
+	public Iterator<GraphComponent> getAllComponentsIterator() {
 		return (graphComponents != null) ? 
 				graphComponents.values().iterator() :
 				new Iterator<GraphComponent>() {

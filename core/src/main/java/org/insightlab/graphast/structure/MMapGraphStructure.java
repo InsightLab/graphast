@@ -52,7 +52,8 @@ public class MMapGraphStructure implements GraphStructure {
 	private long nodePos = 0;
 	private long edgePos = 0;
 	
-	private MMapMap idMapping;
+	private MMapMap nodIdMapping;
+	private MMapMap edgeIdMapping;
 	private String nodesFile = "nodes.mmap";
 	private String edgesFile = "edges.mmap";
 	
@@ -70,7 +71,7 @@ public class MMapGraphStructure implements GraphStructure {
 		if (!directory.endsWith("/")) 
 			directory += "/";
 		
-		idMapping = new MMapTreeMap(directory);
+		nodIdMapping = new MMapTreeMap(directory);
 		File f    = new File(directory);
 		
 		boolean graphExists = f.exists();
@@ -89,7 +90,7 @@ public class MMapGraphStructure implements GraphStructure {
 				edgePos = getNumberOfEdges();
 				
 				for (long i = 0; i < nodePos; i++) {
-					idMapping.put(nodeAccess.getLong(getNodeIndex(i)), i);
+					nodIdMapping.put(nodeAccess.getLong(getNodeIndex(i)), i);
 				}	
 				
 			}
@@ -133,8 +134,8 @@ public class MMapGraphStructure implements GraphStructure {
 		if (edgeAccess.getCapacity() < getEdgeIndex(edgePos) + EDGE_SIZE)
 			edgeAccess.ensureCapacity(edgeAccess.getCapacity() + INITIAL_EDGE_FILE_SIZE);
 		
-		long fromId = idMapping.get(e.getFromNodeId());
-		long toId   = idMapping.get(e.getToNodeId());
+		long fromId = nodIdMapping.get(e.getFromNodeId());
+		long toId   = nodIdMapping.get(e.getToNodeId());
 		
 		long fromIndex = getNodeIndex(fromId);
 		long toIndex   = getNodeIndex(toId);
@@ -162,7 +163,7 @@ public class MMapGraphStructure implements GraphStructure {
 	public void addNode(Node n) {
 		if (nodeAccess.getCapacity() < getNodeIndex(nodePos) + NODE_SIZE)
 			nodeAccess.ensureCapacity(nodeAccess.getCapacity() + INITIAL_NODE_FILE_SIZE);
-		idMapping.put(n.getId(), nodePos);
+		nodIdMapping.put(n.getId(), nodePos);
 		
 		long nodeIndex = getNodeIndex(nodePos);
 		
@@ -191,20 +192,26 @@ public class MMapGraphStructure implements GraphStructure {
 		return new Node(id);
 	}
 
+	@Override
+	public Edge getEdge(long id) {
+		//TODO implement
+		return null;
+	}
+
 	/**
 	 * Verify whether the node which has the given id is in the graph or not.
 	 * @param id the node's id.
 	 */
 	@Override
 	public boolean containsNode(long id) {
-		return idMapping.containsKey(id);
+		return nodIdMapping.containsKey(id);
 	}
 	
 	/**
 	 * @return an iterator to graph's nodes.
 	 */
 	@Override
-	public Iterator<Node> nodeIterator() {
+	public Iterator<Node> allNodesIterator() {
 		
 		return new Iterator<Node>() {
 			
@@ -232,7 +239,7 @@ public class MMapGraphStructure implements GraphStructure {
 	 * @return an iterator to graph's edges.
 	 */
 	@Override
-	public Iterator<Edge> edgeIterator() {
+	public Iterator<Edge> allEdgesIterator() {
 		
 		return new Iterator<Edge>() {
 			
@@ -287,11 +294,11 @@ public class MMapGraphStructure implements GraphStructure {
 	 * @return the out edges of the node which has the given id.
 	 */
 	@Override
-	public Iterator<Edge> getOutEdges(final long id) {
+	public Iterator<Edge> getAllOutEdgesIterator(final long id) {
 		
 		return new Iterator<Edge>() {
 			
-			long pos = nodeAccess.getLong( getNodeIndex(idMapping.get(id)) + 8 );
+			long pos = nodeAccess.getLong( getNodeIndex(nodIdMapping.get(id)) + 8 );
 
 			@Override
 			public boolean hasNext() {
@@ -326,11 +333,11 @@ public class MMapGraphStructure implements GraphStructure {
 	 * @return the in edges of the node which has the given id.
 	 */
 	@Override
-	public Iterator<Edge> getInEdges(final long id) {
+	public Iterator<Edge> getAllInEdgesIterator(final long id) {
 		
 		return new Iterator<Edge>() {
 			
-			long pos = nodeAccess.getLong( getNodeIndex(idMapping.get(id)) + 16 );
+			long pos = nodeAccess.getLong( getNodeIndex(nodIdMapping.get(id)) + 16 );
 
 			@Override
 			public boolean hasNext() {
@@ -379,7 +386,7 @@ public class MMapGraphStructure implements GraphStructure {
 	}
 
 	@Override
-	public Iterator<GraphComponent> getAllComponents() {
+	public Iterator<GraphComponent> getAllComponentsIterator() {
 		// TODO Auto-generated method stub
 		return null;
 	}

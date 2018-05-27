@@ -38,7 +38,20 @@ public abstract class GraphObject implements Serializable {
 	 */
 	private static final long serialVersionUID = -5380199647561475338L;
 	private HashMap<String, Object> data = null;
-	
+	private Boolean isRemoved = false;
+
+	public void remove() {
+		isRemoved = true;
+	}
+
+	public void reinsert() {
+		isRemoved = false;
+	}
+
+	public Boolean isRemoved() {
+		return isRemoved;
+	}
+
 	/**
 	 * Put data function. Given a key and a value, represented by an object,
 	 * it adds a new element into its data HashMap. If its HashMap is null,

@@ -157,11 +157,11 @@ public class DefaultGraphTest {
 	public void testGetNeighborhood() {
 		g.addNodes(n0, n1, n2, n3, n4);
 		g.addEdges(e0, e2, e4, e1, e6, e5, e3);
-		assertThat("Neighborhood Test n0", Arrays.asList(1l, 3l), containsInAnyOrder(Iterators.toArray(g.getNeighborhood(0), Long.class)));
-		assertThat("Neighborhood Test n1", Arrays.asList(4l, 3l), containsInAnyOrder(Iterators.toArray(g.getNeighborhood(1), Long.class)));
-		assertThat("Neighborhood Test n2", Arrays.asList(4l, 3l), containsInAnyOrder(Iterators.toArray(g.getNeighborhood(2), Long.class)));
-		assertThat("Neighborhood Test n3", Arrays.asList(1l, 0l), containsInAnyOrder(Iterators.toArray(g.getNeighborhood(3), Long.class)));
-		assertThat("Neighborhood Test n4", Arrays.asList(1l, 3l), containsInAnyOrder(Iterators.toArray(g.getNeighborhood(4), Long.class)));
+		assertThat("Neighborhood Test n0", Arrays.asList(1l, 3l), containsInAnyOrder(Iterators.toArray(g.getNeighborhoodIterator(0), Long.class)));
+		assertThat("Neighborhood Test n1", Arrays.asList(4l, 3l), containsInAnyOrder(Iterators.toArray(g.getNeighborhoodIterator(1), Long.class)));
+		assertThat("Neighborhood Test n2", Arrays.asList(4l, 3l), containsInAnyOrder(Iterators.toArray(g.getNeighborhoodIterator(2), Long.class)));
+		assertThat("Neighborhood Test n3", Arrays.asList(1l, 0l), containsInAnyOrder(Iterators.toArray(g.getNeighborhoodIterator(3), Long.class)));
+		assertThat("Neighborhood Test n4", Arrays.asList(1l, 3l), containsInAnyOrder(Iterators.toArray(g.getNeighborhoodIterator(4), Long.class)));
 	}
 	
 	@Test
@@ -192,7 +192,7 @@ public class DefaultGraphTest {
 		try{
 			g.addEdge(e6);
 		}catch(NodeNotFoundException e){
-			Iterator<Long> neighbors = g.getNeighborhood(n0.getId());
+			Iterator<Long> neighbors = g.getNeighborhoodIterator(n0.getId());
 			assertEquals("First neighbor must be 1", new Long(1), neighbors.next());
 			assertEquals("Iterator must end", false, neighbors.hasNext());
 			

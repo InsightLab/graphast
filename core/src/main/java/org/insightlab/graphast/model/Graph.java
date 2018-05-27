@@ -96,6 +96,10 @@ public class Graph extends GraphObject {
 			duplicatedNodesCounter++;
 		}
 	}
+
+	public Node removeNode(final long id) {
+		return structure.removeNode(id);
+	}
 	
 	public long getDuplicatedNodesCounter() {
 		return duplicatedNodesCounter;
@@ -123,6 +127,14 @@ public class Graph extends GraphObject {
 	public void addEdge(Edge e) {
 		structure.addEdge(e);
 	}
+
+	public Edge removeEdge(final long id) {
+		return structure.removeEdge(id);
+	}
+
+	public Edge removeEdge(final long fromId, final long toId) {
+		return structure.removeEdge(fromId, toId);
+	}
 	
 	/**
 	 * Adds a batch of new edges to this graph. It utilizes the addEdge function to
@@ -131,7 +143,6 @@ public class Graph extends GraphObject {
 	 * @param edges the new edges to be added to the graph.
 	 */
 	public void addEdges(Edge ...edges) {
-		
 		for (Edge e : edges)
 			this.addEdge(e);
 	}
@@ -158,25 +169,19 @@ public class Graph extends GraphObject {
 	 * @return the iterator of the list of nodes contained in this graph.
 	 */
 	public Iterator<Node> getNodeIterator() {
-		return structure.nodeIterator();
+		return structure.existingNodesIterator();
 	}
 	
 	public Iterable<Node> getNodes() {
-		return new Iterable<Node>() {
-			@Override
-			public Iterator<Node> iterator() {
-				return getNodeIterator();
-			}
-		};
+		return structure.getNodes();
+	}
+
+	public Edge getEdge(final long id) {
+		return structure.getEdge(id);
 	}
 	
 	public Edge getEdge(long from, long to) {
-		if (!(this.containsNode(from) && containsNode(to))) 
-			return null;
-		for (Edge out : getOutEdges(from))
-			if (out.getAdjacent(from) == to)
-				return out;
-		return null;
+		return structure.getEdge(from, to);
 	}
 	
 	/**
@@ -185,16 +190,11 @@ public class Graph extends GraphObject {
 	 * @return the iterator of the list of edges contained in this graph.
 	 */
 	public Iterator<Edge> getEdgeIterator() {
-		return structure.edgeIterator();
+		return structure.existingEdgesIterator();
 	}
 	
 	public Iterable<Edge> getEdges() {
-		return new Iterable<Edge>() {
-			@Override
-			public Iterator<Edge> iterator() {
-				return getEdgeIterator();
-			}
-		};
+		return structure.getEdges();
 	}
 	
 	/**
@@ -224,18 +224,11 @@ public class Graph extends GraphObject {
 	 * @return an Iterator object of the list of outgoing edges of the node with the given id.
 	 */
 	public Iterator<Edge> getOutEdgesIterator(long id) {
-		return structure.getOutEdges(id);
+		return structure.getAllOutEdgesIterator(id);
 	}
 	
 	public Iterable<Edge> getOutEdges(long id) {
-		return new Iterable<Edge>() {
-
-			@Override
-			public Iterator<Edge> iterator() {
-				return getOutEdgesIterator(id);
-			}
-			
-		};
+		return structure.getOutEdges(id);
 	}
 	
 	/**
@@ -247,18 +240,11 @@ public class Graph extends GraphObject {
 	 * @return an Iterator object of the list of incoming edges of the node with the given id.
 	 */
 	public Iterator<Edge> getInEdgesIterator(long id) {
-		return structure.getInEdges(id);
+		return structure.getAllInEdgesIterator(id);
 	}
 	
 	public Iterable<Edge> getInEdges(long id) {
-		return new Iterable<Edge>() {
-
-			@Override
-			public Iterator<Edge> iterator() {
-				return getInEdgesIterator(id);
-			}
-			
-		};
+		return structure.getInEdges(id);
 	}
 	
 	public <C extends GraphComponent> C getComponent(Class<C> componentClass) {
@@ -271,12 +257,7 @@ public class Graph extends GraphObject {
 	}
 	
 	public Iterable<GraphComponent> getAllComponents() {
-		return new Iterable<GraphComponent>() {
-			@Override
-			public Iterator<GraphComponent> iterator() {
-				return structure.getAllComponents();
-			}
-		};
+		return structure.getAllComponents();
 	}
 	
 	public Set<Class<? extends GraphComponent>> getAllComponentNames() {
@@ -296,11 +277,11 @@ public class Graph extends GraphObject {
 	 * This neighborhood is represented by an Iterator object of a list of ids of nodes to 
 	 * which the node given in the function points to.
 	 */
-	public Iterator<Long> getNeighborhood(final long id) {
+	public Iterator<Long> getNeighborhoodIterator(final long id) {
 		
 		return new Iterator<Long>() {
 			
-			Iterator<Edge> iter = structure.getOutEdges(id);
+			Iterator<Edge> iter = structure.getAllOutEdgesIterator(id);
 
 			@Override
 			public boolean hasNext() {
@@ -315,5 +296,8 @@ public class Graph extends GraphObject {
 			
 		};
 	}
-	
+
+	public Iterable<Long> getNeighborhood(final long id) {
+		return () -> getNeighborhoodIterator(id);
+	}
 }

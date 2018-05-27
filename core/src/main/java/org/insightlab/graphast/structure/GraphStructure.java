@@ -24,10 +24,12 @@
 
 package org.insightlab.graphast.structure;
 
+import com.google.common.collect.Iterators;
 import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Node;
 import org.insightlab.graphast.model.components.GraphComponent;
 
+import javax.annotation.Nonnull;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -44,12 +46,43 @@ public interface GraphStructure {
 	void addNode(Node node);
 	
 	Node getNode(final long id);
+
+	default Node removeNode(final long id) {
+		Node n = getNode(id);
+		n.remove();
+		return n;
+	}
 	
 	/**
 	 * Add a new edge into the graph.
 	 * @param edge the edge that will be added into the graph.
 	 */
 	void addEdge(Edge edge);
+
+	Edge getEdge(final long id);
+
+	default Edge getEdge(long from, long to) {
+		if (!(this.containsNode(from) && containsNode(to)))
+			return null;
+		for (Edge out : getOutEdges(from))
+			if (out.getAdjacent(from) == to)
+				return out;
+		return null;
+	}
+
+	default Edge removeEdge(Edge e) {
+		if (e == null) return null;
+		e.remove();
+		return e;
+	}
+
+	default Edge removeEdge(final long id) {
+		return removeEdge( getEdge(id) );
+	}
+
+	default Edge removeEdge(final long fromId, final long toId) {
+		return removeEdge( getEdge(fromId, toId) );
+	}
 	
 	/**
 	 * Verify whether the node which has the given id is in the graph or not.
@@ -58,15 +91,33 @@ public interface GraphStructure {
 	 */
 	boolean containsNode(final long id);
 	
+	Iterator<Node> allNodesIterator();
+	
 	/**
 	 * @return an iterator to graph's nodes.
 	 */
-	Iterator<Node> nodeIterator();
-	
+	@Nonnull
+	default Iterator<Node> existingNodesIterator() {
+		return Iterators.filter(allNodesIterator(), n -> !n.isRemoved());
+	}
+
+	default Iterable<Node> getNodes() {
+		return this::existingNodesIterator;
+	}
+
+	Iterator<Edge> allEdgesIterator();
+
 	/**
 	 * @return an iterator to graph's edges.
 	 */
-	Iterator<Edge> edgeIterator();
+	@Nonnull
+	default Iterator<Edge> existingEdgesIterator() {
+		return Iterators.filter(allEdgesIterator(), e -> !e.isRemoved());
+	}
+
+	default Iterable<Edge> getEdges() {
+		return this::existingEdgesIterator;
+	}
 	
 	/**
 	 * @return the number of graph's nodes.
@@ -82,13 +133,29 @@ public interface GraphStructure {
 	 * @return the out edges of the node which has the given id.
 	 * @param id the node's id.
 	 */
-	Iterator<Edge> getOutEdges(final long id);
-	
+	Iterator<Edge> getAllOutEdgesIterator(final long id);
+
+	default Iterator<Edge> getExistingOutEdgesIterator(final long id) {
+		return Iterators.filter(getAllOutEdgesIterator(id), e -> !e.isRemoved());
+	}
+
+	default Iterable<Edge> getOutEdges(final long id) {
+		return () -> getExistingOutEdgesIterator(id);
+	}
+
 	/**
 	 * @param id the node's id.
 	 * @return the in edges of the node which has the given id.
 	 */
-	Iterator<Edge> getInEdges(final long id);
+	Iterator<Edge> getAllInEdgesIterator(final long id);
+
+	default Iterator<Edge> getExistingInEdgesIterator(final long id) {
+		return Iterators.filter(getAllInEdgesIterator(id), e -> !e.isRemoved());
+	}
+
+	default Iterable<Edge> getInEdges(final long id) {
+		return () -> getExistingInEdgesIterator(id);
+	}
 	
 	
 	Set<Class<? extends GraphComponent>> getAllComponentClasses();
@@ -99,6 +166,11 @@ public interface GraphStructure {
 	
 	void addComponent(GraphComponent component);
 
-	Iterator<GraphComponent> getAllComponents();
+	@Nonnull
+	Iterator<GraphComponent> getAllComponentsIterator();
+
+	default Iterable<GraphComponent> getAllComponents() {
+		return this::getAllComponentsIterator;
+	}
 	
 }
