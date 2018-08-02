@@ -1,0 +1,16 @@
+# target programming lamguage
+language: java
+
+# JDK versios support
+jdk:
+  #- oraclejdk7
+  - oraclejdk8
+
+# run tests, findbugs, pmd and friends using Ant, Maven or Gradle
+# script: cd core && mvn test install
+install:
+  - cd core && mvn install
+script:
+  - mvn test jacoco:report
+after_success:
+  - mvn coveralls:report -DrepoToken=$repoToken
