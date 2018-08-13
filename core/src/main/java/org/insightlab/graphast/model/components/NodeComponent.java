@@ -15,10 +15,12 @@ public abstract class NodeComponent implements Component, Serializable {
 	
 	public void setNode(Node node) {
 		this.node = node;
+		onAttach();
 	}
 	
 	public Node getNode() {
 		return node;
 	}
-	
+
+	public void onAttach() {}
 }

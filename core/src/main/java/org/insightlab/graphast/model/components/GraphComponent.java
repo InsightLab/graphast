@@ -15,10 +15,13 @@ public abstract class GraphComponent implements Component, Serializable {
 	
 	public void setGraph(Graph graph) {
 		this.graph = graph;
+		onAttach();
 	}
 	
 	public Graph getGraph() {
 		return graph;
 	}
-	
+
+	public void onAttach() {}
+
 }

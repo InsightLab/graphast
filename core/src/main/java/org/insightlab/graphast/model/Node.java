@@ -68,11 +68,15 @@ public class Node extends GraphObject {
 	public void setId(long id) {
 		this.id = id;
 	}
-	
+
 	public void addComponent(NodeComponent component) {
+		addComponent(component.getClass(), component);
+	}
+	
+	public void addComponent(Class<? extends NodeComponent> key, NodeComponent component) {
 		if (nodeComponents == null)
 			nodeComponents = new HashMap<>();
-		nodeComponents.put(component.getClass(), component);
+		nodeComponents.put(key, component);
 		component.setNode(this);
 	}
 	

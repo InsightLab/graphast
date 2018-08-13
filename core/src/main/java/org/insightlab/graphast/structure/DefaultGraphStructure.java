@@ -187,11 +187,13 @@ public class DefaultGraphStructure implements GraphStructure {
 		return inEdges.get(nodeIdMapping.get(id)).iterator();
 	}
 
+
+
 	@Override
-	public void addComponent(GraphComponent component) {
+	public void addComponent(Class<? extends GraphComponent> key, GraphComponent component) {
 		if (graphComponents == null)
 			graphComponents = new HashMap<>();
-		graphComponents.put(component.getClass(), component);
+		graphComponents.put(key, component);
 	}
 	
 	@Override
