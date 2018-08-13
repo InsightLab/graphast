@@ -4,6 +4,7 @@ import org.insightlab.graphast.generators.GraphGenerator;
 import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Graph;
 import org.insightlab.graphast.model.Node;
+import org.insightlab.graphast.model.components.EdgeComponent;
 import org.insightlab.graphast.model.components.cost_list_components.CostListEdgeComponent;
 import org.insightlab.graphast.model.components.spatial_components.*;
 import org.insightlab.graphast.query.cost_functions.CostFunctionFactory;
@@ -15,8 +16,7 @@ import org.insightlab.graphast.query.utils.DistanceVector;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 //import org.insightlab.graphast.model.Edge;
 
@@ -131,4 +131,26 @@ public class ComponentTest {
 
 	}
 
+	@Test
+	public void getSubClassAndOnAttachTest() {
+		Edge e = new Edge();
+		EdgeComponent component1 = new EdgeComponentSubClass1();
+		EdgeComponent component2 = new EdgeComponentSubClass2();
+		e.addComponent(component1);
+		e.addComponent(EdgeComponentSuperClass.class, component2);
+		assertEquals("SubClass Equals", EdgeComponentSubClass1.class, e.getComponent(EdgeComponentSubClass1.class).getClass());
+		assertEquals("SuperClass Equals", EdgeComponentSubClass2.class, e.getComponent(EdgeComponentSuperClass.class).getClass());
+		assertNull("Trying to get component with wrong key", e.getComponent(EdgeComponentSubClass2.class));
+	}
+
+	private abstract class EdgeComponentSuperClass extends EdgeComponent {
+		@Override
+		public void onAttach() {
+			assertNotNull(getEdge());
+		}
+	}
+
+	private class EdgeComponentSubClass1 extends EdgeComponentSuperClass { }
+
+	private class EdgeComponentSubClass2 extends EdgeComponentSuperClass { }
 }
