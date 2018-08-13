@@ -26,6 +26,7 @@ package org.insightlab.graphast.query.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * The Distance Vector class. This class is used in the shortest path strategy calculation to store and manipulate the elements
@@ -82,6 +83,26 @@ public class DistanceVector {
 			System.out.println("Distance to node " + n + ": " + element.getDistance() + " | Previous node: " + element.getParentId());
 		}
 	}
+
+	public List<Long> getPath(long targetId) {
+		if (getElement(targetId).getParentId() == -1L) {
+			System.out.println("No path between '" + sourceId + "' and '" + targetId + "'");
+			return null;
+		}
+
+		ArrayList<Long> path = new ArrayList<>();
+		path.add(targetId);
+
+		long parentId = targetId;
+
+		while ((parentId = vector.get(parentId).getParentId()) != -1L) {
+
+			path.add(0, parentId);
+			if (parentId == sourceId)
+				break;
+		}
+		return path;
+	}
 	
 	/**
 	 * Prints the path between a source node and a target node, if it exists. If it does not exist, a message indicating this is shown.
@@ -90,26 +111,7 @@ public class DistanceVector {
 	 * @param targetId the id of the target node in the graph.
 	 */
 	public void printPathTo(long targetId) {
-		
-		if (getElement(targetId).getParentId() == -1) {
-			System.out.println("No path between '" + sourceId + "' and '" + targetId + "'");
-			return;
-		}
-		
-		ArrayList<Long> path = new ArrayList<>();
-		path.add(targetId);
-		
-		long parentId = targetId;
-		
-		while ((parentId = vector.get(parentId).getParentId()) != -1l) {
-			
-			path.add(0, parentId);
-			
-			if (parentId == sourceId) 
-				break;
-		}
-	
-		System.out.println(path.stream().map(String::valueOf).reduce((s1, s2) -> s1 + " -> " + s2).get());
+		System.out.println(getPath(targetId).stream().map(String::valueOf).reduce((s1, s2) -> s1 + " -> " + s2).get());
 	}
 	
 	/**
