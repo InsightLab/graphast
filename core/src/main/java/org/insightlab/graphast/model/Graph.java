@@ -25,6 +25,7 @@
 package org.insightlab.graphast.model;
 
 import org.insightlab.graphast.exceptions.DuplicatedNodeException;
+import org.insightlab.graphast.model.components.EdgeComponent;
 import org.insightlab.graphast.model.components.GraphComponent;
 import org.insightlab.graphast.model.listeners.EdgeListener;
 import org.insightlab.graphast.model.listeners.NodeListener;
@@ -276,13 +277,21 @@ public class Graph extends GraphObject {
 	public Iterable<Edge> getInEdges(long id) {
 		return structure.getInEdges(id);
 	}
-	
+
 	public <C extends GraphComponent> C getComponent(Class<C> componentClass) {
 		return componentClass.cast(structure.getComponent(componentClass));
 	}
-	
+
+	public boolean hasComponent(Class<? extends GraphComponent> key) {
+		return getComponent(key) != null;
+	}
+
 	public void addComponent(GraphComponent component) {
-		structure.addComponent(component);
+		addComponent(component.getClass(), component);
+	}
+
+	public void addComponent(Class<? extends GraphComponent> key, GraphComponent component) {
+		structure.addComponent(key, component);
 		component.setGraph(this);
 	}
 	

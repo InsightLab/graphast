@@ -163,8 +163,11 @@ public interface GraphStructure {
 	
 	GraphComponent getComponent(Class<? extends GraphComponent> componentClass);
 	
-	
-	void addComponent(GraphComponent component);
+	void addComponent(Class<? extends  GraphComponent> key, GraphComponent component);
+
+	default void addComponent(GraphComponent component) {
+		addComponent(component.getClass(), component);
+	}
 
 	@Nonnull
 	Iterator<GraphComponent> getAllComponentsIterator();

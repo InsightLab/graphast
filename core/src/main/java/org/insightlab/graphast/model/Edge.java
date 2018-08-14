@@ -173,11 +173,15 @@ public class Edge extends GraphObject {
 	public long getAdjacent(long id) {
 		return id == toNodeId ? fromNodeId : toNodeId;
 	}
-	
+
 	public void addComponent(EdgeComponent component) {
+		addComponent(component.getClass(), component);
+	}
+	
+	public void addComponent(Class<? extends EdgeComponent> key, EdgeComponent component) {
 		if (edgeComponent == null)
 			edgeComponent = new HashMap<>();
-		edgeComponent.put(component.getClass(), component);
+		edgeComponent.put(key, component);
 		component.setEdge(this);
 	}
 	
@@ -185,6 +189,10 @@ public class Edge extends GraphObject {
 		if (edgeComponent == null || !edgeComponent.containsKey(componentClass))
 			return null;
 		return componentClass.cast(edgeComponent.get(componentClass));
+	}
+
+	public boolean hasComponent(Class<? extends EdgeComponent> key) {
+		return getComponent(key) != null;
 	}
 	
 	public Set<Class<? extends EdgeComponent>> getAllComponentClasses() {

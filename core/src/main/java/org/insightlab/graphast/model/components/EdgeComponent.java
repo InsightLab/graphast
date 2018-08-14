@@ -15,10 +15,13 @@ public abstract class EdgeComponent implements Component, Serializable {
 	
 	public void setEdge(Edge edge) {
 		this.edge = edge;
+		onAttach();
 	}
 	
 	public Edge getEdge() {
 		return edge;
 	}
+
+	public void onAttach() {}
 
 }
