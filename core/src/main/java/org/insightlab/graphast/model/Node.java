@@ -85,6 +85,10 @@ public class Node extends GraphObject {
 			return null;
 		return componentClass.cast(nodeComponents.get(componentClass));
 	}
+
+	public boolean hasComponent(Class<? extends NodeComponent> key) {
+		return getComponent(key) != null;
+	}
 	
 	public Set<Class<? extends NodeComponent>> getAllComponentClasses() {
 		return nodeComponents.keySet();

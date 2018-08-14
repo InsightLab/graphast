@@ -282,6 +282,10 @@ public class Graph extends GraphObject {
 		return componentClass.cast(structure.getComponent(componentClass));
 	}
 
+	public boolean hasComponent(Class<? extends GraphComponent> key) {
+		return getComponent(key) != null;
+	}
+
 	public void addComponent(GraphComponent component) {
 		addComponent(component.getClass(), component);
 	}

@@ -190,6 +190,10 @@ public class Edge extends GraphObject {
 			return null;
 		return componentClass.cast(edgeComponent.get(componentClass));
 	}
+
+	public boolean hasComponent(Class<? extends EdgeComponent> key) {
+		return getComponent(key) != null;
+	}
 	
 	public Set<Class<? extends EdgeComponent>> getAllComponentClasses() {
 		return edgeComponent.keySet();
