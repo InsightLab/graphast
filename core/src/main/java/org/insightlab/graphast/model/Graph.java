@@ -320,7 +320,7 @@ public class Graph extends GraphObject {
 		
 		return new Iterator<Long>() {
 			
-			Iterator<Edge> iter = structure.getAllOutEdgesIterator(id);
+			Iterator<Edge> iter = structure.getExistingOutEdgesIterator(id);
 
 			@Override
 			public boolean hasNext() {

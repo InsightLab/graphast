@@ -49,6 +49,8 @@ public interface GraphStructure {
 
 	default Node removeNode(final long id) {
 		Node n = getNode(id);
+		for (Edge e : getOutEdges(id)) removeEdge(e);
+		for (Edge e : getInEdges(id)) removeEdge(e);
 		n.remove();
 		return n;
 	}
