@@ -107,7 +107,9 @@ public class DefaultGraphStructure implements GraphStructure {
 			throw new NodeNotFoundException(e.getToNodeId());
 		}
 
-		if (edgeIdMapping.get(e.getId()) != null)
+		Integer internalEdgeId = edgeIdMapping.get(e.getId());
+
+		if (internalEdgeId != null && !edges.get(internalEdgeId).isRemoved())
 			throw new DuplicatedEdgeException(e.getId());
 
 		edgeIdMapping.put(e.getId(), nextEdgeId++);
