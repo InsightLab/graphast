@@ -98,7 +98,15 @@
             <artifactId>kryo-serializers</artifactId>
             <version>0.41</version>
         </dependency>
-		
+
+		<!-- https://mvnrepository.com/artifact/org.apache.mahout/mahout-collections -->
+		<dependency>
+			<groupId>org.apache.mahout</groupId>
+			<artifactId>mahout-collections</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+
 	</dependencies>
 	
 	<reporting>

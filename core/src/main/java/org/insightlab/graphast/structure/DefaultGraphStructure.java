@@ -31,6 +31,10 @@ import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Node;
 import org.insightlab.graphast.model.components.GraphComponent;
 
+import org.apache.mahout.math.map.AbstractLongIntMap;
+import org.apache.mahout.math.map.OpenLongIntHashMap;
+import org.apache.mahout.math.list.IntArrayList;
+
 import javax.annotation.Nonnull;
 import java.util.*;
 
@@ -44,34 +48,34 @@ public class DefaultGraphStructure implements GraphStructure {
 	
 	private Integer nextNodeId = 0;
 	private Integer nextEdgeId = 0;
-	
-	private HashMap<Long, Integer> nodeIdMapping = new HashMap<>();
-	private HashMap<Long, Integer> edgeIdMapping = new HashMap<>();
+
+	private AbstractLongIntMap nodeIdMapping = new OpenLongIntHashMap();
+	private AbstractLongIntMap edgeIdMapping = new OpenLongIntHashMap();
 	
 	private ArrayList<Node> nodes = new ArrayList<>();
 	private ArrayList<Edge> edges = new ArrayList<>();
-	
-	private ArrayList<ArrayList<Edge>> outEdges = new ArrayList<>();
-	private ArrayList<ArrayList<Edge>> inEdges  = new ArrayList<>();
+
+	private ArrayList<IntArrayList> outEdges = new ArrayList<>();
+	private ArrayList<IntArrayList> inEdges  = new ArrayList<>();
 	
 	/**
 	 * Add a new adjacency between two vertices.
-	 * @param id the first vertex of the adjacency.
+	 * @param nId the first vertex of the adjacency.
 	 * @param e edge that represents the adjacency between the vertices.
 	 */
-	private void addAdjacency(long id, Edge e) {
+	private void addAdjacency(long nId, int eIndex, Edge e) {
 		
-		int nodeId = nodeIdMapping.get(id);
+		int nIndex = nodeIdMapping.get(nId);
 		
 		if (e.isBidirectional()) {
-			inEdges.get(nodeId).add(e);
-			outEdges.get(nodeId).add(e);
+			inEdges.get(nIndex).add(eIndex);
+			outEdges.get(nIndex).add(eIndex);
 		}
-		else if (e.getFromNodeId() == id) {
-			outEdges.get(nodeId).add(e);
+		else if (e.getFromNodeId() == nId) {
+			outEdges.get(nIndex).add(eIndex);
 		}
-		else if (e.getToNodeId() == id) {
-			inEdges.get(nodeId).add(e);
+		else if (e.getToNodeId() == nId) {
+			inEdges.get(nIndex).add(eIndex);
 		}
 		
 	}
@@ -81,15 +85,17 @@ public class DefaultGraphStructure implements GraphStructure {
 	 * @param node the node that will be added.
 	 */
 	public void addNode(Node node) {
+
+		long nId = node.getId();
 		
-		if (nodeIdMapping.get(node.getId()) != null)
-			throw new DuplicatedNodeException(node.getId());
+		if (this.containsNode(nId))
+			throw new DuplicatedNodeException(nId);
 		
-		nodeIdMapping.put(node.getId(), nextNodeId++);
+		nodeIdMapping.put(nId, nextNodeId++);
 		nodes.add(node);
 		
-		outEdges.add(new ArrayList<>());
-		inEdges.add(new ArrayList<>());
+		outEdges.add(new IntArrayList());
+		inEdges.add(new IntArrayList());
 	
 	}
 	
@@ -98,7 +104,7 @@ public class DefaultGraphStructure implements GraphStructure {
 	 * @param e the edge that will be added into the graph.
 	 */
 	public void addEdge(Edge e) {
-		
+
 		if (!containsNode(e.getFromNodeId())) {
 			throw new NodeNotFoundException(e.getFromNodeId());
 		}
@@ -107,15 +113,15 @@ public class DefaultGraphStructure implements GraphStructure {
 			throw new NodeNotFoundException(e.getToNodeId());
 		}
 
-		Integer internalEdgeId = edgeIdMapping.get(e.getId());
-
-		if (internalEdgeId != null && !edges.get(internalEdgeId).isRemoved())
+		if (this.containsEdge(e.getId()))
 			throw new DuplicatedEdgeException(e.getId());
 
-		edgeIdMapping.put(e.getId(), nextEdgeId++);
+		int eIndex = nextEdgeId++;
+
+		edgeIdMapping.put(e.getId(), eIndex);
 		
-		addAdjacency(e.getFromNodeId(), e);
-		addAdjacency(e.getToNodeId(),   e);
+		addAdjacency(e.getFromNodeId(), eIndex, e);
+		addAdjacency(e.getToNodeId(),   eIndex, e);
 		
 		edges.add(e);
 		
@@ -127,7 +133,12 @@ public class DefaultGraphStructure implements GraphStructure {
 	 */
 	@Override
 	public boolean containsNode(long id) {
-		return nodeIdMapping.containsKey(id);
+		return nodeIdMapping.containsKey(id) && !nodes.get(nodeIdMapping.get(id)).isRemoved();
+	}
+
+	@Override
+	public boolean containsEdge(long id) {
+		return edgeIdMapping.containsKey(id) && !edges.get(edgeIdMapping.get(id)).isRemoved();
 	}
 	
 	/**
@@ -178,7 +189,20 @@ public class DefaultGraphStructure implements GraphStructure {
 	 * @return the out edges of the node which has the given id.
 	 */
 	public Iterator<Edge> getAllOutEdgesIterator(final long id) {
-		return outEdges.get(nodeIdMapping.get(id)).iterator();
+		return new Iterator<Edge>() {
+			private int index = 0;
+			private IntArrayList list = outEdges.get(nodeIdMapping.get(id));
+
+			@Override
+			public boolean hasNext() {
+				return index < list.size();
+			}
+
+			@Override
+			public Edge next() {
+				return edges.get(list.get(index++));
+			}
+		};
 	}
 	
 	/**
@@ -186,7 +210,20 @@ public class DefaultGraphStructure implements GraphStructure {
 	 * @return the in edges of the node which has the given id.
 	 */
 	public Iterator<Edge> getAllInEdgesIterator(final long id) {
-		return inEdges.get(nodeIdMapping.get(id)).iterator();
+		return new Iterator<Edge>() {
+			private int index = 0;
+			private IntArrayList list = inEdges.get(nodeIdMapping.get(id));
+
+			@Override
+			public boolean hasNext() {
+				return index < list.size();
+			}
+
+			@Override
+			public Edge next() {
+				return edges.get(list.get(index++));
+			}
+		};
 	}
 
 

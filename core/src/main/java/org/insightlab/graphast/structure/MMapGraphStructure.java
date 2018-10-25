@@ -206,7 +206,12 @@ public class MMapGraphStructure implements GraphStructure {
 	public boolean containsNode(long id) {
 		return nodIdMapping.containsKey(id);
 	}
-	
+
+	@Override
+	public boolean containsEdge(long id) {
+		return edgeIdMapping.containsKey(id);
+	}
+
 	/**
 	 * @return an iterator to graph's nodes.
 	 */

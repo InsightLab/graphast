@@ -92,6 +92,8 @@ public interface GraphStructure {
 	 * @return true if Node with passed id is in the graph, false otherwise.
 	 */
 	boolean containsNode(final long id);
+
+	boolean containsEdge(final long id);
 	
 	Iterator<Node> allNodesIterator();
 	
