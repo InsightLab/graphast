@@ -99,11 +99,11 @@
             <version>0.41</version>
         </dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.apache.mahout/mahout-collections -->
+		<!-- https://mvnrepository.com/artifact/com.carrotsearch/hppc -->
 		<dependency>
-			<groupId>org.apache.mahout</groupId>
-			<artifactId>mahout-collections</artifactId>
-			<version>1.0</version>
+			<groupId>com.carrotsearch</groupId>
+			<artifactId>hppc</artifactId>
+			<version>0.8.1</version>
 		</dependency>
 
 

@@ -177,6 +177,10 @@ public class Graph extends GraphObject {
 		for (Edge e : edges)
 			this.addEdge(e);
 	}
+
+	public void updateAdjacency(Edge e) {
+		structure.updateAdjacency(e);
+	}
 	
 	/**
 	 * Contains node. This function checks if a node with the given id already exists

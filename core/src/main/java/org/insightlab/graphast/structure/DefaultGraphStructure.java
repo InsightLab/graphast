@@ -24,16 +24,17 @@
 
 package org.insightlab.graphast.structure;
 
+import com.carrotsearch.hppc.IntHashSet;
+import com.carrotsearch.hppc.IntSet;
+import com.carrotsearch.hppc.LongIntHashMap;
+import com.carrotsearch.hppc.LongIntMap;
+import com.carrotsearch.hppc.cursors.IntCursor;
 import org.insightlab.graphast.exceptions.DuplicatedEdgeException;
 import org.insightlab.graphast.exceptions.DuplicatedNodeException;
 import org.insightlab.graphast.exceptions.NodeNotFoundException;
 import org.insightlab.graphast.model.Edge;
 import org.insightlab.graphast.model.Node;
 import org.insightlab.graphast.model.components.GraphComponent;
-
-import org.apache.mahout.math.map.AbstractLongIntMap;
-import org.apache.mahout.math.map.OpenLongIntHashMap;
-import org.apache.mahout.math.list.IntArrayList;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -43,41 +44,44 @@ import java.util.*;
  *
  */
 public class DefaultGraphStructure implements GraphStructure {
+
+	private static final int OUT_EDGES = 0;
+	private static final int IN_EDGES = 1;
 	
 	private Map<Class<? extends GraphComponent>, GraphComponent> graphComponents = null;
 	
 	private Integer nextNodeId = 0;
 	private Integer nextEdgeId = 0;
 
-	private AbstractLongIntMap nodeIdMapping = new OpenLongIntHashMap();
-	private AbstractLongIntMap edgeIdMapping = new OpenLongIntHashMap();
+	private LongIntMap nodeIdMapping = new LongIntHashMap();
+	private LongIntMap edgeIdMapping = new LongIntHashMap();
 	
 	private ArrayList<Node> nodes = new ArrayList<>();
 	private ArrayList<Edge> edges = new ArrayList<>();
 
-	private ArrayList<IntArrayList> outEdges = new ArrayList<>();
-	private ArrayList<IntArrayList> inEdges  = new ArrayList<>();
-	
-	/**
-	 * Add a new adjacency between two vertices.
-	 * @param nId the first vertex of the adjacency.
-	 * @param e edge that represents the adjacency between the vertices.
-	 */
-	private void addAdjacency(long nId, int eIndex, Edge e) {
-		
-		int nIndex = nodeIdMapping.get(nId);
-		
+	private ArrayList<IntSet[]> adjacency = new ArrayList<>();
+
+	@Override
+	public void updateAdjacency(Edge e) {
+		updateAdjacency(e, edgeIdMapping.get(e.getId()));
+	}
+
+	private void updateAdjacency(Edge e, int eIndex) {
+		int fromIndex = nodeIdMapping.get(e.getFromNodeId());
+		int toIndex = nodeIdMapping.get(e.getToNodeId());
+		IntSet[] fromAdj = adjacency.get(fromIndex);
+		IntSet[] toAdj = adjacency.get(toIndex);
+
+		fromAdj[0].add(eIndex);
+		toAdj[1].add(eIndex);
+
 		if (e.isBidirectional()) {
-			inEdges.get(nIndex).add(eIndex);
-			outEdges.get(nIndex).add(eIndex);
+			fromAdj[1].add(eIndex);
+			toAdj[0].add(eIndex);
+		} else {
+			fromAdj[1].removeAll(eIndex);
+			toAdj[0].removeAll(eIndex);
 		}
-		else if (e.getFromNodeId() == nId) {
-			outEdges.get(nIndex).add(eIndex);
-		}
-		else if (e.getToNodeId() == nId) {
-			inEdges.get(nIndex).add(eIndex);
-		}
-		
 	}
 
 	/**
@@ -93,10 +97,8 @@ public class DefaultGraphStructure implements GraphStructure {
 		
 		nodeIdMapping.put(nId, nextNodeId++);
 		nodes.add(node);
-		
-		outEdges.add(new IntArrayList());
-		inEdges.add(new IntArrayList());
-	
+
+		adjacency.add(new IntHashSet[] {new IntHashSet(), new IntHashSet()});
 	}
 	
 	/**
@@ -119,9 +121,8 @@ public class DefaultGraphStructure implements GraphStructure {
 		int eIndex = nextEdgeId++;
 
 		edgeIdMapping.put(e.getId(), eIndex);
-		
-		addAdjacency(e.getFromNodeId(), eIndex, e);
-		addAdjacency(e.getToNodeId(),   eIndex, e);
+
+		updateAdjacency(e, eIndex);
 		
 		edges.add(e);
 		
@@ -183,26 +184,29 @@ public class DefaultGraphStructure implements GraphStructure {
 	public Edge getEdge(final long id) {
 		return edges.get(edgeIdMapping.get(id));
 	}
+
+	private Iterator<Edge> getAdjacencyIterator(final long id, int outOrIn) {
+		return new Iterator<Edge>() {
+			private Iterator<IntCursor> iter = adjacency.get(nodeIdMapping.get(id))[outOrIn].iterator();
+
+			@Override
+			public boolean hasNext() {
+				return iter.hasNext();
+			}
+
+			@Override
+			public Edge next() {
+				return edges.get(iter.next().value);
+			}
+		};
+	}
 	
 	/**
 	 * @param id the node's id.
 	 * @return the out edges of the node which has the given id.
 	 */
 	public Iterator<Edge> getAllOutEdgesIterator(final long id) {
-		return new Iterator<Edge>() {
-			private int index = 0;
-			private IntArrayList list = outEdges.get(nodeIdMapping.get(id));
-
-			@Override
-			public boolean hasNext() {
-				return index < list.size();
-			}
-
-			@Override
-			public Edge next() {
-				return edges.get(list.get(index++));
-			}
-		};
+		return getAdjacencyIterator(id, OUT_EDGES);
 	}
 	
 	/**
@@ -210,20 +214,7 @@ public class DefaultGraphStructure implements GraphStructure {
 	 * @return the in edges of the node which has the given id.
 	 */
 	public Iterator<Edge> getAllInEdgesIterator(final long id) {
-		return new Iterator<Edge>() {
-			private int index = 0;
-			private IntArrayList list = inEdges.get(nodeIdMapping.get(id));
-
-			@Override
-			public boolean hasNext() {
-				return index < list.size();
-			}
-
-			@Override
-			public Edge next() {
-				return edges.get(list.get(index++));
-			}
-		};
+		return getAdjacencyIterator(id, IN_EDGES);
 	}
 
 

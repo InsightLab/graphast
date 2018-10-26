@@ -30,11 +30,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class DefaultGraphTest {
 
@@ -128,7 +130,22 @@ public class DefaultGraphTest {
 		g.addEdge(e2);
 		assertEquals(3l, g.getNumberOfEdges());
 	}
-	
+
+	@Test
+	public void testEdgeDirectionUpdate() {
+		g.addNodes(n0, n1, n2, n3, n4);
+		g.addEdges(e0, e2, e4, e1, e6, e5, e3);
+		assertTrue("2 -> 4 not bi", Iterators.contains(g.getOutEdgesIterator(2), e1));
+		assertTrue("4 -> 2 not bi", !Iterators.contains(g.getOutEdgesIterator(4), e1));
+		e1.setBidirectional(true);
+		g.updateAdjacency(e1);
+		assertTrue("2 -> 4 bi", Iterators.contains(g.getOutEdgesIterator(2), e1));
+		assertTrue("4 -> 2 bi", Iterators.contains(g.getOutEdgesIterator(4), e1));
+		e1.setBidirectional(false);
+		g.updateAdjacency(e1);
+		assertTrue("2 -> 4 retest not bi", Iterators.contains(g.getOutEdgesIterator(2), e1));
+		assertTrue("4 -> 2 retest not bi", !Iterators.contains(g.getOutEdgesIterator(4), e1));
+	}
 	
 	@Test
 	public void testGetOutEdges() {

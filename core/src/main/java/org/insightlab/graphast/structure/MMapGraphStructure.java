@@ -198,6 +198,11 @@ public class MMapGraphStructure implements GraphStructure {
 		return null;
 	}
 
+	@Override
+	public void updateAdjacency(Edge e) {
+
+	}
+
 	/**
 	 * Verify whether the node which has the given id is in the graph or not.
 	 * @param id the node's id.

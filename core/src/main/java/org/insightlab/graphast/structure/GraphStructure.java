@@ -85,6 +85,8 @@ public interface GraphStructure {
 	default Edge removeEdge(final long fromId, final long toId) {
 		return removeEdge( getEdge(fromId, toId) );
 	}
+
+	void updateAdjacency(Edge e);
 	
 	/**
 	 * Verify whether the node which has the given id is in the graph or not.
