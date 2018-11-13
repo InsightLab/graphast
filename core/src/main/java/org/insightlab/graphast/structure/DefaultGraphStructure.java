@@ -24,10 +24,7 @@
 
 package org.insightlab.graphast.structure;
 
-import com.carrotsearch.hppc.IntHashSet;
-import com.carrotsearch.hppc.IntSet;
-import com.carrotsearch.hppc.LongIntHashMap;
-import com.carrotsearch.hppc.LongIntMap;
+import com.carrotsearch.hppc.*;
 import com.carrotsearch.hppc.cursors.IntCursor;
 import org.insightlab.graphast.exceptions.DuplicatedEdgeException;
 import org.insightlab.graphast.exceptions.DuplicatedNodeException;
@@ -55,6 +52,9 @@ public class DefaultGraphStructure implements GraphStructure {
 
 	private LongIntMap nodeIdMapping = new LongIntHashMap();
 	private LongIntMap edgeIdMapping = new LongIntHashMap();
+
+	private IntArrayList aliveNodes = new IntArrayList();
+	private IntArrayList aliveEdges = new IntArrayList();
 	
 	private ArrayList<Node> nodes = new ArrayList<>();
 	private ArrayList<Edge> edges = new ArrayList<>();
@@ -84,6 +84,16 @@ public class DefaultGraphStructure implements GraphStructure {
 		}
 	}
 
+	@Override
+	public long nodeIndex(long nodeId) {
+		return nodeIdMapping.get(nodeId);
+	}
+
+	@Override
+	public long edgeIndex(long edgeId) {
+		return edgeIdMapping.get(edgeId);
+	}
+
 	/**
 	 * Add a new node into the graph.
 	 * @param node the node that will be added.
@@ -94,9 +104,17 @@ public class DefaultGraphStructure implements GraphStructure {
 		
 		if (this.containsNode(nId))
 			throw new DuplicatedNodeException(nId);
-		
-		nodeIdMapping.put(nId, nextNodeId++);
+		int index = nextNodeId++;
+		nodeIdMapping.put(nId, index);
 		nodes.add(node);
+
+		int aliveIndex = index >> 5;
+		int aliveSubIndex = index & 31;
+
+		if (aliveIndex >= aliveNodes.size())
+			aliveNodes.add(0);
+
+		aliveNodes.set(aliveIndex, aliveNodes.get(aliveIndex) | (byte)(1 << aliveSubIndex));
 
 		adjacency.add(new IntHashSet[] {new IntHashSet(), new IntHashSet()});
 	}
@@ -122,6 +140,14 @@ public class DefaultGraphStructure implements GraphStructure {
 
 		edgeIdMapping.put(e.getId(), eIndex);
 
+		int aliveIndex = eIndex >> 5;
+		int aliveSubIndex = eIndex & 31;
+
+		if (aliveIndex >= aliveEdges.size())
+			aliveEdges.add(0);
+
+		aliveEdges.set(aliveIndex, aliveEdges.get(aliveIndex) | (1 << aliveSubIndex));
+
 		updateAdjacency(e, eIndex);
 		
 		edges.add(e);
@@ -134,12 +160,12 @@ public class DefaultGraphStructure implements GraphStructure {
 	 */
 	@Override
 	public boolean containsNode(long id) {
-		return nodeIdMapping.containsKey(id) && !nodes.get(nodeIdMapping.get(id)).isRemoved();
+		return nodeIdMapping.containsKey(id) && !isRemoved(nodes.get(nodeIdMapping.get(id)));
 	}
 
 	@Override
 	public boolean containsEdge(long id) {
-		return edgeIdMapping.containsKey(id) && !edges.get(edgeIdMapping.get(id)).isRemoved();
+		return edgeIdMapping.containsKey(id) && !isRemoved(edges.get(edgeIdMapping.get(id)));
 	}
 	
 	/**
@@ -181,8 +207,54 @@ public class DefaultGraphStructure implements GraphStructure {
 		return nodes.get(nodeIdMapping.get(id));
 	}
 
+	@Override
+	public Node removeNode(Node n) {
+		int index = nodeIdMapping.get(n.getId());
+
+		int aliveIndex = index >> 5;
+		int aliveSubIndex = index & 31;
+
+		aliveNodes.set(aliveIndex, aliveNodes.get(aliveIndex) & ~(1 << aliveSubIndex));
+
+		for (Edge e : getOutEdges(n.getId())) removeEdge(e);
+		for (Edge e : getInEdges(n.getId())) removeEdge(e);
+
+		return n;
+	}
+
+	@Override
+	public boolean isRemoved(Node n) {
+		int index = nodeIdMapping.get(n.getId());
+
+		int aliveIndex = index >> 5;
+		int aliveSubIndex = index & 31;
+
+		return (aliveNodes.get(aliveIndex) & (1 << aliveSubIndex)) == 0;
+	}
+
 	public Edge getEdge(final long id) {
 		return edges.get(edgeIdMapping.get(id));
+	}
+
+	@Override
+	public Edge removeEdge(Edge e) {
+		int index = edgeIdMapping.get(e.getId());
+
+		int aliveIndex = index >> 5;
+		int aliveSubIndex = index & 31;
+
+		aliveEdges.set(aliveIndex, aliveEdges.get(aliveIndex) & ~(1 << aliveSubIndex));
+		return e;
+	}
+
+	@Override
+	public boolean isRemoved(Edge e) {
+		int index = edgeIdMapping.get(e.getId());
+
+		int aliveIndex = index >> 5;
+		int aliveSubIndex = index & 31;
+
+		return (aliveEdges.get(aliveIndex) & (1 << aliveSubIndex)) == 0;
 	}
 
 	private Iterator<Edge> getAdjacencyIterator(final long id, int outOrIn) {

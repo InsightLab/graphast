@@ -38,6 +38,10 @@ import java.util.Set;
  * for different GraphStructure's implementations.
  */
 public interface GraphStructure {
+
+	long nodeIndex(final long nodeId);
+
+	long edgeIndex(final long edgeId);
 	
 	/**
 	 * Add a new node into the graph.
@@ -47,13 +51,13 @@ public interface GraphStructure {
 	
 	Node getNode(final long id);
 
+	Node removeNode(Node n);
+
 	default Node removeNode(final long id) {
-		Node n = getNode(id);
-		for (Edge e : getOutEdges(id)) removeEdge(e);
-		for (Edge e : getInEdges(id)) removeEdge(e);
-		n.remove();
-		return n;
+		return removeNode( getNode(id) );
 	}
+
+	boolean isRemoved(Node n);
 	
 	/**
 	 * Add a new edge into the graph.
@@ -72,11 +76,7 @@ public interface GraphStructure {
 		return null;
 	}
 
-	default Edge removeEdge(Edge e) {
-		if (e == null) return null;
-		e.remove();
-		return e;
-	}
+	Edge removeEdge(Edge e);
 
 	default Edge removeEdge(final long id) {
 		return removeEdge( getEdge(id) );
@@ -85,6 +85,8 @@ public interface GraphStructure {
 	default Edge removeEdge(final long fromId, final long toId) {
 		return removeEdge( getEdge(fromId, toId) );
 	}
+
+	boolean isRemoved(Edge e);
 
 	void updateAdjacency(Edge e);
 	
@@ -104,7 +106,7 @@ public interface GraphStructure {
 	 */
 	@Nonnull
 	default Iterator<Node> existingNodesIterator() {
-		return Iterators.filter(allNodesIterator(), n -> !n.isRemoved());
+		return Iterators.filter(allNodesIterator(), n -> !isRemoved(n));
 	}
 
 	default Iterable<Node> getNodes() {
@@ -118,7 +120,7 @@ public interface GraphStructure {
 	 */
 	@Nonnull
 	default Iterator<Edge> existingEdgesIterator() {
-		return Iterators.filter(allEdgesIterator(), e -> !e.isRemoved());
+		return Iterators.filter(allEdgesIterator(), e -> !isRemoved(e));
 	}
 
 	default Iterable<Edge> getEdges() {
@@ -142,7 +144,7 @@ public interface GraphStructure {
 	Iterator<Edge> getAllOutEdgesIterator(final long id);
 
 	default Iterator<Edge> getExistingOutEdgesIterator(final long id) {
-		return Iterators.filter(getAllOutEdgesIterator(id), e -> !e.isRemoved());
+		return Iterators.filter(getAllOutEdgesIterator(id), e -> !isRemoved(e));
 	}
 
 	default Iterable<Edge> getOutEdges(final long id) {
@@ -156,7 +158,7 @@ public interface GraphStructure {
 	Iterator<Edge> getAllInEdgesIterator(final long id);
 
 	default Iterator<Edge> getExistingInEdgesIterator(final long id) {
-		return Iterators.filter(getAllInEdgesIterator(id), e -> !e.isRemoved());
+		return Iterators.filter(getAllInEdgesIterator(id), e -> !isRemoved(e));
 	}
 
 	default Iterable<Edge> getInEdges(final long id) {

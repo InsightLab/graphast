@@ -154,7 +154,17 @@ public class MMapGraphStructure implements GraphStructure {
 		edgeAccess.setLong( 0 , ++edgePos );
 		
 	}
-	
+
+	@Override
+	public long nodeIndex(long nodeId) {
+		return 0;
+	}
+
+	@Override
+	public long edgeIndex(long edgeId) {
+		return 0;
+	}
+
 	/**
 	 * Add a new node into the graph.
 	 * @param n the node that will be added.
@@ -193,9 +203,29 @@ public class MMapGraphStructure implements GraphStructure {
 	}
 
 	@Override
+	public Node removeNode(Node n) {
+		return null;
+	}
+
+	@Override
+	public boolean isRemoved(Node n) {
+		return false;
+	}
+
+	@Override
 	public Edge getEdge(long id) {
 		//TODO implement
 		return null;
+	}
+
+	@Override
+	public Edge removeEdge(Edge e) {
+		return null;
+	}
+
+	@Override
+	public boolean isRemoved(Edge e) {
+		return false;
 	}
 
 	@Override

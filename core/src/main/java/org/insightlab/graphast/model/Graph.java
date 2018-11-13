@@ -259,7 +259,7 @@ public class Graph extends GraphObject {
 	 * @return an Iterator object of the list of outgoing edges of the node with the given id.
 	 */
 	public Iterator<Edge> getOutEdgesIterator(long id) {
-		return structure.getAllOutEdgesIterator(id);
+		return structure.getExistingOutEdgesIterator(id);
 	}
 	
 	public Iterable<Edge> getOutEdges(long id) {
@@ -275,7 +275,7 @@ public class Graph extends GraphObject {
 	 * @return an Iterator object of the list of incoming edges of the node with the given id.
 	 */
 	public Iterator<Edge> getInEdgesIterator(long id) {
-		return structure.getAllInEdgesIterator(id);
+		return structure.getExistingInEdgesIterator(id);
 	}
 	
 	public Iterable<Edge> getInEdges(long id) {

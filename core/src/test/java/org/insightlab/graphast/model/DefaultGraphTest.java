@@ -34,9 +34,7 @@ import java.util.Collections;
 import java.util.Iterator;
 
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class DefaultGraphTest {
 
@@ -186,11 +184,11 @@ public class DefaultGraphTest {
 		g.addNode(n0);
 		g.addNode(n1);
 		g.addNode(n2);
-		
-		assertEquals("Contains Test n0",g.containsNode(n0.getId()),true);
-		assertEquals("Contains Test n1",g.containsNode(n1.getId()),true);
-		assertEquals("Contains Test n2",g.containsNode(n2.getId()),true);
-		assertEquals("Contains Test n3",g.containsNode(n3.getId()),false);
+
+		assertTrue("Contains Test n0", g.containsNode(n0.getId()));
+		assertTrue("Contains Test n1", g.containsNode(n1.getId()));
+		assertTrue("Contains Test n2", g.containsNode(n2.getId()));
+		assertFalse("Contains Test n3", g.containsNode(n3.getId()));
 	}
 	
 	@Test(expected = NodeNotFoundException.class)
@@ -200,26 +198,47 @@ public class DefaultGraphTest {
 	}
 
 	@Test
-	public void testNeighborhoodPertinenceOnException(){
+	public void testNeighborhoodPertinenceOnException() {
 		g.addNode(n0);
 		g.addNode(n1);
 		g.addNode(n2);
-		
+
 		g.addEdge(e2);
-		try{
+		try {
 			g.addEdge(e6);
-		}catch(NodeNotFoundException e){
+		} catch (NodeNotFoundException e) {
 			Iterator<Long> neighbors = g.getNeighborhoodIterator(n0.getId());
 			assertEquals("First neighbor must be 1", new Long(1), neighbors.next());
-			assertEquals("Iterator must end", false, neighbors.hasNext());
-			
+			assertFalse("Iterator must end", neighbors.hasNext());
+
 			Iterator<Edge> inEdges = g.getInEdgesIterator(n0.getId());
-			assertEquals("Should be no in edge on n0", false, inEdges.hasNext());
-			
+			assertFalse("Should be no in edge on n0", inEdges.hasNext());
+
 			Iterator<Edge> outEdges = g.getOutEdgesIterator(n0.getId());
-			assertEquals("Should be a out edge on n0", true, outEdges.hasNext());
-			assertEquals("The out edge of n0 should be to node 1", 1l, outEdges.next().getToNodeId());
-			assertEquals("Should be no other out edge on n0", false, outEdges.hasNext());
+			assertTrue("Should be a out edge on n0", outEdges.hasNext());
+			assertEquals("The out edge of n0 should be to node 1", 1L, outEdges.next().getToNodeId());
+			assertFalse("Should be no other out edge on n0", outEdges.hasNext());
 		}
 	}
+
+	@Test
+	public void testGetEdgesRemoving() {
+		g.addNodes(n0, n1, n2, n3, n4);
+		g.addEdges(e0, e2, e4, e1, e6, e5, e3);
+		g.removeEdge(e1.getId());
+		g.removeEdge(e6.getId());
+		g.removeNode(n0.getId());
+
+		assertThat("Out Edges Test n1", Arrays.asList(e0, e3), containsInAnyOrder(Iterators.toArray(g.getOutEdgesIterator(1), Edge.class)));
+		assertThat("Out Edges Test n2", Arrays.asList(e4), containsInAnyOrder(Iterators.toArray(g.getOutEdgesIterator(2), Edge.class)));
+		assertThat("Out Edges Test n3", Arrays.asList(e3), containsInAnyOrder(Iterators.toArray(g.getOutEdgesIterator(3), Edge.class)));
+		assertThat("Out Edges Test n4", Arrays.asList(e0, e5), containsInAnyOrder(Iterators.toArray(g.getOutEdgesIterator(4), Edge.class)));
+
+		assertThat("In Edges Test n1", Arrays.asList(e0, e3), containsInAnyOrder(Iterators.toArray(g.getInEdgesIterator(1), Edge.class)));
+		assertThat("In Edges Test n2", Collections.emptyList(), containsInAnyOrder(Iterators.toArray(g.getInEdgesIterator(2), Edge.class)));
+		assertThat("In Edges Test n3", Arrays.asList(e3, e4, e5), containsInAnyOrder(Iterators.toArray(g.getInEdgesIterator(3), Edge.class)));
+		assertThat("In Edges Test n4", Arrays.asList(e0), containsInAnyOrder(Iterators.toArray(g.getInEdgesIterator(4), Edge.class)));
+
+	}
+
 }
