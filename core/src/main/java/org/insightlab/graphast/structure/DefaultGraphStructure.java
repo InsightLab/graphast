@@ -47,8 +47,8 @@ public class DefaultGraphStructure implements GraphStructure {
 	
 	private Map<Class<? extends GraphComponent>, GraphComponent> graphComponents = null;
 	
-	private Integer nextNodeId = 0;
-	private Integer nextEdgeId = 0;
+	private int nextNodeId = 0;
+	private int nextEdgeId = 0;
 
 	private LongIntMap nodeIdMapping = new LongIntHashMap();
 	private LongIntMap edgeIdMapping = new LongIntHashMap();
@@ -58,6 +58,9 @@ public class DefaultGraphStructure implements GraphStructure {
 	
 	private ArrayList<Node> nodes = new ArrayList<>();
 	private ArrayList<Edge> edges = new ArrayList<>();
+
+	private int numberOfNodes = 0;
+	private int numberOfEdges = 0;
 
 	private ArrayList<IntSet[]> adjacency = new ArrayList<>();
 
@@ -106,7 +109,6 @@ public class DefaultGraphStructure implements GraphStructure {
 			throw new DuplicatedNodeException(nId);
 		int index = nextNodeId++;
 		nodeIdMapping.put(nId, index);
-		nodes.add(node);
 
 		int aliveIndex = index >> 5;
 		int aliveSubIndex = index & 31;
@@ -117,6 +119,9 @@ public class DefaultGraphStructure implements GraphStructure {
 		aliveNodes.set(aliveIndex, aliveNodes.get(aliveIndex) | (byte)(1 << aliveSubIndex));
 
 		adjacency.add(new IntHashSet[] {new IntHashSet(), new IntHashSet()});
+
+		nodes.add(node);
+		numberOfNodes++;
 	}
 	
 	/**
@@ -151,7 +156,7 @@ public class DefaultGraphStructure implements GraphStructure {
 		updateAdjacency(e, eIndex);
 		
 		edges.add(e);
-		
+		numberOfEdges++;
 	}
 
 	/**
@@ -187,7 +192,7 @@ public class DefaultGraphStructure implements GraphStructure {
 	 */
 	@Override
 	public long getNumberOfNodes() {
-		return nodes.size();
+		return numberOfNodes;
 	}
 	
 	/**
@@ -195,7 +200,7 @@ public class DefaultGraphStructure implements GraphStructure {
 	 */
 	@Override
 	public long getNumberOfEdges() {
-		return edges.size();
+		return numberOfEdges;
 	}
 	
 	/**
@@ -218,6 +223,8 @@ public class DefaultGraphStructure implements GraphStructure {
 
 		for (Edge e : getOutEdges(n.getId())) removeEdge(e);
 		for (Edge e : getInEdges(n.getId())) removeEdge(e);
+
+		numberOfNodes--;
 
 		return n;
 	}
@@ -244,6 +251,9 @@ public class DefaultGraphStructure implements GraphStructure {
 		int aliveSubIndex = index & 31;
 
 		aliveEdges.set(aliveIndex, aliveEdges.get(aliveIndex) & ~(1 << aliveSubIndex));
+
+		numberOfEdges--;
+
 		return e;
 	}
 
