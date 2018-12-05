@@ -1,14 +1,14 @@
 package br.ufc.insightlab.generators;
 
-import br.ufc.insightlab.model.Edge;
-import br.ufc.insightlab.model.Graph;
-import br.ufc.insightlab.model.Node;
-import br.ufc.insightlab.model.components.cost_list_components.CostListEdgeComponent;
-import br.ufc.insightlab.model.components.cost_list_components.CostListNodeComponent;
-import br.ufc.insightlab.model.components.spatial_components.Geometry;
-import br.ufc.insightlab.model.components.spatial_components.Point;
-import br.ufc.insightlab.model.components.spatial_components.SpatialEdgeComponent;
-import br.ufc.insightlab.model.components.spatial_components.SpatialNodeComponent;
+import br.ufc.insightlab.graphast.model.Edge;
+import br.ufc.insightlab.graphast.model.Graph;
+import br.ufc.insightlab.graphast.model.Node;
+import br.ufc.insightlab.graphast.model.components.cost_list_components.CostListEdgeComponent;
+import br.ufc.insightlab.graphast.model.components.cost_list_components.CostListNodeComponent;
+import br.ufc.insightlab.graphast.model.components.spatial_components.Geometry;
+import br.ufc.insightlab.graphast.model.components.spatial_components.Point;
+import br.ufc.insightlab.graphast.model.components.spatial_components.SpatialEdgeComponent;
+import br.ufc.insightlab.graphast.model.components.spatial_components.SpatialNodeComponent;
 
 public class GraphGenerator {
 	

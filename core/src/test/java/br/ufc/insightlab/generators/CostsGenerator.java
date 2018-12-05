@@ -1,8 +1,8 @@
 package br.ufc.insightlab.generators;
 
-import br.ufc.insightlab.model.Edge;
-import br.ufc.insightlab.model.Graph;
-import br.ufc.insightlab.model.components.cost_list_components.CostListEdgeComponent;
+import br.ufc.insightlab.graphast.model.Edge;
+import br.ufc.insightlab.graphast.model.Graph;
+import br.ufc.insightlab.graphast.model.components.cost_list_components.CostListEdgeComponent;
 
 import java.util.Random;
 

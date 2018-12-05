@@ -1,18 +1,18 @@
 package br.ufc.insightlab.components;
 
 import br.ufc.insightlab.generators.GraphGenerator;
-import br.ufc.insightlab.model.Edge;
-import br.ufc.insightlab.model.Graph;
-import br.ufc.insightlab.model.Node;
-import br.ufc.insightlab.model.components.EdgeComponent;
-import br.ufc.insightlab.model.components.cost_list_components.CostListEdgeComponent;
-import br.ufc.insightlab.model.components.spatial_components.*;
-import br.ufc.insightlab.query.cost_functions.CostFunctionFactory;
-import br.ufc.insightlab.query.cost_functions.InterpolationMethod;
-import br.ufc.insightlab.query.cost_functions.TimeDependentCostFunction;
-import br.ufc.insightlab.query.shortestpath.DijkstraStrategy;
-import br.ufc.insightlab.query.shortestpath.ShortestPathStrategy;
-import br.ufc.insightlab.query.utils.DistanceVector;
+import br.ufc.insightlab.graphast.model.Edge;
+import br.ufc.insightlab.graphast.model.Graph;
+import br.ufc.insightlab.graphast.model.Node;
+import br.ufc.insightlab.graphast.model.components.EdgeComponent;
+import br.ufc.insightlab.graphast.model.components.cost_list_components.CostListEdgeComponent;
+import br.ufc.insightlab.graphast.model.components.spatial_components.*;
+import br.ufc.insightlab.graphast.query.cost_functions.CostFunctionFactory;
+import br.ufc.insightlab.graphast.query.cost_functions.InterpolationMethod;
+import br.ufc.insightlab.graphast.query.cost_functions.TimeDependentCostFunction;
+import br.ufc.insightlab.graphast.query.shortestpath.DijkstraStrategy;
+import br.ufc.insightlab.graphast.query.shortestpath.ShortestPathStrategy;
+import br.ufc.insightlab.graphast.query.utils.DistanceVector;
 import org.junit.Before;
 import org.junit.Test;
 
