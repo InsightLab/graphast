@@ -17,12 +17,6 @@
 		</license>
 	</licenses>
 
-	<scm>
-		<connection>scm:git:git://github.com/InsightLab/graphast.git</connection>
-		<url>scm:git:git://github.com/ARiDa/graphast.git</url>
-		<developerConnection>scm:git:git://github.com/ARiDa/graphast.git</developerConnection>
-	</scm>
-
 	<developers>
 		<developer>
 			<id>InsightLab</id>
@@ -35,6 +29,23 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
     	<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
+
+	<scm>
+  <connection>scm:git:git://github.com/insightlab/graphast.git</connection>
+  <developerConnection>scm:git:git://github.com/insightlab/graphast.git</developerConnection>
+  <url>http://github.com/insightlab/graphast/tree/master</url>
+</scm>		
+
+<distributionManagement>
+  <snapshotRepository>
+   <id>ossrh</id>
+   <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+  </snapshotRepository>
+  <repository>
+   <id>ossrh</id>
+   <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+  </repository>
+</distributionManagement>
 
 	<dependencies>
 
@@ -178,7 +189,7 @@
 					<execution>
 						<id>attach-sources</id>
 						<goals>
-							<goal>jar</goal>
+							<goal>jar-no-fork</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -197,13 +208,24 @@
 				</executions>
 			</plugin>
 
+    <plugin>
+      <groupId>org.sonatype.plugins</groupId>
+      <artifactId>nexus-staging-maven-plugin</artifactId>
+      <version>1.6.7</version>
+      <extensions>true</extensions>
+      <configuration>
+        <serverId>ossrh</serverId>
+        <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+        <autoReleaseAfterClose>false</autoReleaseAfterClose>
+      </configuration>
+    </plugin>
 
 		 	<plugin>
 				<artifactId>maven-gpg-plugin</artifactId>
 				<version>1.6</version>
 				<executions>
 					<execution>
-						<phase>repository:bundle-create</phase>
+						<phase>verify</phase>
 						<goals>
 							<goal>sign</goal>
 						</goals>
